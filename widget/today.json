@@ -1,0 +1,13 @@
+{
+  "type": "AdaptiveCard",
+  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+  "version": "1.5",
+  "body": [
+    {"type": "TextBlock", "text": "ROUTINES REIMAGINED", "size": "Small", "weight": "Bolder", "color": "Accent"},
+    {"type": "TextBlock", "text": "Level ${level} · ${title}", "size": "Large", "weight": "Bolder", "wrap": true},
+    {"type": "TextBlock", "text": "${streak}-day streak", "color": "Warning", "spacing": "None"},
+    {"type": "TextBlock", "text": "${workoutText}", "wrap": true, "spacing": "Medium"},
+    {"type": "TextBlock", "text": "${leftText}", "wrap": true, "isSubtle": true, "spacing": "Small"}
+  ],
+  "actions": [{"type": "Action.Execute", "title": "Open app", "verb": "open"}]
+}

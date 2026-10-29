@@ -554,6 +554,22 @@ button.tag{border:0;cursor:pointer}
 .dp-day{min-width:0}
 .dp-day li span{overflow-wrap:anywhere}
 .dp-day summary{min-width:0}
+/* ---------- Smooth animations on phones ---------- */
+#fx{will-change:transform;transform:translateZ(0)}
+.float{will-change:transform,opacity;font-size:26px;-webkit-text-stroke:.5px rgba(0,0,0,.35);text-shadow:0 0 18px var(--gold-glow),0 2px 0 rgba(0,0,0,.4);white-space:nowrap}
+.xpbar i,.lvl .bar,.ring .bar{will-change:width,stroke-dashoffset}
+.ex::before{will-change:transform}
+.toast{will-change:transform}
+.chk:active{transform:scale(.88)}
+.tab{transition:background .25s,color .25s,transform .15s}.tab:active{transform:scale(.94)}
+@media (max-width:560px),(pointer:coarse){
+  .tabs{backdrop-filter:none;-webkit-backdrop-filter:none;background:var(--bg)}
+  .overlay{backdrop-filter:none;-webkit-backdrop-filter:none;background:rgba(5,5,6,.93)}
+  .float{font-size:30px}
+  .ov .huge{font-size:128px}
+  .ex.pop .chk{animation:pop .55s cubic-bezier(.3,1.7,.5,1)}
+  .rays{width:300px;height:300px;margin:-150px 0 0 -150px}
+}
 </style>
 
 <header class="board">
@@ -1107,7 +1123,7 @@ function applyDecay(){
 
 /* ================= Persistence ================= */
 let saveTimer=null,saving=false,again=false;
-function save(){S.saved=Date.now();try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}clearTimeout(saveTimer);saveTimer=setTimeout(flush,800)}
+function save(){S.saved=Date.now();try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}clearTimeout(saveTimer);saveTimer=setTimeout(()=>{flush();try{NOTIF.sync()}catch(e){}},800)}
 function buildReport(){
   const t=todayKey(),sc=sched(),log=S.dayLog[t]||{},R=routine(),items=allItems(R);
   const tasks=[];sc.sections.forEach(sec=>sec.tasks.forEach(k=>{if(k.kind==='workout')return;const e=log[k.id]||{};tasks.push({sec:sec.name,title:k.title,time:k.time||'',min:k.min||0,s:e.s||0,d:e.d||0})}));
@@ -1200,13 +1216,15 @@ function renderTabs(){
 /* ================= Views ================= */
 const VIEWS={diet:()=>viewDiet(),newtab:()=>viewNewTab(),workout:()=>viewToday(),day:()=>draft?viewEditor():viewDay(),skeefo:()=>viewSkeefo(),ranks:()=>viewRanks(),me:()=>viewMe(),
   family:()=>R0()==='parent'?viewFamily():viewKidFamily(),report:()=>viewReport(),schedule:()=>draft?viewEditor():viewParentSchedule()};
+let lastTab=null;
 function render(){
   renderTabs();
-  const v=$('#view');v.innerHTML=(R0()==='parent'&&tab!=='me'?`<div class="pv-bar"><span><b>Parent view</b> · Workout, My day and Diet are hidden here</span><button class="btn sm primary" data-act="role" data-v="me">Switch to my app</button></div>`:'')+(VIEWS[tab]||(String(tab).startsWith('c_')?()=>viewCustom(tab):VIEWS.workout))();
+  const v=$('#view'),changed=lastTab!==tab;lastTab=tab;v.innerHTML=(R0()==='parent'&&tab!=='me'?`<div class="pv-bar"><span><b>Parent view</b> · Workout, My day and Diet are hidden here</span><button class="btn sm primary" data-act="role" data-v="me">Switch to my app</button></div>`:'')+(VIEWS[tab]||(String(tab).startsWith('c_')?()=>viewCustom(tab):VIEWS.workout))();
   if(tab==='ranks'&&rankView==='board')fillNames();
   if(tab==='me'&&R0()==='me')bindProfile();
   if(tab==='skeefo')scrollChat(true);
   tick();
+  if(changed&&!reduced&&v.animate){[...v.children].slice(0,7).forEach((c,i)=>c.animate([{opacity:0,transform:'translate3d(0,14px,0)'},{opacity:1,transform:'none'}],{duration:340,delay:i*45,easing:'cubic-bezier(.16,1,.3,1)',fill:'backwards'}))}
 }
 function banner(kind,title,body,act){return`<div class="banner ${kind}"><span class="dot"></span><div><b>${title}</b>${body||''}</div>${act||''}</div>`}
 function statusBanner(){
@@ -1958,7 +1976,7 @@ async function fillNames(){
 /* ---------- Me ---------- */
 function viewMe(){
   const parent=R0()==='parent';
-  if(window.RR_STANDALONE)return viewProfile()+(S.aiPlan?`<section class="card"><div class="label">Skeefo plan</div><h3 class="h3">Your workouts follow Skeefo’s 7-day plan</h3><button class="btn" data-act="clearplan">Clear Skeefo plan</button></section>`:'')+`<section class="card"><div class="label">Your data</div><h3 class="h3">Saved on this device</h3><p class="note">Your progress is stored in this browser only. Clearing your browser data erases it.</p></section>`;
+  if(window.RR_STANDALONE)return remindersCard()+viewProfile()+(S.aiPlan?`<section class="card"><div class="label">Skeefo plan</div><h3 class="h3">Your workouts follow Skeefo’s 7-day plan</h3><button class="btn" data-act="clearplan">Clear Skeefo plan</button></section>`:'')+`<section class="card"><div class="label">Your data</div><h3 class="h3">Saved on this device</h3><p class="note">Your progress is stored in this browser only. Clearing your browser data erases it.</p></section>`;
   let h=`<section class="card"><div class="label">Who’s using this device</div><div class="seg wide" role="group" aria-label="Role" style="margin-top:10px">
     <button data-act="role" data-v="me" aria-pressed="${!parent}">I’m training</button><button data-act="role" data-v="parent" aria-pressed="${parent}">I’m a parent</button></div>
     <p class="note" style="margin:10px 0 0">${parent?'Parent view shows your kid’s daily report and lets you set their schedule.':'Switch to parent view if you’re a parent checking on your kid.'}</p></section>`;
@@ -2070,6 +2088,8 @@ document.addEventListener('click',e=>{
     case'cleardiet':{if(t.dataset.sure!=='1'){t.dataset.sure='1';t.textContent='Tap again to clear';break}S.dietPlan=null;save();render();break}
     case'dswap':{try{const v=DPLAN.swap(+t.dataset.d,t.dataset.m);SFX.shuffle();render();toast(medal('↻',true),'Meal swapped',v)}catch(err){toast(medal('!',false),'Can’t swap that one',err.message)}break}
     case'dunavoid':S.dpAvoid=(S.dpAvoid||[]).filter(x=>x!==t.dataset.v);save();render();break;
+    case'notifon':NOTIF.enable().then(()=>{render();if(S.notif)toast(medal('✓',true),'Reminders on','You’ll get a notification when things are due.')});break;
+    case'notifoff':S.notif=false;save();NOTIF.sync();render();break;
     case'clearchat':if(!busy){archiveChat();save();SFX.shuffle();render();toast(skeefoMark(40),'Chat cleared','Skeefo still remembers what you talked about.')}break;
     case'forget':{if(t.dataset.sure!=='1'){t.dataset.sure='1';t.textContent='Tap again to make Skeefo forget';break}S.mem=[];S.chat=[];save();render();toast(skeefoMark(40),'Memory wiped','Skeefo starts fresh. Your plans and schedule stay the same.');break}
     case'clearplan':S.aiPlan=null;save();render();toast(medal('✓',true),'Skeefo plan cleared','Back to automatic daily routines.');break;
@@ -2210,44 +2230,98 @@ document.addEventListener('pointerdown',()=>SFX.unlock(),{once:true});
 document.addEventListener('keydown',()=>SFX.unlock(),{once:true});
 
 /* ================= Effects ================= */
-const cv=$('#fx'),cx=cv.getContext('2d');let parts=[],running=false;
-function sizeCv(){const r=devicePixelRatio||1;cv.width=innerWidth*r;cv.height=innerHeight*r;cx.setTransform(r,0,0,r,0,0)}
-sizeCv();addEventListener('resize',sizeCv);
+const cv=$('#fx'),cx=cv.getContext('2d',{alpha:true,desynchronized:true});let parts=[],running=false,lastT=0;
+const PHONE=matchMedia('(max-width:560px)').matches||matchMedia('(pointer:coarse)').matches;
+function sizeCv(){const vw=(window.visualViewport&&visualViewport.width)||innerWidth,vh=(window.visualViewport&&visualViewport.height)||innerHeight,r=Math.min(2,devicePixelRatio||1);
+  cv.width=Math.round(vw*r);cv.height=Math.round(vh*r);cv.style.width=vw+'px';cv.style.height=vh+'px';cx.setTransform(r,0,0,r,0,0)}
+sizeCv();addEventListener('resize',sizeCv);window.visualViewport&&visualViewport.addEventListener('resize',sizeCv);
 const css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
 const rectOf=el=>el&&el.getBoundingClientRect?el.getBoundingClientRect():el;
-function loop(){cx.clearRect(0,0,innerWidth,innerHeight);parts=parts.filter(p=>p.life>0);
-  for(const p of parts){p.vy+=p.g;p.vx*=.99;p.x+=p.vx;p.y+=p.vy;p.rot+=p.vr;p.life--;
-    cx.save();cx.globalAlpha=Math.min(1,p.life/30);cx.translate(p.x,p.y);cx.rotate(p.rot);cx.fillStyle=p.c;
-    if(p.shape)cx.fillRect(-p.s/2,-p.s/4,p.s,p.s/2);else{cx.beginPath();cx.arc(0,0,p.s/2,0,7);cx.fill()}cx.restore()}
-  if(parts.length)requestAnimationFrame(loop);else{running=false;cx.clearRect(0,0,innerWidth,innerHeight)}}
-function kick(){if(!running){running=true;requestAnimationFrame(loop)}}
-function sparks(el){if(reduced)return;const r=rectOf(el),x=r.left+r.width/2,y=r.top+r.height/2,cols=[css('--gold'),css('--gold-2'),css('--lvl')];
-  for(let i=0;i<16;i++){const a=Math.random()*Math.PI*2,s=2+Math.random()*3.5;parts.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,g:.12,s:4+Math.random()*3,c:cols[i%3],rot:0,vr:0,life:28+Math.random()*14})}kick()}
-function confetti(power){if(reduced)return;const cols=[css('--gold'),css('--gold-2'),css('--lvl'),'#ffffff',css('--flame')];
-  for(let k=0;k<2;k++){const x=k?innerWidth*.85:innerWidth*.15,y=innerHeight*.75;
-    for(let i=0;i<90*power;i++){const a=-Math.PI/2+(k?-1:1)*(.15+Math.random()*.55),s=8+Math.random()*9;
-      parts.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,g:.25,s:7+Math.random()*7,c:cols[i%5],rot:Math.random()*6,vr:(Math.random()-.5)*.4,life:90+Math.random()*60,shape:1})}}kick()}
+const buzz=pat=>{try{if(!reduced&&navigator.vibrate)navigator.vibrate(pat)}catch(e){}};
+function loop(t){const dt=Math.min(2.5,lastT?(t-lastT)/16.667:1);lastT=t;
+  const W=cv.width/Math.min(2,devicePixelRatio||1),H=cv.height/Math.min(2,devicePixelRatio||1);cx.clearRect(0,0,W,H);
+  parts=parts.filter(p=>p.life>0&&p.y<H+60);
+  for(const p of parts){p.vy+=p.g*dt;p.vx*=Math.pow(p.drag,dt);p.vy*=Math.pow(p.drag,dt);p.x+=p.vx*dt;p.y+=p.vy*dt;p.rot+=p.vr*dt;p.flip+=p.vf*dt;p.life-=dt;
+    const a=Math.min(1,p.life/24);if(a<=0)continue;cx.globalAlpha=a;cx.fillStyle=p.c;
+    if(p.shape){cx.setTransform(1,0,0,1,0,0);const r=Math.min(2,devicePixelRatio||1);cx.setTransform(r,0,0,r,0,0);cx.translate(p.x,p.y);cx.rotate(p.rot);cx.scale(1,Math.cos(p.flip));
+      const w=p.s,h=p.s*.55;cx.beginPath();if(cx.roundRect)cx.roundRect(-w/2,-h/2,w,h,2);else cx.rect(-w/2,-h/2,w,h);cx.fill();cx.setTransform(r,0,0,r,0,0)}
+    else{cx.beginPath();cx.arc(p.x,p.y,p.s/2*Math.max(.3,a),0,6.283);cx.fill()}}
+  cx.globalAlpha=1;
+  if(parts.length)requestAnimationFrame(loop);else{running=false;lastT=0;cx.clearRect(0,0,W,H)}}
+function kick(){if(!running){running=true;lastT=0;requestAnimationFrame(loop)}}
+function sparks(el){if(reduced)return;const r=rectOf(el),x=r.left+r.width/2,y=r.top+r.height/2,cols=[css('--gold'),css('--gold-2'),css('--lvl'),'#ffffff'],n=PHONE?18:16,sz=PHONE?1.35:1;
+  for(let i=0;i<n;i++){const a=(i/n)*Math.PI*2+Math.random()*.3,sp=2.6+Math.random()*3.2;parts.push({x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,g:.1,drag:.93,s:(4+Math.random()*3)*sz,c:cols[i%4],rot:0,vr:0,flip:0,vf:0,life:30+Math.random()*12})}
+  buzz(12);kick()}
+function confetti(power){if(reduced)return;const cols=[css('--gold'),css('--gold-2'),css('--lvl'),'#ffffff',css('--flame'),'#4FB6FF'];
+  const W=(window.visualViewport&&visualViewport.width)||innerWidth,H=(window.visualViewport&&visualViewport.height)||innerHeight,count=Math.round((PHONE?60:90)*power),sz=PHONE?1.4:1;
+  for(let k=0;k<2;k++){const x=k?W*.9:W*.1,y=H*.82;
+    for(let i=0;i<count;i++){const a=-Math.PI/2+(k?-1:1)*(.12+Math.random()*.5),sp=(PHONE?11:9)+Math.random()*(PHONE?9:9);
+      parts.push({x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,g:.22,drag:.985,s:(7+Math.random()*6)*sz,c:cols[i%6],rot:Math.random()*6,vr:(Math.random()-.5)*.3,flip:Math.random()*6,vf:.12+Math.random()*.2,life:110+Math.random()*60,shape:1})}}
+  buzz(power>=1?[20,40,20,40,60]:[15,30,15]);kick()}
 function floatXP(el,text){const r=rectOf(el);if(!r||!r.width)return;const f=document.createElement('div');f.className='float';f.textContent=text;
-  f.style.left=(r.left+r.width/2)+'px';f.style.top=r.top+'px';document.body.appendChild(f);
-  const a=f.animate([{transform:'translate(-50%,0) scale(.6)',opacity:0},{transform:'translate(-50%,-22px) scale(1.15)',opacity:1,offset:.25},{transform:'translate(-50%,-70px) scale(1)',opacity:0}],{duration:reduced?300:1100,easing:'cubic-bezier(.2,.8,.2,1)'});
+  f.style.left=(r.left+r.width/2)+'px';f.style.top=(r.top-6)+'px';document.body.appendChild(f);
+  const a=f.animate([{transform:'translate3d(-50%,8px,0) scale(.5)',opacity:0},{transform:'translate3d(-50%,-26px,0) scale(1.25)',opacity:1,offset:.22},{transform:'translate3d(-50%,-40px,0) scale(1)',opacity:1,offset:.5},{transform:'translate3d(-50%,-84px,0) scale(.95)',opacity:0}],{duration:reduced?300:1300,easing:'cubic-bezier(.16,1,.3,1)'});
   a.onfinish=()=>f.remove()}
 function overlay(cls,html,ms){const o=document.createElement('div');o.className='overlay '+cls;o.innerHTML=`<div class="ov">${html}<button class="btn primary" style="margin-top:8px">Continue</button></div>`;
   document.body.appendChild(o);o.animate([{opacity:0},{opacity:1}],{duration:250});
   const close=()=>{const a=o.animate([{opacity:1},{opacity:0}],{duration:200});a.onfinish=()=>o.remove()};
   o.querySelector('button').addEventListener('click',close);o.querySelector('button').focus();if(ms)setTimeout(()=>o.isConnected&&close(),ms)}
-function levelUp(L){SFX.levelUp();overlay('lvlup',`<div class="eyebrow">Level up</div><div class="huge num"><span class="rays"></span>${L}</div><h2>${esc(titleFor(L))}</h2><p>${xpFor(L+1)-S.xp} XP to level ${L+1}.</p>`);confetti(1.4)}
-function levelDown(d){SFX.levelDown();overlay('lvldown',`<div class="eyebrow">Level lost</div><div class="huge num">${d.to}</div><h2>Down from level ${d.from}</h2><p>You missed ${d.missed} days in a row. Finish today’s routine to stop the slide and earn the Comeback badge.</p>`)}
+function levelUp(L){SFX.levelUp();buzz([30,60,30,60,140]);overlay('lvlup',`<div class="eyebrow">Level up</div><div class="huge num"><span class="rays"></span>${L}</div><h2>${esc(titleFor(L))}</h2><p>${xpFor(L+1)-S.xp} XP to level ${L+1}.</p>`);confetti(1.4)}
+function levelDown(d){SFX.levelDown();buzz([120,80,200]);overlay('lvldown',`<div class="eyebrow">Level lost</div><div class="huge num">${d.to}</div><h2>Down from level ${d.from}</h2><p>You missed ${d.missed} days in a row. Finish today’s routine to stop the slide and earn the Comeback badge.</p>`)}
 let toastQ=Promise.resolve();
 function toast(icon,title,sub){toastQ=toastQ.then(()=>new Promise(res=>{const t=$('#toast');t.innerHTML=`${icon}<div><b>${esc(title)}</b><span>${esc(sub)}</span></div>`;
   t.classList.add('show');setTimeout(()=>{t.classList.remove('show');setTimeout(res,450)},2400)}))}
 
+/* ================= Installed app: reminders, badge, widget data ================= */
+const INSTALLED=()=>!!window.RR_STANDALONE&&(matchMedia('(display-mode: standalone)').matches||matchMedia('(display-mode: window-controls-overlay)').matches||navigator.standalone===true);
+const NOTIF={
+  timers:[],
+  supported:()=>'Notification' in window&&'serviceWorker' in navigator,
+  state:()=>!NOTIF.supported()?'unsupported':Notification.permission,
+  async enable(){
+    if(!NOTIF.supported())return'unsupported';
+    let p=Notification.permission;if(p==='default')p=await Notification.requestPermission();
+    if(p==='granted'){S.notif=true;save();
+      try{const reg=await navigator.serviceWorker.ready;if('periodicSync' in reg){await reg.periodicSync.register('rr-remind',{minInterval:60*60*1000}).catch(()=>{})}}catch(e){}
+      await NOTIF.sync();try{const reg=await navigator.serviceWorker.ready;reg.showNotification('Reminders are on',{body:'I’ll remind you when things on your schedule are due.',icon:'icon-192.png',badge:'icon-192.png',tag:'rr-hello'})}catch(e){}}
+    return p},
+  data(){ensureToday();const t=todayKey(),log=S.dayLog[t]||{},R=routine(),rw=RULES().remindWorkout;
+    const items=sched().sections.flatMap(x=>x.tasks).map(k=>({id:k.id,title:k.title,time:(k.kind==='workout'&&rw)||k.time||'',done:!!taskState(k,log).d,workout:k.kind==='workout'}));
+    const left=items.filter(i=>!i.done).length,w=allItems(R).length;
+    return{date:t,items,left,level:lvl(S.xp),title:titleFor(lvl(S.xp)),xp:S.xp,streak:S.streak,notif:!!S.notif&&NOTIF.state()==='granted',
+      workoutText:S.today.complete?`${R.title}: done ✓`:`${R.title}: ${S.today.done.length}/${w} moves`,leftText:left?`${left} thing${left>1?'s':''} left today`:'Everything done today!',updated:Date.now()}},
+  async sync(){
+    if(!INSTALLED())return;const d=NOTIF.data();
+    try{const c=await caches.open('rr-data');await c.put('widget/data.json',new Response(JSON.stringify(d),{headers:{'content-type':'application/json'}}))}catch(e){}
+    try{if('setAppBadge' in navigator){d.left?navigator.setAppBadge(d.left):navigator.clearAppBadge()}}catch(e){}
+    try{navigator.serviceWorker&&navigator.serviceWorker.controller&&navigator.serviceWorker.controller.postMessage({type:'rr-sync'})}catch(e){}
+    NOTIF.timers.forEach(clearTimeout);NOTIF.timers=[];
+    if(d.notif){const now=Date.now();d.items.filter(i=>!i.done&&i.time).forEach(i=>{const ts=hmToday(i.time);if(ts>now&&ts-now<86400000)NOTIF.timers.push(setTimeout(()=>NOTIF.show(i),ts-now))})}
+  },
+  async show(i){try{const reg=await navigator.serviceWorker.ready;
+    reg.showNotification(i.workout?'Time to train':'Reminder: '+i.title,{body:i.workout?'Your workout is ready. Keep the streak alive!':`It’s ${hm(i.time)}. Tap to check it off.`,icon:'icon-192.png',badge:'icon-192.png',tag:'rr-'+i.id,renotify:false,data:{url:'./#'+(i.workout?'workout':'day')}})}catch(e){}},
+};
+function remindersCard(){
+  if(!window.RR_STANDALONE)return'';
+  if(!INSTALLED())return`<section class="card fam-hero"><div class="label">Reminders</div><h3 class="h3">Install the app for reminders</h3>
+    <p class="note">Notifications and the icon badge only work in the installed app.</p>
+    <ul class="rules"><li><span>1</span><div><b>iPhone:</b> open this page in Safari, tap Share, then <b>Add to Home Screen</b>. Open it from your home screen.</div></li><li><span>2</span><div><b>Android:</b> open it in Chrome, tap ⋮, then <b>Install app</b>.</div></li></ul></section>`;
+  const st=NOTIF.state();
+  if(st==='unsupported')return`<section class="card"><div class="label">Reminders</div><h3 class="h3">Not supported on this phone</h3><p class="note">Your phone’s browser doesn’t allow app notifications. On iPhone you need iOS 16.4 or newer.</p></section>`;
+  const on=st==='granted'&&S.notif;
+  return`<section class="card ${on?'':'fam-hero'}"><div class="label">Reminders</div><h3 class="h3">${on?'Reminders are on':'Turn on reminders'}</h3>
+    <p class="note">${on?'You’ll get a notification when a timed task or your workout is due, and the app icon shows how many things are left today.':st==='denied'?'Notifications are blocked. Turn them on for this app in your phone’s Settings, then come back.':'Get a notification when tasks with a time and your workout are due. Only tasks that have a time can remind you.'}</p>
+    <p class="note" style="font-size:12px">Reminders are most reliable when the app is still open in the background. Android can also check in now and then while it’s closed.</p>
+    ${on?`<button class="btn sm ghost" data-act="notifoff">Turn off reminders</button>`:st==='denied'?'':`<button class="btn primary" data-act="notifon">Turn on reminders</button>`}</section>`;
+}
 /* ================= Boot ================= */
 function boot(withDecay=true,quiet=false){
   ensureToday();
   if(!busy&&(S.chat||[]).length){archiveChat();save()}
   const d=withDecay&&R0()==='me'?applyDecay():null;
   if(d)save();
-  renderTabs();render();renderHeader();
+  {const h=location.hash.slice(1);if(h&&(TABS.me.some(([k])=>k===h)||h==='newtab'))tab=h}
+  renderTabs();render();renderHeader();try{NOTIF.sync()}catch(e){}
   if(d&&d.to)setTimeout(()=>levelDown(d),400);
   else if(d&&d.broke&&!quiet)toast(medal('0',false),'Streak reset','You missed two days in a row.');
 }
