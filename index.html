@@ -147,9 +147,9 @@ main .wrap{padding-block:20px 64px;display:grid;gap:16px}
 .guide .fold>div{padding:0 20px}
 .guide.open .fold>div{padding-bottom:18px}
 .steps{margin:0;padding:0;list-style:none;counter-reset:s;display:grid;gap:10px}
-.steps li{counter-increment:s;display:grid;grid-template-columns:24px 1fr;gap:10px;font-size:14px;color:var(--muted)}
+.steps li{counter-increment:s;display:block;position:relative;padding-left:34px;min-height:22px;font-size:14px;color:var(--muted)}
 .steps li b{color:var(--ink)}
-.steps li::before{content:counter(s);width:22px;height:22px;border-radius:50%;background:var(--surface-2);box-shadow:inset 0 0 0 1px var(--line-2);display:grid;place-items:center;font-family:var(--f-mono);font-size:11px;color:var(--ink)}
+.steps li::before{position:absolute;left:0;top:0;content:counter(s);width:22px;height:22px;border-radius:50%;background:var(--surface-2);box-shadow:inset 0 0 0 1px var(--line-2);display:grid;place-items:center;font-family:var(--f-mono);font-size:11px;color:var(--ink)}
 
 /* ---------- Exercises ---------- */
 .block{display:grid;gap:8px}
@@ -771,7 +771,7 @@ let FAM={schedule:undefined,report:undefined},draft=null,busy=false,seeded=false
 let PERM=null,linkState='checking',linkName='',justLinked=false;
 try{role=localStorage.getItem('rb-role')}catch(e){}
 const R0=()=>role||'me';
-const TABS={me:[['workout','Workout'],['day','My day'],['diet','Diet'],['skeefo','Skeefo'],['ranks','Ranks'],['me','Me']],
+const TABS={me:[['workout','Workout'],['day','My day'],['diet','Diet'],['skeefo','Skeefo'],['ranks','Ranks'],['family','Family'],['me','Me']],
   parent:[['family','Family'],['report','Report'],['schedule','Schedule'],['skeefo','Skeefo'],['me','Me']]};
 function sched(){
   if(R0()==='parent'){const c=CTLS[SEL],k=KIDS[SEL],a=c&&c.schedule,b=k&&k.schedule;return(a&&(!b||(a.updated||0)>=(b.updated||0))?a:b)||defaultSchedule()}
@@ -1149,7 +1149,7 @@ function renderTabs(){
 
 /* ================= Views ================= */
 const VIEWS={diet:()=>viewDiet(),newtab:()=>viewNewTab(),workout:()=>viewToday(),day:()=>draft?viewEditor():viewDay(),skeefo:()=>viewSkeefo(),ranks:()=>viewRanks(),me:()=>viewMe(),
-  family:()=>viewFamily(),report:()=>viewReport(),schedule:()=>draft?viewEditor():viewParentSchedule()};
+  family:()=>R0()==='parent'?viewFamily():viewKidFamily(),report:()=>viewReport(),schedule:()=>draft?viewEditor():viewParentSchedule()};
 function render(){
   renderTabs();
   const v=$('#view');v.innerHTML=(R0()==='parent'&&tab!=='me'?`<div class="pv-bar"><span><b>Parent view</b> · Workout, My day and Diet are hidden here</span><button class="btn sm primary" data-act="role" data-v="me">Switch to my app</button></div>`:'')+(VIEWS[tab]||(String(tab).startsWith('c_')?()=>viewCustom(tab):VIEWS.workout))();
@@ -1833,8 +1833,14 @@ function validateSched(j,wantTimes){
 }
 
 /* ---------- Ranks ---------- */
+function viewKidFamily(){
+  if(window.RR_STANDALONE)return`<section class="card fam-hero"><div class="label">Family</div><h2 class="h2">Family groups</h2>
+    <p class="note">Family groups let a parent see your daily report, set your schedule and add restrictions. They need accounts to share data between phones, so they live in the full Routines Reimagined app on Claude.</p>
+    <ul class="rules"><li><span>1</span><div>Ask whoever runs this app to share the full version with you and your parent.</div></li><li><span>2</span><div>Your parent opens it and creates your family on their Family tab.</div></li><li><span>3</span><div>You tap <b>Join my family</b> there, and they approve you.</div></li></ul></section>`;
+  return kidFamilyCard()+`<section class="card"><div class="label">Are you a parent?</div><h3 class="h3">Switch to parent view</h3><p class="note">Parents create the family group, add kids, set schedules and restrictions, and see live reports.</p><button class="btn" data-act="role" data-v="parent">I’m a parent</button></section>`;
+}
 function viewRanks(){
-  if(window.RR_STANDALONE)return viewProgress();
+  if(window.RR_STANDALONE)return`<section class="card"><div class="label">Leaderboard</div><h3 class="h3">Compete with friends</h3><p class="note">The live leaderboard needs accounts so scores can be shared between phones, so it lives in the full Routines Reimagined app on Claude. Your own stats are below.</p></section>`+viewProgress();
   if(R0()==='me'&&RULES().hideBoard&&rankView==='board')rankView='stats';
   return`<div class="seg wide" role="group" aria-label="Ranks view">${R0()==='me'&&RULES().hideBoard?'':`<button data-act="rank" data-v="board" aria-pressed="${rankView==='board'}">Leaderboard</button>`}<button data-act="rank" data-v="stats" aria-pressed="${rankView==='stats'}">${R0()==='parent'?'Badges & rules':'My stats'}</button></div>`+(rankView==='board'?viewLeaders():viewProgress());
 }
