@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>Routines Reimagined</title>
 <meta name="description" content="Daily workouts, routines, diet and Skeefo, your coach. Earn XP, keep streaks, level up.">
 <meta name="theme-color" content="#09090A">
@@ -97,7 +97,8 @@ h1,h2,h3{text-wrap:balance;margin:0}
 .tab{border:0;background:transparent;padding:10px 4px;border-radius:10px;font-weight:600;font-size:14px;color:var(--muted);transition:background .2s,color .2s}
 .tab:hover{color:var(--ink)}
 .tab[aria-selected="true"]{background:var(--surface-2);color:var(--ink);box-shadow:inset 0 0 0 1px var(--line-2)}
-main .wrap{padding-block:20px 64px;display:grid;gap:16px}
+main .wrap{padding-block:20px 64px;display:grid;grid-template-columns:minmax(0,1fr);gap:16px}
+main .wrap>*{min-width:0}
 
 /* ---------- Cards ---------- */
 .card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:20px}
@@ -531,6 +532,28 @@ textarea.notes{resize:vertical;margin-top:8px;line-height:1.5}
 .dp-day[open] summary span{display:none}
 .dp-day ul{margin:8px 0 0;padding:0;list-style:none;display:grid;gap:6px;font-size:14px}
 .dp-day li b{display:inline-block;min-width:76px;color:var(--gold);font-size:12px;font-family:var(--f-mono);text-transform:uppercase;letter-spacing:.06em}
+/* ---------- Phone polish ---------- */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;touch-action:manipulation;overscroll-behavior-y:none}
+*{-webkit-tap-highlight-color:transparent}
+button,a,input,label,summary{touch-action:manipulation}
+.toast:not(.show){visibility:hidden;transition:transform .5s cubic-bezier(.2,1.3,.4,1),visibility 0s .5s}
+.toast.show{visibility:visible}
+.dp-day li{display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center}
+.dp-day li span{min-width:0}
+.swap{width:30px;height:30px;border-radius:9px;border:1px solid var(--line-2);background:var(--surface);color:var(--lvl);font-size:15px;padding:0;display:grid;place-items:center}
+.swap:active{transform:rotate(-180deg);transition:transform .3s}
+button.tag{border:0;cursor:pointer}
+@media (max-width:560px){
+  .brand h1{font-size:19px;gap:8px}.brand h1 .logo{width:28px;height:28px}.rab{font-size:10px;padding:2px 6px}
+  .date{font-size:11px}
+  input,select,textarea,.inp{font-size:16px!important}
+  .day h2{font-size:26px}
+  .ladder .rung{flex-basis:84px}
+}
+.dp-week{grid-template-columns:minmax(0,1fr)}
+.dp-day{min-width:0}
+.dp-day li span{overflow-wrap:anywhere}
+.dp-day summary{min-width:0}
 </style>
 
 <header class="board">
@@ -720,6 +743,13 @@ balance:['Stand next to a wall or chair for safety.','Lift one foot off the floo
 };
 const openHow=new Set();let guideOpen=true;
 
+/* ================= No zooming on phones ================= */
+(()=>{const stop=e=>e.preventDefault();
+  ['gesturestart','gesturechange','gestureend'].forEach(ev=>document.addEventListener(ev,stop,{passive:false}));
+  document.addEventListener('touchmove',e=>{if(e.touches&&e.touches.length>1)e.preventDefault()},{passive:false});
+  let last=0;document.addEventListener('touchend',e=>{const n=Date.now();if(n-last<300&&!e.target.closest('input,textarea,select'))e.preventDefault();last=n},{passive:false});
+  document.addEventListener('wheel',e=>{if(e.ctrlKey)e.preventDefault()},{passive:false});
+})();
 /* ================= Helpers ================= */
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -963,8 +993,10 @@ const FOODS={
 const DPREFS=[['veg','Vegetarian'],['vegan','Vegan'],['noDairy','No dairy'],['noNuts','No nuts'],['noEgg','No eggs']];
 function makeDietPlan(prefs={}){
   const goal=S.profile.goal,r=rng(hash(todayKey()+JSON.stringify(prefs)+goal+Date.now()%1000));
-  const ok=([n,t])=>!((prefs.veg||prefs.vegan)&&t.includes('m'))&&!(prefs.vegan&&/[ed]/.test(t))&&!(prefs.noDairy&&t.includes('d'))&&!(prefs.noNuts&&t.includes('n'))&&!(prefs.noEgg&&t.includes('e'));
-  const want=goal==='muscle'?'P':goal==='endurance'?'C':null;
+  const avoid=(S.dpAvoid||[]).flatMap(x=>expandFood(x.toLowerCase()));
+  const ok=([n,t])=>!avoid.some(a=>n.toLowerCase().includes(a))&&!((prefs.veg||prefs.vegan)&&t.includes('m'))&&!(prefs.vegan&&/[ed]/.test(t))&&!(prefs.noDairy&&t.includes('d'))&&!(prefs.noNuts&&t.includes('n'))&&!(prefs.noEgg&&t.includes('e'));
+  const want=S.dpBias||(goal==='muscle'?'P':goal==='endurance'?'C':null);
+  window.__dpOk=ok;
   const days=[];const used={b:[],l:[],d:[],s:[]};
   for(let i=0;i<7;i++){const day={};
     for(const k of['b','l','d','s']){let pool=FOODS[k].filter(ok);if(!pool.length)pool=FOODS[k].filter(([,t])=>!t.includes('n'));
@@ -977,6 +1009,22 @@ function makeDietPlan(prefs={}){
   return{made:Date.now(),prefs,days,summary:`Here’s your 7-day meal plan${tags.length?` (${tags.join(', ')})`:''}, with ${why}. These are ideas, not strict rules: swap anything you don’t like, eat until you’re satisfied, and check with a parent about allergies.`};
 }
 const planToday=()=>S.dietPlan&&S.dietPlan.days[(new Date().getDay()+6)%7];
+const FOODSYN={fish:['fish','salmon','tuna'],seafood:['fish','salmon','tuna'],meat:['chicken','turkey','meat','tuna','salmon','fish'],chicken:['chicken'],dairy:['milk','cheese','yogurt','feta'],milk:['milk'],cheese:['cheese','feta','quesadilla'],egg:['egg','omelette'],nut:['peanut','nut','trail mix'],peanut:['peanut'],bean:['bean','chickpea','lentil','hummus','falafel','edamame'],tofu:['tofu'],rice:['rice'],bread:['toast','bread','sandwich','wrap','pita']};
+const expandFood=f=>FOODSYN[f]||[f];
+const DAYN=['monday','tuesday','wednesday','thursday','friday','saturday','sunday'],MEALN={breakfast:'b',lunch:'l',dinner:'d',snack:'s',snacks:'s'},MEALL={b:'Breakfast',l:'Lunch',d:'Dinner',s:'Snack'};
+function dayIdx(t){const td=(new Date().getDay()+6)%7;if(/\btomorrow\b/.test(t))return(td+1)%7;const i=DAYN.findIndex(d=>t.includes(d)||t.includes(' '+d.slice(0,3)+' '));return i>=0?i:td}
+function mealOk(name){const pr=S.dietPlan?S.dietPlan.prefs:{};const avoid=(S.dpAvoid||[]).flatMap(x=>expandFood(x.toLowerCase()));const tag=Object.values(FOODS).flat().find(([n])=>n===name);const t=tag?tag[1]:'';
+  return!avoid.some(a=>name.toLowerCase().includes(a))&&!((pr.veg||pr.vegan)&&t.includes('m'))&&!(pr.vegan&&/[ed]/.test(t))&&!(pr.noDairy&&t.includes('d'))&&!(pr.noNuts&&t.includes('n'))&&!(pr.noEgg&&t.includes('e'))}
+const DPLAN={
+  need(){if(!S.dietPlan)throw new Error('You don’t have a diet plan yet. Say “make me a diet plan” first.')},
+  swap(di,k){this.need();const cur=S.dietPlan.days[di][k],pool=FOODS[k].map(x=>x[0]).filter(n=>n!==cur&&mealOk(n));if(!pool.length)throw new Error('I’m out of other ideas for that meal with your current settings.');
+    const pick=pool[Math.floor(Math.random()*pool.length)];S.dietPlan.days[di][k]=pick;save();return pick},
+  set(di,k,text){this.need();text=String(text||'').trim().replace(/^["“']|["”']$/g,'').slice(0,70);if(!text)throw new Error('What should I put there?');S.dietPlan.days[di][k]=text.replace(/^\w/,c=>c.toUpperCase());save();return S.dietPlan.days[di][k]},
+  avoid(food){this.need();food=String(food||'').trim().toLowerCase().replace(/^(any|eating|the)\s+/,'').replace(/s$/,'').slice(0,30);if(food.length<3)throw new Error('Which food should I take out?');
+    S.dpAvoid=[...new Set([...(S.dpAvoid||[]),food])];let n=0;
+    const words=expandFood(food);S.dietPlan.days.forEach((d,i)=>Object.keys(d).forEach(k=>{if(words.some(w=>d[k].toLowerCase().includes(w))){try{this.swap(i,k);n++}catch(e){}}}));save();return n},
+  prefs(ch){const pr={...(S.dietPlan?S.dietPlan.prefs:S.dpPrefs||{}),...ch};S.dpPrefs=pr;return applyDietPlan(makeDietPlan(pr))},
+};
 function prefsFromText(t){const p={};if(/vegan/.test(t))p.vegan=true;if(/vegetarian|no meat|dont eat meat|don t eat meat/.test(t))p.veg=true;
   if(/no dairy|dairy free|lactose|no milk/.test(t))p.noDairy=true;if(/nut|peanut/.test(t)&&/no |allerg|free|without/.test(t))p.noNuts=true;if(/no eggs?|egg allerg|without eggs?/.test(t))p.noEgg=true;return p}
 function applyDietPlan(plan){S.dietPlan=plan;save();SFX.bonus();confetti(.5);const d=planToday();
@@ -989,7 +1037,9 @@ function dietPlanCard(){
     <div class="dayfoot"><button class="btn sm" data-go="skeefo">Ask Skeefo instead</button><button class="btn primary" data-act="mkdiet">Create my diet plan</button></div></section>`;
   const td=(new Date().getDay()+6)%7,days=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
   return`<section class="card"><div class="block-h" style="padding:0"><h3 class="h3">Meal plan</h3><span class="label">${DPREFS.filter(([k])=>S.dietPlan.prefs[k]).map(([,l])=>l).join(' · ')||'No restrictions'}</span></div>
-    <div class="dp-week">${S.dietPlan.days.map((d,i)=>`<details class="dp-day" ${i===td?'open':''}><summary><b>${days[i]}${i===td?' · today':''}</b><span>${esc(d.d)}</span></summary><ul><li><b>Breakfast</b> ${esc(d.b)}</li><li><b>Lunch</b> ${esc(d.l)}</li><li><b>Dinner</b> ${esc(d.d)}</li><li><b>Snack</b> ${esc(d.s)}</li></ul></details>`).join('')}</div>
+    <div class="dp-week">${S.dietPlan.days.map((d,i)=>`<details class="dp-day" ${i===td?'open':''}><summary><b>${days[i]}${i===td?' · today':''}</b><span>${esc(d.d)}</span></summary><ul>${['b','l','d','s'].map(k=>`<li><b>${MEALL[k]}</b><span>${esc(d[k])}</span><button class="swap" data-act="dswap" data-d="${i}" data-m="${k}" aria-label="Swap ${MEALL[k]} on ${days[i]}" title="Swap for another idea">↻</button></li>`).join('')}</ul></details>`).join('')}</div>
+    ${(S.dpAvoid||[]).length?`<div class="rule-chips" style="margin-top:10px"><span class="label">Avoiding:</span>${S.dpAvoid.map(f=>`<button class="tag" data-act="dunavoid" data-v="${esc(f)}" title="Stop avoiding">${esc(f)} ✕</button>`).join('')}</div>`:''}
+    <p class="note" style="margin:10px 0 0">Tap ↻ to swap a meal, or tell Skeefo things like “change Tuesday dinner to tacos” or “I don’t like fish”.</p>
     <div class="dayfoot"><button class="btn sm ghost" data-act="cleardiet">Clear plan</button><button class="btn sm" data-act="mkdiet">New plan</button></div></section>`;
 }
 
@@ -1422,7 +1472,7 @@ ${ctx()}
 
 How you talk: warm, encouraging, direct, a little playful. Keep replies under 120 words unless they ask for detail. Use short paragraphs, "- " bullets and **bold** for key words. No headings.
 When interviewing about goals, ask ONE question at a time, in this order unless already known: main goal, age, experience, equipment, minutes per day, other activities. Only ask about wake-up, bed or school times if they say they want times on their schedule. After about 5 answers, summarize and tell them to tap "Build my workout plan" or "Build my daily schedule" (these buttons are under the chat). When the user asks you to change something (update their schedule to yours, add/remove/move a task, check something off, change their goal or minutes, shuffle today’s workout, mute sounds), DO IT with your tools right away, then confirm in one short sentence. Never claim you did something unless the tool succeeded.
-Diet plans are meal ideas only: never give calorie targets, portion limits or weight-loss diets. You cannot browse the internet or look up live information (news, scores, prices); if asked, say so and share what you know, noting it may be out of date.
+You can edit the saved diet plan with edit_diet_meal, diet_avoid_food and diet_more when asked. Diet plans are meal ideas only: never give calorie targets, portion limits or weight-loss diets. You cannot browse the internet or look up live information (news, scores, prices); if asked, say so and share what you know, noting it may be out of date.
 Some earlier messages are from past chats the user cleared from the screen; you still remember them and can refer back naturally.
 App facts: one rest day is allowed; missing 2 days resets the streak; missing 4 days drops a level, then one more level every 3 days. Every exercise has a "How to do it" guide on the Workout tab.
 Safety: the user may be a teenager. Give age-appropriate advice. Never suggest crash diets, calorie counting targets, skipping meals, supplements, or extreme training. For pain, injury, dizziness, eating worries or health conditions, tell them to stop and talk to a doctor or a trusted adult. Stay on fitness, health habits, sleep, routines, school-life balance and motivation; gently steer other topics back.`}
@@ -1700,6 +1750,17 @@ function tryCommand(raw){
   // shuffle
   if(/\b(shuffle|reroll|re roll)\b/.test(t)||/\b(new|different|another)\b (workout|routine) (today|for today)?/.test(t))return run(ACT.shuffle);
   // tabs and diet
+  if(R0()==='me'&&S.dietPlan){
+    let mm=t.match(/\b(?:i (?:don t|dont|do not) (?:like|eat|want)|no more|take out|remove|get rid of|i m allergic to|i am allergic to|avoid)\s+(?:any\s+)?([a-z ]{3,25}?)\s*(?:from my (?:diet|meal) plan|in my (?:diet|meal) plan|anymore|please)?\s*$/);
+    if(mm&&!/\b(tab|task|section|schedule|plan|times?)\b/.test(mm[1])&&!MEALN[mm[1].trim()])return run(()=>{const n=DPLAN.avoid(mm[1]);return`Got it, no more **${esc(mm[1].trim())}**. I swapped ${n} meal${n===1?'':'s'} in your plan and I’ll keep it out of new plans.`});
+    mm=t.match(/\b(?:change|set|make|replace|switch|swap)\s+(?:my\s+|the\s+)?(?:(today|tomorrow|monday|tuesday|wednesday|thursday|friday|saturday|sunday)(?:\s*s)?\s+)?(breakfast|lunch|dinner|snack)(?:\s+(?:on|for)\s+(today|tomorrow|monday|tuesday|wednesday|thursday|friday|saturday|sunday))?\s+(?:to|with|for|into)\s+(.+)$/);
+    if(mm){const di=dayIdx(' '+(mm[1]||mm[3]||'today')+' '),k=MEALN[mm[2]],orig=text.match(/\b(?:to|with|for|into)\s+(.+)$/i);return run(()=>{const v=DPLAN.set(di,k,orig?orig[1]:mm[4]);SFX.bonus();return`Done! ${DAYN[di][0].toUpperCase()+DAYN[di].slice(1)} ${MEALL[k].toLowerCase()} is now **${esc(v)}**.`})}
+    mm=t.match(/\b(?:swap|change|switch|replace|new|different|another)\b.*?\b(breakfast|lunch|dinner|snack)\b/);
+    if(mm&&!/\bplan\b/.test(t)){const di=dayIdx(t),k=MEALN[mm[1]];return run(()=>{const v=DPLAN.swap(di,k);SFX.shuffle();return`Swapped! ${DAYN[di][0].toUpperCase()+DAYN[di].slice(1)} ${MEALL[k].toLowerCase()}: **${esc(v)}**.`})}
+    if(/\b(more|extra|higher)\s+protein\b/.test(t)){S.dpBias='P';return run(()=>DPLAN.prefs({}))}
+    if(/\b(more|extra)\s+(carbs|energy)\b/.test(t)){S.dpBias='C';return run(()=>DPLAN.prefs({}))}
+    mm=prefsFromText(t);if(Object.keys(mm).length&&/\b(make|switch|change|turn|update|i m|i am|now)\b/.test(t)&&/\b(plan|diet|meals?|vegan|vegetarian|dairy|nut|egg)/.test(t))return run(()=>DPLAN.prefs(mm));
+  }
   if(/\b(diet|meal|food|eating) ?plans?\b|\bplan (?:out )?my (?:meals|food|eating)\b|\bwhat should i eat (?:this|each|every) (?:week|day)\b/.test(t)&&!/\b(clear|delete|remove)\b/.test(t)){
     if(R0()==='parent')return'Diet plans go on your kid’s own app. They can tap “Create my diet plan” on their Diet tab or ask me.';
     return run(()=>{const pr={...(S.dpPrefs||{}),...prefsFromText(t)};S.dpPrefs=pr;return applyDietPlan(makeDietPlan(pr))})}
@@ -1739,6 +1800,9 @@ function tryCommand(raw){
   return null;
 }
 const TOOLS=()=>[
+  {name:'edit_diet_meal',description:'Change one meal in the saved 7-day diet plan. day: monday..sunday or today/tomorrow. meal: breakfast|lunch|dinner|snack. Give text to set a specific meal, or leave it out to swap for a random healthy idea.',inputSchema:{type:'object',properties:{day:{type:'string'},meal:{type:'string'},text:{type:'string'}},required:['meal']},execute:i=>{const di=dayIdx(' '+String(i.day||'today').toLowerCase()+' '),k=MEALN[String(i.meal).toLowerCase()];if(!k)throw new Error('meal must be breakfast, lunch, dinner or snack');return i.text?'Set: '+DPLAN.set(di,k,i.text):'Swapped to: '+DPLAN.swap(di,k)}},
+  {name:'diet_avoid_food',description:'Remove a food the user dislikes or is allergic to from the diet plan and keep it out of future plans.',inputSchema:{type:'object',properties:{food:{type:'string'}},required:['food']},execute:i=>'Replaced '+DPLAN.avoid(i.food)+' meals'},
+  {name:'diet_more',description:'Rebuild the diet plan leaning toward more protein (P) or more carbs (C).',inputSchema:{type:'object',properties:{focus:{type:'string',enum:['P','C']}},required:['focus']},execute:i=>{S.dpBias=i.focus==='C'?'C':'P';return DPLAN.prefs({})}},
   {name:'create_diet_plan',description:'Create and save a 7-day meal-idea plan on the Diet tab (balanced meals, no calorie targets). Returns today’s meals.',inputSchema:{type:'object',properties:{vegetarian:{type:'boolean'},vegan:{type:'boolean'},noDairy:{type:'boolean'},noNuts:{type:'boolean'},noEgg:{type:'boolean'}}},execute:i=>{const pr={veg:!!i.vegetarian,vegan:!!i.vegan,noDairy:!!i.noDairy,noNuts:!!i.noNuts,noEgg:!!i.noEgg};S.dpPrefs=pr;return applyDietPlan(makeDietPlan(pr))}},
   {name:'create_tab',description:'Create a new custom tab in the app’s tab bar with an optional starting checklist.',inputSchema:{type:'object',properties:{name:{type:'string'},items:{type:'array',items:{type:'string'}}},required:['name']},execute:i=>{const tb=TABACT.create(i);renderTabs();return'Created tab '+tb.name}},
   {name:'delete_tab',description:'Delete a custom tab the user made. Built-in tabs cannot be deleted.',inputSchema:{type:'object',properties:{name:{type:'string'}},required:['name']},execute:i=>{const tb=findTab(i.name);if(!tb)throw new Error('No custom tab with that name; built-in tabs cannot be deleted.');TABACT.remove(tb.id);renderTabs();return'Deleted tab '+tb.name}},
@@ -2004,6 +2068,8 @@ document.addEventListener('click',e=>{
     case'dpref':{const k=t.dataset.v;S.dpPrefs=S.dpPrefs||{};S.dpPrefs[k]=!S.dpPrefs[k];if(k==='vegan'&&S.dpPrefs.vegan)S.dpPrefs.veg=true;SFX.tick();save();render();break}
     case'mkdiet':{applyDietPlan(makeDietPlan(S.dpPrefs||{}));render();toast(medal('✓',true),'Diet plan ready','A week of meal ideas is on your Diet tab.');break}
     case'cleardiet':{if(t.dataset.sure!=='1'){t.dataset.sure='1';t.textContent='Tap again to clear';break}S.dietPlan=null;save();render();break}
+    case'dswap':{try{const v=DPLAN.swap(+t.dataset.d,t.dataset.m);SFX.shuffle();render();toast(medal('↻',true),'Meal swapped',v)}catch(err){toast(medal('!',false),'Can’t swap that one',err.message)}break}
+    case'dunavoid':S.dpAvoid=(S.dpAvoid||[]).filter(x=>x!==t.dataset.v);save();render();break;
     case'clearchat':if(!busy){archiveChat();save();SFX.shuffle();render();toast(skeefoMark(40),'Chat cleared','Skeefo still remembers what you talked about.')}break;
     case'forget':{if(t.dataset.sure!=='1'){t.dataset.sure='1';t.textContent='Tap again to make Skeefo forget';break}S.mem=[];S.chat=[];save();render();toast(skeefoMark(40),'Memory wiped','Skeefo starts fresh. Your plans and schedule stay the same.');break}
     case'clearplan':S.aiPlan=null;save();render();toast(medal('✓',true),'Skeefo plan cleared','Back to automatic daily routines.');break;
