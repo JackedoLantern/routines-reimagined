@@ -763,6 +763,17 @@ button.tag{border:0;cursor:pointer}
 .gate-skip{justify-self:center;color:var(--muted);font-weight:500}
 body.gated{overflow:hidden}
 @keyframes gateIn{from{opacity:0}to{opacity:1}}
+/* ---------- Mini yeti beside the step ---------- */
+.ex.task{position:relative}
+.yeti-mini{position:absolute;right:6px;top:50%;width:76px;height:68px;transform:translateY(-50%);pointer-events:none;z-index:2;animation:ymIn .45s cubic-bezier(.2,1.5,.4,1) both;filter:drop-shadow(0 4px 10px rgba(0,0,0,.5))}
+.yeti-mini .yeti-svg{width:100%;height:100%}
+.yeti-mini .y-shadow{display:none}
+.ym-cap{position:absolute;right:84px;top:50%;transform:translateY(-50%);z-index:2;pointer-events:none;background:var(--raise);border:1px solid color-mix(in srgb,var(--gold) 45%,var(--line-2));color:var(--gold);
+  font-family:var(--f-display);font-weight:900;font-size:13px;text-transform:uppercase;letter-spacing:.04em;padding:4px 9px;border-radius:10px;white-space:nowrap;max-width:46%;overflow:hidden;text-overflow:ellipsis;animation:ymIn .45s .1s cubic-bezier(.2,1.5,.4,1) both}
+.yeti-on>div:last-of-type .xpv,.yeti-on .xpv{opacity:0}
+.yeti-mini.out,.ym-cap.out{animation:ymOut .35s ease-in both}
+@keyframes ymIn{from{opacity:0;transform:translateY(-50%) scale(.3)}to{opacity:1;transform:translateY(-50%) scale(1)}}
+@keyframes ymOut{to{opacity:0;transform:translateY(-50%) scale(.6)}}
 </style>
 
 <header class="board">
@@ -2087,26 +2098,30 @@ function yetiSVG(sp,title){
     dots:`<g class="y-fx fx-dots"><rect x="132" y="18" width="40" height="22" rx="11" fill="#fff"/><circle class="dt dt0" cx="143" cy="29" r="3" fill="#6E5BFF"/><circle class="dt dt1" cx="152" cy="29" r="3" fill="#6E5BFF"/><circle class="dt dt2" cx="161" cy="29" r="3" fill="#6E5BFF"/></g>`,
   };
   const throwFx=act==='throw'?`<g class="y-fx fx-throw"><circle class="tb" cx="150" cy="70" r="8" fill="#FF8A1F"/></g>`:'';
-  const arm=(side,prop)=>`<g transform="translate(${side==='L'?62:138},100)"><g class="y-arm${side}"><rect x="-8" y="-4" width="16" height="44" rx="8" fill="${FUR}" stroke="${FUR2}" stroke-width="1.5"/><circle cx="0" cy="42" r="8.5" fill="${FACE}"/>${prop||''}</g></g>`;
-  const leg=x=>`<g transform="translate(${x},146)"><g class="y-leg${x<100?'L':'R'}"><rect x="-9" y="-2" width="18" height="22" rx="8" fill="${FUR}" stroke="${FUR2}" stroke-width="1.5"/><ellipse cx="0" cy="21" rx="12" ry="5.5" fill="${FACE2}"/></g></g>`;
+  const arm=(side,prop)=>`<g transform="translate(${side==='L'?54:146},88)"><g class="y-arm${side}"><path d="M-11 0 Q-18 13 -11 25 Q-9 35 -7 41 L7 41 Q9 35 11 25 Q18 12 11 0 Z" fill="${FUR}" stroke="${FUR2}" stroke-width="1.5"/><circle cx="0" cy="1" r="12" fill="${FUR}" stroke="${FUR2}" stroke-width="1.5"/><path d="M-7 18 q7 -7 14 0" fill="none" stroke="${FUR2}" stroke-width="1.6" stroke-linecap="round"/><circle cx="0" cy="43" r="8.5" fill="${FACE}"/>${prop||''}</g></g>`;
+  const leg=x=>`<g transform="translate(${x},140)"><g class="y-leg${x<100?'L':'R'}"><path d="M-12 -4 Q-15 9 -10 24 L10 24 Q15 9 12 -4 Z" fill="${FUR}" stroke="${FUR2}" stroke-width="1.5"/><path d="M-6 10 q6 4 12 0" fill="none" stroke="${FUR2}" stroke-width="1.4"/><ellipse cx="0" cy="25" rx="13" ry="5.5" fill="${FACE2}"/></g></g>`;
   const closedEyes=act==='sleep'||act==='calm';
   return`<svg class="yeti-svg y-${act}${closedEyes?' y-eyesshut':''}" viewBox="0 0 200 180" aria-hidden="true">
     <ellipse class="y-shadow" cx="100" cy="170" rx="46" ry="6" fill="rgba(0,0,0,.4)"/>${pr.stage||''}
-    <g class="y-all">${leg(84)}${leg(116)}
-      <path d="M56 114 Q56 68 100 68 Q144 68 144 114 Q144 150 100 156 Q56 150 56 114Z" fill="${FUR}" stroke="${FUR2}" stroke-width="1.5"/>
-      <ellipse cx="100" cy="120" rx="24" ry="26" fill="#E8EFF7"/>
-      <path d="M60 140 l6 8 l6 -7 l6 8 l6 -7 l6 8 l6 -7 l6 8 l6 -7 l6 8 l6 -7 l6 8 l6 -8" fill="none" stroke="${FUR2}" stroke-width="2" stroke-linejoin="round"/>
+    <g class="y-all">${leg(87)}${leg(113)}
+      <path d="M46 90 Q48 70 72 67 L128 67 Q152 70 154 90 Q152 104 141 112 L133 142 Q100 153 67 142 L59 112 Q48 104 46 90Z" fill="${FUR}" stroke="${FUR2}" stroke-width="1.5"/>
+      <path d="M70 92 Q85 107 100 98 Q115 107 130 92" fill="none" stroke="${FUR2}" stroke-width="2.2" stroke-linecap="round"/>
+      <path d="M100 98 V146" stroke="${FUR2}" stroke-width="1.6"/>
+      ${[107,118,129].map(y=>`<rect x="88" y="${y}" width="10.5" height="9" rx="3.5" fill="#E3EAF3" stroke="${FUR2}" stroke-width="1"/><rect x="101.5" y="${y}" width="10.5" height="9" rx="3.5" fill="#E3EAF3" stroke="${FUR2}" stroke-width="1"/>`).join('')}
+      <path d="M71 110 q5 14 9 28 M129 110 q-5 14 -9 28" fill="none" stroke="${FUR2}" stroke-width="1.6" stroke-linecap="round"/>
+      <path d="M70 140 l5 6 l5 -5 l5 6 l5 -5 l5 6 l5 -5 l5 6 l5 -5 l5 6 l5 -5 l5 6" fill="none" stroke="${FUR2}" stroke-width="1.8" stroke-linejoin="round"/>
       ${arm('L',pr.L)}
-      <g transform="translate(100,58)"><g class="y-head">
+      <g transform="translate(100,48)"><g class="y-head"><g transform="scale(.9)">
         <path d="M-22 -24 q-14 -12 -8 -26 q6 10 16 16z" fill="${HORN}"/><path d="M22 -24 q14 -12 8 -26 q-6 10 -16 16z" fill="${HORN}"/>
         <circle r="34" fill="${FUR}" stroke="${FUR2}" stroke-width="1.5"/>
         <path d="M-14 -32 l5 -8 l4 7 l5 -9 l4 9 l5 -7 l4 8" fill="${FUR}" stroke="${FUR2}" stroke-width="1.5" stroke-linejoin="round"/>
         <ellipse cx="0" cy="6" rx="25" ry="21" fill="${FACE}"/>
+        <path d="M-15 -7 l10 3 M15 -7 l-10 3" stroke="${EYE}" stroke-width="2.6" stroke-linecap="round"/>
         <g class="y-eyes"><ellipse cx="-9" cy="1" rx="3.6" ry="4.4" fill="${EYE}"/><ellipse cx="9" cy="1" rx="3.6" ry="4.4" fill="${EYE}"/><circle cx="-8" cy="-.5" r="1.2" fill="#fff"/><circle cx="10" cy="-.5" r="1.2" fill="#fff"/></g>
         <path class="y-closed" d="M-13 2 q4 3 8 0 M5 2 q4 3 8 0" fill="none" stroke="${EYE}" stroke-width="2.2" stroke-linecap="round"/>
         <circle cx="-17" cy="11" r="3.5" fill="${PINK}" opacity=".7"/><circle cx="17" cy="11" r="3.5" fill="${PINK}" opacity=".7"/>
         <path class="y-mouth" d="M-7 13 Q0 20 7 13" fill="${act==='brush'?'#fff':'none'}" stroke="${EYE}" stroke-width="2.4" stroke-linecap="round"/>
-        ${pr.hat||''}</g></g>
+        ${pr.hat||''}</g></g></g>
       ${pr.front||''}${arm('R',pr.R)}</g>${FX[sp.fx]||''}${throwFx}</svg>`;
 }
 let yetiTimer=null;
@@ -2118,6 +2133,16 @@ function yetiPlay(title){
   el.classList.remove('out');void el.offsetWidth;el.classList.add('show');
   SFX.yeti&&SFX.yeti(sp.m);
   clearTimeout(yetiTimer);yetiTimer=setTimeout(yetiClose,reduced?1800:3800);
+  if(!sp.ai)yetiPrefetch();
+}
+function yetiInline(id,title){
+  if(S.yeti===false||R0()==='parent')return;
+  const row=document.querySelector(`.task[data-id="${id}"]`);if(!row){yetiPlay(title);return}
+  const sp=yetiSpec(title);row.querySelectorAll('.yeti-mini,.ym-cap').forEach(e=>e.remove());
+  const m=document.createElement('div');m.className='yeti-mini';m.innerHTML=yetiSVG(sp,title);
+  const c=document.createElement('span');c.className='ym-cap';c.textContent=sp.l1;
+  row.classList.add('yeti-on');row.append(m);SFX.yeti&&SFX.yeti(sp.m);
+  setTimeout(()=>{m.classList.add('out');c.classList.add('out');setTimeout(()=>{m.remove();c.remove();row.classList.remove('yeti-on')},400)},reduced?1800:3800);
   if(!sp.ai)yetiPrefetch();
 }
 function yetiClose(){const el=$('#yetiPop');if(!el||!el.classList.contains('show'))return;el.classList.add('out');setTimeout(()=>{el.classList.remove('show','out')},320)}
@@ -2646,7 +2671,7 @@ function taskToggle(id,btn){
   const e=log[id]||(log[id]={}),h=S.history[t]||(S.history[t]={x:0,c:0}),L0=lvl(S.xp),rect=btn.getBoundingClientRect();
   let bonus=0;
   if(e.d){SFX.uncheck();delete e.d;if(e.g){S.xp=Math.max(0,S.xp-e.g);h.x=Math.max(0,h.x-e.g);log._x-=e.g;e.g=0}}
-  else{e.d=Date.now();{const yk=sched().sections.flatMap(x=>x.tasks).find(x=>x.id===id);if(yk&&yk.kind!=='workout')setTimeout(()=>yetiPlay(yk.title),280)}SFX.check(Object.keys(log).filter(x=>x[0]!=='_'&&log[x].d).length-1);setTimeout(SFX.coin,90);const g=Math.min(TASK_XP,Math.max(0,TASK_CAP-log._x));
+  else{e.d=Date.now();{const yk=sched().sections.flatMap(x=>x.tasks).find(x=>x.id===id);if(yk&&yk.kind!=='workout')setTimeout(()=>yetiInline(yk.id,yk.title),40)}SFX.check(Object.keys(log).filter(x=>x[0]!=='_'&&log[x].d).length-1);setTimeout(SFX.coin,90);const g=Math.min(TASK_XP,Math.max(0,TASK_CAP-log._x));
     if(g){e.g=g;log._x+=g;S.xp+=g;h.x+=g;floatXP(rect,'+'+g+' XP')}sparks(rect);noteCheck();
     {const k=sched().sections.flatMap(x=>x.tasks).find(x=>x.id===id);if(k&&k.min>=10&&e.s&&e.d-e.s<k.min*60000*.25)flag('fast_task',`“${k.title}” took ${dur(e.d-e.s)} (planned ${k.min} min)`);
      const quick=Object.keys(log).filter(x=>x[0]!=='_'&&log[x].d&&e.d-log[x].d<60000).length;if(quick>=4)flag('bulk',`Checked off ${quick} tasks within one minute`)}
