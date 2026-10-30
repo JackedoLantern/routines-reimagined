@@ -15,7 +15,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Routines">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
-<script>window.RR_STANDALONE=true;window.RR_VERSION='21bd62e41a';</script>
+<script>window.RR_STANDALONE=true;window.RR_VERSION='a91d6f5606';</script>
 <script>window.RR_SUPABASE={url:'https://uszalonpjyssvvsikzvg.supabase.co',key:'sb_publishable_w-5rI0R9ht2-HAr5HghM0w_-3HYiAEg'};</script>
 <script src="supabase.js"></script>
 </head>
@@ -1112,7 +1112,7 @@ const BADGES=[
  {id:'early',n:'Early bird',d:'Finish before 8 am',g:'AM',ok:s=>!!s.flags.early},
  {id:'comeback',n:'Comeback',d:'Train after a level drop',g:'↑',ok:s=>!!s.flags.comeback},
 ];
-const XP_MAIN=25, XP_SIDE=10, BONUS=60;
+const XP_MAIN=3, XP_SIDE=3, BONUS=60;
 const HOW={
 pushup:['Start in a high plank: hands just wider than your shoulders, body straight from head to heels.','Bend your elbows at about 45° to your body and lower your chest until it is just above the floor.','Push the floor away to straighten your arms. Breathe in on the way down, out on the way up.','Too hard? Put your knees on the floor and keep your hips in line.'],
 inclinepush:['Put your hands on a sturdy bench, table or counter, slightly wider than your shoulders.','Walk your feet back until your body is one straight line.','Lower your chest to the edge, then push back up. The lower the surface, the harder it gets.'],
@@ -1825,7 +1825,35 @@ function matchEx(name){
   if(score<20){for(const[k,v]of Object.entries(W_ALIAS)){if(q.includes(k)){const e=EX.find(x=>x.id===v||x.id.startsWith(v)||wNorm(x.n).includes(k));if(e)return e}}return null}
   return best;
 }
+const NUMW={a:1,an:1,one:1,two:2,three:3,four:4,five:5,six:6,seven:7,eight:8,nine:9,ten:10,eleven:11,twelve:12,thirteen:13,fourteen:14,fifteen:15,sixteen:16,seventeen:17,eighteen:18,nineteen:19,twenty:20,thirty:30,forty:40,fifty:50,sixty:60,hundred:100,couple:2,few:3,dozen:12};
+function numWords(s){return String(s).replace(/\bhalf (?:a|an) minute\b/gi,'30 seconds').replace(/\ba (?:minute|min)\b/gi,'1 minute').replace(/\b(twenty|thirty|forty|fifty|sixty)[ -](one|two|three|four|five|six|seven|eight|nine)\b/gi,(m,a,b)=>String(NUMW[a.toLowerCase()]+NUMW[b.toLowerCase()]))
+  .replace(/\b(?:a )?(couple|few|dozen)(?: of)?\b/gi,(m,w)=>String(NUMW[w.toLowerCase()])).replace(/\b(one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty|thirty|forty|fifty|sixty|hundred)\b/gi,w=>String(NUMW[w.toLowerCase()]))}
+const W_UNIT='(reps?|repetitions?|rounds?|sets?|times|laps?)';
+function natExLine(raw){
+  let s=numWords(raw).replace(/^\s*(?:i want(?: to do)?|i(?:'|’)?ll do|i will do|let me do|do|doing|give me|please)\s+/i,'').trim(),m;
+  const isRound=u=>/^(rounds?|sets?|times|laps?)$/i.test(u);
+  const done=(name,sets,dose)=>({name:name.trim(),sets,dose});
+  // "8 rounds of 10 pushups" / "3 sets of 12 squats"
+  if((m=s.match(/^(\d+)\s*(?:rounds?|sets?)\s+of\s+(\d+)\s*(?:reps?\s+(?:of\s+)?)?(.+)$/i)))return done(m[3],+m[1],m[2]+' reps');
+  // "10 pushups with/for/and/x 8 reps|rounds|sets|times"  -> 10 per round, 8 rounds
+  if((m=s.match(new RegExp('^(\\d+)\\s+(.+?)\\s*(?:,|with|for|and|x|×|-|in)?\\s*(\\d+)\\s*'+W_UNIT+'\\b','i'))))return isRound(m[4])||/^reps?|repetitions?$/i.test(m[4])?done(m[2],+m[3],m[1]+' reps'):null;
+  // "pushups 10 reps 8 sets" / "pushups 8 sets of 10"
+  if((m=s.match(/^(.+?)\s+(\d+)\s*(?:sets?|rounds?)\s*(?:of|x)?\s*(\d+)\s*(?:reps?)?\b/i)))return done(m[1],+m[2],m[3]+' reps');
+  if((m=s.match(/^(.+?)\s+(\d+)\s*reps?\s*(?:,|and|x|for|in)?\s*(\d+)\s*(?:sets?|rounds?|times)\b/i)))return done(m[1],+m[3],m[2]+' reps');
+  // "10 pushups 8 times"
+  if((m=s.match(/^(\d+)\s+(.+?)\s+(\d+)\s*times\b/i)))return done(m[2],+m[3],m[1]+' reps');
+  // "30 second plank" / "1 minute of jumping jacks" (optionally "3 times")
+  if((m=s.match(/^(\d+)\s*(s|secs?|seconds?|mins?|minutes?)\s+(?:of\s+)?(.+?)(?:\s+(\d+)\s*(?:times|rounds?|sets?))?$/i)))return done(m[3],m[4]?+m[4]:1,m[1]+(/^m/i.test(m[2])?' min':' s'));
+  // "plank for 45 seconds"
+  if((m=s.match(/^(.+?)\s+for\s+(\d+)\s*(s|secs?|seconds?|mins?|minutes?)\b(?:\s*,?\s*(\d+)\s*(?:times|rounds?|sets?))?/i)))return done(m[1],m[4]?+m[4]:1,m[2]+(/^m/i.test(m[3])?' min':' s'));
+  // "20 burpees" / "20 reps of burpees"
+  if((m=s.match(/^(\d+)\s*(?:reps?\s+(?:of\s+)?)?([a-z][a-z' -]+)$/i)))return done(m[2],1,m[1]+' reps');
+  return null;
+}
 function parseExLine(line){
+  {const nl=natExLine(String(line).replace(/^\s*(?:[-*•·–]|\d+[.)])\s+/,''));if(nl&&nl.name&&/[a-z]/i.test(nl.name)&&nl.name.split(' ').length<=5){const nm=nl.name.replace(/\b(of|reps?|sets?|rounds?|each|side)\b/gi,' ').replace(/\s+/g,' ').trim();const e=matchEx(nm);
+    if(nm)return{id:'cw_'+rid(),n:nm.replace(/^\w/,c=>c.toUpperCase()).slice(0,40),ref:e?e.id:'',cue:e?e.cue:'',sets:Math.max(1,Math.min(10,nl.sets||3)),dose:String(nl.dose).slice(0,20)}}}
+  line=numWords(line);
   let s=String(line).replace(/^\s*(?:[-*•·–]|\d+[.)])\s*/,'').replace(/\s+/g,' ').trim();if(!s||s.length<2)return null;
   if(/^(warm ?up|cool ?down|main|workout|day \d+|monday|tuesday|wednesday|thursday|friday|saturday|sunday)\s*:?\s*$/i.test(s))return null;
   let sets=0,dose='',m;
@@ -1845,7 +1873,7 @@ function parseExLine(line){
   return{id:'cw_'+rid(),n:name,ref:e?e.id:'',cue:e?e.cue:'',sets:Math.max(1,Math.min(10,sets)),dose:dose.slice(0,20)};
 }
 function parseExList(text){
-  const lines=String(text||'').split(/\r?\n|;|(?:,\s*(?=[a-z]))/i).map(x=>x.trim()).filter(Boolean);
+  const lines=numWords(String(text||'')).split(/\r?\n|;|,?\s+(?:and|then|plus)\s+(?=\d)|,\s*(?=\d+\s*[a-z])|(?:,\s*(?=[a-z]))/i).map(x=>x.trim().replace(/^(?:and|then|plus)\s+/i,'')).filter(Boolean);
   return lines.map(parseExLine).filter(Boolean).slice(0,20);
 }
 function setMyWorkout(items,title,src){
@@ -3034,6 +3062,13 @@ function tryCommand(raw,inner){
   // workout from a list
   {const wm=raw.match(/^\s*(?:please\s+|can you\s+|could you\s+)?(?:make|build|create|turn|import|use|set)\b[^\n:]*?\bworkout\b[^\n:]*?(?::|\n)\s*([\s\S]+)$/i);
    if(wm&&R0()==='me')return run(()=>{const its=parseExList(wm[1]);const w=setMyWorkout(its,'My workout','skeefo');return`Done! I made **${esc(w.title)}** from your list:\n${myWorkoutText(w)}\n\nIt’s on your **Workout** tab now. Tap **Edit workout** there to change names, sets or reps. Say **“back to automatic workouts”** to undo.`})}
+  {const am=text.match(/^(?:please\s+|can you\s+)?(?:add|put|include)\s+(.+?)\s+(?:to|in|into|on)\s+(?:my|the|today(?:’|')?s)\s+workout$/i);
+   if(am&&R0()==='me')return run(()=>{const its=parseExList(am[1]);if(!its.length)throw new Error('Tell me the exercise and numbers, like “add 10 pushups with 8 reps to my workout”.');
+     const base=S.myWorkout?S.myWorkout.items:(routine().blocks.find(b=>b.k==='main')||{items:[]}).items.map(x=>({id:'cw_'+rid(),n:x.n,ref:x.ref||x.id,cue:x.cue,sets:x.sets,dose:x.dose}));
+     const w=setMyWorkout([...base,...its],S.myWorkout?S.myWorkout.title:'My workout','skeefo');
+     return`Added to your workout: ${its.map(x=>`**${esc(x.n)}**, ${exPlain(x)}`).join('; ')}. It’s on the **Workout** tab.`})}
+  {const rm=text.match(/^(?:please\s+)?(?:remove|delete|take out|drop)\s+(.+?)\s+from\s+(?:my|the)\s+workout$/i);
+   if(rm&&S.myWorkout)return run(()=>{const q=wNorm(rm[1]),i=S.myWorkout.items.findIndex(x=>wNorm(x.n).includes(q)||q.includes(wNorm(x.n)));if(i<0)throw new Error(`I couldn’t find “${rm[1]}” in your workout.`);const [x]=S.myWorkout.items.splice(i,1);save();return`Removed **${esc(x.n)}** from your workout.`})}
   if(/^ (?:import|upload|add) (?:a |my )?(?:workout )?list $|^ import (?:a |my )?workout $/.test(t)){setTimeout(()=>{tab='workout';wStartEdit(true);render();scrollTo({top:0})},600);return'Opening the importer on your **Workout** tab. Paste your list (one exercise per line) or choose a file.'}
   if(S.myWorkout&&(has(t,'back to automatic','back to normal workouts')||/\b(clear|remove|delete|stop using)\b.*\bmy workout\b/.test(t))){S.myWorkout=null;save();return'Cleared your workout. You’re back on automatic routines.'}
   // shuffle
@@ -3094,8 +3129,17 @@ function tryCommand(raw,inner){
   if(/\b(make|workouts?)\b.*\b(easier|lighter|less intense)\b/.test(t))ch.level=S.profile.level==='advanced'?'intermediate':'beginner';
   m=t.match(/\bi (?:m|am) (?:a |an )?(beginner|intermediate|advanced)\b/);if(m)ch.level=m[1];
   if(Object.keys(ch).length)return run(ACT.profile,ch);
+  // bare exercise statement like "10 pushups with 8 reps" -> add to the workout
+  if(R0()==='me'&&/\d|\b(one|two|three|four|five|six|seven|eight|nine|ten|twelve|fifteen|twenty|thirty|dozen)\b/i.test(text)&&text.length<160&&!/\?|\b(how|what|why|should|can i|is it|did|ate|had|drank)\b/i.test(text)){
+    const its=parseExList(text);if(its.length&&its.every(x=>x.ref)){
+      const base=S.myWorkout?S.myWorkout.items:(routine().blocks.find(b=>b.k==='main')||{items:[]}).items.map(x=>({id:'cw_'+rid(),n:x.n,ref:x.ref||x.id,cue:x.cue,sets:x.sets,dose:x.dose}));
+      const w=setMyWorkout([...base,...its],S.myWorkout?S.myWorkout.title:'My workout','skeefo');
+      return`Got it! I added ${its.map(x=>`**${esc(x.n)}**: ${exPlain(x)}`).join(', and ')} to your workout on the **Workout** tab. 💪\n\nIf I got the numbers wrong, tap **Edit workout** there, or tell me like “8 rounds of 10 pushups”.`}}
   return null;
 }
+function exPlain(x){const d=String(x.dose);const r=d.match(/^(\d+(?:–\d+)?) reps(.*)$/);
+  if(r)return x.sets>1?`${r[1]} reps, ${x.sets} rounds (${x.sets} × ${r[1]}${r[2]})`:`${r[1]} reps${r[2]}`;
+  return x.sets>1?`${d}, ${x.sets} rounds`:d}
 const TOOLS=()=>[
   {name:'set_training_days',description:'Set which weekdays the user trains. days: array of weekday indexes 0=Mon..6=Sun, or count: number of days per week (2-7) to spread evenly.',inputSchema:{type:'object',properties:{days:{type:'array',items:{type:'number'}},count:{type:'number'}}},execute:i=>{const d=Array.isArray(i.days)&&i.days.length?[...new Set(i.days.map(Number).filter(x=>x>=0&&x<=6))].sort():SPREAD[Math.max(2,Math.min(7,parseInt(i.count)||7))];S.profile={...S.profile,days:d,set:true};save();return'Training days: '+daysText()}},
   {name:'edit_diet_meal',description:'Change one meal in the saved 7-day diet plan. day: monday..sunday or today/tomorrow. meal: breakfast|lunch|dinner|snack. Give text to set a specific meal, or leave it out to swap for a random healthy idea.',inputSchema:{type:'object',properties:{day:{type:'string'},meal:{type:'string'},text:{type:'string'}},required:['meal']},execute:i=>{const di=dayIdx(' '+String(i.day||'today').toLowerCase()+' '),k=MEALN[String(i.meal).toLowerCase()];if(!k)throw new Error('meal must be breakfast, lunch, dinner or snack');return i.text?'Set: '+DPLAN.set(di,k,i.text):'Swapped to: '+DPLAN.swap(di,k)}},
