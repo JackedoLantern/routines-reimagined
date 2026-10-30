@@ -15,7 +15,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Routines">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
-<script>window.RR_STANDALONE=true;window.RR_VERSION='7d98a8ad42';</script>
+<script>window.RR_STANDALONE=true;window.RR_VERSION='7bacb0a812';</script>
 <script>window.RR_SUPABASE={url:'https://uszalonpjyssvvsikzvg.supabase.co',key:'sb_publishable_w-5rI0R9ht2-HAr5HghM0w_-3HYiAEg'};</script>
 <script src="supabase.js"></script>
 </head>
@@ -541,6 +541,18 @@ svg.moose.lb-ico{display:inline-block;width:16px;height:16px;vertical-align:-3px
 .daystrip.pick .dsb.on{background:var(--lvl);border-color:var(--lvl);color:#0b0b0c}
 .quickpick{display:flex;flex-wrap:wrap;gap:6px}
 .chk.locked{opacity:.55;border-style:dashed}
+.boost-w{padding:14px 16px}
+.bw-head{display:flex;justify-content:space-between;align-items:center}
+.bw-head .icon-btn{width:30px;height:30px;font-size:16px}
+.bq{margin:8px 0 6px;font-size:16px;line-height:1.45;color:var(--ink);font-weight:500}
+.ba{margin:0;font-size:12.5px;color:var(--gold)}.ba span{color:var(--muted)}
+.boost-pop{position:fixed;left:50%;top:calc(12px + env(safe-area-inset-top,0px));z-index:80;width:min(440px,calc(100vw - 24px));display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:start;padding:14px 14px 14px 16px;border-radius:18px;background:linear-gradient(180deg,var(--raise),var(--surface));border:1px solid var(--line-2);box-shadow:0 18px 50px rgba(0,0,0,.6),0 0 0 1px rgba(255,197,61,.08);transform:translate(-50%,-140%);opacity:0;transition:transform .5s cubic-bezier(.2,1.2,.3,1),opacity .3s}
+.boost-pop.in{transform:translate(-50%,0);opacity:1}
+.boost-pop .bq{font-size:14.5px;margin:0 0 4px}
+.bp-ico{width:34px;height:34px;display:grid;place-items:center;border-radius:10px;background:var(--gold-soft);color:var(--gold);font-size:22px;font-family:Georgia,serif;line-height:1}
+.boost-pop.note .bp-ico{background:var(--lvl-soft)}
+.bp-x{background:none;border:0;color:var(--muted);font-size:14px;cursor:pointer;padding:4px;border-radius:8px}.bp-x:hover{color:var(--ink);background:var(--surface-2)}
+@media (prefers-reduced-motion:reduce){.boost-pop{transition:opacity .2s}}
 .lnk-chip{display:inline-flex;align-items:center;gap:2px;margin-left:6px;padding:2px 8px;border-radius:999px;border:1px solid var(--lvl-soft);background:var(--lvl-soft);color:var(--lvl);font:600 11px/1.5 var(--f-body);cursor:pointer;vertical-align:middle;white-space:nowrap}
 .lnk-chip:active{transform:scale(.95)}
 .lnk-row{grid-column:1/-1;display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);margin:-2px 0 6px}
@@ -1729,7 +1741,7 @@ function renderTabs(){
 }
 
 /* ================= Views ================= */
-const VIEWS={diet:()=>viewDiet(),newtab:()=>viewNewTab(),workout:()=>viewToday(),day:()=>draft?viewEditor():viewDay(),skeefo:()=>viewSkeefo(),ranks:()=>viewRanks(),me:()=>viewMe(),
+const VIEWS={diet:()=>viewDiet(),newtab:()=>viewNewTab(),workout:()=>boostWidget()+viewToday(),day:()=>draft?viewEditor():viewDay()+boostWidget(),skeefo:()=>viewSkeefo(),ranks:()=>viewRanks(),me:()=>viewMe(),
   family:()=>R0()==='parent'?viewFamily():viewKidFamily(),report:()=>viewReport(),schedule:()=>draft?viewEditor():viewParentSchedule()};
 let lastTab=null;
 function render(){
@@ -3156,8 +3168,8 @@ async function fillNames(){
 /* ---------- Me ---------- */
 function viewMe(){
   const parent=R0()==='parent';
-  if(window.RR_STANDALONE&&!CLOUD())return nameCard()+linkCard(false)+accountCard()+remindersCard()+viewProfile()+(S.aiPlan?`<section class="card"><div class="label">Skeefo plan</div><h3 class="h3">Your workouts follow Skeefo’s 7-day plan</h3><button class="btn" data-act="clearplan">Clear Skeefo plan</button></section>`:'')+`<section class="card"><div class="label">Your data</div><h3 class="h3">Saved on this device</h3><p class="note">Your progress is stored in this browser only. Clearing your browser data erases it.</p></section>`;
-  let h=nameCard()+(parent?'':linkCard(false))+(window.RR_STANDALONE?accountCard()+(parent?'':remindersCard()):'')+`<section class="card"><div class="label">Who’s using this device</div><div class="seg wide" role="group" aria-label="Role" style="margin-top:10px">
+  if(window.RR_STANDALONE&&!CLOUD())return nameCard()+boostCard()+linkCard(false)+accountCard()+remindersCard()+viewProfile()+(S.aiPlan?`<section class="card"><div class="label">Skeefo plan</div><h3 class="h3">Your workouts follow Skeefo’s 7-day plan</h3><button class="btn" data-act="clearplan">Clear Skeefo plan</button></section>`:'')+`<section class="card"><div class="label">Your data</div><h3 class="h3">Saved on this device</h3><p class="note">Your progress is stored in this browser only. Clearing your browser data erases it.</p></section>`;
+  let h=nameCard()+(parent?'':boostCard())+(parent?'':linkCard(false))+(window.RR_STANDALONE?accountCard()+(parent?'':remindersCard()):'')+`<section class="card"><div class="label">Who’s using this device</div><div class="seg wide" role="group" aria-label="Role" style="margin-top:10px">
     <button data-act="role" data-v="me" aria-pressed="${!parent}">I’m training</button><button data-act="role" data-v="parent" aria-pressed="${parent}">I’m a parent</button></div>
     <p class="note" style="margin:10px 0 0">${parent?'Parent view shows your kid’s daily report and lets you set their schedule.':'Switch to parent view if you’re a parent checking on your kid.'}</p></section>`;
   if(parent){
@@ -3224,7 +3236,9 @@ document.addEventListener('click',e=>{
     case'toggle':toggle(t.dataset.id,t);break;
     case'how':{SFX.soft();const id=t.dataset.id,row=t.closest('.ex');if(openHow.has(id))openHow.delete(id);else openHow.add(id);const o=openHow.has(id);row.classList.toggle('open',o);t.setAttribute('aria-expanded',o);break}
     case'guide':{SFX.soft();guideOpen=!guideOpen;const g=t.closest('.guide');g.classList.toggle('open',guideOpen);t.setAttribute('aria-expanded',guideOpen);break}
-    case'task':taskToggle(t.dataset.id,t);break;
+    case'task':{const was=!!((S.dayLog[todayKey()]||{})[t.dataset.id]||{}).d;taskToggle(t.dataset.id,t);if(!was&&Math.random()<.2)setTimeout(()=>boostPop(),2500);break}
+    case'boostnext':{S.boostCur=boostPick();S.boostCurD=todayKey();save();SFX.soft();const w=t.closest('.boost-w');if(w){w.querySelector('.bw-body').innerHTML=boostHTML(S.boostCur);w.querySelector('.label').textContent=S.boostCur.kind==='quote'?'Quote':'Note from Skeefo';w.querySelector('.bw-body').animate([{opacity:0,transform:'translateY(6px)'},{opacity:1,transform:'none'}],{duration:300})}break}
+    case'boosttoggle':{S.boost=S.boost===false;save();render();if(S.boost!==false){boostStart();toast(medal('❝',true),'Encouragement on','Quotes and notes will pop up now and then.')}break}
     case'linkedchk':{const k=sched().sections.flatMap(x=>x.tasks).find(x=>x.id===t.dataset.id);if(!k)break;SFX.soft();
       toast(medal('🔗',false),linkAutoDone(k)?'Done on '+tabLinkName(k.link):'Finish your '+tabLinkName(k.link)+' tab first',linkAutoDone(k)?'This one follows your '+tabLinkName(k.link)+' tab.':(k.link==='workout'?'Finish every move in your workout and this checks itself off.':k.link==='diet'?'Log breakfast, lunch and dinner and this checks itself off.':'Check everything on that tab and this checks itself off.'));break}
     case'start':{ensureToday();const d=todayKey(),log=S.dayLog[d]||(S.dayLog[d]={_x:0,_sec:{}});(log[t.dataset.id]||(log[t.dataset.id]={})).s=Date.now();SFX.start();save();render();break}
@@ -3537,6 +3551,49 @@ function rankSVG(name,cls){
   return`<svg class="rank-ico ${cls||''}" viewBox="0 0 64 64" role="img" aria-label="${name} rank">${defs}${body}</svg>`;
 }
 
+/* ================= Encouragement: quotes + notes (widget and random pop-ups) ================= */
+const QUOTES=[
+  {q:'You miss 100% of the shots you don’t take.',a:'Wayne Gretzky',r:'hockey legend'},
+  {q:'I’ve failed over and over and over again in my life. And that is why I succeed.',a:'Michael Jordan',r:'Nike ad, 1997'},
+  {q:'The miracle isn’t that I finished. The miracle is that I had the courage to start.',a:'John Bingham',r:'runner and author'},
+  {q:'If you can’t fly then run, if you can’t run then walk, if you can’t walk then crawl, but whatever you do you have to keep moving forward.',a:'Martin Luther King Jr.',r:'speech, 1967'},
+  {q:'Hard work beats talent when talent doesn’t work hard.',a:'Tim Notke',r:'high school coach'},
+  {q:'We are what we repeatedly do. Excellence, then, is not an act, but a habit.',a:'Will Durant',r:'The Story of Philosophy'},
+  {q:'Do not let what you cannot do interfere with what you can do.',a:'John Wooden',r:'basketball coach'},
+  {q:'Champions keep playing until they get it right.',a:'Billie Jean King',r:'tennis legend'},
+  {q:'I am building a fire, and every day I train, I add more fuel. At just the right moment, I light the match.',a:'Mia Hamm',r:'soccer legend'},
+  {q:'Do what you can, with what you’ve got, where you are.',a:'Squire Bill Widener',r:'quoted by Theodore Roosevelt'},
+];
+const NOTES=[
+  'Small steps every day add up to big results. 💪','You showed up today. That already counts.','One task at a time. You’ve got this!',
+  'Your future self is going to thank you for today.','Progress, not perfection.','Tough days build strong people.',
+  'You’re stronger than you were last week.','Every check mark is a vote for the person you want to be. ✅','Drink some water and keep going! 💧',
+  'Even a 5-minute effort beats zero.','Proud of you for sticking with it.','Rest is part of training too. Just don’t skip the comeback.',
+  'Legends are built one boring day at a time. 🫎','Hard now, easy later.','You don’t have to be great to start, but you have to start to be great.',
+];
+let boostLast=-1,boostTimer=null,boostDayIdx=null;
+function boostPick(){const pool=QUOTES.length+NOTES.length;let i;do{i=Math.floor(Math.random()*pool)}while(i===boostLast&&pool>1);boostLast=i;
+  return i<QUOTES.length?{...QUOTES[i],kind:'quote'}:{q:NOTES[i-QUOTES.length],a:'Skeefo',kind:'note'}}
+function boostToday(){const t=todayKey();if(boostDayIdx&&boostDayIdx.t===t)return boostDayIdx.v;
+  let h=0;for(const c of t)h=(h*31+c.charCodeAt(0))>>>0;const v={...QUOTES[h%QUOTES.length],kind:'quote'};boostDayIdx={t,v};return v}
+function boostHTML(b){return`<p class="bq">${b.kind==='quote'?'“'+esc(b.q)+'”':esc(b.q)}</p><p class="ba">— ${esc(b.a)}${b.r?`<span>, ${esc(b.r)}</span>`:''}</p>`}
+function boostWidget(){
+  if(S.boost===false||R0()==='parent')return'';const b=(S.boostCur&&S.boostCurD===todayKey()&&S.boostCur)||boostToday();
+  return`<section class="card boost-w" aria-live="polite"><div class="bw-head"><span class="label">${b.kind==='quote'?'Quote of the day':'Note from Skeefo'}</span><button class="icon-btn" data-act="boostnext" aria-label="Show another quote" title="Another one">↻</button></div><div class="bw-body">${boostHTML(b)}</div></section>`}
+function boostPop(force){
+  clearTimeout(boostTimer);boostTimer=setTimeout(()=>boostPop(),(3+Math.random()*4)*60000);
+  if(!force&&(S.boost===false||R0()==='parent'||document.hidden||draft||DRAG||document.querySelector('.overlay')||/^(INPUT|TEXTAREA|SELECT)$/.test((document.activeElement||{}).tagName||'')))return;
+  document.querySelector('.boost-pop')?.remove();
+  const b=boostPick(),el=document.createElement('div');el.className='boost-pop '+b.kind;el.setAttribute('role','status');
+  el.innerHTML=`<div class="bp-ico" aria-hidden="true">${b.kind==='quote'?'❝':skeefoMark(30)}</div><div class="bp-txt">${boostHTML(b)}</div><button class="bp-x" aria-label="Close">✕</button>`;
+  document.body.appendChild(el);requestAnimationFrame(()=>el.classList.add('in'));try{SFX.soft()}catch(e){}
+  const close=()=>{el.classList.remove('in');setTimeout(()=>el.remove(),400)};
+  el.querySelector('.bp-x').onclick=close;let t=setTimeout(close,9000);
+  el.addEventListener('pointerenter',()=>clearTimeout(t));el.addEventListener('pointerleave',()=>{t=setTimeout(close,3000)});
+}
+function boostCard(){const on=S.boost!==false;return`<section class="card"><div class="ed-row" style="justify-content:space-between"><div><div class="label">Encouragement</div><h3 class="h3" style="margin:4px 0 2px">Quotes and pep talks</h3><p class="note" style="margin:0">Real quotes from athletes and leaders, plus notes from Skeefo, pop up now and then.</p></div><button class="btn ${on?'primary':''}" data-act="boosttoggle" aria-pressed="${on}">${on?'On':'Off'}</button></div></section>`}
+function boostStart(){clearTimeout(boostTimer);boostTimer=setTimeout(()=>boostPop(),(25+Math.random()*35)*1000)}
+
 function legendUp(){SFX.levelUp();setTimeout(()=>SFX.bonus(),500);buzz([40,60,40,60,40,60,220]);overlay('lvlup legend-ov',`<div class="eyebrow">New rank</div><div class="moose-wrap"><span class="rays"></span>${mooseSVG('big')}</div><h2 style="color:${RANKCOL.Legend}">Legend</h2><p>You hit ${LEGEND_XP.toLocaleString()} XP. Keep doing your tasks to stay a Legend!</p>`);confetti(2)}
 function levelUp(L){SFX.levelUp();buzz([30,60,30,60,140]);const rkN=titleFor(L,S.xp),rkOld=titleFor(L-1,S.xp-1);overlay('lvlup',`<div class="eyebrow">${rkN!==rkOld?'New rank!':'Level up'}</div><div class="moose-wrap rk-wrap"><span class="rays"></span>${rankSVG(rkN,'big')}</div><h2 style="color:${RANKCOL[rkN]}">${esc(rkN)} · Level ${L}</h2><p>${xpFor(L+1)-S.xp} XP to level ${L+1}.</p>`);confetti(1.4)}
 function levelDown(d){SFX.levelDown();buzz([120,80,200]);overlay('lvldown',`<div class="eyebrow">Level lost</div><div class="huge num">${d.to}</div><h2>Down from level ${d.from}</h2><p>You missed ${d.missed} days in a row. Finish today’s routine to stop the slide and earn the Comeback badge.</p>`)}
@@ -3726,6 +3783,7 @@ function boot(withDecay=true,quiet=false){
 }
 byokInit();
 boot();
+boostStart();
 sbInit();
 connect();
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&S.today&&S.today.date!==todayKey())boot()});
