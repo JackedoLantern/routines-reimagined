@@ -749,6 +749,20 @@ button.tag{border:0;cursor:pointer}
 /* walking dog */
 .y-dog{animation:yRun .3s ease-in-out infinite alternate}.y-tail{transform-box:fill-box;transform-origin:100% 100%;animation:yWag .2s ease-in-out infinite alternate}
 @keyframes yWag{from{transform:rotate(-15deg)}to{transform:rotate(15deg)}}
+/* ---------- Sign up / Log in screen ---------- */
+.gate{position:fixed;inset:0;z-index:80;display:grid;place-items:center;overflow-y:auto;padding:24px max(16px,env(safe-area-inset-left,0px)) calc(24px + env(safe-area-inset-bottom,0px));
+  background:radial-gradient(500px 300px at 20% 0%,var(--lvl-soft),transparent 70%),radial-gradient(420px 260px at 100% 100%,var(--gold-soft),transparent 70%),var(--bg);animation:gateIn .35s ease-out}
+.gate.out{opacity:0;transition:opacity .28s}
+.gate-card{width:min(400px,100%);display:grid;gap:14px;text-align:center}
+.gate-card .form{text-align:left}
+.gate-logo{width:72px;height:72px;justify-self:center;filter:drop-shadow(0 0 18px var(--lvl-glow));animation:logoIn .9s cubic-bezier(.2,1.3,.4,1) both}
+.gate-title{font-family:var(--f-display);font-weight:900;font-size:34px;text-transform:uppercase;letter-spacing:.04em;line-height:1}
+.gate-title span{color:var(--lvl)}
+.gate-go{width:100%;padding:12px;font-size:15px}
+.gate-msg:empty{display:none}
+.gate-skip{justify-self:center;color:var(--muted);font-weight:500}
+body.gated{overflow:hidden}
+@keyframes gateIn{from{opacity:0}to{opacity:1}}
 </style>
 
 <header class="board">
@@ -2507,7 +2521,7 @@ function bindProfile(){
 }
 
 /* ================= Actions ================= */
-document.addEventListener('submit',e=>{if(e.target.id==='sb-form'){e.preventDefault();sbAuth((e.submitter&&e.submitter.dataset.mode)||'in');return}
+document.addEventListener('submit',e=>{if(e.target.id==='gate-form'){e.preventDefault();sbAuth(gateMode);return}
   if(e.target.id==='ti-form'){e.preventDefault();const i=$('#ti-in');if(i.value.trim()){TABACT.addItem(tab,i.value);SFX.soft();render();$('#ti-in')?.focus()}return}
   if(e.target.id==='sk-form'){e.preventDefault();const i=$('#sk-in');const v=i.value;i.value='';sendChat(v)}});
 document.addEventListener('keydown',e=>{if(e.target.id==='sk-in'&&e.key==='Enter'&&!e.shiftKey){e.preventDefault();$('#sk-form').requestSubmit()}});
@@ -2579,7 +2593,11 @@ document.addEventListener('click',e=>{
     case'dunavoid':S.dpAvoid=(S.dpAvoid||[]).filter(x=>x!==t.dataset.v);save();render();break;
     case'notifon':NOTIF.enable().then(()=>{render();if(S.notif)toast(medal('✓',true),'Reminders on','You’ll get a notification when things are due.')});break;
     case'notifoff':S.notif=false;save();NOTIF.sync();render();break;
-    case'sbout':SBX.client.auth.signOut().then(()=>{toast(medal('✓',true),'Signed out','Your progress stays on this device.')});break;
+    case'sbout':{if(t.dataset.sure!=='1'){t.dataset.sure='1';t.textContent='Tap again to log out';break}
+      flush();SBX.client.auth.signOut().then(()=>{S.guest=false;save();toast(medal('✓',true),'Logged out','Your progress stays on this device.');gateShow('in')});break}
+    case'gate':gateShow(t.dataset.v);break;
+    case'gatemode':gateMode=t.dataset.v;SFX.tick();{const g=$('#authGate');if(g)g.innerHTML=gateHTML()}break;
+    case'gateskip':S.guest=true;save();gateHide();break;
     case'sbjoin':{const code=(($('#fam-code')||{}).value||'').trim();if(code.length<4){$('#fam-code')?.focus();break}
       SBX.client.rpc('join_family',{join_code:code,as_role:t.dataset.v,display_name:S.profile.name||(SBX.user&&SBX.user.email||'').split('@')[0]}).then(r=>{
         if(r.error)return toast(medal('!',false),'Couldn’t join',r.error.message.includes('No family')?'No family has that code. Check it and try again.':r.error.message);
@@ -2819,7 +2837,7 @@ const SBON=()=>!!SBX.client;
 function sbInit(){
   if(!window.RR_SUPABASE||!window.supabase||!window.supabase.createClient)return;
   try{SBX.client=window.supabase.createClient(RR_SUPABASE.url,RR_SUPABASE.key,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}})}catch(e){return}
-  SBX.client.auth.onAuthStateChange((ev,session)=>{const u=session&&session.user||null;const was=SBX.user&&SBX.user.id;SBX.user=u;if((u&&u.id)!==was)setTimeout(sbAfterAuth,0)});
+  SBX.client.auth.onAuthStateChange((ev,session)=>{const u=session&&session.user||null;SBX.ready=true;setTimeout(gateCheck,0);const was=SBX.user&&SBX.user.id;SBX.user=u;if((u&&u.id)!==was)setTimeout(sbAfterAuth,0)});
   sbLoadBoard();
 }
 async function sbLoadBoard(){
@@ -2892,25 +2910,42 @@ async function sbSetCtl(id,patch){
 }
 function accountCard(){
   if(!SBON())return'';
-  if(CLOUD())return`<section class="card"><div class="label">Account</div><h3 class="h3">Signed in</h3><p class="note">${esc(SBX.user.email||'')}. Your progress syncs across devices, and you’re on the shared leaderboard.</p><button class="btn sm ghost" data-act="sbout">Sign out</button></section>`;
-  return`<section class="card fam-hero"><div class="label">Account</div><h3 class="h3">Make a free account</h3>
-    <p class="note">Join the leaderboard, family groups and sync your progress to any device. Under 13? Ask a parent to help.</p>
-    <form class="form" id="sb-form" style="margin-top:12px;gap:10px">
-      <input class="inp" id="sb-name" maxlength="24" autocomplete="nickname" placeholder="Your name (shown on the leaderboard)" value="${esc(S.profile.name||'')}">
-      <input class="inp" id="sb-email" type="email" autocomplete="email" placeholder="Email" required>
-      <input class="inp" id="sb-pass" type="password" autocomplete="current-password" placeholder="Password (6+ characters)" minlength="6" required>
-      <div class="row-act"><button class="btn primary" type="submit" data-mode="up">Sign up</button><button class="btn" type="submit" data-mode="in">Sign in</button></div>
-      ${SBX.msg?`<p class="hint" id="sb-msg">${esc(SBX.msg)}</p>`:''}
-    </form></section>`;
+  if(CLOUD())return`<section class="card"><div class="label">Account</div><h3 class="h3">Logged in</h3><p class="note">${esc(SBX.user.email||'')}. Your progress syncs across devices, and you’re on the shared leaderboard.</p><button class="btn sm ghost danger" data-act="sbout">Log out</button></section>`;
+  return`<section class="card fam-hero"><div class="label">Account</div><h3 class="h3">You’re not logged in</h3>
+    <p class="note">Log in to join the leaderboard, family groups and sync your progress to any device.</p>
+    <div class="row-act" style="margin-top:12px"><button class="btn primary" data-act="gate" data-v="up">Sign up</button><button class="btn" data-act="gate" data-v="in">Log in</button></div></section>`;
 }
+let gateMode='up';
+function gateHTML(){
+  const up=gateMode==='up';
+  return`<div class="gate-card" role="dialog" aria-modal="true" aria-labelledby="gate-title">
+    <svg class="gate-logo" viewBox="0 0 64 64" aria-hidden="true">${(document.querySelector('.brand .logo')||{}).innerHTML||''}</svg>
+    <h2 id="gate-title" class="gate-title">Routines <span>Reimagined</span></h2>
+    <p class="note">${up?'Make a free account to save your progress, join the leaderboard and connect with your family.':'Welcome back! Log in to pick up where you left off.'}</p>
+    <div class="seg wide" role="tablist"><button role="tab" data-act="gatemode" data-v="up" aria-pressed="${up}">Sign up</button><button role="tab" data-act="gatemode" data-v="in" aria-pressed="${!up}">Log in</button></div>
+    <form class="form" id="gate-form" style="gap:10px">
+      ${up?`<input class="inp" id="gate-name" maxlength="24" autocomplete="nickname" placeholder="Your name (shown on the leaderboard)" value="${esc(S.profile.name||'')}">`:''}
+      <input class="inp" id="gate-email" type="email" autocomplete="email" placeholder="Email" required>
+      <input class="inp" id="gate-pass" type="password" autocomplete="${up?'new-password':'current-password'}" placeholder="${up?'Make a password (6+ characters)':'Password'}" minlength="6" required>
+      <button class="btn primary gate-go" type="submit">${up?'Create my account':'Log in'}</button>
+      <p class="hint gate-msg" aria-live="polite">${esc(SBX.msg||'')}</p>
+    </form>
+    ${up?'<p class="hint">Under 13? Ask a parent to help you sign up.</p>':''}
+    <button class="linkbtn gate-skip" data-act="gateskip">Continue without an account</button></div>`;
+}
+function gateShow(mode){if(mode)gateMode=mode;SBX.msg='';let g=$('#authGate');if(!g){g=document.createElement('div');g.id='authGate';g.className='gate';document.body.appendChild(g)}g.innerHTML=gateHTML();g.hidden=false;document.body.classList.add('gated')}
+function gateHide(){const g=$('#authGate');if(g){g.classList.add('out');setTimeout(()=>{g.hidden=true;g.classList.remove('out')},280)}document.body.classList.remove('gated')}
+function gateCheck(){if(!SBON()||!SBX.ready)return;if(CLOUD()){gateHide();return}if(!S.guest)gateShow()}
 async function sbAuth(mode){
-  const email=($('#sb-email')||{}).value||'',password=($('#sb-pass')||{}).value||'';if(!email||password.length<6){SBX.msg='Enter your email and a password with at least 6 characters.';render();return}
-  const nm=(($('#sb-name')||{}).value||'').trim().slice(0,24);if(nm){S.profile.name=nm;save()}
-  SBX.msg=mode==='up'?'Creating your account…':'Signing in…';render();
+  const email=(($('#gate-email')||{}).value||'').trim(),password=($('#gate-pass')||{}).value||'',msg=t=>{SBX.msg=t;const m=$('.gate-msg');if(m)m.textContent=t};
+  if(!email||password.length<6)return msg('Enter your email and a password with at least 6 characters.');
+  const nm=(($('#gate-name')||{}).value||'').trim().slice(0,24);if(nm){S.profile.name=nm;save()}
+  const btn=$('.gate-go');if(btn)btn.disabled=true;msg(mode==='up'?'Creating your account…':'Logging in…');
   const r=mode==='up'?await SBX.client.auth.signUp({email,password}):await SBX.client.auth.signInWithPassword({email,password});
-  if(r.error){SBX.msg=r.error.message.replace('Invalid login credentials','That email or password is wrong.');render();return}
-  if(mode==='up'&&!r.data.session){SBX.msg='Check your email and tap the confirm link, then sign in here.';render();return}
-  SBX.msg='';SFX.bonus();confetti(.5);toast(medal('✓',true),mode==='up'?'Account created':'Signed in','Your progress now syncs.');
+  if(btn)btn.disabled=false;
+  if(r.error)return msg(r.error.message.replace('Invalid login credentials','That email or password is wrong.').replace('User already registered','That email already has an account. Tap Log in.'));
+  if(mode==='up'&&!r.data.session)return msg('Check your email and tap the confirm link, then come back and log in.');
+  SBX.msg='';S.guest=false;save();gateHide();SFX.bonus();confetti(.6);toast(medal('✓',true),mode==='up'?'Account created':'Logged in','Your progress now syncs.');
 }
 function cloudJoinCard(asRole){
   return`<div class="ed-row" style="margin-top:12px"><input class="inp" id="fam-code" maxlength="6" placeholder="Family code" style="text-transform:uppercase;letter-spacing:.2em"><button class="btn primary" data-act="sbjoin" data-v="${asRole}">Join</button></div>`;
