@@ -428,7 +428,8 @@ input[type="time"]::-webkit-calendar-picker-indicator{filter:invert(1);opacity:.
 /* ---------- Skeefo ↔ Claude link card ---------- */
 .card.link{display:grid;grid-template-columns:auto 1fr auto;gap:16px;align-items:center}
 .card.link .lk-text{min-width:0}
-.card.link .lk-text b{display:block;font-size:16px;margin-top:2px}
+.card.link .lk-text>b{display:block;font-size:16px;margin-top:2px}
+.card.link .lk-text .note b{display:inline;font-size:inherit;color:var(--ink)}
 .card.link .note{margin:4px 0 0}
 .card.link.prompt,.card.link.denied,.card.link.signedout{border-color:color-mix(in srgb,var(--lvl) 45%,var(--line));background:radial-gradient(360px 160px at 0% 50%,var(--lvl-soft),transparent 75%),var(--surface)}
 .card.link.granted{border-color:color-mix(in srgb,var(--gold) 30%,var(--line))}
@@ -491,6 +492,8 @@ html{scrollbar-color:#34343A #09090A}
 .kid-today,.rule-chips{display:flex;flex-wrap:wrap;gap:6px}
 .chip.bad{background:var(--bad-soft);color:var(--bad)}
 .row-act{display:flex;gap:6px}
+.name-row{display:flex;gap:8px;margin-top:12px}.name-row .inp{flex:1;min-width:0}
+@media(max-width:420px){.name-row{flex-direction:column}.name-row .btn{width:100%}}
 .daystrip{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;margin:0 0 12px}
 .dsb{position:relative;background:var(--surface);border:1px solid var(--line);color:var(--muted);border-radius:12px;padding:9px 0 8px;font:600 13px/1 var(--f-body);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;min-width:0;transition:background .2s,color .2s,border-color .2s,transform .15s}
 .dsb i{font-style:normal;font-size:9px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;opacity:.8}
@@ -2726,6 +2729,8 @@ function tryCommand(raw,inner){
   if(/\b(mute|sounds? off|turn (the )?sounds? off|no sounds?)\b/.test(t))return run(ACT.sound,{on:false});
   // plan
   if(/\b(clear|remove|delete|stop|drop)\b.*\b(your|skeefo s|the|my)\b.*\bplan\b/.test(t)||has(t,'back to normal workouts','back to automatic'))return run(ACT.clearPlan);
+  {const nm=text.match(/^(?:please\s+)?(?:change|set|update|switch)\s+(?:my\s+)?(?:user\s*name|username|name|display name)\s+to\s+["“']?(.+?)["”']?$/i)||text.match(/^(?:please\s+)?call me\s+["“']?(.+?)["”']?$/i)||text.match(/^my (?:new )?(?:user)?name is (?:now )?["“']?(.+?)["”']?$/i);
+   if(nm)return run(()=>{const r=setName(nm[1]);return`Done! Your name is now **${esc(r.n)}**. It shows on the leaderboard${R0()==='parent'?'':' and in your parent’s report'}. You can also change it on the Me tab.`})}
   {const iv=interviewCommand(t);if(iv!=null)return iv}
   {const dc=daysCommand(t);if(dc!=null)return dc}
   // shuffle
@@ -2944,8 +2949,8 @@ async function fillNames(){
 /* ---------- Me ---------- */
 function viewMe(){
   const parent=R0()==='parent';
-  if(window.RR_STANDALONE&&!CLOUD())return linkCard(false)+accountCard()+remindersCard()+viewProfile()+(S.aiPlan?`<section class="card"><div class="label">Skeefo plan</div><h3 class="h3">Your workouts follow Skeefo’s 7-day plan</h3><button class="btn" data-act="clearplan">Clear Skeefo plan</button></section>`:'')+`<section class="card"><div class="label">Your data</div><h3 class="h3">Saved on this device</h3><p class="note">Your progress is stored in this browser only. Clearing your browser data erases it.</p></section>`;
-  let h=(parent?'':linkCard(false))+(window.RR_STANDALONE?accountCard()+(parent?'':remindersCard()):'')+`<section class="card"><div class="label">Who’s using this device</div><div class="seg wide" role="group" aria-label="Role" style="margin-top:10px">
+  if(window.RR_STANDALONE&&!CLOUD())return nameCard()+linkCard(false)+accountCard()+remindersCard()+viewProfile()+(S.aiPlan?`<section class="card"><div class="label">Skeefo plan</div><h3 class="h3">Your workouts follow Skeefo’s 7-day plan</h3><button class="btn" data-act="clearplan">Clear Skeefo plan</button></section>`:'')+`<section class="card"><div class="label">Your data</div><h3 class="h3">Saved on this device</h3><p class="note">Your progress is stored in this browser only. Clearing your browser data erases it.</p></section>`;
+  let h=nameCard()+(parent?'':linkCard(false))+(window.RR_STANDALONE?accountCard()+(parent?'':remindersCard()):'')+`<section class="card"><div class="label">Who’s using this device</div><div class="seg wide" role="group" aria-label="Role" style="margin-top:10px">
     <button data-act="role" data-v="me" aria-pressed="${!parent}">I’m training</button><button data-act="role" data-v="parent" aria-pressed="${parent}">I’m a parent</button></div>
     <p class="note" style="margin:10px 0 0">${parent?'Parent view shows your kid’s daily report and lets you set their schedule.':'Switch to parent view if you’re a parent checking on your kid.'}</p></section>`;
   if(parent){
@@ -2960,12 +2965,18 @@ function viewMe(){
   h+=kidFamilyCard();
   return h;
 }
+function cleanName(v){return String(v||'').replace(/[<>{}\[\]\\]/g,'').replace(/\s+/g,' ').trim().slice(0,24)}
+function setName(v){const n=cleanName(v);if(n.length<2)throw new Error('Your name needs at least 2 letters.');const old=S.profile.name||'';S.profile={...S.profile,name:n};save();renderHeader();return{n,old}}
+function nameCard(){const n=S.profile.name||'';
+  return`<section class="card namecard"><div class="label">Your name</div><h3 class="h3">${n?esc(n):'Pick a name'}</h3>
+    <p class="note">This is your username on the leaderboard${R0()==='parent'?'':' and in your parent’s report'}. You can change it any time.</p>
+    <div class="name-row"><input class="inp" id="nm-inp" maxlength="24" autocomplete="nickname" placeholder="Type a new name" value="${esc(n)}" aria-label="Your name"><button class="btn primary" data-act="savename">Save name</button></div>
+    <span class="hint" id="nm-msg"></span></section>`}
 function viewProfile(){
   const p=S.profile;
   const radios=(name,map)=>`<div class="opts">${Object.entries(map).map(([k,l])=>`<label class="opt"><input type="radio" name="${name}" id="${name}-${k}" value="${k}" ${p[name]===k?'checked':''}><span>${l}</span></label>`).join('')}</div>`;
   return`<section class="card"><form class="form" id="pf">
     <div><div class="label">Your profile</div><h3 class="h3">Tune your daily routine</h3></div>
-    <div class="field"><label for="pf-name">Your name</label><input class="inp" id="pf-name" maxlength="24" placeholder="Shown on the leaderboard and your parent’s report" value="${esc(p.name)}"></div>
     <div class="field"><label for="pf-age">Age</label><input class="inp" id="pf-age" type="number" min="13" max="95" inputmode="numeric" value="${esc(p.age)}" style="max-width:120px"><span class="hint">Under 18: no heavy barbell lifts. 45+: gentler impact for beginners. 55+: low-impact moves and extra balance work.</span></div>
     <div class="field"><span class="lab">Main goal</span>${radios('goal',GOALS)}</div>
     <div class="field"><span class="lab">Experience</span>${radios('level',LEVELS)}</div>
@@ -2975,12 +2986,13 @@ function viewProfile(){
     <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><button class="btn primary" type="submit">Save and build my routine</button><span class="hint" id="pf-msg"></span></div>
   </form></section>`;
 }
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target&&e.target.id==='nm-inp'){e.preventDefault();$('[data-act="savename"]')?.click()}});
 function bindProfile(){
   const f=$('#pf');if(!f)return;$('#pf-min').addEventListener('input',e=>$('#pf-minout').textContent=e.target.value+' min');
   f.addEventListener('submit',e=>{e.preventDefault();
     const age=Math.max(13,Math.min(95,parseInt($('#pf-age').value)||28)),g=n=>f.querySelector(`input[name="${n}"]:checked`)?.value;
     const started=S.today.done.length>0;
-    const dsel=[...f.querySelectorAll('input[name="pf-day"]:checked')].map(x=>+x.value);S.profile={...S.profile,name:$('#pf-name').value.trim().slice(0,24),age,goal:g('goal'),level:g('level'),equip:g('equip'),minutes:+$('#pf-min').value,days:dsel.length?dsel:[0,1,2,3,4,5,6],set:true};
+    const dsel=[...f.querySelectorAll('input[name="pf-day"]:checked')].map(x=>+x.value);S.profile={...S.profile,age,goal:g('goal'),level:g('level'),equip:g('equip'),minutes:+$('#pf-min').value,days:dsel.length?dsel:[0,1,2,3,4,5,6],set:true};
     save();renderHeader();
     if(started)$('#pf-msg').textContent='Saved. You already started today, so the new settings start tomorrow.';
     else{tab='workout';render();scrollTo({top:0,behavior:reduced?'auto':'smooth'});toast(medal('✓',true),'Profile saved','Today’s routine is rebuilt for you.')}
@@ -3078,6 +3090,7 @@ document.addEventListener('click',e=>{
     case'yetitoggle':S.yeti=S.yeti===false;save();render();if(S.yeti)yetiPlay('Animations on');break;
     case'clearchat':if(!busy){archiveChat();save();SFX.shuffle();render();toast(skeefoMark(40),'Chat cleared','Skeefo still remembers what you talked about.')}break;
     case'forget':{if(t.dataset.sure!=='1'){t.dataset.sure='1';t.textContent='Tap again to make Skeefo forget';break}S.mem=[];S.chat=[];save();render();toast(skeefoMark(40),'Memory wiped','Skeefo starts fresh. Your plans and schedule stay the same.');break}
+    case'savename':{const inp=$('#nm-inp');try{const r=setName(inp.value);SFX.link();render();toast(medal('✓',true),'Name saved',r.old&&r.old!==r.n?`You’re now ${r.n} everywhere.`:`Hi, ${r.n}!`)}catch(err){const m=$('#nm-msg');if(m){m.textContent=err.message;m.style.color='var(--bad)'}inp.focus()}break}
     case'clearplan':S.aiPlan=null;save();render();toast(medal('✓',true),'Skeefo plan cleared','Back to automatic daily routines.');break;
     case'rank':SFX.tick();rankView=t.dataset.v;render();break;
     case'role':role=t.dataset.v;try{localStorage.setItem('rb-role',role)}catch(err){}tab=role==='me'?'workout':'family';draft=null;renderTabs();renderHeader();render();if(role==='me')flush();break;
