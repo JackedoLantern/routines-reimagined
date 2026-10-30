@@ -1646,12 +1646,12 @@ function linkCard(compact){
     <div class="lk-act"><a class="btn primary" href="https://claude.ai/artifact/WtR7pqRXcFC2njWBfPHRFN" target="_blank" rel="noopener">Open in Claude</a></div></section>`;
   const s=linkState,mark=`<div class="lk-icons"><span class="lk-sk">${skeefoMark(34)}</span><span class="lk-line ${s==='granted'?'on':''}"><i></i></span><span class="lk-cl" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="9" r="3.6"/><path d="M5 19.5c1.4-3.2 4-4.6 7-4.6s5.6 1.4 7 4.6"/></svg></span></div>`;
   let title,body,btn='';
-  if(s==='checking'){title='Checking your Claude link…';body=''}
-  else if(s==='granted'){const on=S.skMode!=='offline';title=on?'Skeefo is using his Claude brain':'Skeefo is using his offline brain';body=`${linkName?`Linked as <b>${esc(linkName)}</b>. `:''}${on?'He can answer almost anything in detail.':'He works without Claude right now. Switch back any time.'}`;btn=`<button class="btn sm" data-act="skmode">${on?'Use offline brain':'Use Claude brain'}</button>`}
+  if(s==='checking'){title='Link Skeefo to Claude';body='Checking your Claude account…'}
+  else if(s==='granted'){const on=S.skMode!=='offline';title=on?'Skeefo is linked to Claude':'Skeefo is linked, using offline brain';body=`${linkName?`Linked as <b>${esc(linkName)}</b>. `:''}${on?'He can answer almost anything in detail.':'He works without Claude right now. Switch back any time.'}`;btn=`<button class="btn sm" data-act="skmode">${on?'Use offline brain':'Use Claude brain'}</button>`}
   else if(s==='prompt'){title='Link Skeefo to Claude';body='His offline brain handles interviews, plans, schedules and common questions. Linking Claude is optional and makes him smarter.';btn=`<button class="btn primary" data-act="link">Link Skeefo to Claude</button>`}
-  else if(s==='denied'){title='Skeefo is using his offline brain';body='His Claude link is turned off, so he’s answering offline. Turn it back on any time for a smarter Skeefo (optional).';btn=`<button class="btn primary" data-act="managelink">Turn it on</button>`}
-  else if(s==='signedout'){title='Skeefo is using his offline brain';body='He works without an account. Signing in to Claude is optional and gives him a smarter brain.';btn=`<a class="btn primary" href="https://claude.ai/login" target="_blank" rel="noopener">Sign in to Claude</a>`}
-  else{title='Skeefo is using his offline brain';body='He works fine here. A Claude link isn’t available in this view, and it’s optional anyway.'}
+  else if(s==='denied'){title='Link Skeefo to Claude';body='His Claude link is turned off, so he’s answering offline. Turn it back on any time for a smarter Skeefo (optional).';btn=`<button class="btn primary" data-act="managelink">Turn it on</button>`}
+  else if(s==='signedout'){title='Link Skeefo to Claude';body='He works without an account. Signing in to Claude is optional and gives him a smarter brain.';btn=`<a class="btn primary" href="https://claude.ai/login" target="_blank" rel="noopener">Sign in to Claude</a>`}
+  else{title='Link Skeefo to Claude';body='Open Routines Reimagined on claude.ai while signed in to Claude to link him. He works offline until then.'}
   return`<section class="card link ${s} ${justLinked?'just':''} ${compact?'compact':''}">${mark}<div class="lk-text"><div class="label">${s==='granted'?'Linked to Claude':'Optional · Claude link'}</div><b>${title}</b><p class="note">${body}</p></div>${btn?`<div class="lk-act">${btn}</div>`:''}</section>`;
 }
 async function doLink(){
@@ -2464,8 +2464,8 @@ async function fillNames(){
 /* ---------- Me ---------- */
 function viewMe(){
   const parent=R0()==='parent';
-  if(window.RR_STANDALONE&&!CLOUD())return accountCard()+remindersCard()+linkCard(false)+viewProfile()+(S.aiPlan?`<section class="card"><div class="label">Skeefo plan</div><h3 class="h3">Your workouts follow Skeefo’s 7-day plan</h3><button class="btn" data-act="clearplan">Clear Skeefo plan</button></section>`:'')+`<section class="card"><div class="label">Your data</div><h3 class="h3">Saved on this device</h3><p class="note">Your progress is stored in this browser only. Clearing your browser data erases it.</p></section>`;
-  let h=(window.RR_STANDALONE?accountCard()+(parent?'':remindersCard()):'')+`<section class="card"><div class="label">Who’s using this device</div><div class="seg wide" role="group" aria-label="Role" style="margin-top:10px">
+  if(window.RR_STANDALONE&&!CLOUD())return linkCard(false)+accountCard()+remindersCard()+viewProfile()+(S.aiPlan?`<section class="card"><div class="label">Skeefo plan</div><h3 class="h3">Your workouts follow Skeefo’s 7-day plan</h3><button class="btn" data-act="clearplan">Clear Skeefo plan</button></section>`:'')+`<section class="card"><div class="label">Your data</div><h3 class="h3">Saved on this device</h3><p class="note">Your progress is stored in this browser only. Clearing your browser data erases it.</p></section>`;
+  let h=(parent?'':linkCard(false))+(window.RR_STANDALONE?accountCard()+(parent?'':remindersCard()):'')+`<section class="card"><div class="label">Who’s using this device</div><div class="seg wide" role="group" aria-label="Role" style="margin-top:10px">
     <button data-act="role" data-v="me" aria-pressed="${!parent}">I’m training</button><button data-act="role" data-v="parent" aria-pressed="${parent}">I’m a parent</button></div>
     <p class="note" style="margin:10px 0 0">${parent?'Parent view shows your kid’s daily report and lets you set their schedule.':'Switch to parent view if you’re a parent checking on your kid.'}</p></section>`;
   if(parent){
@@ -2475,7 +2475,6 @@ function viewMe(){
       <li><span>3</span><div>Kids get pop-up reminders with sound while the app is open. Daily emails come once Gmail is set up.</div></li></ul></section>`;
     return h;
   }
-  h+=linkCard(false);
   h+=viewProfile();
   if(S.aiPlan)h+=`<section class="card"><div class="label">Skeefo plan</div><h3 class="h3">Your workouts follow Skeefo’s 7-day plan</h3><p class="note">Made ${new Date(S.aiPlan.made).toLocaleDateString()}. Clear it to go back to automatic daily routines.</p><button class="btn" data-act="clearplan">Clear Skeefo plan</button></section>`;
   h+=kidFamilyCard();
