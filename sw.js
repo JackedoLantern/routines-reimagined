@@ -1,6 +1,6 @@
 // Routines Reimagined: offline support, reminders, badge and widget
-const CACHE='rr-v4';
-const CORE=['./','index.html','manifest.webmanifest','favicon.svg','icon-192.png','icon-512.png','apple-touch-icon.png','widget/today.json'];
+const CACHE='rr-v5';
+const CORE=['./','index.html','manifest.webmanifest','favicon.svg','icon-192.png','icon-512.png','apple-touch-icon.png','widget/today.json','supabase.js'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(CORE)).then(()=>self.skipWaiting()))});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==CACHE&&k!=='rr-data'&&k!=='rr-sent').map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});
 
@@ -8,6 +8,7 @@ async function getData(){try{const r=await (await caches.open('rr-data')).match(
 self.addEventListener('fetch',e=>{
   if(e.request.method!=='GET')return;
   const url=new URL(e.request.url);
+  if(url.origin!==self.location.origin&&!/fonts\.(googleapis|gstatic)\.com$/.test(url.hostname))return;
   if(url.pathname.endsWith('/widget/data.json')){e.respondWith(getData().then(d=>new Response(JSON.stringify(d||{level:1,title:'Rookie',streak:0,workoutText:'Open the app to start',leftText:''}),{headers:{'content-type':'application/json'}})));return}
   const fresh=e.request.mode==='navigate'||/\.(html|js|webmanifest|json)$/.test(url.pathname);
   e.respondWith(fetch(e.request,fresh?{cache:'no-cache'}:{}).then(r=>{const copy=r.clone();caches.open(CACHE).then(c=>c.put(e.request,copy)).catch(()=>{});return r})

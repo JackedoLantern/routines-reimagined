@@ -16,6 +16,8 @@
 <meta name="apple-mobile-web-app-title" content="Routines">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
 <script>window.RR_STANDALONE=true;</script>
+<script>window.RR_SUPABASE={url:'https://uszalonpjyssvvsikzvg.supabase.co',key:'sb_publishable_w-5rI0R9ht2-HAr5HghM0w_-3HYiAEg'};</script>
+<script src="supabase.js"></script>
 </head>
 <body>
 
@@ -570,6 +572,8 @@ button.tag{border:0;cursor:pointer}
   .ex.pop .chk{animation:pop .55s cubic-bezier(.3,1.7,.5,1)}
   .rays{width:300px;height:300px;margin:-150px 0 0 -150px}
 }
+.famcode{display:flex;align-items:center;gap:12px;margin-top:12px;padding:10px 14px;border-radius:12px;background:var(--surface-2);flex-wrap:wrap}
+.famcode b{font-family:var(--f-mono);font-size:22px;letter-spacing:.2em;color:var(--gold)}
 </style>
 
 <header class="board">
@@ -836,11 +840,12 @@ function pickSel(){const m=members();if(!SEL||!m.includes(SEL))SEL=m[0]||null;tr
 function effProfile(){const p={...S.profile},R=RULES();if(R.maxMinutes)p.minutes=Math.min(p.minutes,R.maxMinutes);return p}
 const allowedEx=e=>{const R=RULES();return!(R.noHard&&e.hard)&&!(R.noImpact&&e.imp)};
 async function setCtl(id,patch){
+  if(CLOUD())return sbSetCtl(id,patch);
   if(!DB||!id)return;
   const c={member:false,family:'',rules:{...DEF_RULES},...(CTLS[id]||{}),...patch,updated:Date.now()};
   CTLS[id]=c;try{await DB.doc('ctl/'+id).set(clone(c))}catch(e){toast(medal('!',false),'Couldn’t save that','Check your connection and try again.')}
 }
-async function setGroup(g){GROUP=g;try{await DB.doc('fam/group').set(clone(g))}catch(e){toast(medal('!',false),'Couldn’t save the family','Check your connection and try again.')}}
+async function setGroup(g){if(CLOUD())return sbSetGroup(g);GROUP=g;try{await DB.doc('fam/group').set(clone(g))}catch(e){toast(medal('!',false),'Couldn’t save the family','Check your connection and try again.')}}
 function safeRender(tabs){if(draft)return;const a=document.activeElement;if(a&&/INPUT|TEXTAREA|SELECT/.test(a.tagName)&&a.value)return;if(!tabs||tabs.includes(tab))render()}
 
 /* cheat detection */
@@ -895,14 +900,17 @@ function viewFamily(){
   if(GROUP===undefined)return`<section class="card empty">Loading your family…</section>`;
   if(!GROUP)return`<section class="card fam-hero"><div class="label">Family group</div><h2 class="h2">Create your family</h2>
     <p class="note">Make a private family group, add your kids, set their schedules and restrictions, and follow their progress live.</p>
-    <div class="ed-row" style="margin-top:12px"><input class="inp" id="fam-name" maxlength="30" placeholder="Family name, like The Parkers"><button class="btn primary" data-act="famcreate">Create</button></div></section>`;
+    <div class="ed-row" style="margin-top:12px"><input class="inp" id="fam-name" maxlength="30" placeholder="Family name, like The Parkers"><button class="btn primary" data-act="famcreate">Create</button></div>
+    ${CLOUD()?(SBX.parentPending?`<p class="note" style="margin-top:14px">You asked to join a family as a parent. A parent in that family needs to approve you.</p>`:`<p class="note" style="margin-top:14px">Another parent already made your family? Enter their family code:</p>${cloudJoinCard('parent')}`):''}</section>`;
   const m=members(),t=todayKey(),isParent=(GROUP.parents||[]).includes(UID);
   const reqs=Object.entries(KIDS).filter(([id,k])=>k.req&&!m.includes(id)&&!(GROUP.ignored||[]).includes(id)&&id!==UID);
   let h=`<section class="card fam-hero"><div class="label">Family group</div><h2 class="h2">${esc(GROUP.name)}</h2>
     <div class="meta"><span class="chip lv">${m.length} kid${m.length===1?'':'s'}</span><span class="chip">${(GROUP.parents||[]).length} parent${(GROUP.parents||[]).length===1?'':'s'}</span></div>
-    <p class="note">To add a kid: share this app with them from the Share menu, then have them tap <b>Join my family</b> on their Me tab. Their request shows up here.</p>
-    <div class="dayfoot">${isParent?'':`<button class="btn primary" data-act="famparent">Join as a parent</button>`}<span style="flex:1"></span><button class="btn sm ghost danger" data-act="famdelete">Delete family group</button></div></section>`;
-  if(reqs.length)h+=`<section class="block"><div class="block-h"><h3>Join requests</h3><span class="label">${reqs.length}</span></div>${reqs.map(([id,k])=>`<div class="ex task"><span class="kav">${esc((k.name||'?')[0].toUpperCase())}</span><div class="exinfo static"><span class="exn">${esc(k.name||'Unnamed kid')}</span><span class="cue">Level ${k.level||1} · wants to join</span></div><div class="row-act"><button class="btn sm" data-act="famignore" data-id="${esc(id)}">Ignore</button><button class="btn sm primary" data-act="famadd" data-id="${esc(id)}">Add</button></div></div>`).join('')}</section>`;
+    ${CLOUD()?`<div class="famcode"><span class="label">Family code</span><b class="num">${esc(GROUP.code||'')}</b><button class="btn sm" data-act="copycode" data-v="${esc(GROUP.code||'')}">Copy</button></div>
+    <p class="note">To add a kid or another parent: they open the app, make a free account on the Me tab, then enter this code on their <b>Family</b> tab. Their request shows up here for you to approve.</p>`
+    :`<p class="note">To add a kid: share this app with them from the Share menu, then have them tap <b>Join my family</b> on their Me tab. Their request shows up here.</p>`}
+    <div class="dayfoot">${isParent||CLOUD()?'':`<button class="btn primary" data-act="famparent">Join as a parent</button>`}<span style="flex:1"></span><button class="btn sm ghost danger" data-act="famdelete">Delete family group</button></div></section>`;
+  if(reqs.length)h+=`<section class="block"><div class="block-h"><h3>Join requests</h3><span class="label">${reqs.length}</span></div>${reqs.map(([id,k])=>`<div class="ex task"><span class="kav">${esc((k.name||'?')[0].toUpperCase())}</span><div class="exinfo static"><span class="exn">${esc(k.name||'Unnamed kid')}</span><span class="cue">${k.reqRole==='parent'?'Parent':'Kid'} · wants to join</span></div><div class="row-act"><button class="btn sm" data-act="famignore" data-id="${esc(id)}">Ignore</button><button class="btn sm primary" data-act="famadd" data-id="${esc(id)}">Add</button></div></div>`).join('')}</section>`;
   h+=`<section class="block"><div class="block-h"><h3>Kids</h3><span class="label">${m.length}</span></div>`;
   if(!m.length)h+=`<section class="card empty">No kids yet. When they ask to join, approve them above.</section>`;
   m.forEach(id=>{const k=KIDS[id]||{},today=k.date===t,w=k.workout||{},tasks=today?(k.tasks||[]):[],fl=today?(k.flags||[]):[];
@@ -918,7 +926,10 @@ function viewFamily(){
 
 /* kid: family card on Me */
 function kidFamilyCard(){
-  if(!DB)return`<section class="card"><div class="label">Family</div><h3 class="h3">Join your family</h3><p class="note">Sign in to Claude to join your family group so a parent can follow along.</p></section>`;
+  if(CLOUD()&&!inFamily()){
+    if(SBX.kidFam&&SBX.kidFam.status==='pending')return`<section class="card"><div class="label">Family</div><h3 class="h3">Request sent</h3><p class="note">Waiting for your parent to approve you in their Family tab.</p><button class="btn sm ghost" data-act="sbleave">Cancel request</button></section>`;
+    return`<section class="card fam-hero"><div class="label">Family</div><h3 class="h3">Join your family</h3><p class="note">Ask your parent for the family code from their Family tab and enter it here. Once they approve you, they can see your daily report, set your schedule and add restrictions.</p>${cloudJoinCard('kid')}</section>`}
+  if(!DB&&!CLOUD())return`<section class="card"><div class="label">Family</div><h3 class="h3">Join your family</h3><p class="note">Sign in to Claude to join your family group so a parent can follow along.</p></section>`;
   if(inFamily()){const R=RULES(),on=[R.lockSchedule&&'Your schedule is set by your parent',R.maxMinutes&&`Workouts up to ${R.maxMinutes} minutes`,R.noHard&&'No advanced moves',R.noImpact&&'No jumping moves',R.skeefo==='off'&&'Skeefo is turned off',R.skeefo==='offline'&&'Skeefo uses his offline brain',R.hideBoard&&'Leaderboard is hidden',R.remindWorkout&&`Workout reminder at ${hm(R.remindWorkout)}`,R.cheatAlerts&&'Your parent is told if check-offs happen super fast'].filter(Boolean);
     return`<section class="card"><div class="label">Family</div><h3 class="h3">You’re in ${esc(MYCTL.family||'your family')}</h3><p class="note">Your parent sees your daily report: what you finished, when, and how long it took.</p>${on.length?`<ul class="rules">${on.map((x,i)=>`<li><span>${i+1}</span><div>${esc(x)}</div></li>`).join('')}</ul>`:''}</section>`}
   if(S.fam&&S.fam.joined)return`<section class="card"><div class="label">Family</div><h3 class="h3">Request sent</h3><p class="note">Waiting for a parent to add you. They’ll see it in their Family tab.</p><button class="btn sm ghost" data-act="famleave">Cancel request</button></section>`;
@@ -1137,6 +1148,7 @@ function buildReport(){
     tasks,days,flags:S.today.flags||[],schedule:clone(sched()),req:true,updated:Date.now()};
 }
 async function flush(){
+  if(SBON())return sbFlush();
   if(!DB||!UID)return;
   if(saving){again=true;return}
   saving=true;
@@ -1362,7 +1374,7 @@ document.addEventListener('change',e=>{if(draft&&e.target.id==='ed-lock')draft.l
 
 /* ---------- Parent: report & schedule ---------- */
 function noKids(){return`<section class="card empty"><b style="color:var(--ink)">No kids in your family yet.</b><br>Go to the Family tab to create your family and add your kids.<br><br><button class="btn primary" data-go="family">Open Family</button></section>`}
-function needAccess(){return`<section class="card empty"><b style="color:var(--ink)">You don’t have access to the family report yet.</b><br>Ask the person who made this app to share it with you from the Share menu with edit access. Then reopen it.</section>`}
+function needAccess(){if(window.RR_STANDALONE)return`<section class="card empty"><b style="color:var(--ink)">Make a free account first.</b><br>Go to the Me tab, sign up, then come back here to create or join your family.<br><br><button class="btn primary" data-go="me">Go to Me</button></section>`;return`<section class="card empty"><b style="color:var(--ink)">You don’t have access to the family report yet.</b><br>Ask the person who made this app to share it with you from the Share menu with edit access. Then reopen it.</section>`}
 function viewReport(){
   if(!famOK)return needAccess();pickSel();
   if(!members().length)return noKids();
@@ -1916,13 +1928,14 @@ function validateSched(j,wantTimes){
 
 /* ---------- Ranks ---------- */
 function viewKidFamily(){
-  if(window.RR_STANDALONE)return`<section class="card fam-hero"><div class="label">Family</div><h2 class="h2">Family groups</h2>
-    <p class="note">Family groups let a parent see your daily report, set your schedule and add restrictions. They need accounts to share data between phones, so they live in the full Routines Reimagined app on Claude.</p>
-    <ul class="rules"><li><span>1</span><div>Ask whoever runs this app to share the full version with you and your parent.</div></li><li><span>2</span><div>Your parent opens it and creates your family on their Family tab.</div></li><li><span>3</span><div>You tap <b>Join my family</b> there, and they approve you.</div></li></ul></section>`;
+  if(window.RR_STANDALONE&&!CLOUD())return`<section class="card fam-hero"><div class="label">Family</div><h2 class="h2">Family groups</h2>
+    <p class="note">Family groups let a parent see your daily report, set your schedule and add restrictions. Make a free account on the Me tab to create or join one.</p>
+    <ul class="rules"><li><span>1</span><div><b>Parents:</b> make an account, switch to “I’m a parent” on Me, and create your family. You get a family code.</div></li><li><span>2</span><div><b>Kids:</b> make an account and enter that code on this tab.</div></li><li><span>3</span><div>The parent approves the request, and you’re connected.</div></li></ul>
+    <button class="btn primary" data-go="me">Make an account</button></section>`;
   return kidFamilyCard()+`<section class="card"><div class="label">Are you a parent?</div><h3 class="h3">Switch to parent view</h3><p class="note">Parents create the family group, add kids, set schedules and restrictions, and see live reports.</p><button class="btn" data-act="role" data-v="parent">I’m a parent</button></section>`;
 }
 function viewRanks(){
-  if(window.RR_STANDALONE)return`<section class="card"><div class="label">Leaderboard</div><h3 class="h3">Compete with friends</h3><p class="note">The live leaderboard needs accounts so scores can be shared between phones, so it lives in the full Routines Reimagined app on Claude. Your own stats are below.</p></section>`+viewProgress();
+  if(window.RR_STANDALONE&&!SBON())return`<section class="card"><div class="label">Leaderboard</div><h3 class="h3">Compete with friends</h3><p class="note">The live leaderboard needs accounts so scores can be shared between phones, so it lives in the full Routines Reimagined app on Claude. Your own stats are below.</p></section>`+viewProgress();
   if(R0()==='me'&&RULES().hideBoard&&rankView==='board')rankView='stats';
   return`<div class="seg wide" role="group" aria-label="Ranks view">${R0()==='me'&&RULES().hideBoard?'':`<button data-act="rank" data-v="board" aria-pressed="${rankView==='board'}">Leaderboard</button>`}<button data-act="rank" data-v="stats" aria-pressed="${rankView==='stats'}">${R0()==='parent'?'Badges & rules':'My stats'}</button></div>`+(rankView==='board'?viewLeaders():viewProgress());
 }
@@ -1955,17 +1968,17 @@ function viewProgress(){
 function viewLeaders(){
   const head=`<section class="card"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap"><div><div class="label">Leaderboard</div><h3 class="h3">Everyone training here</h3></div>
     <div class="seg" role="group" aria-label="Rank by">${[['xp','XP'],['streak','Streak'],['week','This week']].map(([k,l])=>`<button data-metric="${k}" aria-pressed="${lbMetric===k}">${l}</button>`).join('')}</div></div>`;
-  if(!DB)return head+`<div class="empty">The leaderboard needs you to be signed in to Claude. Your progress is still saved on this device.</div></section>`;
+  if(!DB&&!SBON())return head+`<div class="empty">The leaderboard needs you to be signed in to Claude. Your progress is still saved on this device.</div></section>`;
   const wk=weekStart(todayKey());
   const val=r=>lbMetric==='xp'?r.xp||0:lbMetric==='streak'?r.streak||0:(r.weekKey===wk?r.week||0:0);
   const rows=[...LB].sort((a,b)=>val(b)-val(a)||(b.xp||0)-(a.xp||0));
-  if(!rows.length)return head+`<div class="empty">No one is on the board yet. Finish an exercise to post your score, then share this page so others can join.</div></section>`;
+  if(!rows.length)return head+`<div class="empty">No one is on the board yet. Finish an exercise to post your score${window.RR_STANDALONE?'':', then share this page so others can join'}.</div></section>`;
   const unit={xp:'XP',streak:'days',week:'routines'}[lbMetric];
   return head+`<div class="lb">${rows.map((r,i)=>`<div class="row ${i<3?'p'+(i+1):''} ${r.id===UID?'me':''}" style="animation-delay:${Math.min(i,10)*40}ms">
     <div class="rk num">${i+1}</div>
     <div style="min-width:0"><div class="nm" data-uid="${esc(r.id)}" data-handle="${esc(r.handle||'')}">${esc(r.handle||'…')}</div><div class="sub"><span class="lv">Lv ${r.level||1}</span> · ${esc(titleFor(r.level||1))} · ${r.streak||0}-day streak</div></div>
     <div class="val num">${val(r).toLocaleString()}<small>${unit}</small></div></div>`).join('')}</div>
-    <p class="note" style="margin:12px 0 0">Anyone you share this page with who signs in and trains shows up here.</p></section>`;
+    <p class="note" style="margin:12px 0 0">${window.RR_STANDALONE?(CLOUD()?'Anyone with an account who trains shows up here. Set your name on Me.':'Make a free account on the Me tab to show up here.'):'Anyone you share this page with who signs in and trains shows up here.'}</p></section>`;
 }
 async function fillNames(){
   const els=[...document.querySelectorAll('.nm[data-uid]')];if(!els.length)return;
@@ -1976,8 +1989,8 @@ async function fillNames(){
 /* ---------- Me ---------- */
 function viewMe(){
   const parent=R0()==='parent';
-  if(window.RR_STANDALONE)return remindersCard()+viewProfile()+(S.aiPlan?`<section class="card"><div class="label">Skeefo plan</div><h3 class="h3">Your workouts follow Skeefo’s 7-day plan</h3><button class="btn" data-act="clearplan">Clear Skeefo plan</button></section>`:'')+`<section class="card"><div class="label">Your data</div><h3 class="h3">Saved on this device</h3><p class="note">Your progress is stored in this browser only. Clearing your browser data erases it.</p></section>`;
-  let h=`<section class="card"><div class="label">Who’s using this device</div><div class="seg wide" role="group" aria-label="Role" style="margin-top:10px">
+  if(window.RR_STANDALONE&&!CLOUD())return accountCard()+remindersCard()+viewProfile()+(S.aiPlan?`<section class="card"><div class="label">Skeefo plan</div><h3 class="h3">Your workouts follow Skeefo’s 7-day plan</h3><button class="btn" data-act="clearplan">Clear Skeefo plan</button></section>`:'')+`<section class="card"><div class="label">Your data</div><h3 class="h3">Saved on this device</h3><p class="note">Your progress is stored in this browser only. Clearing your browser data erases it.</p></section>`;
+  let h=(window.RR_STANDALONE?accountCard()+(parent?'':remindersCard()):'')+`<section class="card"><div class="label">Who’s using this device</div><div class="seg wide" role="group" aria-label="Role" style="margin-top:10px">
     <button data-act="role" data-v="me" aria-pressed="${!parent}">I’m training</button><button data-act="role" data-v="parent" aria-pressed="${parent}">I’m a parent</button></div>
     <p class="note" style="margin:10px 0 0">${parent?'Parent view shows your kid’s daily report and lets you set their schedule.':'Switch to parent view if you’re a parent checking on your kid.'}</p></section>`;
   if(parent){
@@ -2020,7 +2033,8 @@ function bindProfile(){
 }
 
 /* ================= Actions ================= */
-document.addEventListener('submit',e=>{if(e.target.id==='ti-form'){e.preventDefault();const i=$('#ti-in');if(i.value.trim()){TABACT.addItem(tab,i.value);SFX.soft();render();$('#ti-in')?.focus()}return}
+document.addEventListener('submit',e=>{if(e.target.id==='sb-form'){e.preventDefault();sbAuth((e.submitter&&e.submitter.dataset.mode)||'in');return}
+  if(e.target.id==='ti-form'){e.preventDefault();const i=$('#ti-in');if(i.value.trim()){TABACT.addItem(tab,i.value);SFX.soft();render();$('#ti-in')?.focus()}return}
   if(e.target.id==='sk-form'){e.preventDefault();const i=$('#sk-in');const v=i.value;i.value='';sendChat(v)}});
 document.addEventListener('keydown',e=>{if(e.target.id==='sk-in'&&e.key==='Enter'&&!e.shiftKey){e.preventDefault();$('#sk-form').requestSubmit()}});
 let notesT=null;document.addEventListener('input',e=>{const nid=e.target.dataset&&e.target.dataset.notes;if(nid){const tb=ctab(nid);if(tb){tb.notes=e.target.value.slice(0,5000);clearTimeout(notesT);notesT=setTimeout(save,600)}return}});
@@ -2082,6 +2096,7 @@ document.addEventListener('click',e=>{
         if(tb.items.every(y=>y.d===td)){setTimeout(()=>{SFX.bonus();confetti(.5)},300)}}save();renderHeader();render();break}
     case'tdel':{const tb=ctab(tab);if(tb){tb.items=tb.items.filter(y=>y.id!==t.dataset.id);save();render()}break}
     case'famdelete':{if(t.dataset.sure!=='1'){t.dataset.sure='1';t.textContent='Tap again to delete the whole family';break}
+      if(CLOUD()){SBX.client.from('families').delete().eq('id',GROUP.id).then(r=>{if(r.error)return toast(medal('!',false),'Couldn’t delete the family',r.error.message);GROUP=null;SEL=null;sbRefresh();toast(medal('✓',true),'Family group deleted','Kids keep their own progress.')});break}
       const ids=members();DB.doc('fam/group').delete().then(async()=>{for(const id of ids)await setCtl(id,{member:false,family:''});GROUP=null;SEL=null;render();toast(medal('✓',true),'Family group deleted','Kids keep their own progress. You can make a new group any time.')}).catch(()=>toast(medal('!',false),'Couldn’t delete the family','Check your connection and try again.'));break}
     case'dpref':{const k=t.dataset.v;S.dpPrefs=S.dpPrefs||{};S.dpPrefs[k]=!S.dpPrefs[k];if(k==='vegan'&&S.dpPrefs.vegan)S.dpPrefs.veg=true;SFX.tick();save();render();break}
     case'mkdiet':{applyDietPlan(makeDietPlan(S.dpPrefs||{}));render();toast(medal('✓',true),'Diet plan ready','A week of meal ideas is on your Diet tab.');break}
@@ -2090,6 +2105,13 @@ document.addEventListener('click',e=>{
     case'dunavoid':S.dpAvoid=(S.dpAvoid||[]).filter(x=>x!==t.dataset.v);save();render();break;
     case'notifon':NOTIF.enable().then(()=>{render();if(S.notif)toast(medal('✓',true),'Reminders on','You’ll get a notification when things are due.')});break;
     case'notifoff':S.notif=false;save();NOTIF.sync();render();break;
+    case'sbout':SBX.client.auth.signOut().then(()=>{toast(medal('✓',true),'Signed out','Your progress stays on this device.')});break;
+    case'sbjoin':{const code=(($('#fam-code')||{}).value||'').trim();if(code.length<4){$('#fam-code')?.focus();break}
+      SBX.client.rpc('join_family',{join_code:code,as_role:t.dataset.v,display_name:S.profile.name||(SBX.user&&SBX.user.email||'').split('@')[0]}).then(r=>{
+        if(r.error)return toast(medal('!',false),'Couldn’t join',r.error.message.includes('No family')?'No family has that code. Check it and try again.':r.error.message);
+        SFX.link();toast(medal('+',true),'Request sent','A parent needs to approve you.');if(t.dataset.v==='kid'){S.fam={joined:true};save()}sbRefresh()});break}
+    case'sbleave':if(SBX.kidFam)SBX.client.from('family_members').delete().eq('family_id',SBX.kidFam.id).eq('user_id',UID).then(()=>{S.fam={joined:false};save();sbRefresh()});break;
+    case'copycode':{const v=t.dataset.v;try{navigator.clipboard.writeText(v).then(()=>toast(medal('✓',true),'Code copied',v),()=>{})}catch(err){}break}
     case'clearchat':if(!busy){archiveChat();save();SFX.shuffle();render();toast(skeefoMark(40),'Chat cleared','Skeefo still remembers what you talked about.')}break;
     case'forget':{if(t.dataset.sure!=='1'){t.dataset.sure='1';t.textContent='Tap again to make Skeefo forget';break}S.mem=[];S.chat=[];save();render();toast(skeefoMark(40),'Memory wiped','Skeefo starts fresh. Your plans and schedule stay the same.');break}
     case'clearplan':S.aiPlan=null;save();render();toast(medal('✓',true),'Skeefo plan cleared','Back to automatic daily routines.');break;
@@ -2314,6 +2336,109 @@ function remindersCard(){
     <p class="note" style="font-size:12px">Reminders are most reliable when the app is still open in the background. Android can also check in now and then while it’s closed.</p>
     ${on?`<button class="btn sm ghost" data-act="notifoff">Turn off reminders</button>`:st==='denied'?'':`<button class="btn primary" data-act="notifon">Turn on reminders</button>`}</section>`;
 }
+/* ================= Website accounts and shared data (Supabase) ================= */
+const SBX={client:null,user:null,timer:null,kidFam:null,busy:false,msg:''};
+const CLOUD=()=>!!SBX.user;
+const SBON=()=>!!SBX.client;
+function sbInit(){
+  if(!window.RR_SUPABASE||!window.supabase||!window.supabase.createClient)return;
+  try{SBX.client=window.supabase.createClient(RR_SUPABASE.url,RR_SUPABASE.key,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}})}catch(e){return}
+  SBX.client.auth.onAuthStateChange((ev,session)=>{const u=session&&session.user||null;const was=SBX.user&&SBX.user.id;SBX.user=u;if((u&&u.id)!==was)setTimeout(sbAfterAuth,0)});
+  sbLoadBoard();
+}
+async function sbLoadBoard(){
+  if(!SBON())return;
+  const r=await SBX.client.from('leaderboard').select('user_id,handle,xp,level,streak,best,total,week,week_key').order('xp',{ascending:false}).limit(200);
+  if(!r.error){LB=r.data.map(x=>({id:x.user_id,handle:x.handle,xp:x.xp,level:x.level,streak:x.streak,best:x.best,total:x.total,week:x.week,weekKey:x.week_key}));if(tab==='ranks')safeRender(['ranks'])}
+}
+async function sbAfterAuth(){
+  clearInterval(SBX.timer);
+  if(!SBX.user){UID=null;famOK=false;GROUP=undefined;KIDS={};CTLS={};MYCTL=undefined;SBX.kidFam=null;renderTabs();render();renderHeader();return}
+  UID=SBX.user.id;famOK=true;
+  try{const r=await SBX.client.from('user_state').select('data').eq('user_id',UID).maybeSingle();
+    if(r.data&&r.data.data&&(r.data.data.saved||0)>(S.saved||0)){S=Object.assign(fresh(),r.data.data);boot(true,true)}}catch(e){}
+  await sbRefresh();SBX.timer=setInterval(sbRefresh,20000);
+  flush();renderTabs();render();renderHeader();
+}
+async function sbRefresh(){
+  if(!CLOUD())return;const c=SBX.client;
+  try{
+    await sbLoadBoard();
+    const mine=(await c.from('family_members').select('family_id,role,status,name,families(name,code)').eq('user_id',UID)).data||[];
+    const par=mine.find(m=>m.role==='parent'&&m.status==='active'),kid=mine.find(m=>m.role==='kid');
+    SBX.parentPending=mine.find(m=>m.role==='parent'&&m.status==='pending')||null;
+    if(par){
+      const fid=par.family_id,all=(await c.from('family_members').select('user_id,role,status,name').eq('family_id',fid)).data||[];
+      GROUP={id:fid,name:(par.families&&par.families.name)||'Family',code:(par.families&&par.families.code)||'',
+        parents:all.filter(m=>m.role==='parent'&&m.status==='active').map(m=>m.user_id),kids:all.filter(m=>m.role==='kid'&&m.status==='active').map(m=>m.user_id),ignored:[]};
+      const nk={},nc={};
+      if(GROUP.kids.length){
+        ((await c.from('kid_reports').select('user_id,data').in('user_id',GROUP.kids)).data||[]).forEach(r=>nk[r.user_id]=r.data);
+        ((await c.from('kid_controls').select('user_id,rules,schedule').in('user_id',GROUP.kids)).data||[]).forEach(r=>nc[r.user_id]={member:true,family:GROUP.name,rules:r.rules||{},schedule:r.schedule||null})}
+      all.forEach(m=>{if(m.user_id===UID)return;if(m.status==='pending')nk[m.user_id]={...(nk[m.user_id]||{}),name:m.name||'Someone',req:true,reqRole:m.role};
+        else if(m.role==='kid')nk[m.user_id]={...(nk[m.user_id]||{}),name:(nk[m.user_id]&&nk[m.user_id].name)||m.name}});
+      KIDS=nk;CTLS=nc;pickSel();
+    }else GROUP=null;
+    if(kid){SBX.kidFam={id:kid.family_id,name:kid.families&&kid.families.name,status:kid.status};
+      if(kid.status==='active'){const ctl=(await c.from('kid_controls').select('rules,schedule').eq('user_id',UID).maybeSingle()).data;
+        MYCTL={member:true,family:(kid.families&&kid.families.name)||'your family',rules:(ctl&&ctl.rules)||{},schedule:(ctl&&ctl.schedule)||null}}
+      else MYCTL=null}
+    else{SBX.kidFam=null;MYCTL=null}
+  }catch(e){console.warn('refresh failed',e)}
+  renderHeader();safeRender(['family','report','schedule','ranks','day','workout']);
+}
+async function sbFlush(){
+  if(!CLOUD())return;const c=SBX.client,now=new Date().toISOString(),t=todayKey();
+  try{
+    await c.from('user_state').upsert({user_id:UID,data:clone(S),updated_at:now});
+    if(R0()==='me'){
+      if(RULES().hideBoard)await c.from('leaderboard').delete().eq('user_id',UID);
+      else if(S.xp>0||S.profile.set){const wk=weekStart(t),week=Object.entries(S.history).filter(([k,v])=>v.c&&k>=wk).length;
+        await c.from('leaderboard').upsert({user_id:UID,handle:(S.profile.name||'Athlete').slice(0,24),xp:S.xp,level:lvl(S.xp),streak:S.streak,best:S.best,total:S.total,week,week_key:wk,updated_at:now})}
+      if(SBX.kidFam&&SBX.kidFam.status==='active')await c.from('kid_reports').upsert({user_id:UID,data:buildReport(),updated_at:now});
+    }
+  }catch(e){console.warn('cloud save failed',e)}
+}
+async function sbSetGroup(g){
+  const c=SBX.client;
+  if(!GROUP||!GROUP.id){const r=await c.rpc('create_family',{fam_name:g.name,display_name:S.profile.name||''});if(r.error)throw r.error;return sbRefresh()}
+  const prev=new Set(GROUP.kids);
+  for(const id of g.kids.filter(x=>!prev.has(x)))await c.from('family_members').update({status:'active'}).eq('family_id',GROUP.id).eq('user_id',id);
+  for(const id of GROUP.kids.filter(x=>!g.kids.includes(x)))await c.from('family_members').delete().eq('family_id',GROUP.id).eq('user_id',id);
+  for(const id of (g.ignored||[]))await c.from('family_members').delete().eq('family_id',GROUP.id).eq('user_id',id).eq('status','pending');
+  await sbRefresh();
+}
+async function sbSetCtl(id,patch){
+  if(!('rules' in patch)&&!('schedule' in patch))return;
+  const cur=CTLS[id]||{},row={user_id:id,rules:patch.rules||cur.rules||{},schedule:'schedule' in patch?patch.schedule:(cur.schedule||null),updated_by:UID,updated_at:new Date().toISOString()};
+  CTLS[id]={...cur,...patch,member:true};
+  const r=await SBX.client.from('kid_controls').upsert(row);if(r.error)toast(medal('!',false),'Couldn’t save that','Check your connection and try again.');
+}
+function accountCard(){
+  if(!SBON())return'';
+  if(CLOUD())return`<section class="card"><div class="label">Account</div><h3 class="h3">Signed in</h3><p class="note">${esc(SBX.user.email||'')}. Your progress syncs across devices, and you’re on the shared leaderboard.</p><button class="btn sm ghost" data-act="sbout">Sign out</button></section>`;
+  return`<section class="card fam-hero"><div class="label">Account</div><h3 class="h3">Make a free account</h3>
+    <p class="note">Join the leaderboard, family groups and sync your progress to any device. Under 13? Ask a parent to help.</p>
+    <form class="form" id="sb-form" style="margin-top:12px;gap:10px">
+      <input class="inp" id="sb-name" maxlength="24" autocomplete="nickname" placeholder="Your name (shown on the leaderboard)" value="${esc(S.profile.name||'')}">
+      <input class="inp" id="sb-email" type="email" autocomplete="email" placeholder="Email" required>
+      <input class="inp" id="sb-pass" type="password" autocomplete="current-password" placeholder="Password (6+ characters)" minlength="6" required>
+      <div class="row-act"><button class="btn primary" type="submit" data-mode="up">Sign up</button><button class="btn" type="submit" data-mode="in">Sign in</button></div>
+      ${SBX.msg?`<p class="hint" id="sb-msg">${esc(SBX.msg)}</p>`:''}
+    </form></section>`;
+}
+async function sbAuth(mode){
+  const email=($('#sb-email')||{}).value||'',password=($('#sb-pass')||{}).value||'';if(!email||password.length<6){SBX.msg='Enter your email and a password with at least 6 characters.';render();return}
+  const nm=(($('#sb-name')||{}).value||'').trim().slice(0,24);if(nm){S.profile.name=nm;save()}
+  SBX.msg=mode==='up'?'Creating your account…':'Signing in…';render();
+  const r=mode==='up'?await SBX.client.auth.signUp({email,password}):await SBX.client.auth.signInWithPassword({email,password});
+  if(r.error){SBX.msg=r.error.message.replace('Invalid login credentials','That email or password is wrong.');render();return}
+  if(mode==='up'&&!r.data.session){SBX.msg='Check your email and tap the confirm link, then sign in here.';render();return}
+  SBX.msg='';SFX.bonus();confetti(.5);toast(medal('✓',true),mode==='up'?'Account created':'Signed in','Your progress now syncs.');
+}
+function cloudJoinCard(asRole){
+  return`<div class="ed-row" style="margin-top:12px"><input class="inp" id="fam-code" maxlength="6" placeholder="Family code" style="text-transform:uppercase;letter-spacing:.2em"><button class="btn primary" data-act="sbjoin" data-v="${asRole}">Join</button></div>`;
+}
 /* ================= Boot ================= */
 function boot(withDecay=true,quiet=false){
   ensureToday();
@@ -2326,6 +2451,7 @@ function boot(withDecay=true,quiet=false){
   else if(d&&d.broke&&!quiet)toast(medal('0',false),'Streak reset','You missed two days in a row.');
 }
 boot();
+sbInit();
 connect();
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&S.today&&S.today.date!==todayKey())boot()});
 </script>
