@@ -15,7 +15,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Routines">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
-<script>window.RR_STANDALONE=true;window.RR_VERSION='1a8f96a76b';</script>
+<script>window.RR_STANDALONE=true;window.RR_VERSION='0cb973aa82';</script>
 <script>window.RR_SUPABASE={url:'https://uszalonpjyssvvsikzvg.supabase.co',key:'sb_publishable_w-5rI0R9ht2-HAr5HghM0w_-3HYiAEg'};</script>
 <script src="supabase.js"></script>
 </head>
@@ -492,6 +492,10 @@ html{scrollbar-color:#34343A #09090A}
 .kid-today,.rule-chips{display:flex;flex-wrap:wrap;gap:6px}
 .chip.bad{background:var(--bad-soft);color:var(--bad)}
 .row-act{display:flex;gap:6px}
+.savepick{margin-top:16px;padding-top:14px;border-top:1px solid var(--line)}
+.savepick .daystrip{margin:10px 0 8px}
+.daystrip.pick .dsb.on{background:var(--lvl);border-color:var(--lvl);color:#0b0b0c}
+.quickpick{display:flex;flex-wrap:wrap;gap:6px}
 .lnk-chip{display:inline-flex;align-items:center;gap:2px;margin-left:6px;padding:2px 8px;border-radius:999px;border:1px solid var(--lvl-soft);background:var(--lvl-soft);color:var(--lvl);font:600 11px/1.5 var(--f-body);cursor:pointer;vertical-align:middle;white-space:nowrap}
 .lnk-chip:active{transform:scale(.95)}
 .lnk-row{grid-column:1/-1;display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);margin:-2px 0 6px}
@@ -1203,6 +1207,16 @@ function viewDayOther(sd,r){
   if(!sc.sections.length)h+=`<section class="card empty">Nothing planned for ${DAYFULL[sd]} yet.</section>`;
   return h;
 }
+function saveLabel(d){d=[...(d||[])].sort();return!d.length?'Pick at least one day':d.length===7?'Save for every day':'Save for '+(d.join()==='0,1,2,3,4'?'weekdays':d.join()==='5,6'?'weekends':d.length===1?DAYFULL[d[0]]+' only':d.map(i=>WDN[i]).join(', '))}
+function savePicker(wd,cust){
+  if(!draft._save)draft._save=[wd];const sel=draft._save;
+  return`<div class="savepick"><div class="label">Save these changes for</div>
+    <div class="daystrip pick" role="group" aria-label="Days to save for">${WDN.map((d,i)=>`<button type="button" class="dsb ${sel.includes(i)?'on':''}" aria-pressed="${sel.includes(i)}" data-act="savepick" data-v="${i}">${d}${i===wd?'<i>editing</i>':''}</button>`).join('')}</div>
+    <div class="quickpick">${[['all','Every day'],['wk','Weekdays'],['we','Weekends'],['one','Just '+DAYFULL[wd]]].map(([v,l])=>`<button type="button" class="chip-btn" data-act="savepick" data-v="${v}">${l}</button>`).join('')}</div>
+    <p class="note" id="ed-savenote">${saveNote(sel,cust)}</p></div>`}
+function saveNote(sel,cust){const others=(cust||[]).filter(d=>!sel.includes(d));
+  if(sel.length===7)return`Every day of the week gets this schedule${(cust||[]).length?', and your custom days go back to normal':''}.`;
+  return`Only the days you picked change. The other days keep their own schedule.`}
 function saveScheduleScope(sections,scope,wd,extra){
   const r=clone(rawSched());r.example=false;r.by=R0()==='parent'?'parent':'me';Object.assign(r,extra||{});
   if(scope==='all'){r.sections=sections;r.days={}}else{r.days=r.days||{};(Array.isArray(wd)?wd:[wd]).forEach(d=>r.days[d]={sections:clone(sections)})}
@@ -1774,8 +1788,8 @@ function viewEditor(){
   });
   const hasW=draft.sections.some(s=>s.tasks.some(k=>k.kind==='workout'));
   h+=`</div><div class="ed-actions"><button class="btn" data-act="addsec">+ Add section</button>${hasW?'':`<button class="btn" data-act="addworkout">+ Add daily workout</button>`}</div>
-    <p class="note">Save it for <b>every day</b> of the week${cust.length?` (this also replaces your custom ${cust.map(d=>DAYFULL[d]).join(', ')})`:''}, or only for <b>${DAYFULL[wd]}</b>.</p>
-    <div class="dayfoot ed-save"><button class="btn" data-act="cancel">Cancel</button><div class="row-act"><button class="btn" data-act="savesched" data-v="day">Save for ${DAYFULL[wd]} only</button><button class="btn primary" data-act="savesched" data-v="all">Save for every day</button></div></div></section>`;
+    ${savePicker(wd,cust)}
+    <div class="dayfoot ed-save"><button class="btn" data-act="cancel">Cancel</button><button class="btn primary" data-act="savesched" data-v="pick" id="ed-savebtn">${saveLabel(draft._save)}</button></div></section>`;
   return h;
 }
 document.addEventListener('input',e=>{
@@ -3067,9 +3081,15 @@ document.addEventListener('click',e=>{
     case'addtask':draft.sections[si].tasks.push({id:rid(),title:'',time:'',min:10});render();document.querySelector(`#ed-${draft.sections[si].tasks.at(-1).id}-title`)?.focus();break;
     case'deltask':draft.sections[si].tasks.splice(ti,1);render();break;
     case'addworkout':(draft.sections.at(-1)||(draft.sections.push({id:rid(),name:'Workout',tasks:[]}),draft.sections[0])).tasks.push({id:'workout',kind:'workout',title:'Daily workout',time:'',min:S.profile.minutes||30});render();break;
-    case'savesched':{const secs=clone(draft.sections).map(s=>({...s,name:(s.name||'').trim()||'Section',tasks:s.tasks.filter(k=>k.kind==='workout'||(k.title||'').trim()).map(k=>({...k,title:(k.title||'').trim()}))}));
-      const scope=t.dataset.v==='day'?'day':'all',wd=draft._wd??((new Date().getDay()+6)%7),extra=R0()==='parent'?{locked:!!draft.locked}:{locked:false};
-      draft=null;saveScheduleScope(secs,scope,wd,extra);render();SFX.link();toast(medal('✓',true),scope==='day'?DAYFULL[wd]+' saved':'Saved for every day',R0()==='parent'?'It’s on your kid’s app now.':scope==='day'?'Only '+DAYFULL[wd]+' changed.':'Every day of your week is updated.');break}
+    case'savepick':{if(!draft)break;const v=t.dataset.v,wd=draft._wd??((new Date().getDay()+6)%7);let d=new Set(draft._save||[wd]);
+      if(v==='all')d=new Set([0,1,2,3,4,5,6]);else if(v==='wk')d=new Set([0,1,2,3,4]);else if(v==='we')d=new Set([5,6]);else if(v==='one')d=new Set([wd]);else{const i=+v;d.has(i)?d.delete(i):d.add(i)}
+      draft._save=[...d].sort();SFX.soft();
+      document.querySelectorAll('.savepick .dsb').forEach(b=>{const on=draft._save.includes(+b.dataset.v);b.classList.toggle('on',on);b.setAttribute('aria-pressed',on)});
+      const sb=$('#ed-savebtn');if(sb){sb.textContent=saveLabel(draft._save);sb.disabled=!draft._save.length}
+      const raw=rawSched(),n=$('#ed-savenote');if(n)n.textContent=saveNote(draft._save,Object.keys(raw.days||{}).map(Number));break}
+    case'savesched':{if(t.dataset.v==='pick'&&!(draft._save||[1]).length)break;const secs=clone(draft.sections).map(s=>({...s,name:(s.name||'').trim()||'Section',tasks:s.tasks.filter(k=>k.kind==='workout'||(k.title||'').trim()).map(k=>({...k,title:(k.title||'').trim()}))}));
+      const wd=draft._wd??((new Date().getDay()+6)%7),pick=t.dataset.v==='pick'?(draft._save||[wd]):t.dataset.v==='day'?[wd]:[0,1,2,3,4,5,6],scope=pick.length===7?'all':'day',extra=R0()==='parent'?{locked:!!draft.locked}:{locked:false};
+      const lbl=saveLabel(pick).replace(/^Save for /,'').replace(/ only$/,'');draft=null;saveScheduleScope(secs,scope,pick,extra);render();SFX.link();toast(medal('✓',true),scope==='day'?'Saved for '+lbl:'Saved for every day',R0()==='parent'?'It’s on your kid’s app now.':scope==='day'?'The other days stay the same.':'Every day of your week is updated.');break}
     case'ask':sendChat(t.dataset.q);break;
     case'buildplan':buildPlan();break;
     case'buildsched':buildSched();break;
