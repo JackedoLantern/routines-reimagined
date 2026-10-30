@@ -15,7 +15,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Routines">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
-<script>window.RR_STANDALONE=true;window.RR_VERSION='8f70ce6bd3';</script>
+<script>window.RR_STANDALONE=true;window.RR_VERSION='7d98a8ad42';</script>
 <script>window.RR_SUPABASE={url:'https://uszalonpjyssvvsikzvg.supabase.co',key:'sb_publishable_w-5rI0R9ht2-HAr5HghM0w_-3HYiAEg'};</script>
 <script src="supabase.js"></script>
 </head>
@@ -540,6 +540,7 @@ svg.moose.lb-ico{display:inline-block;width:16px;height:16px;vertical-align:-3px
 .savepick .daystrip{margin:10px 0 8px}
 .daystrip.pick .dsb.on{background:var(--lvl);border-color:var(--lvl);color:#0b0b0c}
 .quickpick{display:flex;flex-wrap:wrap;gap:6px}
+.chk.locked{opacity:.55;border-style:dashed}
 .lnk-chip{display:inline-flex;align-items:center;gap:2px;margin-left:6px;padding:2px 8px;border-radius:999px;border:1px solid var(--lvl-soft);background:var(--lvl-soft);color:var(--lvl);font:600 11px/1.5 var(--f-body);cursor:pointer;vertical-align:middle;white-space:nowrap}
 .lnk-chip:active{transform:scale(.95)}
 .lnk-row{grid-column:1/-1;display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);margin:-2px 0 6px}
@@ -854,7 +855,7 @@ body.gated{overflow:hidden}
 @keyframes iSpill{0%,34%{opacity:0;transform:translateY(0)}38%{opacity:1}52%{opacity:1;transform:translateY(42px)}53%,100%{opacity:0}}
 @keyframes iPud{0%,36%{transform:scaleX(0)}70%,100%{transform:scaleX(1)}}
 .it-bowl .spoon{transform-origin:60px 8px;animation:iScoop 1s ease-in-out infinite}
-.sm{stroke-dasharray:30;animation:iSteam 1.6s ease-in-out infinite}.sm1{animation-delay:.5s}.sm2{animation-delay:1s}
+svg .sm{stroke-dasharray:30;animation:iSteam 1.6s ease-in-out infinite}svg .sm1{animation-delay:.5s}svg .sm2{animation-delay:1s}
 @keyframes iScoop{0%,100%{transform:rotate(0) translateY(0)}50%{transform:rotate(-22deg) translateY(-6px)}}
 @keyframes iSteam{0%{stroke-dashoffset:30;opacity:0}40%{opacity:.9}100%{stroke-dashoffset:-30;opacity:0}}
 .it-apple .bite{transform-box:fill-box!important;transform-origin:center;transform:scale(0);animation:iBite 2.4s ease-out infinite}.it-apple .b1{animation-delay:.5s}.it-apple .b2{animation-delay:1s}
@@ -917,7 +918,7 @@ body.gated{overflow:hidden}
 .it-backpack .bp{transform-origin:50px 74px;animation:iSquash .6s ease-in-out infinite alternate}.it-backpack .zip{stroke-dasharray:24;animation:iWrite 1.2s linear infinite}
 @keyframes iSquash{from{transform:scale(1,1)}to{transform:scale(1.06,.92)}}
 .it-controller .ctl{transform-origin:50px 46px;animation:iWob .3s ease-in-out infinite alternate}
-.btn1{animation:iBlink .4s steps(2) infinite}.btn2{animation:iBlink .4s steps(2) infinite reverse}
+svg .btn1{animation:iBlink .4s steps(2) infinite}svg .btn2{animation:iBlink .4s steps(2) infinite reverse}
 @keyframes iBlink{50%{opacity:.25}}
 .dab{transform-box:fill-box!important;transform-origin:center;transform:scale(0);animation:iDab 2.4s ease-out infinite}.d1{animation-delay:.4s}.d2{animation-delay:.8s}.d3{animation-delay:1.2s}
 .it-paint .pbr{transform-origin:76px 64px;animation:iWob .25s ease-in-out infinite alternate}
@@ -1440,6 +1441,18 @@ function linkAutoDone(k){if(!k.link||k.kind==='workout'||R0()==='parent')return 
     if(String(k.link).startsWith('c_')){const t=ctab(k.link),td=todayKey();return t&&t.items.length&&t.items.every(x=>x.d===td)?1:0}}catch(e){}
   return 0}
 const LINKAUTO=id=>id==='workout'?'when you finish your workout':id==='diet'?'when you log breakfast, lunch and dinner':String(id).startsWith('c_')?'when everything on that tab is checked':'';
+const gatedLink=k=>!!(k&&k.kind!=='workout'&&k.link&&(k.link==='workout'||k.link==='diet'||String(k.link).startsWith('c_')));
+/* linked tasks follow their tab: checked when the tab is finished, unchecked when it isn't */
+function syncLinked(){
+  if(R0()!=='me'||!S.today)return false;const t=todayKey(),sc=sched(),log=S.dayLog[t]||(S.dayLog[t]={_x:0,_sec:{}});log._sec=log._sec||{};log._x=log._x||0;
+  const h=S.history[t]||(S.history[t]={x:0,c:0});let ch=false;const L0=lvl(S.xp);
+  for(const sec of sc.sections)for(const k of sec.tasks){if(!gatedLink(k))continue;const e=log[k.id]||(log[k.id]={});
+    const ok=!!linkAutoDone({...k});
+    if(ok&&!e.d){const g=Math.min(TASK_XP,Math.max(0,TASK_CAP-log._x));e.d=Date.now();e.viaLink=1;if(g){e.g=g;log._x+=g;S.xp+=g;h.x+=g}ch=true}
+    else if(!ok&&e.d){if(e.g){S.xp=Math.max(0,S.xp-e.g);h.x=Math.max(0,h.x-e.g);log._x-=e.g;e.g=0}delete e.d;delete e.viaLink;ch=true}}
+  if(ch){for(const sec of sc.sections){if(!log._sec[sec.id]&&sec.tasks.length&&sec.tasks.every(k=>k.kind==='workout'?S.today.complete:log[k.id]&&log[k.id].d)){log._sec[sec.id]=1;S.xp+=SEC_XP;h.x+=SEC_XP}}
+    save();setTimeout(()=>{renderHeader();if(lvl(S.xp)>L0)afterXP(L0,300,checkBadges())},0)}
+  return ch}
 function resolveLink(q){q=nrm(q).replace(/^(the|my|your)\s+/,'').replace(/\s+(tab|page|section)$/,'').trim();
   const syn={workouts:'workout','work out':'workout','working out':'workout',exercise:'workout',training:'workout',gym:'workout',food:'diet',meals:'diet','meal plan':'diet','diet plan':'diet',eating:'diet',nutrition:'diet',leaderboard:'ranks',rank:'ranks',rankings:'ranks',ranking:'ranks',profile:'me',settings:'me',account:'me',coach:'skeefo',ai:'skeefo',chat:'skeefo',group:'family'};
   q=syn[q]||q;const b=LINKABLE().find(([id,n])=>id===q||nrm(n)===q);if(b)return b[0];
@@ -1593,7 +1606,7 @@ const allItems=r=>r.blocks.flatMap(b=>b.items);
 /* ================= Daily XP loss for undone tasks ================= */
 function dayTaskCount(d){
   const wd=(parseKey(d).getDay()+6)%7,sc=schedForDay(wd),log=S.dayLog[d]||{},tasks=sc.sections.flatMap(x=>x.tasks).filter(k=>k.kind!=='workout'&&!String(k.link||'').startsWith('c_'));
-  let done=0;for(const k of tasks){const e=log[k.id];let ok=!!(e&&e.d);
+  let done=0;for(const k of tasks){const e=log[k.id];let ok=!!(e&&e.d)&&!gatedLink(k);
     if(!ok&&k.link==='workout'){const h=S.history[d];ok=!!(h&&h.c)}
     if(!ok&&k.link==='diet'){const m=((S.diet||{})[d]||{}).m||{};ok=!!(m.b&&m.l&&m.d)}
     if(ok)done++}
@@ -1720,6 +1733,7 @@ const VIEWS={diet:()=>viewDiet(),newtab:()=>viewNewTab(),workout:()=>viewToday()
   family:()=>R0()==='parent'?viewFamily():viewKidFamily(),report:()=>viewReport(),schedule:()=>draft?viewEditor():viewParentSchedule()};
 let lastTab=null;
 function render(){
+  try{syncLinked()}catch(e){}
   renderTabs();
   const v=$('#view'),changed=lastTab!==tab;lastTab=tab;v.innerHTML=(R0()==='parent'&&tab!=='me'?`<div class="pv-bar"><span><b>Parent view</b> · Workout, My schedule and Diet are hidden here</span><button class="btn sm primary" data-act="role" data-v="me">Switch to my app</button></div>`:'')+(VIEWS[tab]||(String(tab).startsWith('c_')?()=>viewCustom(tab):VIEWS.workout))();
   if(tab==='ranks'&&rankView==='board')fillNames();
@@ -1783,7 +1797,7 @@ function viewToday(){
 /* ---------- My schedule ---------- */
 function taskState(k,log){
   if(k.kind==='workout')return{d:S.today.complete?S.today.end||1:0,s:S.today.start||0};
-  const e=log[k.id]||{},a=e.d?0:linkAutoDone(k);return{d:e.d||a||0,s:e.s||0,auto:!!a};
+  const e=log[k.id]||{};if(gatedLink(k)){const a=linkAutoDone(k);return{d:a?(e.d||a):0,s:0,auto:true,gated:true}}return{d:e.d||0,s:e.s||0};
 }
 function viewDay(){
   ensureToday();
@@ -1814,19 +1828,20 @@ function taskRow(k,log){
   const st=taskState(k,log),now=Date.now(),wk=k.kind==='workout';
   const late=!st.d&&k.time&&now>hmToday(k.time)+Math.max(15,k.min||0)*60000;
   let status='';
-  if(st.auto)status=`Done on ${esc(tabLinkName(k.link))}`;
+  if(st.gated)status=st.d?`Done on ${esc(tabLinkName(k.link))}`:`Finish your ${esc(tabLinkName(k.link))} tab to check this off`;
   else if(st.d&&st.s)status=`Done ${clock(st.d)} · took ${dur(st.d-st.s)}`;
   else if(st.d)status=`Done ${clock(st.d)}`;
   else if(st.s)status=`Started ${clock(st.s)} · <span class="live" data-since="${st.s}">${mmss(now-st.s)}</span>`;
   else if(late)status=`<span class="late">Running late</span>`;
   const when=[k.time?hm(k.time):'',k.min?`~${k.min} min`:''].filter(Boolean).join(' · ');
   const right=wk?`<button class="btn sm" data-go="workout">${st.d?'View':'Open'}</button>`
-    :st.auto?`<button class="btn sm" data-go="${esc(k.link)}">Open</button>`
+    :st.gated?`${st.d?`<span class="xpv dose">+${(log[k.id]&&log[k.id].g)||TASK_XP} XP</span>`:`<button class="btn sm" data-go="${esc(k.link)}">Open</button>`}`
     :st.d?`<span class="xpv dose">+${(log[k.id]&&log[k.id].g)||TASK_XP} XP</span>`
     :st.s?`<span class="pulse" aria-hidden="true"></span>`
     :'';
   return`<div class="ex task ${st.d?'done':''} ${wk?'wk':''}" data-id="${k.id}">
     ${wk?`<button class="chk" data-go="workout" aria-label="Open today’s workout"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button>`
+      :st.gated?`<button class="chk ${st.d?'':'locked'}" data-act="linkedchk" data-id="${k.id}" aria-pressed="${!!st.d}" aria-label="${esc(k.title)} checks off when your ${esc(tabLinkName(k.link))} tab is finished"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button>`
       :`<button class="chk" data-act="task" data-id="${k.id}" aria-pressed="${!!st.d}" aria-label="Mark ${esc(k.title)} done"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button>`}
     <div class="exinfo static"><span class="exn">${esc(k.title)}${wk?' <span class="tag">Workout</span>':''}${!wk&&k.link&&tabLinkName(k.link)?` <button class="lnk-chip" data-go="${esc(k.link)}" aria-label="Open the ${esc(tabLinkName(k.link))} tab">↗ ${esc(tabLinkName(k.link))}</button>`:''}</span><span class="cue">${esc(when)}${when&&status?' · ':''}${status}</span></div>
     <div>${right}</div></div>`;
@@ -1839,7 +1854,7 @@ function viewEditor(){
   const parent=R0()==='parent',wd=draft._wd??((new Date().getDay()+6)%7),raw=rawSched(),cust=Object.keys(raw.days||{}).map(Number).filter(d=>d!==wd).sort();
   let h=`<section class="card"><div class="ed-head"><div><div class="label">Editing ${DAYFULL[wd]}${draft._custom?' · custom day':''}</div><h3 class="h3">${parent?esc(kidName(SEL))+'’s schedule':'Your schedule'}</h3></div>
     ${parent?`<label class="switch"><input type="checkbox" id="ed-lock" data-ed="lock" ${draft.locked?'checked':''}><span></span>Lock it so only you can change it</label>`:''}</div>
-    <p class="note"><b>Hold</b> any task or section (or its ⠿ handle) and drag to move it, even into another section. Sections group your day. Each task can have a start time, how many minutes it takes, and a link to another tab. Linked tasks get a shortcut, and Workout, Diet and your own tabs check them off for you.</p><div class="ed">`;
+    <p class="note"><b>Hold</b> any task or section (or its ⠿ handle) and drag to move it, even into another section. Sections group your day. Each task can have a start time, how many minutes it takes, and a link to another tab. Linked tasks get a shortcut. Tasks linked to Workout, Diet or your own tabs can only be checked off by finishing that tab, and they uncheck if it isn’t finished.</p><div class="ed">`;
   draft.sections.forEach((s,si)=>{
     h+=`<div class="ed-sec"><div class="ed-row"><span class="grip" data-grip="sec" role="button" tabindex="0" aria-label="Hold and drag to move this section"><svg viewBox="0 0 12 18" aria-hidden="true"><circle cx="3" cy="3" r="1.6"/><circle cx="9" cy="3" r="1.6"/><circle cx="3" cy="9" r="1.6"/><circle cx="9" cy="9" r="1.6"/><circle cx="3" cy="15" r="1.6"/><circle cx="9" cy="15" r="1.6"/></svg></span><input class="inp sec" id="ed-${s.id}-name" data-ed="sec" data-si="${si}" value="${esc(s.name)}" placeholder="Section name" aria-label="Section name">
       <button class="icon-btn" data-act="delsec" data-si="${si}" aria-label="Delete section ${esc(s.name)}">✕</button></div>
@@ -2358,7 +2373,7 @@ const ACT={
       if(f.k.kind==='workout'){if(id==='workout')return`Already done! Your **${esc(f.k.title)}** task is linked to the Workout tab, and it checks itself off when you finish your workout.`;throw new Error('That’s your daily workout, so it stays linked to the Workout tab. Try another task.')}
       if(!id){delete f.k.link;return`Unlinked **${esc(f.k.title)}**. It’s a normal task again.`}
       f.k.link=id;const auto=LINKAUTO(id);
-      return`${made?`Added **${esc(f.k.title)}** to ${esc(f.s.name)} and linked it`:`Linked **${esc(f.k.title)}**`} to the **${esc(tabLinkName(id))}** tab! 🔗 Tap **↗ ${esc(tabLinkName(id))}** next to it on My schedule to jump there.${auto?` It checks itself off ${auto}.`:''}`});
+      return`${made?`Added **${esc(f.k.title)}** to ${esc(f.s.name)} and linked it`:`Linked **${esc(f.k.title)}**`} to the **${esc(tabLinkName(id))}** tab! 🔗 Tap **↗ ${esc(tabLinkName(id))}** next to it on My schedule to jump there.${auto?` It can only be checked off ${auto}, and it unchecks if that tab isn’t finished.`:''}`});
   },
   removeTask({title}){
     return mutSched(sc=>{const f=findTask(sc,title);if(!f)throw new Error(`I couldn’t find “${title}” on your schedule.`);
@@ -2377,6 +2392,7 @@ const ACT={
     if(R0()==='parent')throw new Error('Only your kid can check off their own tasks.');
     const sc=sched(),f=findTask(sc,title);if(!f)throw new Error(`I couldn’t find “${title}” on your schedule.`);
     if(f.k.kind==='workout')throw new Error('Your workout gets checked off when you finish every move on the Workout tab.');
+    if(gatedLink(f.k))throw new Error(`**${esc(f.k.title)}** is linked to your ${esc(tabLinkName(f.k.link))} tab, so it checks itself off when that tab is finished.`);
     ensureToday();const log=S.dayLog[todayKey()]||{};
     if(log[f.k.id]&&log[f.k.id].d)return`**${esc(f.k.title)}** is already done. Nice!`;
     taskToggle(f.k.id,$('.composer')||document.body);const e2=(S.dayLog[todayKey()]||{})[f.k.id]||{};return`Checked off **${esc(f.k.title)}**! +${e2.g||TASK_XP} XP.`;
@@ -2731,6 +2747,7 @@ const ACT2={
     sc.sections=sc.sections.filter(x=>x!==s);return`Deleted the **${esc(s.name)}** section${s.tasks.length?` and its ${s.tasks.length} task${s.tasks.length>1?'s':''}`:''}.`})},
   uncheck(title){if(R0()==='parent')throw new Error('Only your kid can change their own check marks.');
     const sc=sched(),f=findTask(sc,title);if(!f)throw new Error(`I couldn’t find “${title}” on your schedule.`);
+    if(gatedLink(f.k))throw new Error(`**${esc(f.k.title)}** follows your ${esc(tabLinkName(f.k.link))} tab, so it unchecks itself if that tab isn’t finished.`);
     const log=S.dayLog[todayKey()]||{};if(!(log[f.k.id]&&log[f.k.id].d))return`**${esc(f.k.title)}** isn’t checked off yet.`;
     taskToggle(f.k.id,$('.composer')||document.body);return`Unchecked **${esc(f.k.title)}**.`},
   listDay(wd){ensureToday();const tw=(new Date().getDay()+6)%7;
@@ -3208,6 +3225,8 @@ document.addEventListener('click',e=>{
     case'how':{SFX.soft();const id=t.dataset.id,row=t.closest('.ex');if(openHow.has(id))openHow.delete(id);else openHow.add(id);const o=openHow.has(id);row.classList.toggle('open',o);t.setAttribute('aria-expanded',o);break}
     case'guide':{SFX.soft();guideOpen=!guideOpen;const g=t.closest('.guide');g.classList.toggle('open',guideOpen);t.setAttribute('aria-expanded',guideOpen);break}
     case'task':taskToggle(t.dataset.id,t);break;
+    case'linkedchk':{const k=sched().sections.flatMap(x=>x.tasks).find(x=>x.id===t.dataset.id);if(!k)break;SFX.soft();
+      toast(medal('🔗',false),linkAutoDone(k)?'Done on '+tabLinkName(k.link):'Finish your '+tabLinkName(k.link)+' tab first',linkAutoDone(k)?'This one follows your '+tabLinkName(k.link)+' tab.':(k.link==='workout'?'Finish every move in your workout and this checks itself off.':k.link==='diet'?'Log breakfast, lunch and dinner and this checks itself off.':'Check everything on that tab and this checks itself off.'));break}
     case'start':{ensureToday();const d=todayKey(),log=S.dayLog[d]||(S.dayLog[d]={_x:0,_sec:{}});(log[t.dataset.id]||(log[t.dataset.id]={})).s=Date.now();SFX.start();save();render();break}
     case'schday':{const v=+t.dataset.v,tw=(new Date().getDay()+6)%7;schDay=v===tw?null:v;SFX.soft();render();break}
     case'resetday':{const wd=schDay??((new Date().getDay()+6)%7),r=clone(rawSched());if(r.days)delete r.days[wd];delete r._wd;delete r._custom;saveSchedule(r);render();toast(medal('✓',true),DAYFULL[wd]+' reset','It uses your every-day schedule again.');break}
@@ -3323,6 +3342,7 @@ function toggle(id,btn){
 }
 function taskToggle(id,btn){
   ensureToday();
+  {const lk=sched().sections.flatMap(x=>x.tasks).find(x=>x.id===id);if(gatedLink(lk)){toast(medal('🔗',false),'Linked to '+tabLinkName(lk.link),'It checks off by itself when that tab is finished.');return}}
   const t=todayKey(),log=S.dayLog[t]||(S.dayLog[t]={_x:0,_sec:{}});log._sec=log._sec||{};log._x=log._x||0;
   const e=log[id]||(log[id]={}),h=S.history[t]||(S.history[t]={x:0,c:0}),L0=lvl(S.xp),rect=btn.getBoundingClientRect();
   let bonus=0;
