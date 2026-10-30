@@ -15,7 +15,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Routines">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
-<script>window.RR_STANDALONE=true;window.RR_VERSION='d6a6c39f04';</script>
+<script>window.RR_STANDALONE=true;window.RR_VERSION='e9c92acd3b';</script>
 <script>window.RR_SUPABASE={url:'https://uszalonpjyssvvsikzvg.supabase.co',key:'sb_publishable_w-5rI0R9ht2-HAr5HghM0w_-3HYiAEg'};</script>
 <script src="supabase.js"></script>
 </head>
@@ -553,6 +553,7 @@ svg.moose.lb-ico{display:inline-block;width:16px;height:16px;vertical-align:-3px
 .boost-pop.note .bp-ico{background:var(--lvl-soft)}
 .bp-x{background:none;border:0;color:var(--muted);font-size:14px;cursor:pointer;padding:4px;border-radius:8px}.bp-x:hover{color:var(--ink);background:var(--surface-2)}
 @media (prefers-reduced-motion:reduce){.boost-pop{transition:opacity .2s}}
+.w-dist select.inp{width:64px;padding:8px 6px}.w-dist input{width:76px!important}.w-conv{color:var(--muted);font:12px var(--f-mono);white-space:nowrap}
 .wl{display:grid;gap:8px;margin-top:12px}
 .w-row{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;gap:6px;align-items:center;padding:8px;border-radius:12px;background:var(--surface-2)}
 .w-mv{display:flex;flex-direction:column;gap:2px}.w-mv .icon-btn{width:28px;height:22px;font-size:12px}
@@ -1619,7 +1620,7 @@ function ensureToday(){
   if(!S.today||S.today.date!==t)S.today={date:t,variant:0,done:[],complete:false,bonus:0,start:0,end:0};
   const cut=addDays(t,-30);for(const k of Object.keys(S.dayLog))if(k<cut)delete S.dayLog[k];
 }
-const routine=()=>applyMyWorkout(buildRoutine(effProfile(),S.today.date,S.today.variant));
+const routine=()=>applyMyWorkout(distify(buildRoutine(effProfile(),S.today.date,S.today.variant)));
 const allItems=r=>r.blocks.flatMap(b=>b.items);
 
 /* ================= Daily XP loss for undone tasks ================= */
@@ -1804,9 +1805,9 @@ function viewToday(){
       const d=done.includes(it.id),o=openHow.has(it.id),how=HOW[it.id]||HOW[it.ref]||(it.ref===''&&R.mine?['Do this exercise the way you learned it, with good form.','Move slowly and stay in control.','Stop if anything hurts.']:[]);
       h+=`<div class="ex ${d?'done':''} ${o?'open':''} ${locked?'locked':''}" data-id="${it.id}">
         <button class="chk" data-act="toggle" data-id="${it.id}" aria-pressed="${d}" aria-label="Mark ${esc(it.n)} done"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button>
-        <button class="exinfo" data-act="how" data-id="${it.id}" aria-expanded="${o}"><span class="exn">${esc(it.n)}</span><span class="cue">${esc(it.cue||'')}</span><span class="howlink">How to do it <svg class="chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span></button>
+        <button class="exinfo" data-act="how" data-id="${it.id}" aria-expanded="${o}"><span class="exn">${esc(it.n)}${it.km!=null?' <span class="tag">Distance</span>':''}</span><span class="cue">${esc(it.cue||'')}</span><span class="howlink">How to do it <svg class="chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span></button>
         <div class="dose num">${it.sets>1?it.sets+' × ':''}${esc(it.dose)}<small class="xpv">+${it.xp} XP</small></div>
-        <div class="fold how"><div><ol class="steps">${how.map(s=>`<li>${esc(s)}</li>`).join('')}</ol>${it.sets>1?`<p class="note">Do ${it.sets} rounds of ${esc(it.dose)}. Rest ${R.rest} s between rounds.</p>`:''}</div></div></div>`;
+        <div class="fold how"><div><ol class="steps">${how.map(s=>`<li>${esc(s)}</li>`).join('')}</ol>${it.km!=null?`<p class="note">Go ${esc(it.dose)} at your own pace.</p>`:it.sets>1?`<p class="note">Do ${it.sets} rounds of ${esc(it.dose)}. Rest ${R.rest} s between rounds.</p>`:''}</div></div></div>`;
     }
     h+=`</section>`;
   }
@@ -1850,7 +1851,28 @@ function natExLine(raw){
   if((m=s.match(/^(\d+)\s*(?:reps?\s+(?:of\s+)?)?([a-z][a-z' -]+)$/i)))return done(m[2],1,m[1]+' reps');
   return null;
 }
+/* ---- workout type detection: distance (run/jog/walk…) vs lifting (sets × reps) vs timed ---- */
+const DIST_RE=/\b(runs?|running|jog|jogs|jogging|sprints?|sprinting|walk|walks|walking|hike|hiking|swim|swimming|cycl(?:e|ing)|biking|bike ride|treadmill)\b/i;
+const LIFT_RE=/\b(curls?|press|bench|deadlifts?|squats? rack|rows?|pull ?downs?|pulldowns?|skull ?crushers?|preacher|dumbb?ells?|barbells?|kettlebells?|lifts?|raises?|flys?|flyes?|extensions?|shrugs?|lat)\b/i;
+const isDistName=n=>DIST_RE.test(n)&&!/interval/i.test(n);
+const kmRound=v=>Math.round(v*100)/100;
+function distDose(km){km=Math.max(.05,kmRound(km));return`${+km.toFixed(2)} km · ${+(km*0.621371).toFixed(2)} mi`}
+function exType(x){return x&&x.km!=null?'dist':/\b(s|min)$/.test(String(x&&x.dose||''))?'time':'reps'}
+function distFromText(s){const m=String(s).match(/(\d+(?:\.\d+)?)\s*(kms?|kilomet(?:er|re)s?|k|mi|miles?|m|meters?|metres?)\b/i);if(!m)return null;
+  const v=parseFloat(m[1]),u=m[2].toLowerCase();const km=/^(mi|mile)/.test(u)?v*1.609344:/^(m|meter|metre)$|^(meters|metres)$/.test(u)?v/1000:v;return{km,match:m[0],unit:/^(mi|mile)/.test(u)?'mi':'km'}}
+function distItem(name,km,unit){const sw=/swim/i.test(name),cy=/cycl|bike/i.test(name),wk=/walk|hike/i.test(name)&&!/run|jog/i.test(name);return{id:'cw_'+rid(),n:name.replace(/^\w/,c=>c.toUpperCase()).slice(0,40),ref:sw||cy?'':'brisk',cue:sw?'Long, smooth strokes':cy?'Steady cadence, easy breathing':wk?'Brisk pace, swing your arms':/sprint/i.test(name)?'Fast, then walk back to recover':'Steady pace you could talk at',sets:1,km:kmRound(km),u:unit||'km',dose:distDose(km)}}
+function distify(R){
+  if(!R||!R.blocks)return R;
+  return{...R,blocks:R.blocks.map(b=>({...b,items:b.items.map(it=>{if(it.km!=null||!isDistName(it.n))return it;const mm=String(it.dose).match(/(\d+(?:\.\d+)?)\s*min/);if(!mm)return it;
+    const pace=/walk|hike/i.test(it.n)&&!/jog|run/i.test(it.n)?12:/sprint/i.test(it.n)?5:/swim/i.test(it.n)?30:/cycl|bike/i.test(it.n)?3:7;const km=+mm[1]/pace;return{...it,sets:1,km:kmRound(km),dose:distDose(km)}})}))}
+}
 function parseExLine(line){
+  {const raw=numWords(String(line)).replace(/^\s*(?:[-*•·–]|\d+[.)])\s+/,'').trim(),d=distFromText(raw);
+   const nm0=raw.replace(d?d.match:'',' ').replace(/\b(for|of|a|an|about|around|do|go|on|the)\b/gi,' ').replace(/[,:;()@-]+/g,' ').replace(/\b\d+(?:\.\d+)?\s*(min|mins|minutes?|s|secs?|seconds?)\b/gi,' ').replace(/\b\d+\b/g,' ').replace(/\s+/g,' ').trim();
+   if(nm0&&isDistName(nm0)){
+     if(d)return distItem(nm0,d.km,d.unit);
+     const mm=raw.match(/(\d+(?:\.\d+)?)\s*(?:min|mins|minutes?)\b/i),pace=/walk|hike/i.test(nm0)&&!/jog|run/i.test(nm0)?12:/sprint/i.test(nm0)?5:7;
+     return distItem(nm0,mm?+mm[1]/pace:2,'km')}}
   {const nl=natExLine(String(line).replace(/^\s*(?:[-*•·–]|\d+[.)])\s+/,''));if(nl&&nl.name&&/[a-z]/i.test(nl.name)&&nl.name.split(' ').length<=5){const nm=nl.name.replace(/\b(of|reps?|sets?|rounds?|each|side)\b/gi,' ').replace(/\s+/g,' ').trim();const e=matchEx(nm);
     if(nm)return{id:'cw_'+rid(),n:nm.replace(/^\w/,c=>c.toUpperCase()).slice(0,40),ref:e?e.id:'',cue:e?e.cue:'',sets:Math.max(1,Math.min(10,nl.sets||3)),dose:String(nl.dose).slice(0,20)}}}
   line=numWords(line);
@@ -1884,7 +1906,7 @@ function setMyWorkout(items,title,src){
 function myWorkoutText(w){return w.items.map((x,i)=>`${i+1}. **${esc(x.n)}**: ${x.sets>1?x.sets+' × ':''}${esc(x.dose)}${x.ref?'':' *(custom)*'}`).join('\n')}
 function applyMyWorkout(R){
   const w=S.myWorkout;if(!w||!w.items||!w.items.length||R.restDay||S.today.variant!==0)return R;
-  const main=w.items.map(x=>({id:x.id,n:x.n,cue:x.cue||'',ref:x.ref||'',sets:x.sets||1,dose:x.dose||'10 reps',xp:XP_MAIN}));
+  const main=w.items.map(x=>({id:x.id,n:x.n,cue:x.cue||'',ref:x.ref||'',sets:x.km!=null?1:(x.sets||1),dose:x.km!=null?distDose(x.km):(x.dose||'10 reps'),km:x.km,xp:XP_MAIN}));
   return{...R,title:w.title||'My workout',mine:true,fromAI:false,prog:null,blocks:R.blocks.map(b=>b.k==='main'?{...b,name:'Your exercises',items:main}:b)};
 }
 function viewWorkoutEditor(){
@@ -1895,7 +1917,8 @@ function viewWorkoutEditor(){
     <div class="wl">`;
   d.items.forEach((x,i)=>{h+=`<div class="w-row"><div class="w-mv"><button class="icon-btn" data-act="wup" data-i="${i}" aria-label="Move ${esc(x.n)} up" ${i?'':'disabled'}>↑</button><button class="icon-btn" data-act="wdown" data-i="${i}" aria-label="Move ${esc(x.n)} down" ${i<d.items.length-1?'':'disabled'}>↓</button></div>
     <input class="inp w-n" data-w="n" data-i="${i}" maxlength="40" value="${esc(x.n)}" placeholder="Exercise" aria-label="Exercise name">
-    <div class="w-dose"><input class="inp" type="number" min="1" max="10" data-w="sets" data-i="${i}" value="${x.sets}" aria-label="Sets"><span>×</span><input class="inp" data-w="dose" data-i="${i}" maxlength="20" value="${esc(x.dose)}" placeholder="10 reps" aria-label="Reps or time"></div>
+    ${x.km!=null?`<div class="w-dose w-dist"><input class="inp" type="number" min="0.1" max="200" step="0.1" data-w="km" data-i="${i}" value="${x.u==='mi'?+(x.km*0.621371).toFixed(2):x.km}" aria-label="Distance"><select class="inp" data-w="u" data-i="${i}" aria-label="Unit"><option value="km" ${x.u!=='mi'?'selected':''}>km</option><option value="mi" ${x.u==='mi'?'selected':''}>mi</option></select><small class="w-conv" id="w-conv-${i}">${x.u==='mi'?+x.km.toFixed(2)+' km':+(x.km*0.621371).toFixed(2)+' mi'}</small></div>`
+      :`<div class="w-dose"><input class="inp" type="number" min="1" max="10" data-w="sets" data-i="${i}" value="${x.sets}" aria-label="Sets"><span>×</span><input class="inp" data-w="dose" data-i="${i}" maxlength="20" value="${esc(x.dose)}" placeholder="${LIFT_RE.test(x.n)?'10 reps':'10 reps or 30 s'}" aria-label="Reps or time"></div>`}
     <button class="icon-btn" data-act="wdel" data-i="${i}" aria-label="Delete ${esc(x.n)}">✕</button></div>`});
   if(!d.items.length)h+=`<div class="empty">No exercises yet. Add one or import a list.</div>`;
   h+=`</div><div class="ed-actions"><button class="btn" data-act="wadd">+ Add exercise</button></div>
@@ -1909,13 +1932,16 @@ function viewWorkoutEditor(){
 }
 function wStartEdit(imp){
   ensureToday();const R=routine(),main=(R.blocks.find(b=>b.k==='main')||{items:[]}).items;
-  const src=S.myWorkout?S.myWorkout.items:main.map(x=>({id:'cw_'+rid(),n:x.n,ref:x.ref||x.id,cue:x.cue,sets:x.sets,dose:x.dose}));
+  const src=S.myWorkout?S.myWorkout.items:main.map(x=>({id:'cw_'+rid(),n:x.n,ref:x.ref||x.id,cue:x.cue,sets:x.sets,dose:x.dose,...(x.km!=null?{km:x.km,u:'km'}:{})}));
   wDraft={title:S.myWorkout?S.myWorkout.title:(R.restDay?'My workout':R.title),items:clone(src),imp:!!imp};
 }
 document.addEventListener('input',e=>{const t=e.target;if(!wDraft||!t.dataset)return;
   if(t.id==='w-title'){wDraft.title=t.value;return}
   const f=t.dataset.w,i=+t.dataset.i;if(!f||!wDraft.items[i])return;
   if(f==='sets')wDraft.items[i].sets=Math.max(1,Math.min(10,parseInt(t.value)||1));
+  else if(f==='km'||f==='u'){const x=wDraft.items[i];if(f==='u'){x.u=t.value}else{const v=Math.max(.05,parseFloat(t.value)||0);x.km=kmRound(x.u==='mi'?v*1.609344:v)}x.dose=distDose(x.km);
+    if(f==='u'){const r=t.closest('.w-dist');if(r)r.querySelector('[data-w=km]').value=x.u==='mi'?+(x.km*0.621371).toFixed(2):x.km}
+    const c=$('#w-conv-'+i);if(c)c.textContent=x.u==='mi'?+x.km.toFixed(2)+' km':+(x.km*0.621371).toFixed(2)+' mi';return}
   else if(f==='n'){wDraft.items[i].n=t.value;const e2=matchEx(t.value);wDraft.items[i].ref=e2?e2.id:'';wDraft.items[i].cue=e2?e2.cue:''}
   else wDraft.items[i][f]=t.value});
 document.addEventListener('change',e=>{if(e.target.id!=='w-file'||!wDraft)return;const f=e.target.files&&e.target.files[0];if(!f)return;
@@ -3137,7 +3163,7 @@ function tryCommand(raw,inner){
       return`Got it! I added ${its.map(x=>`**${esc(x.n)}**: ${exPlain(x)}`).join(', and ')} to your workout on the **Workout** tab. 💪\n\nIf I got the numbers wrong, tap **Edit workout** there, or tell me like “8 rounds of 10 pushups”.`}}
   return null;
 }
-function exPlain(x){const d=String(x.dose);const r=d.match(/^(\d+(?:–\d+)?) reps(.*)$/);
+function exPlain(x){if(x.km!=null)return distDose(x.km);const d=String(x.dose);const r=d.match(/^(\d+(?:–\d+)?) reps(.*)$/);
   if(r)return x.sets>1?`${r[1]} reps, ${x.sets} rounds (${x.sets} × ${r[1]}${r[2]})`:`${r[1]} reps${r[2]}`;
   return x.sets>1?`${d}, ${x.sets} rounds`:d}
 const TOOLS=()=>[
@@ -3382,7 +3408,7 @@ document.addEventListener('click',e=>{
     case'wimport':{const ta=$('#w-paste'),its=parseExList(ta?ta.value:'');if(!its.length){toast(medal('!',false),'No exercises found','Put one per line, like “Push-ups 3x10”.');break}
       wDraft.items=t.dataset.v==='replace'?its:[...wDraft.items,...its];wDraft.imp=false;SFX.bonus();render();toast(medal('✓',true),`Added ${its.length} exercise${its.length>1?'s':''}`,'Check them, then tap Save workout.');break}
     case'wcancel':wDraft=null;render();break;
-    case'wsave':{const items=wDraft.items.map(x=>({...x,n:String(x.n||'').trim().slice(0,40),dose:String(x.dose||'').trim()||'10 reps'})).filter(x=>x.n);
+    case'wsave':{const items=wDraft.items.map(x=>{const n=String(x.n||'').trim().slice(0,40);let y={...x,n,dose:String(x.dose||'').trim()||'10 reps'};if(isDistName(n)&&y.km==null){const d=distFromText(y.dose);y.km=kmRound(d?d.km:2);y.u=d?d.unit:'km';y.sets=1}else if(!isDistName(n)&&y.km!=null){delete y.km;delete y.u;y.dose='10 reps';y.sets=3}if(y.km!=null)y.dose=distDose(y.km);return y}).filter(x=>x.n);
       if(!items.length){toast(medal('!',false),'Add at least one exercise','Or tap Back to automatic.');break}
       if(S.today.done.length&&S.myWorkout){const ids=new Set(items.map(x=>x.id));S.today.done=S.today.done.filter(id=>ids.has(id)||!String(id).startsWith('cw_'))}
       setMyWorkout(items,String(wDraft.title||'').trim()||'My workout','edit');wDraft=null;S.today.variant=0;SFX.link();render();toast(medal('✓',true),'Workout saved','It’s your workout on every training day now.');break}
