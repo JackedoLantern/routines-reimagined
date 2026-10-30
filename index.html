@@ -15,7 +15,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Routines">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
-<script>window.RR_STANDALONE=true;window.RR_VERSION='e9c92acd3b';</script>
+<script>window.RR_STANDALONE=true;window.RR_VERSION='97a84e92f5';</script>
 <script>window.RR_SUPABASE={url:'https://uszalonpjyssvvsikzvg.supabase.co',key:'sb_publishable_w-5rI0R9ht2-HAr5HghM0w_-3HYiAEg'};</script>
 <script src="supabase.js"></script>
 </head>
@@ -554,6 +554,9 @@ svg.moose.lb-ico{display:inline-block;width:16px;height:16px;vertical-align:-3px
 .bp-x{background:none;border:0;color:var(--muted);font-size:14px;cursor:pointer;padding:4px;border-radius:8px}.bp-x:hover{color:var(--ink);background:var(--surface-2)}
 @media (prefers-reduced-motion:reduce){.boost-pop{transition:opacity .2s}}
 .w-dist select.inp{width:64px;padding:8px 6px}.w-dist input{width:76px!important}.w-conv{color:var(--muted);font:12px var(--f-mono);white-space:nowrap}
+.attach{display:grid;place-items:center;width:34px;height:34px;flex:none;border-radius:10px;color:var(--muted);cursor:pointer}.attach:hover{color:var(--ink);background:var(--surface-2)}
+.attach svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.w-days{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0 4px}.w-days .chip-btn.on{background:var(--lvl);border-color:var(--lvl);color:#0b0817}.w-days .chip-btn.danger{color:var(--bad)}
 .wl{display:grid;gap:8px;margin-top:12px}
 .w-row{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;gap:6px;align-items:center;padding:8px;border-radius:12px;background:var(--surface-2)}
 .w-mv{display:flex;flex-direction:column;gap:2px}.w-mv .icon-btn{width:28px;height:22px;font-size:12px}
@@ -1785,7 +1788,7 @@ function viewToday(){
   h+=`<section class="card"><div class="day"><div style="min-width:0">
       <div class="label">${new Date().toLocaleDateString(undefined,{weekday:'long'})} · ${esc(GOALS[p.goal])}</div>
       <h2>${esc(R.title)}</h2>
-      <div class="meta">${R.mine?'<span class="chip sk">Your workout</span>':''}${R.prog?(R.prog.done?'<span class="chip sk">Program complete 🎉</span>':`<span class="chip sk">Week ${R.prog.week} of ${R.prog.weeks}</span>`):R.fromAI?'<span class="chip sk">Skeefo plan</span>':''}<span class="chip">~${p.minutes} min</span><span class="chip">${items.length} moves</span><span class="chip">rest ${R.rest}s</span><span class="chip xp">up to ${totalXP} XP</span></div>
+      <div class="meta">${R.mine?`<span class="chip sk">${R.dayCount>1?`${esc(R.planName||'Your plan')} · day ${R.dayNo} of ${R.dayCount}`:'Your workout'}</span>`:''}${R.prog?(R.prog.done?'<span class="chip sk">Program complete 🎉</span>':`<span class="chip sk">Week ${R.prog.week} of ${R.prog.weeks}</span>`):R.fromAI?'<span class="chip sk">Skeefo plan</span>':''}<span class="chip">~${p.minutes} min</span><span class="chip">${items.length} moves</span><span class="chip">rest ${R.rest}s</span><span class="chip xp">up to ${totalXP} XP</span></div>
     </div>
     <div class="ring ${pct===1?'full':''}"><svg viewBox="0 0 84 84"><circle class="trk" cx="42" cy="42" r="36"/><circle class="bar" cx="42" cy="42" r="36" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-pct)}"/></svg><div><div><b class="num">${dn}/${items.length}</b><span>done</span></div></div></div></div>
     <div class="dayfoot"><span class="note">${esc(LEVELS[p.level])} · ${esc(EQUIP[p.equip])} · age ${esc(p.age)}${+p.age>=55?' · low-impact':''}${S.today.start&&!locked?` · started ${clock(S.today.start)}`:''}</span>
@@ -1886,7 +1889,7 @@ function parseExLine(line){
   if(!dose&&(m=take(/(\d{1,3})\s*(s|sec|secs|seconds|second|min|mins|minutes|minute)\b/i)))dose=m[1]+(/^s/i.test(m[2])?' s':' min');
   if(!dose&&(m=take(/(\d{1,3}(?:\s*[-–]\s*\d{1,3})?)\s*(?:reps?|times)?\b/i)))dose=m[1].replace(/\s*[-–]\s*/,'–')+' reps';
   if(wt)dose=(dose||'10 reps')+' @ '+wt;
-  s=s.replace(/\b\d+\b/g,' ').replace(/\b(of|reps?|sets?|for|each|side|x)\b/gi,' ').replace(/[,:;@()]+/g,' ').replace(/\s+/g,' ').trim();
+  s=s.replace(/\b\d+\b/g,' ').replace(/\b(of|reps?|sets?|for|each|side|x)\b/gi,' ').replace(/[,:;@()]+/g,' ').replace(/(^|\s)[-–—]+(?=\s|$)/g,' ').replace(/\s+/g,' ').trim().replace(/[-–—\s]+$/,'');
   if(!s||!/[a-z]/i.test(s))return null;
   const e=matchEx(s);
   if(!dose)dose=e&&e.t==='time'?'30 s':e&&e.t==='min'?'10 min':'10 reps';
@@ -1898,22 +1901,73 @@ function parseExList(text){
   const lines=numWords(String(text||'')).split(/\r?\n|;|,?\s+(?:and|then|plus)\s+(?=\d)|,\s*(?=\d+\s*[a-z])|(?:,\s*(?=[a-z]))/i).map(x=>x.trim().replace(/^(?:and|then|plus)\s+/i,'')).filter(Boolean);
   return lines.map(parseExLine).filter(Boolean).slice(0,20);
 }
-function setMyWorkout(items,title,src){
+function myDays(w){return w&&w.days&&w.days.length?w.days:w?[{title:w.title,items:w.items||[]}]:[]}
+function myDayIdx(w,date){const D=myDays(w);if(D.length<=1)return 0;const t=date||todayKey(),p=effProfile();let n=0,d=w.start||t,guard=0;
+  while(d<t&&guard++<800){if(isTrainDay(d,p))n++;d=addDays(d,1)}return n%D.length}
+const myTodayDay=w=>myDays(w)[myDayIdx(w)];
+function setMyWorkoutDays(days,name,src){days=days.filter(d=>d.items.length);
+  if(!days.length)throw new Error('I couldn’t find any exercises in that. Put one exercise per line, like “Push-ups 3x10” or “Plank 45s”.');
+  if(days.length===1)return setMyWorkout(days[0].items,days[0].title||name,src);
+  S.myWorkout={title:(name||'My plan').slice(0,30),days:days.map(d=>({title:(d.title||'Workout').slice(0,30),items:d.items})),start:todayKey(),src:src||'list',made:Date.now()};
+  if(!S.today.done.length)S.today.variant=0;save();return S.myWorkout}
+function isDayHeader(l){const s=String(l).replace(/^\s*(?:[-*•·–]|\d+[.)])\s+/,'').replace(/[:\-–]+\s*$/,'').trim();
+  if(!s||/\d/.test(s)||s.length>40)return false;
+  if(/\b(day|days|workout|schedule|plan|routine|session|split|week)\b$/i.test(s)||/^(day|week)\b/i.test(s)||/^(monday|tuesday|wednesday|thursday|friday|saturday|sunday|mon|tue|wed|thu|fri|sat|sun)\b/i.test(s))return true;
+  if(/:\s*$/.test(l)&&!isDistName(s))return true;
+  return /^[A-Z][A-Z &'\/]+$/.test(s)&&s.split(' ').length<=6&&!isDistName(s)}
+function parseWorkoutDoc(text){
+  const lines=numWords(String(text||'')).split(/\r?\n/).map(x=>x.replace(/[\u200b\u00a0]/g,' ').trim()).filter(Boolean);
+  let name='',days=[],cur=null;
+  for(const l of lines){
+    if(isDayHeader(l)){const h=l.replace(/^\s*(?:[-*•·–]|\d+[.)])\s+/,'').replace(/[:\-–]+\s*$/,'').trim().toLowerCase().replace(/\b\w/g,c=>c.toUpperCase());
+      if(/\b(schedule|plan|program|routine)\b/i.test(h)&&!days.length&&!cur){name=h;continue}
+      cur={title:h,items:[]};days.push(cur);continue}
+    const its=parseExList(l);if(!its.length)continue;
+    if(!cur){cur={title:'',items:[]};days.push(cur)}cur.items.push(...its)}
+  days=days.filter(d=>d.items.length);
+  days.forEach((d,i)=>{if(!d.title)d.title=days.length>1?'Day '+(i+1):'My workout'});
+  return{name:name||(days.length>1?'My plan':(days[0]&&days[0].title)||'My workout'),days}}
+function planSummary(w){const D=myDays(w);if(D.length<=1)return myWorkoutText({items:D[0]?D[0].items:[]});
+  return D.map((d,i)=>`**${esc(d.title)}**${i===myDayIdx(w)?' *(today)*':''}\n`+d.items.map(x=>`- ${esc(x.n)}: ${exPlain(x)}`).join('\n')).join('\n\n')}
+/* PDF / text file reading, fully offline (pdf.js is bundled with the website) */
+let pdfLibP=null;
+function loadPdfLib(){if(window.pdfjsLib)return Promise.resolve(window.pdfjsLib);
+  if(!pdfLibP)pdfLibP=new Promise((res,rej)=>{const local=!!window.RR_STANDALONE,base=local?'':'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/',sc=document.createElement('script');
+    sc.src=base+'pdf.min.js';sc.onload=()=>{try{window.pdfjsLib.GlobalWorkerOptions.workerSrc=base+'pdf.worker.min.js';res(window.pdfjsLib)}catch(e){rej(e)}};sc.onerror=()=>{pdfLibP=null;rej(new Error('I couldn’t load the PDF reader. Connect to the internet once, then try again.'))};document.head.appendChild(sc)});
+  return pdfLibP}
+async function readWorkoutFile(f){
+  if(f.size>8e6)throw new Error('That file is too big. Try one under 8 MB.');
+  if(/\.pdf$/i.test(f.name)||f.type==='application/pdf'){
+    const lib=await loadPdfLib(),doc=await lib.getDocument({data:new Uint8Array(await f.arrayBuffer())}).promise;let out=[];
+    for(let p=1;p<=Math.min(doc.numPages,10);p++){const pg=await doc.getPage(p),tc=await pg.getTextContent();let line='',lastY=null;
+      for(const it of tc.items){const y=it.transform?Math.round(it.transform[5]):null;if(lastY!=null&&y!=null&&Math.abs(y-lastY)>3&&line.trim()){out.push(line.trim());line=''}line+=it.str;if(it.hasEOL){out.push(line.trim());line='';lastY=null;continue}lastY=y}
+      if(line.trim())out.push(line.trim())}
+    return out.filter(Boolean).join('\n')}
+  return String(await f.text()).slice(0,20000)}
+async function importWorkoutFile(f,where){
+  const text=await readWorkoutFile(f),doc=parseWorkoutDoc(text);
+  if(!doc.days.length)throw new Error(`I opened **${esc(f.name)}** but couldn’t find any exercises in it. If it’s a scanned picture, I can’t read the words. Try typing the list instead.`);
+  const w=setMyWorkoutDays(doc.days,doc.name,'file');const D=myDays(w);
+  return`I read **${esc(f.name)}** and made ${D.length>1?`a **${D.length}-day plan**`:'your workout'} from it:\n\n${planSummary(w)}\n\n${D.length>1?`Your training days take turns: ${D.map(d=>esc(d.title)).join(' → ')}, then back to the start. `:''}It’s on your **Workout** tab. Tap **Edit workout** to fix anything I got wrong.`}
+function setMyWorkout(items,title,src,di){
   if(!items.length)throw new Error('I couldn’t find any exercises in that list. Put one exercise per line, like “Push-ups 3x10” or “Plank 45s”.');
-  S.myWorkout={title:(title||'My workout').slice(0,30),items,src:src||'list',made:Date.now()};
+  const w0=S.myWorkout,multi=w0&&w0.days&&w0.days.length>1;
+  if(multi&&di!=null){w0.days[di]={title:(title||w0.days[di].title||'Day '+(di+1)).slice(0,30),items};}
+  else S.myWorkout={title:(title||'My workout').slice(0,30),items,src:src||'list',made:Date.now()};
   if(!S.today.done.length)S.today.variant=0;save();return S.myWorkout;
 }
 function myWorkoutText(w){return w.items.map((x,i)=>`${i+1}. **${esc(x.n)}**: ${x.sets>1?x.sets+' × ':''}${esc(x.dose)}${x.ref?'':' *(custom)*'}`).join('\n')}
 function applyMyWorkout(R){
-  const w=S.myWorkout;if(!w||!w.items||!w.items.length||R.restDay||S.today.variant!==0)return R;
-  const main=w.items.map(x=>({id:x.id,n:x.n,cue:x.cue||'',ref:x.ref||'',sets:x.km!=null?1:(x.sets||1),dose:x.km!=null?distDose(x.km):(x.dose||'10 reps'),km:x.km,xp:XP_MAIN}));
-  return{...R,title:w.title||'My workout',mine:true,fromAI:false,prog:null,blocks:R.blocks.map(b=>b.k==='main'?{...b,name:'Your exercises',items:main}:b)};
+  const w=S.myWorkout;if(!w||R.restDay||S.today.variant!==0)return R;const day=myTodayDay(w);if(!day||!day.items||!day.items.length)return R;
+  const main=day.items.map(x=>({id:x.id,n:x.n,cue:x.cue||'',ref:x.ref||'',sets:x.km!=null?1:(x.sets||1),dose:x.km!=null?distDose(x.km):(x.dose||'10 reps'),km:x.km,xp:XP_MAIN}));
+  return{...R,title:day.title||w.title||'My workout',planName:myDays(w).length>1?w.title:'',dayNo:myDayIdx(w)+1,dayCount:myDays(w).length,mine:true,fromAI:false,prog:null,blocks:R.blocks.map(b=>b.k==='main'?{...b,name:'Your exercises',items:main}:b)};
 }
 function viewWorkoutEditor(){
   const d=wDraft;
-  let h=`<section class="card"><div class="ed-head"><div><div class="label">Edit workout</div><h3 class="h3">Your workout</h3></div></div>
+  let h=`<section class="card"><div class="ed-head"><div><div class="label">Edit workout</div><h3 class="h3">${d.days.length>1?esc(d.name||'Your plan'):'Your workout'}</h3></div></div>
+    ${d.days.length>1||true?`<div class="w-days" role="tablist" aria-label="Workout days">${d.days.map((x,i)=>`<button class="chip-btn ${i===d.di?'on':''}" role="tab" aria-selected="${i===d.di}" data-act="wday" data-v="${i}">${esc(x.title||'Day '+(i+1))}${i===d.today?' · today':''}</button>`).join('')}<button class="chip-btn" data-act="wdayadd">+ Add day</button>${d.days.length>1?`<button class="chip-btn danger" data-act="wdaydel">Delete this day</button>`:''}</div>`:''}
     <p class="note">This replaces the main set on your training days. Warm-up and cool-down stay automatic.</p>
-    <div class="field" style="margin-top:10px"><label for="w-title">Workout name</label><input class="inp" id="w-title" maxlength="30" value="${esc(d.title)}"></div>
+    ${d.days.length>1?`<p class="note">Your training days take turns going through these days in order.</p>`:''}<div class="field" style="margin-top:10px"><label for="w-title">${d.days.length>1?'Day name':'Workout name'}</label><input class="inp" id="w-title" maxlength="30" value="${esc(d.title)}"></div>
     <div class="wl">`;
   d.items.forEach((x,i)=>{h+=`<div class="w-row"><div class="w-mv"><button class="icon-btn" data-act="wup" data-i="${i}" aria-label="Move ${esc(x.n)} up" ${i?'':'disabled'}>↑</button><button class="icon-btn" data-act="wdown" data-i="${i}" aria-label="Move ${esc(x.n)} down" ${i<d.items.length-1?'':'disabled'}>↓</button></div>
     <input class="inp w-n" data-w="n" data-i="${i}" maxlength="40" value="${esc(x.n)}" placeholder="Exercise" aria-label="Exercise name">
@@ -1923,17 +1977,22 @@ function viewWorkoutEditor(){
   if(!d.items.length)h+=`<div class="empty">No exercises yet. Add one or import a list.</div>`;
   h+=`</div><div class="ed-actions"><button class="btn" data-act="wadd">+ Add exercise</button></div>
     <details class="w-imp" ${d.imp?'open':''}><summary>Import a list</summary>
-      <p class="note">Paste one exercise per line, like <b>Push-ups 3x10</b>, <b>Plank 45s</b> or <b>3 sets of 12 squats</b>. Or pick a .txt or .csv file.</p>
+      <p class="note">Paste one exercise per line, like <b>Push-ups 3x10</b>, <b>Plank 45s</b> or <b>Run 5k</b>. Put a line like <b>ARM DAY</b> above each day for a plan with several days. Or pick a <b>PDF</b>, .txt or .csv file.</p>
       <textarea class="inp" id="w-paste" rows="5" placeholder="Push-ups 3x10&#10;Squats 3x15&#10;Plank 45s&#10;Jog 10 min"></textarea>
-      <div class="row-act" style="margin-top:8px;flex-wrap:wrap"><label class="btn sm">Choose file<input type="file" id="w-file" accept=".txt,.csv,text/plain,text/csv" hidden></label><button class="btn sm" data-act="wimport" data-v="add">Add to list</button><button class="btn sm primary" data-act="wimport" data-v="replace">Replace list</button></div>
+      <div class="row-act" style="margin-top:8px;flex-wrap:wrap"><label class="btn sm">Choose file<input type="file" id="w-file" accept=".pdf,.txt,.csv,application/pdf,text/plain,text/csv" hidden></label><button class="btn sm" data-act="wimport" data-v="add">Add to list</button><button class="btn sm primary" data-act="wimport" data-v="replace">Replace list</button></div>
     </details>
     <div class="dayfoot">${S.myWorkout?'<button class="btn danger ghost" data-act="wauto">Back to automatic</button>':'<span></span>'}<div class="row-act"><button class="btn" data-act="wcancel">Cancel</button><button class="btn primary" data-act="wsave">Save workout</button></div></div></section>`;
   return h;
 }
 function wStartEdit(imp){
   ensureToday();const R=routine(),main=(R.blocks.find(b=>b.k==='main')||{items:[]}).items;
-  const src=S.myWorkout?S.myWorkout.items:main.map(x=>({id:'cw_'+rid(),n:x.n,ref:x.ref||x.id,cue:x.cue,sets:x.sets,dose:x.dose,...(x.km!=null?{km:x.km,u:'km'}:{})}));
-  wDraft={title:S.myWorkout?S.myWorkout.title:(R.restDay?'My workout':R.title),items:clone(src),imp:!!imp};
+  const w=S.myWorkout,auto=main.map(x=>({id:'cw_'+rid(),n:x.n,ref:x.ref||x.id,cue:x.cue,sets:x.sets,dose:x.dose,...(x.km!=null?{km:x.km,u:'km'}:{})}));
+  const days=w?clone(myDays(w)):[{title:R.restDay?'My workout':R.title,items:auto}],di=w?myDayIdx(w):0;
+  wDraft={days,di,today:di,name:w?w.title:'My workout',imp:!!imp};wPick(di);
+}
+function wPick(i){const d=wDraft;if(d.items)d.days[d.di]={title:d.title,items:d.items};d.di=Math.max(0,Math.min(d.days.length-1,i));d.title=d.days[d.di].title;d.items=d.days[d.di].items;}
+function wNormItems(items){return items.map(x=>{const n=String(x.n||'').trim().slice(0,40);let y={...x,n,dose:String(x.dose||'').trim()||'10 reps'};if(isDistName(n)&&y.km==null){const d=distFromText(y.dose);y.km=kmRound(d?d.km:2);y.u=d?d.unit:'km';y.sets=1}else if(!isDistName(n)&&y.km!=null){delete y.km;delete y.u;y.dose='10 reps';y.sets=3}if(y.km!=null)y.dose=distDose(y.km);return y}).filter(x=>x.n)}
+function wUnused(){
 }
 document.addEventListener('input',e=>{const t=e.target;if(!wDraft||!t.dataset)return;
   if(t.id==='w-title'){wDraft.title=t.value;return}
@@ -1944,9 +2003,12 @@ document.addEventListener('input',e=>{const t=e.target;if(!wDraft||!t.dataset)re
     const c=$('#w-conv-'+i);if(c)c.textContent=x.u==='mi'?+x.km.toFixed(2)+' km':+(x.km*0.621371).toFixed(2)+' mi';return}
   else if(f==='n'){wDraft.items[i].n=t.value;const e2=matchEx(t.value);wDraft.items[i].ref=e2?e2.id:'';wDraft.items[i].cue=e2?e2.cue:''}
   else wDraft.items[i][f]=t.value});
+document.addEventListener('change',e=>{if(e.target.id!=='sk-file')return;const f=e.target.files&&e.target.files[0];e.target.value='';if(!f||busy)return;
+  SFX.send();S.chat.push({r:'u',t:'📎 '+f.name});const a={r:'a',t:'',pending:1,off:1};S.chat.push(a);busy=true;render();scrollChat();
+  importWorkoutFile(f).then(msg=>{a.t=msg;a.act=1}).catch(err=>{a.t=String(err.message||err);a.err=1}).finally(()=>{a.pending=0;busy=false;SFX.reply();save();render();scrollChat()})});
 document.addEventListener('change',e=>{if(e.target.id!=='w-file'||!wDraft)return;const f=e.target.files&&e.target.files[0];if(!f)return;
-  if(f.size>200000){toast(medal('!',false),'That file is too big','Try a short text list.');return}
-  const r=new FileReader();r.onload=()=>{const ta=$('#w-paste');if(ta){ta.value=String(r.result).slice(0,8000);toast(medal('✓',true),'File loaded','Tap Add to list or Replace list.')}};r.readAsText(f)});
+  toast(medal('…',true),'Reading '+f.name,'One moment.');
+  readWorkoutFile(f).then(txt=>{const ta=$('#w-paste');if(ta){ta.value=txt.slice(0,8000);toast(medal('✓',true),'File loaded','Check the text, then tap Replace list or Add to list.')}}).catch(err=>toast(medal('!',false),'Couldn’t read that file',String(err.message||err).replace(/\*\*/g,'')))});
 
 /* ---------- My schedule ---------- */
 function taskState(k,log){
@@ -2177,13 +2239,13 @@ function viewSkeefo(){
   const parent=R0()==='parent';
   if(!parent&&RULES().skeefo==='off')return`<section class="card empty">${skeefoMark(52)}<br><b style="color:var(--ink)">Skeefo is turned off</b><br>Your parent turned Skeefo off for now. Everything else still works.</section>`;
   const chips=parent?[['buildsched','Build a daily schedule for my kid'],['ask','How much sleep does a teenager need?'],['ask','How do I keep my kid motivated without nagging?']]
-    :[['ask','Interview me about my goals'],['importw','Import a workout list'],['buildplan','Build my workout plan'],['buildsched','Build my daily schedule'],['ask','Interview me for my schedule'],['ask','How do I do a proper push-up?']];
+    :[['ask','Interview me about my goals'],['importw','Import a workout list or PDF'],['buildplan','Build my workout plan'],['buildsched','Build my daily schedule'],['ask','Interview me for my schedule'],['ask','How do I do a proper push-up?']];
   let h=`<section class="card sk-head"><div class="sk-av ${busy?'think':''}">${skeefoMark(52)}</div><div style="min-width:0"><h2 class="h2">Skeefo <span class="brain ${useClaude()?'cl':''}">${useClaude()?'Claude brain':'Offline brain'}</span></h2><div class="note">${parent?'AI coach for parents. Builds schedules and answers questions.':'Your AI coach. Ask about workouts, goals, food, sleep or your schedule.'}</div></div>
     ${S.chat.length?`<button class="btn sm ghost" data-act="clearchat">Clear chat</button>`:''}</section>`;
   h+=linkCard(true);
   h+=`<div class="chat" id="chat">${bubble({r:'a',t:intro()},-1)}${S.chat.map(bubble).join('')}</div>
     <div class="chips">${chips.map(([a,q])=>`<button class="chip-btn" data-act="${a}" data-q="${esc(q)}" ${busy?'disabled':''}>${esc(q)}</button>`).join('')}</div>
-    <form class="composer" id="sk-form"><textarea id="sk-in" rows="1" placeholder="Ask Skeefo anything…" aria-label="Message Skeefo"></textarea><button class="send" type="submit" aria-label="Send" ${busy?'disabled':''}><svg viewBox="0 0 24 24"><path d="M4 12h14M13 6l6 6-6 6"/></svg></button></form>
+    <form class="composer" id="sk-form">${parent?'':`<label class="attach" title="Send Skeefo a workout plan (PDF or text file)" aria-label="Attach a workout plan file"><input type="file" id="sk-file" accept=".pdf,.txt,.csv,application/pdf,text/plain,text/csv" hidden><svg viewBox="0 0 24 24"><path d="M20 11.5l-8.2 8.2a5 5 0 0 1-7.1-7.1l8.6-8.6a3.4 3.4 0 0 1 4.8 4.8l-8.6 8.6a1.7 1.7 0 0 1-2.4-2.4l7.9-7.9"/></svg></label>`}<textarea id="sk-in" rows="1" placeholder="Ask Skeefo anything…" aria-label="Message Skeefo"></textarea><button class="send" type="submit" aria-label="Send" ${busy?'disabled':''}><svg viewBox="0 0 24 24"><path d="M4 12h14M13 6l6 6-6 6"/></svg></button></form>
     ${(S.mem||[]).length?`<p class="note mem-note">Skeefo remembers ${Math.ceil(S.mem.length/2)} earlier message${S.mem.length>2?'s':''} from past chats. <button class="linkbtn" data-act="forget">Make him forget</button></p>`:''}
     <p class="note" style="text-align:center;margin:0">Skeefo is an AI and can make mistakes. For injuries or health questions, talk to a doctor.</p>`;
   return h;
@@ -3087,14 +3149,14 @@ function tryCommand(raw,inner){
   {const dc=daysCommand(t);if(dc!=null)return dc}
   // workout from a list
   {const wm=raw.match(/^\s*(?:please\s+|can you\s+|could you\s+)?(?:make|build|create|turn|import|use|set)\b[^\n:]*?\bworkout\b[^\n:]*?(?::|\n)\s*([\s\S]+)$/i);
-   if(wm&&R0()==='me')return run(()=>{const its=parseExList(wm[1]);const w=setMyWorkout(its,'My workout','skeefo');return`Done! I made **${esc(w.title)}** from your list:\n${myWorkoutText(w)}\n\nIt’s on your **Workout** tab now. Tap **Edit workout** there to change names, sets or reps. Say **“back to automatic workouts”** to undo.`})}
+   if(wm&&R0()==='me')return run(()=>{const doc=parseWorkoutDoc(wm[1]);const w=setMyWorkoutDays(doc.days,doc.name,'skeefo');return`Done! I made ${myDays(w).length>1?`a **${myDays(w).length}-day plan**`:`**${esc(myTodayDay(w).title)}**`} from your list:\n\n${planSummary(w)}\n\nIt’s on your **Workout** tab now. Tap **Edit workout** there to change names, sets or reps. Say **“back to automatic workouts”** to undo.`})}
   {const am=text.match(/^(?:please\s+|can you\s+)?(?:add|put|include)\s+(.+?)\s+(?:to|in|into|on)\s+(?:my|the|today(?:’|')?s)\s+workout$/i);
    if(am&&R0()==='me')return run(()=>{const its=parseExList(am[1]);if(!its.length)throw new Error('Tell me the exercise and numbers, like “add 10 pushups with 8 reps to my workout”.');
-     const base=S.myWorkout?S.myWorkout.items:(routine().blocks.find(b=>b.k==='main')||{items:[]}).items.map(x=>({id:'cw_'+rid(),n:x.n,ref:x.ref||x.id,cue:x.cue,sets:x.sets,dose:x.dose}));
-     const w=setMyWorkout([...base,...its],S.myWorkout?S.myWorkout.title:'My workout','skeefo');
+     const W=S.myWorkout,base=W?myTodayDay(W).items:(routine().blocks.find(b=>b.k==='main')||{items:[]}).items.map(x=>({id:'cw_'+rid(),n:x.n,ref:x.ref||x.id,cue:x.cue,sets:x.sets,dose:x.dose}));
+     const w=setMyWorkout([...base,...its],W?myTodayDay(W).title:'My workout','skeefo',W?myDayIdx(W):null);
      return`Added to your workout: ${its.map(x=>`**${esc(x.n)}**, ${exPlain(x)}`).join('; ')}. It’s on the **Workout** tab.`})}
   {const rm=text.match(/^(?:please\s+)?(?:remove|delete|take out|drop)\s+(.+?)\s+from\s+(?:my|the)\s+workout$/i);
-   if(rm&&S.myWorkout)return run(()=>{const q=wNorm(rm[1]),i=S.myWorkout.items.findIndex(x=>wNorm(x.n).includes(q)||q.includes(wNorm(x.n)));if(i<0)throw new Error(`I couldn’t find “${rm[1]}” in your workout.`);const [x]=S.myWorkout.items.splice(i,1);save();return`Removed **${esc(x.n)}** from your workout.`})}
+   if(rm&&S.myWorkout)return run(()=>{const q=wNorm(rm[1]),L=myTodayDay(S.myWorkout).items,i=L.findIndex(x=>wNorm(x.n).includes(q)||q.includes(wNorm(x.n)));if(i<0)throw new Error(`I couldn’t find “${rm[1]}” in today’s workout.`);const [x]=L.splice(i,1);save();return`Removed **${esc(x.n)}** from your workout.`})}
   if(/^ (?:import|upload|add) (?:a |my )?(?:workout )?list $|^ import (?:a |my )?workout $/.test(t)){setTimeout(()=>{tab='workout';wStartEdit(true);render();scrollTo({top:0})},600);return'Opening the importer on your **Workout** tab. Paste your list (one exercise per line) or choose a file.'}
   if(S.myWorkout&&(has(t,'back to automatic','back to normal workouts')||/\b(clear|remove|delete|stop using)\b.*\bmy workout\b/.test(t))){S.myWorkout=null;save();return'Cleared your workout. You’re back on automatic routines.'}
   // shuffle
@@ -3158,8 +3220,8 @@ function tryCommand(raw,inner){
   // bare exercise statement like "10 pushups with 8 reps" -> add to the workout
   if(R0()==='me'&&/\d|\b(one|two|three|four|five|six|seven|eight|nine|ten|twelve|fifteen|twenty|thirty|dozen)\b/i.test(text)&&text.length<160&&!/\?|\b(how|what|why|should|can i|is it|did|ate|had|drank)\b/i.test(text)){
     const its=parseExList(text);if(its.length&&its.every(x=>x.ref)){
-      const base=S.myWorkout?S.myWorkout.items:(routine().blocks.find(b=>b.k==='main')||{items:[]}).items.map(x=>({id:'cw_'+rid(),n:x.n,ref:x.ref||x.id,cue:x.cue,sets:x.sets,dose:x.dose}));
-      const w=setMyWorkout([...base,...its],S.myWorkout?S.myWorkout.title:'My workout','skeefo');
+      const W=S.myWorkout,base=W?myTodayDay(W).items:(routine().blocks.find(b=>b.k==='main')||{items:[]}).items.map(x=>({id:'cw_'+rid(),n:x.n,ref:x.ref||x.id,cue:x.cue,sets:x.sets,dose:x.dose}));
+      const w=setMyWorkout([...base,...its],W?myTodayDay(W).title:'My workout','skeefo',W?myDayIdx(W):null);
       return`Got it! I added ${its.map(x=>`**${esc(x.n)}**: ${exPlain(x)}`).join(', and ')} to your workout on the **Workout** tab. 💪\n\nIf I got the numbers wrong, tap **Edit workout** there, or tell me like “8 rounds of 10 pushups”.`}}
   return null;
 }
@@ -3183,7 +3245,7 @@ const TOOLS=()=>[
   {name:'set_task_time',description:'Set or clear (empty string) the time of a task.',inputSchema:{type:'object',properties:{days:{type:'array',items:{type:'string'},description:'Optional weekdays like ["monday","weekends"]. Leave out to change every day.'},title:{type:'string'},time:{type:'string'}},required:['title','time']},execute:i=>withDays(i.days,()=>ACT.setTime(i))},
   {name:'clear_all_times',description:'Remove clock times from every task.',execute:()=>ACT.clearTimes()},
   {name:'link_task',description:'Link a schedule task to a tab (workout, diet, skeefo, ranks, family, me, or one of the user\'s own tabs by name) so it gets a shortcut and auto-checks from Workout, Diet or custom tabs. Empty tab unlinks. Creates the task if missing.',inputSchema:{type:'object',properties:{days:{type:'array',items:{type:'string'},description:'Optional weekdays. Leave out for every day.'},title:{type:'string'},tab:{type:'string'}},required:['title','tab']},execute:i=>withDays(i.days,()=>ACT.linkTask(i))},
-  {name:'set_workout',description:'Replace the main set of the user\'s Workout tab with exercises from a list. One exercise per line, like "Push-ups 3x10" or "Plank 45s". Use when the user gives or imports a list of exercises.',inputSchema:{type:'object',properties:{title:{type:'string'},list:{type:'string'}},required:['list']},execute:i=>{if(R0()!=='me')return'Workouts go on the kid\'s own app.';const w=setMyWorkout(parseExList(i.list),i.title||'My workout','claude');return'Saved '+w.items.length+' exercises as "'+w.title+'" on the Workout tab. The user can tap Edit workout to change it.'}},
+  {name:'set_workout',description:'Replace the main set of the user\'s Workout tab with exercises from a list. One exercise per line, like "Push-ups 3x10" or "Plank 45s". Use when the user gives or imports a list of exercises.',inputSchema:{type:'object',properties:{title:{type:'string'},list:{type:'string'}},required:['list']},execute:i=>{if(R0()!=='me')return'Workouts go on the kid\'s own app.';const doc=parseWorkoutDoc(i.list),w=setMyWorkoutDays(doc.days,i.title||doc.name,'claude');return'Saved '+myDays(w).length+' day(s) as "'+w.title+'" on the Workout tab. The user can tap Edit workout to change it.'}},
   {name:'add_section',description:'Add a new empty section to the schedule.',inputSchema:{type:'object',properties:{name:{type:'string'}},required:['name']},execute:i=>ACT.addSection(i)},
   {name:'complete_task',description:'Check off a task on today’s schedule for the user (earns XP). Not for the workout.',inputSchema:{type:'object',properties:{title:{type:'string'}},required:['title']},execute:i=>ACT.completeTask(i)},
   {name:'update_profile',description:'Change workout settings. goal: muscle|fat|endurance|mobility|general; level: beginner|intermediate|advanced; equip: none|db|gym; minutes 15-60; age 13-95. Rebuilds today’s workout.',inputSchema:{type:'object',properties:{goal:{type:'string'},level:{type:'string'},equip:{type:'string'},minutes:{type:'number'},age:{type:'number'}}},execute:i=>ACT.profile(i)},
@@ -3405,13 +3467,20 @@ document.addEventListener('click',e=>{
     case'wup':case'wdown':{const i=+t.dataset.i,j=i+(a==='wup'?-1:1);const L=wDraft.items;if(j<0||j>=L.length)break;[L[i],L[j]]=[L[j],L[i]];SFX.soft();render();break}
     case'wdel':wDraft.items.splice(+t.dataset.i,1);render();break;
     case'wadd':wDraft.items.push({id:'cw_'+rid(),n:'',ref:'',cue:'',sets:3,dose:'10 reps'});render();document.querySelectorAll('.w-n')[wDraft.items.length-1]?.focus();break;
-    case'wimport':{const ta=$('#w-paste'),its=parseExList(ta?ta.value:'');if(!its.length){toast(medal('!',false),'No exercises found','Put one per line, like “Push-ups 3x10”.');break}
-      wDraft.items=t.dataset.v==='replace'?its:[...wDraft.items,...its];wDraft.imp=false;SFX.bonus();render();toast(medal('✓',true),`Added ${its.length} exercise${its.length>1?'s':''}`,'Check them, then tap Save workout.');break}
+    case'wday':wPick(+t.dataset.v);render();break;
+    case'wdayadd':wPick(wDraft.di);wDraft.days.push({title:'Day '+(wDraft.days.length+1),items:[]});wPick(wDraft.days.length-1);render();break;
+    case'wdaydel':{if(wDraft.days.length<2)break;wDraft.days.splice(wDraft.di,1);wDraft.items=null;wDraft.di=Math.min(wDraft.di,wDraft.days.length-1);wDraft.today=Math.min(wDraft.today,wDraft.days.length-1);wDraft.title=wDraft.days[wDraft.di].title;wDraft.items=wDraft.days[wDraft.di].items;render();break}
+    case'wimport':{const ta=$('#w-paste'),doc=parseWorkoutDoc(ta?ta.value:''),its=doc.days.flatMap(x=>x.items);if(!its.length){toast(medal('!',false),'No exercises found','Put one per line, like “Push-ups 3x10”.');break}
+      if(doc.days.length>1){wPick(wDraft.di);if(t.dataset.v==='replace'){wDraft.days=doc.days;wDraft.name=doc.name;wDraft.items=null;wDraft.di=0;wDraft.today=0;wDraft.title=doc.days[0].title;wDraft.items=doc.days[0].items}else{wDraft.days.push(...doc.days)}wDraft.imp=false;SFX.bonus();render();toast(medal('✓',true),`Found ${doc.days.length} days`,'Check each day, then tap Save workout.');break}
+      wDraft.items.splice(0,t.dataset.v==='replace'?wDraft.items.length:0,...(t.dataset.v==='replace'?its:[]));if(t.dataset.v!=='replace')wDraft.items.push(...its);wDraft.imp=false;SFX.bonus();render();toast(medal('✓',true),`Added ${its.length} exercise${its.length>1?'s':''}`,'Check them, then tap Save workout.');break}
     case'wcancel':wDraft=null;render();break;
-    case'wsave':{const items=wDraft.items.map(x=>{const n=String(x.n||'').trim().slice(0,40);let y={...x,n,dose:String(x.dose||'').trim()||'10 reps'};if(isDistName(n)&&y.km==null){const d=distFromText(y.dose);y.km=kmRound(d?d.km:2);y.u=d?d.unit:'km';y.sets=1}else if(!isDistName(n)&&y.km!=null){delete y.km;delete y.u;y.dose='10 reps';y.sets=3}if(y.km!=null)y.dose=distDose(y.km);return y}).filter(x=>x.n);
+    case'wsave':{wPick(wDraft.di);const days=wDraft.days.map(d=>({title:String(d.title||'').trim(),items:wNormItems(d.items)})).filter(d=>d.items.length),items=days.flatMap(d=>d.items);
       if(!items.length){toast(medal('!',false),'Add at least one exercise','Or tap Back to automatic.');break}
       if(S.today.done.length&&S.myWorkout){const ids=new Set(items.map(x=>x.id));S.today.done=S.today.done.filter(id=>ids.has(id)||!String(id).startsWith('cw_'))}
-      setMyWorkout(items,String(wDraft.title||'').trim()||'My workout','edit');wDraft=null;S.today.variant=0;SFX.link();render();toast(medal('✓',true),'Workout saved','It’s your workout on every training day now.');break}
+      const old=S.myWorkout,keepStart=old&&old.start;
+      if(days.length>1){S.myWorkout={title:(wDraft.name||'My plan').slice(0,30),days:days.map((d,i)=>({title:(d.title||'Day '+(i+1)).slice(0,30),items:d.items})),start:keepStart||todayKey(),src:'edit',made:Date.now()};
+        if(myDayIdx(S.myWorkout)!==wDraft.today&&wDraft.today<days.length){let st=todayKey();for(let k=0;k<60&&myDayIdx({...S.myWorkout,start:st})!==wDraft.today;k++)st=addDays(st,-1);S.myWorkout.start=st}save()}
+      else{S.myWorkout=null;setMyWorkout(days[0].items,days[0].title||'My workout','edit')}wDraft=null;S.today.variant=0;SFX.link();render();toast(medal('✓',true),'Workout saved','It’s your workout on every training day now.');break}
     case'wauto':S.myWorkout=null;wDraft=null;save();render();toast(medal('↺',true),'Back to automatic','Skeefo picks your workouts again.');break
     case'task':{const was=!!((S.dayLog[todayKey()]||{})[t.dataset.id]||{}).d;taskToggle(t.dataset.id,t);break}
     case'linkedchk':{const k=sched().sections.flatMap(x=>x.tasks).find(x=>x.id===t.dataset.id);if(!k)break;SFX.soft();
