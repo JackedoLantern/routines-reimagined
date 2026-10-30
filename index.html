@@ -491,6 +491,15 @@ html{scrollbar-color:#34343A #09090A}
 .kid-today,.rule-chips{display:flex;flex-wrap:wrap;gap:6px}
 .chip.bad{background:var(--bad-soft);color:var(--bad)}
 .row-act{display:flex;gap:6px}
+.daystrip{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;margin:0 0 12px}
+.dsb{position:relative;background:var(--surface);border:1px solid var(--line);color:var(--muted);border-radius:12px;padding:9px 0 8px;font:600 13px/1 var(--f-body);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;min-width:0;transition:background .2s,color .2s,border-color .2s,transform .15s}
+.dsb i{font-style:normal;font-size:9px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;opacity:.8}
+.dsb.today{color:var(--ink)}
+.dsb.custom::after{content:"";position:absolute;top:5px;right:6px;width:6px;height:6px;border-radius:50%;background:var(--lvl)}
+.dsb.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.dsb:active{transform:scale(.96)}
+.ed-save .row-act{flex-wrap:wrap;justify-content:flex-end}
+@media(max-width:420px){.dsb{font-size:12px;padding:8px 0 7px}.dsb i{font-size:8px}.ed-save{flex-direction:column-reverse;align-items:stretch}.ed-save .row-act{flex-direction:column}.ed-save .btn{width:100%}}
 .card.kid .dayfoot{margin-top:0;flex-wrap:wrap}
 .rules-ed{display:grid;gap:12px;padding-top:12px;border-top:1px solid var(--line)}
 .switch.rule{align-items:flex-start;color:var(--ink)}
@@ -1143,11 +1152,66 @@ let FAM={schedule:undefined,report:undefined},draft=null,busy=false,seeded=false
 let PERM=null,linkState='checking',linkName='',justLinked=false;
 try{role=localStorage.getItem('rb-role')}catch(e){}
 const R0=()=>role||'me';
-const TABS={me:[['workout','Workout'],['day','My day'],['diet','Diet'],['skeefo','Skeefo'],['ranks','Ranks'],['family','Family'],['me','Me']],
+const TABS={me:[['workout','Workout'],['day','My schedule'],['diet','Diet'],['skeefo','Skeefo'],['ranks','Ranks'],['family','Family'],['me','Me']],
   parent:[['family','Family'],['report','Report'],['schedule','Schedule'],['skeefo','Skeefo'],['me','Me']]};
-function sched(){
+function rawSched(){
   if(R0()==='parent'){const c=CTLS[SEL],k=KIDS[SEL],a=c&&c.schedule,b=k&&k.schedule;return(a&&(!b||(a.updated||0)>=(b.updated||0))?a:b)||defaultSchedule()}
   const a=inFamily()&&MYCTL.schedule,b=S.schedule;return a&&(a.updated||0)>(b.updated||0)?a:b;
+}
+/* ================= Per-day schedules ================= */
+let schDay=null,CMDDAYS=null,CMDALL=false;
+function schedForDay(wd,r){r=r||rawSched();const ov=r.days&&r.days[wd];return{...r,sections:ov?ov.sections:r.sections,_wd:wd,_custom:!!ov}}
+function sched(){return schedForDay((new Date().getDay()+6)%7)}
+const DAYFULL=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+const DAYWORD='(monday|tuesday|wednesday|thursday|friday|saturday|sunday|mon|tues|tue|wed|weds|thurs|thur|thu|fri|sat|sun)s?';
+const DAYMAP={mon:0,tue:1,tues:1,wed:2,weds:2,thu:3,thur:3,thurs:3,fri:4,sat:5,sun:6};
+function dayIndexOf(w){w=w.toLowerCase().replace(/s$/,'');const full=DAYFULL.findIndex(d=>d.toLowerCase()===w);return full>=0?full:(DAYMAP[w]??-1)}
+function parseDayScope(text){
+  let s=' '+String(text)+' ',days=new Set(),all=false;
+  const tw=(new Date().getDay()+6)%7;
+  s=s.replace(/\s+(?:on |for )?(?:every ?day|daily|all days|each day)\b/gi,()=>{all=true;return' '});
+  s=s.replace(/\s+(?:on |for |every |during the )?(?:week ?days|school ?days)\b/gi,()=>{[0,1,2,3,4].forEach(d=>days.add(d));return' '});
+  s=s.replace(/\s+(?:on |for |every |over )?(?:the )?week ?ends?\b/gi,()=>{[5,6].forEach(d=>days.add(d));return' '});
+  s=s.replace(/\s+(?:for |only )?(?:today)(?: only)?\b/gi,()=>{days.add(tw);return' '});
+  s=s.replace(/\s+(?:for |only )?(?:tomorrow)(?: only)?\b/gi,()=>{days.add((tw+1)%7);return' '});
+  const re=new RegExp('\\s+(?:on |every |for |each )?(?:the )?'+DAYWORD+'((?:\\s*(?:,|and|&|\\+)\\s*'+DAYWORD+')*)(?: only)?\\b','gi');
+  s=s.replace(re,(m0)=>{(m0.match(new RegExp(DAYWORD,'gi'))||[]).forEach(w=>{const i=dayIndexOf(w);if(i>=0)days.add(i)});return' '});
+  const arr=[...days].sort();
+  return{days:arr.length?arr:null,all,text:s.replace(/\s+/g,' ').trim()};
+}
+const scopeLabel=(days)=>!days?'every day':days.length===7?'every day':days.join()==='0,1,2,3,4'?'weekdays':days.join()==='5,6'?'weekends':days.map(i=>DAYFULL[i]).join(', ');
+function dayStrip(r){
+  const tw=(new Date().getDay()+6)%7,sd=schDay??tw;
+  return`<div class="daystrip" role="tablist" aria-label="Day of the week">${WDN.map((d,i)=>`<button class="dsb ${i===sd?'on':''} ${i===tw?'today':''} ${r.days&&r.days[i]?'custom':''}" role="tab" aria-selected="${i===sd}" data-act="schday" data-v="${i}">${d}${i===tw?'<i>today</i>':''}</button>`).join('')}</div>`;
+}
+function viewDayOther(sd,r){
+  const sc=schedForDay(sd,r),lockedForMe=lockedForKid();
+  let h=dayStrip(r)+banner('info',`Viewing ${DAYFULL[sd]}’s schedule.`,'You can check things off on the day itself.');
+  h+=`<section class="card"><div class="day"><div style="min-width:0"><div class="label">${DAYFULL[sd]} · ${sc._custom?'custom for this day':'same as every day'}</div><h2>My schedule</h2>
+    <div class="meta"><span class="chip">${sc.sections.length} sections</span><span class="chip">${sc.sections.reduce((a,x)=>a+x.tasks.length,0)} tasks</span>${sc._custom?'<span class="chip lv">Custom day</span>':''}</div></div></div>
+    <div class="dayfoot">${sc._custom&&!lockedForMe?`<button class="btn" data-act="resetday">Use every-day schedule</button>`:'<span></span>'}<button class="btn" data-act="edit" ${lockedForMe?'disabled':''}>Edit ${DAYFULL[sd]}</button></div></section>`;
+  for(const sec of sc.sections){h+=`<section class="block"><div class="block-h"><h3>${esc(sec.name)}</h3><span class="label">${sec.tasks.length}</span></div>`;
+    sec.tasks.forEach(k=>h+=`<div class="ex task ro"><span class="slot num">${k.time?hm(k.time):'Any time'}</span><div class="exinfo static"><span class="exn">${esc(k.title)}${k.kind==='workout'?' <span class="tag">Workout</span>':''}</span><span class="cue">${k.min?k.min+' min':''}</span></div><div></div></div>`);
+    h+=`</section>`}
+  if(!sc.sections.length)h+=`<section class="card empty">Nothing planned for ${DAYFULL[sd]} yet.</section>`;
+  return h;
+}
+function saveScheduleScope(sections,scope,wd,extra){
+  const r=clone(rawSched());r.example=false;r.by=R0()==='parent'?'parent':'me';Object.assign(r,extra||{});
+  if(scope==='all'){r.sections=sections;r.days={}}else{r.days=r.days||{};(Array.isArray(wd)?wd:[wd]).forEach(d=>r.days[d]={sections:clone(sections)})}
+  delete r._wd;delete r._custom;return saveSchedule(r);
+}
+const SCHEDQ=[
+  {k:'what',q:'What do you want to add to your schedule? List one or more things, like **piano, walk the dog**.',parse:(t,raw)=>{const l=listParse(raw);return l.length?l:null},hint:'Tell me one or more things to add.'},
+  {k:'when',q:'Which **days**? Say **every day**, **weekdays**, **weekends**, or days like **Monday and Wednesday**.',parse:(t,raw)=>{const d=parseDayScope(' '+raw+' ');if(d.all||/every ?day|daily|all days|always/.test(t))return'all';return d.days&&d.days.length?d.days:null},hint:'Say every day, weekdays, weekends, or name the days.'},
+  {k:'time',q:'What **time**? Like **4pm**, or say **no time**.',parse:t=>/\b(no time|none|any ?time|whenever|flexible|nope|no)\b/.test(t)?'':parseClock(t,1)||null,hint:'Try a time like 4pm, or say no time.'},
+  {k:'part',q:'Last one! Which part of the day? **Morning**, **after school**, **evening**, or a new section name.',parse:(t,raw)=>{const x=String(raw).trim().replace(/[.!?]+$/,'');return x.length>=3?x:null},hint:'Say morning, after school, evening, or a name.'},
+];
+function schedInterviewFinish(a){
+  const days=a.when==='all'?null:a.when,out=[];
+  for(const it of a.what){CMDDAYS=days;CMDALL=!days;try{ACT.addTask({title:it,section:/^(any|whatever|none|doesn t matter|no)$/i.test(a.part)?'':a.part,time:a.time||''});out.push(it)}catch(e){CMDDAYS=null;return e.message}}
+  CMDDAYS=null;CMDALL=false;
+  return`Added ${out.map(x=>'**'+esc(x)+'**').join(', ')} to **${esc(a.part.replace(/^\w/,c=>c.toUpperCase()))}** on **${scopeLabel(days)}**${a.time?` at ${hm(a.time)}`:''}. Check it out on My schedule! Want to add more? Say **“interview me for my schedule”** again.`;
 }
 /* ================= Family groups, restrictions, cheat alerts, reminders ================= */
 let GROUP=undefined,KIDS={},CTLS={},MYCTL=undefined,SEL=null,openR=null;
@@ -1470,7 +1534,7 @@ function buildReport(){
   return{name:(S.profile.name||'').slice(0,24),date:t,xp:S.xp,level:lvl(S.xp),streak:S.streak,best:S.best,total:S.total,last:S.last||'',
     workout:{title:R.title,done:S.today.done.length,total:items.length,complete:!!S.today.complete,start:S.today.start||0,end:S.today.end||0,time:(sc.sections.flatMap(s=>s.tasks).find(k=>k.kind==='workout')||{}).time||''},
     diet:(d=>({w:d.w,m:MEALS.filter(([k])=>d.m[k]).map(([,n])=>n),g:GROUPS.filter(([k])=>d.g[k]).length}))(dietDay()),
-    tasks,days,flags:S.today.flags||[],schedule:clone(sched()),req:true,updated:Date.now()};
+    tasks,days,flags:S.today.flags||[],schedule:clone(rawSched()),req:true,updated:Date.now()};
 }
 async function flush(){
   if(SBON())return sbFlush();
@@ -1492,8 +1556,8 @@ async function flush(){
 }
 async function saveSchedule(sc){
   sc.updated=Date.now();
-  if(R0()==='parent'){if(!SEL)return;const locked=!!sc.locked;delete sc.locked;await setCtl(SEL,{schedule:clone(sc),rules:{...RULES(),lockSchedule:locked}});return}
-  S.schedule=clone(sc);save();try{yetiPrefetch()}catch(e){}
+  if(R0()==='parent'){if(!SEL)return;const locked=('locked' in sc)?!!sc.locked:!!RULES().lockSchedule;delete sc.locked;delete sc._wd;delete sc._custom;await setCtl(SEL,{schedule:clone(sc),rules:{...RULES(),lockSchedule:locked}});return}
+  delete sc._wd;delete sc._custom;S.schedule=clone(sc);save();try{yetiPrefetch()}catch(e){}
 }
 async function connect(){
   try{
@@ -1556,7 +1620,7 @@ const VIEWS={diet:()=>viewDiet(),newtab:()=>viewNewTab(),workout:()=>viewToday()
 let lastTab=null;
 function render(){
   renderTabs();
-  const v=$('#view'),changed=lastTab!==tab;lastTab=tab;v.innerHTML=(R0()==='parent'&&tab!=='me'?`<div class="pv-bar"><span><b>Parent view</b> · Workout, My day and Diet are hidden here</span><button class="btn sm primary" data-act="role" data-v="me">Switch to my app</button></div>`:'')+(VIEWS[tab]||(String(tab).startsWith('c_')?()=>viewCustom(tab):VIEWS.workout))();
+  const v=$('#view'),changed=lastTab!==tab;lastTab=tab;v.innerHTML=(R0()==='parent'&&tab!=='me'?`<div class="pv-bar"><span><b>Parent view</b> · Workout, My schedule and Diet are hidden here</span><button class="btn sm primary" data-act="role" data-v="me">Switch to my app</button></div>`:'')+(VIEWS[tab]||(String(tab).startsWith('c_')?()=>viewCustom(tab):VIEWS.workout))();
   if(tab==='ranks'&&rankView==='board')fillNames();
   if(tab==='me'&&R0()==='me')bindProfile();
   if(tab==='skeefo')scrollChat(true);
@@ -1615,25 +1679,26 @@ function viewToday(){
   return h;
 }
 
-/* ---------- My day ---------- */
+/* ---------- My schedule ---------- */
 function taskState(k,log){
   if(k.kind==='workout')return{d:S.today.complete?S.today.end||1:0,s:S.today.start||0};
   const e=log[k.id]||{};return{d:e.d||0,s:e.s||0};
 }
 function viewDay(){
   ensureToday();
+  const tw=(new Date().getDay()+6)%7,raw=rawSched();if(schDay!=null&&schDay!==tw)return viewDayOther(schDay,raw);
   const sc=sched(),t=todayKey(),log=S.dayLog[t]||{},all=sc.sections.flatMap(s=>s.tasks);
   const dn=all.filter(k=>taskState(k,log).d).length,C=2*Math.PI*36,pct=all.length?dn/all.length:0;
   const now=Date.now(),next=all.find(k=>!taskState(k,log).d&&k.time&&hmToday(k.time)+(k.min||0)*60000>=now)||all.find(k=>!taskState(k,log).d);
   const lockedForMe=lockedForKid();
-  let h='';
+  let h=dayStrip(raw);
   if(sc.example)h+=banner('info','This is an example schedule.','Edit it, ask Skeefo to build one for you, or let a parent set it.',`<button class="btn primary act" data-go="skeefo">Ask Skeefo</button>`);
   else if(sc.by==='parent')h+=banner('info','Your parent set this schedule.',lockedForMe?'Only your parent can change it. You can still check things off.':'You can still edit it.');
-  h+=`<section class="card"><div class="day"><div style="min-width:0"><div class="label">${new Date().toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'})}</div><h2>My day</h2>
+  h+=`<section class="card"><div class="day"><div style="min-width:0"><div class="label">${new Date().toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'})} · ${sc._custom?'custom for '+DAYFULL[tw]:'same as every day'}</div><h2>My schedule</h2>
     <div class="meta"><span class="chip xp">+${TASK_XP} XP per task</span><span class="chip xp">+${SEC_XP} per finished section</span>${next?`<span class="chip">Next: ${esc(next.title)}${next.time?' · '+hm(next.time):''}</span>`:''}</div></div>
     <div class="ring ${pct===1?'full':''}"><svg viewBox="0 0 84 84"><circle class="trk" cx="42" cy="42" r="36"/><circle class="bar" cx="42" cy="42" r="36" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-pct)}"/></svg><div><div><b class="num">${dn}/${all.length}</b><span>done</span></div></div></div></div>
     <div class="dayfoot"><span class="note">Tap Start when you begin a task so ${famOK?'your parent':'you'} can see how long it took.</span>
-    <div class="row-act"><button class="btn sm ghost" data-act="yetitoggle" aria-pressed="${S.yeti!==false}" title="Task animations">✨ Animations ${S.yeti!==false?'on':'off'}</button><button class="btn" data-act="edit" ${lockedForMe?'disabled title="Your parent locked this schedule"':''}>Edit schedule</button></div></div></section>`;
+    <div class="row-act"><button class="btn sm ghost" data-act="yetitoggle" aria-pressed="${S.yeti!==false}" title="Task animations">✨ Animations ${S.yeti!==false?'on':'off'}</button><button class="btn" data-act="edit" ${lockedForMe?'disabled title="Your parent locked this schedule"':''}>Edit ${DAYFULL[tw]}</button></div></div></section>`;
   for(const sec of sc.sections){
     const sd=sec.tasks.filter(k=>taskState(k,log).d).length;
     h+=`<section class="block"><div class="block-h"><h3>${esc(sec.name)}</h3><span class="label">${sd}/${sec.tasks.length}${log._sec&&log._sec[sec.id]?' · bonus earned':''}</span></div>`;
@@ -1668,8 +1733,8 @@ setInterval(tick,1000);
 
 /* ---------- Schedule editor (shared) ---------- */
 function viewEditor(){
-  const parent=R0()==='parent';
-  let h=`<section class="card"><div class="ed-head"><div><div class="label">Editing</div><h3 class="h3">${parent?esc(kidName(SEL))+'’s schedule':'Your schedule'}</h3></div>
+  const parent=R0()==='parent',wd=draft._wd??((new Date().getDay()+6)%7),raw=rawSched(),cust=Object.keys(raw.days||{}).map(Number).filter(d=>d!==wd).sort();
+  let h=`<section class="card"><div class="ed-head"><div><div class="label">Editing ${DAYFULL[wd]}${draft._custom?' · custom day':''}</div><h3 class="h3">${parent?esc(kidName(SEL))+'’s schedule':'Your schedule'}</h3></div>
     ${parent?`<label class="switch"><input type="checkbox" id="ed-lock" data-ed="lock" ${draft.locked?'checked':''}><span></span>Lock it so only you can change it</label>`:''}</div>
     <p class="note">Sections group your day. Each task can have a start time and how many minutes it should take.</p><div class="ed">`;
   draft.sections.forEach((s,si)=>{
@@ -1686,7 +1751,8 @@ function viewEditor(){
   });
   const hasW=draft.sections.some(s=>s.tasks.some(k=>k.kind==='workout'));
   h+=`</div><div class="ed-actions"><button class="btn" data-act="addsec">+ Add section</button>${hasW?'':`<button class="btn" data-act="addworkout">+ Add daily workout</button>`}</div>
-    <div class="dayfoot"><button class="btn" data-act="cancel">Cancel</button><button class="btn primary" data-act="savesched">Save schedule</button></div></section>`;
+    <p class="note">Save it for <b>every day</b> of the week${cust.length?` (this also replaces your custom ${cust.map(d=>DAYFULL[d]).join(', ')})`:''}, or only for <b>${DAYFULL[wd]}</b>.</p>
+    <div class="dayfoot ed-save"><button class="btn" data-act="cancel">Cancel</button><div class="row-act"><button class="btn" data-act="savesched" data-v="day">Save for ${DAYFULL[wd]} only</button><button class="btn primary" data-act="savesched" data-v="all">Save for every day</button></div></div></section>`;
   return h;
 }
 document.addEventListener('input',e=>{
@@ -1740,10 +1806,10 @@ function viewReport(){
 function viewParentSchedule(){
   if(!famOK)return needAccess();pickSel();
   if(!members().length)return noKids();
-  const s=sched(),name=kidName(SEL),lk=RULES().lockSchedule;
-  let h=kidBar()+`<section class="card"><div class="day"><div style="min-width:0"><div class="label">Schedule for ${esc(name)}</div><h2>Daily plan</h2>
+  const tw=(new Date().getDay()+6)%7,sd=schDay??tw,raw=rawSched(),s=schedForDay(sd,raw),name=kidName(SEL),lk=RULES().lockSchedule;
+  let h=kidBar()+dayStrip(raw)+`<section class="card"><div class="day"><div style="min-width:0"><div class="label">${esc(name)} · ${DAYFULL[sd]} · ${s._custom?'custom for this day':'same as every day'}</div><h2>Schedule</h2>
     <div class="meta"><span class="chip">${s.sections.length} sections</span><span class="chip">${s.sections.reduce((a,x)=>a+x.tasks.length,0)} tasks</span><span class="chip ${lk?'lv':''}">${lk?'Locked by you':esc(name)+' can edit'}</span>${s.example?'<span class="chip">Example</span>':''}</div></div></div>
-    <div class="dayfoot"><button class="btn" data-go="skeefo">Ask Skeefo to build one</button><button class="btn primary" data-act="edit">Edit schedule</button></div></section>`;
+    <div class="dayfoot"><button class="btn" data-go="skeefo">Ask Skeefo to build one</button><div class="row-act">${s._custom?'<button class="btn" data-act="resetday">Use every-day schedule</button>':''}<button class="btn primary" data-act="edit">Edit ${DAYFULL[sd]}</button></div></div></section>`;
   for(const sec of s.sections){h+=`<section class="block"><div class="block-h"><h3>${esc(sec.name)}</h3><span class="label">${sec.tasks.length}</span></div>`;
     sec.tasks.forEach(k=>h+=`<div class="ex task ro"><span class="slot num">${k.time?hm(k.time):'Any time'}</span><div class="exinfo static"><span class="exn">${esc(k.title)}${k.kind==='workout'?' <span class="tag">Workout</span>':''}</span><span class="cue">${k.min?k.min+' min':''}</span></div><div></div></div>`);
     h+=`</section>`}
@@ -1772,7 +1838,7 @@ function viewSkeefo(){
   const parent=R0()==='parent';
   if(!parent&&RULES().skeefo==='off')return`<section class="card empty">${skeefoMark(52)}<br><b style="color:var(--ink)">Skeefo is turned off</b><br>Your parent turned Skeefo off for now. Everything else still works.</section>`;
   const chips=parent?[['buildsched','Build a daily schedule for my kid'],['ask','How much sleep does a teenager need?'],['ask','How do I keep my kid motivated without nagging?']]
-    :[['ask','Interview me about my goals'],['buildplan','Build my workout plan'],['buildsched','Build my daily schedule'],['ask','How do I do a proper push-up?']];
+    :[['ask','Interview me about my goals'],['buildplan','Build my workout plan'],['buildsched','Build my daily schedule'],['ask','Interview me for my schedule'],['ask','How do I do a proper push-up?']];
   let h=`<section class="card sk-head"><div class="sk-av ${busy?'think':''}">${skeefoMark(52)}</div><div style="min-width:0"><h2 class="h2">Skeefo <span class="brain ${useClaude()?'cl':''}">${useClaude()?'Claude brain':'Offline brain'}</span></h2><div class="note">${parent?'AI coach for parents. Builds schedules and answers questions.':'Your AI coach. Ask about workouts, goals, food, sleep or your schedule.'}</div></div>
     ${S.chat.length?`<button class="btn sm ghost" data-act="clearchat">Clear chat</button>`:''}</section>`;
   h+=linkCard(true);
@@ -1818,7 +1884,8 @@ async function manageLink(){
 function scrollChat(instant){const c=$('#chat');if(!c)return;const last=c.lastElementChild;if(last)last.scrollIntoView({block:'end',behavior:instant||reduced?'auto':'smooth'})}
 function ctx(){
   const p=S.profile,sc=sched(),R=(ensureToday(),routine());
-  const schedTxt=sc.sections.map(s=>`${s.name}: `+s.tasks.map(k=>`${k.title}${k.time?' at '+k.time:''}${k.min?' ('+k.min+' min)':''}`).join('; ')).join('\n');
+  const fmtS=x=>x.sections.map(s=>`${s.name}: `+s.tasks.map(k=>`${k.title}${k.time?' at '+k.time:''}${k.min?' ('+k.min+' min)':''}`).join('; ')).join('\n'),rw=rawSched();
+  const schedTxt=`Every-day schedule (today is ${DAYFULL[(new Date().getDay()+6)%7]}${sc._custom?', which has its own custom schedule shown after':''}):\n`+fmtS(rw)+Object.keys(rw.days||{}).map(d=>`\nCustom ${DAYFULL[d]} schedule:\n`+fmtS(rw.days[d])).join('');
   if(R0()==='parent'){const r=curKid();
     return`You are talking to a PARENT who uses the app to set their kid's daily schedule and see reports.\nKid's name: ${r&&r.name||'unknown'}. Kid's level ${r?r.level:'?'}, streak ${r?r.streak:'?'} days, ${r?r.total:'?'} workouts done.\nKid's current schedule:\n${schedTxt||'(empty)'}`}
   return`You are talking to the person who trains with the app.\nProfile: ${p.set?`age ${p.age}, goal ${GOALS[p.goal]}, ${LEVELS[p.level]}, equipment ${EQUIP[p.equip]}, ${p.minutes} min per session, trains ${daysText(p)}`:'not set yet (ask them)'}.${programInfo()&&!programInfo().done?` On week ${programInfo().week} of a ${programInfo().weeks}-week program.`:''}\nLevel ${lvl(S.xp)} (${titleFor(lvl(S.xp))}), ${S.xp} XP, ${S.streak}-day streak, ${S.total} workouts done.\nToday's workout: ${R.title}: ${allItems(R).map(i=>i.n).join(', ')}.\nTheir daily schedule:\n${schedTxt||'(empty)'}`;
@@ -1827,7 +1894,7 @@ function persona(){return`You are Skeefo, the upbeat, friendly AI coach inside "
 ${ctx()}
 
 How you talk: warm, encouraging, direct, a little playful. Keep replies under 120 words unless they ask for detail. Use short paragraphs, "- " bullets and **bold** for key words. No headings.
-When interviewing about goals, ask ONE question at a time, in this order unless already known: main goal, age, experience, equipment, minutes per day, other activities. Only ask about wake-up, bed or school times if they say they want times on their schedule. After about 5 answers, summarize and tell them to tap "Build my workout plan" or "Build my daily schedule" (these buttons are under the chat). Interviews: if the user wants to be interviewed about their diet, day or a tab, tell them to say “interview me for my diet”, “interview me for my day” or “interview me for my <name> tab”. For multi-week programs, tell them to say “make me a 4 week workout plan”.
+When interviewing about goals, ask ONE question at a time, in this order unless already known: main goal, age, experience, equipment, minutes per day, other activities. Only ask about wake-up, bed or school times if they say they want times on their schedule. After about 5 answers, summarize and tell them to tap "Build my workout plan" or "Build my daily schedule" (these buttons are under the chat). Interviews: if the user wants to be interviewed about their diet, day or a tab, tell them to say “interview me for my diet”, “interview me for my day”, “interview me for my schedule” (adds things, can be for certain days) or “interview me for my <name> tab”. The schedule can differ by weekday: each day uses the every-day schedule unless it has its own custom schedule. When the user names days (like “on Tuesdays” or “weekends”), pass them in the days field of add_task, remove_task or set_task_time; leave days out to change every day. For multi-week programs, tell them to say “make me a 4 week workout plan”.
 When the user asks you to change something (update their schedule to yours, add/remove/move a task, check something off, change their goal or minutes, shuffle today’s workout, mute sounds), DO IT with your tools right away, then confirm in one short sentence. Never claim you did something unless the tool succeeded.
 You can edit the saved diet plan with edit_diet_meal, diet_avoid_food and diet_more when asked. Diet plans are meal ideas only: never give calorie targets, portion limits or weight-loss diets. You cannot browse the internet or look up live information (news, scores, prices); if asked, say so and share what you know, noting it may be out of date.
 Some earlier messages are from past chats the user cleared from the screen; you still remember them and can refer back naturally.
@@ -1997,7 +2064,7 @@ const KB=[
   {re:['build muscle','gain muscle','get stronger','get bigger','get buff','get strong','abs','six pack'],a:()=>'Muscle comes from three things:\n- **Progressive overload:** a little harder each week (more reps, slower reps or more weight)\n- **Food:** regular meals with protein\n- **Sleep:** 8+ hours\n\nSet your goal to Build muscle and follow your plan. Visible abs mostly come from overall fitness, not endless crunches.'},
   {re:['cardio','run','running','stamina','endurance','jog'],a:()=>'Build stamina slowly: start with **easy efforts you can talk through**, then add one harder interval day a week. Increase total time by about 10% a week. Good shoes help, and the endurance goal gives you more cardio days.'},
   {re:['how much exercise','how often','how many days','how long should'],a:()=>'Rough guidelines:\n- **Kids and teens:** about **60 minutes of activity a day**, with muscle and bone strengthening 3 days a week\n- **Adults:** **150+ minutes a week** of moderate activity plus 2 strength days\n\nYour daily routine plus normal moving around gets you there.'},
-  {re:['xp','level up','levels','how do i level','points'],a:()=>`You earn XP for each exercise (+${XP_MAIN} main, +${XP_SIDE} warm-up/cool-down), a **${BONUS} XP bonus** for finishing the routine (bigger with a longer streak), **+${TASK_XP}** per task on My day and **+${SEC_XP}** for finishing a section. Levels get harder as you go.`},
+  {re:['xp','level up','levels','how do i level','points'],a:()=>`You earn XP for each exercise (+${XP_MAIN} main, +${XP_SIDE} warm-up/cool-down), a **${BONUS} XP bonus** for finishing the routine (bigger with a longer streak), **+${TASK_XP}** per task on My schedule and **+${SEC_XP}** for finishing a section. Levels get harder as you go.`},
   {re:['leaderboard','rank','ranking','compete','friends'],a:()=>'The leaderboard shows everyone you share Routines Reimagined with who signs in and trains. Rank by **XP**, **streak** or **workouts this week** on the Ranks tab.'},
   {re:['parent','mom','dad','guardian'],a:()=>'A parent can follow along: share this page with them from the Share menu with **edit access**. They pick “I’m a parent” on the Me tab to see your daily report, how long tasks took, and to set your schedule.'},
   {re:['remember','what did we talk','what did i say','last time','earlier','before i cleared'],a:()=>{const u=(S.mem||[]).filter(m=>m.r==='u').slice(-4).map(m=>m.t.slice(0,60));
@@ -2066,8 +2133,16 @@ function offlineBuild(kind){
 const lockedForKid=()=>{const sc=sched();return R0()==='me'&&(RULES().lockSchedule||(sc.locked&&sc.by==='parent'))};
 function mutSched(fn){
   if(lockedForKid())throw new Error('Your parent locked your schedule, so I can’t change it. You can still check things off.');
-  const sc=clone(sched());sc.example=false;sc.by=R0()==='parent'?'parent':'me';
-  const out=fn(sc);saveSchedule(sc);return out;
+  const days=CMDDAYS&&CMDDAYS.length?CMDDAYS:null;
+  const r=clone(rawSched());delete r._wd;delete r._custom;r.example=false;r.by=R0()==='parent'?'parent':'me';r.days=r.days||{};
+  const targets=[];
+  if(days)days.forEach(d=>{if(!r.days[d])r.days[d]={sections:clone(r.sections)};targets.push(r.days[d])});
+  else{targets.push(r);Object.keys(r.days).forEach(k=>targets.push(r.days[k]))}
+  let out=null,err=null;
+  for(const tg of targets){try{const o=fn(tg);if(out==null)out=o}catch(e){if(!err)err=e}}
+  if(out==null)throw err||new Error('I couldn’t do that.');
+  saveSchedule(r);
+  return days?String(out).replace(/\s*Check it out on My schedule\.?$/,'')+` That’s for **${scopeLabel(days)}** only.`:out;
 }
 const nrm=t=>norm(t).trim();
 function findTask(sc,q){
@@ -2097,9 +2172,9 @@ const ACT={
     return mutSched(sc=>{let s=section?findSection(sc,section):null,made=false;
       if(!s&&section&&!/^(schedule|day|list|plan|routine|to ?do|todo)s?$/i.test(String(section).trim())){s={id:rid(),name:String(section).trim().replace(/^\w/,c=>c.toUpperCase()).slice(0,30),tasks:[]};sc.sections.push(s);made=true}
       if(!s)s=sc.sections.find(x=>/evening|night/i.test(x.name))||sc.sections.at(-1);
-      if(!s){s={id:rid(),name:'My day',tasks:[]};sc.sections.push(s);made=true}
+      if(!s){s={id:rid(),name:'To do',tasks:[]};sc.sections.push(s);made=true}
       s.tasks.push({id:rid(),title:title.replace(/^\w/,c=>c.toUpperCase()),time:tm||'',min:Math.max(1,Math.min(240,parseInt(min)||10))});
-      return`Done! I added **${esc(title)}** to ${made?'a new ':'your '}**${esc(s.name)}**${made?' section':''}${tm?` at ${hm(tm)}`:''}. Check it out on My day.`});
+      return`Done! I added **${esc(title)}** to ${made?'a new ':'your '}**${esc(s.name)}**${made?' section':''}${tm?` at ${hm(tm)}`:''}. Check it out on My schedule.`});
   },
   removeTask({title}){
     return mutSched(sc=>{const f=findTask(sc,title);if(!f)throw new Error(`I couldn’t find “${title}” on your schedule.`);
@@ -2146,11 +2221,12 @@ function applyPlan(i){const m=typeof i==='object'?i:S.chat[i];if(!m||!m.plan)ret
   return'Done! Your workouts now follow my plan. Today is **'+esc(routine().title)+'**.'}
 function applySched(i){const m=typeof i==='object'?i:S.chat[i];if(!m||!m.sched)return'';
   if(lockedForKid())return'Your parent locked your schedule, so only they can change it.';
-  const cur=sched();saveSchedule({sections:clone(m.sched.sections),example:false,by:R0()==='parent'?'parent':'me',locked:R0()==='parent'?!!cur.locked:false});
+  if(m.sched.days&&m.sched.days.length)saveScheduleScope(clone(m.sched.sections),'day',m.sched.days,R0()==='parent'?{}:{locked:false});
+  else{const cur=rawSched();saveSchedule({sections:clone(m.sched.sections),days:{},example:false,by:R0()==='parent'?'parent':'me',...(R0()==='parent'?{}:{locked:false})})}
   allChat().forEach(x=>{if(x.sched)x.applied=0});m.applied=1;save();confetti(.6);SFX.bonus();
-  return R0()==='parent'?'Done! That schedule is on your kid’s app now.':'Done! Your day is updated to my schedule. Check it out on My day.'}
+  return R0()==='parent'?'Done! That schedule is on your kid’s app now.':'Done! Your day is updated to my schedule. Check it out on My schedule.'}
 function pendingProposal(){for(let i=S.chat.length-1;i>=Math.max(0,S.chat.length-6);i--){const m=S.chat[i];if((m.sched||m.plan)&&!m.applied)return m.plan?'plan':'sched'}return null}
-/* ================= Yeti scene generator (My day) ================= */
+/* ================= Object animations (My schedule) ================= */
 const Y_MOTIONS=['drink','eat','brush','shower','clean','sleep','read','write','music','stretch','run','walk','cheer','type','lift','throw','dance','call','water','cook','show','wave','calm','pack','game','paint','photo'];
 const Y_PROPS=['none','cup','bowl','plate','apple','toothbrush','broom','shirt','trash','pencil','book','guitar','dumbbell','ball','phone','laptop','wateringcan','pot','backpack','controller','paint','camera','flower','sign','dog','bed','shower'];
 const Y_FX=['none','bubbles','drops','zzz','notes','stars','hearts','steam','dust','sweat','flash','rings','dots'];
@@ -2217,7 +2293,7 @@ let yPrefetchT=null,yPrefetching=false;
 function yetiPrefetch(){clearTimeout(yPrefetchT);yPrefetchT=setTimeout(yetiPrefetchNow,1500)}
 async function yetiPrefetchNow(){
   if(yPrefetching||!useClaude()||R0()==='parent')return;S.yetiCache=S.yetiCache||{};
-  const titles=[...new Set(sched().sections.flatMap(s=>s.tasks).filter(k=>k.kind!=='workout').map(k=>k.title))].filter(t=>!S.yetiCache[yetiKey(t)]).slice(0,25);
+  const titles=[...new Set([rawSched(),...Object.values(rawSched().days||{})].flatMap(x=>x.sections).flatMap(s=>s.tasks).filter(k=>k.kind!=='workout').map(k=>k.title))].filter(t=>!S.yetiCache[yetiKey(t)]).slice(0,25);
   if(!titles.length)return;yPrefetching=true;
   const prompt=`You pick a small animated object for each task in a kids' routine app. When the user checks off a task, the object used for it animates beside the task (a cup of water tips and spills, a toothbrush scrubs, a broom sweeps).
 For EACH task below, pick the action and the object that best fits what the task means, using ONLY these words.
@@ -2407,8 +2483,8 @@ const TOPICS=[
  {id:'weight',k:['how much should i weigh','bmi','weigh myself','my weight','lose weight fast','gain weight'],a:'Weight is a better topic for a doctor than an app, because everyone grows differently. Focus on what you can control: moving every day, good food, water and sleep. Those build a strong body at any size.'},
  {id:'stress',k:['stressed','stress','anxious','anxiety','sad','depressed','lonely','upset','overwhelmed','worried','bad day','crying'],a:'I’m sorry today feels heavy. A few things that can help:\n- Take a walk or do some stretching\n- Slow breathing: in for 4, out for 6\n- Talk to someone you trust, like a parent, friend or school counselor\n\nIf you ever feel unsafe, call or text **988** any time.'},
  {id:'tired',k:['tired','no energy','exhausted','sleepy','drained'],a:'Low energy usually comes from one of these: not enough **sleep**, not enough **water**, or not enough **food**. Try a glass of water and a snack, and do just the warm-up. If you’re tired every day, talk to a parent or doctor.'},
- {id:'focus',k:['focus','concentrate','study tips','procrastinat','distracted','homework help','cant focus'],a:'Focus tricks:\n- Put your phone in another room\n- Work 25 minutes, then a 5-minute break\n- Start with the easiest task to get going\n- Do 10 jumping jacks between subjects\n\nAdd “Homework” to My day and check it off for XP.'},
- {id:'screens',k:['screen time','video games','gaming','tiktok','youtube','instagram','social media','phone addiction'],a:'Screens are fine in balance. Try **screens off an hour before bed** for better sleep, and earn game time by finishing your My day list first. I can add a “Screens off” task: say **“add screens off to my evening at 9pm”**.'},
+ {id:'focus',k:['focus','concentrate','study tips','procrastinat','distracted','homework help','cant focus'],a:'Focus tricks:\n- Put your phone in another room\n- Work 25 minutes, then a 5-minute break\n- Start with the easiest task to get going\n- Do 10 jumping jacks between subjects\n\nAdd “Homework” to My schedule and check it off for XP.'},
+ {id:'screens',k:['screen time','video games','gaming','tiktok','youtube','instagram','social media','phone addiction'],a:'Screens are fine in balance. Try **screens off an hour before bed** for better sleep, and earn game time by finishing your My schedule list first. I can add a “Screens off” task: say **“add screens off to my evening at 9pm”**.'},
  {id:'wake',k:['wake up early','waking up','morning routine','get up early','cant wake up'],a:'Waking up easier:\n- Same bedtime every night, even weekends\n- Put your alarm across the room\n- Open the curtains and drink water right away\n- Make your bed: it’s your first win of the day'},
  {id:'habit',k:['habit','consistent','consistency','discipline','stick to','keep going','give up'],a:'Habits stick when they’re **small and the same time every day**. Pick one cue (“after school snack”), do the smallest version (even 5 minutes), and protect your streak. Missing once is fine; never miss twice.'},
  {id:'confidence',k:['confidence','insecure','body image','ugly','too skinny','too fat','hate how i look'],a:'Lots of people feel that way, and you’re not alone. Training is about feeling **strong and capable**, not looking a certain way. Notice what your body can do: more push-ups, faster runs. If these thoughts weigh on you, talk to a parent or school counselor.'},
@@ -2417,10 +2493,10 @@ const TOPICS=[
  {id:'motivate',k:['quote','inspire','motivate me','motivation','pump me up','hype me up'],a:()=>[`**“Start where you are. Use what you have. Do what you can.”** That’s all today needs.`,`Every rep counts. You’re on a **${S.streak}-day streak**, so let’s add another day!`,`Future you is going to be so glad you started today. Let’s go! 🔥`,`You don’t have to be great to start, but you have to start to be great.`][Math.floor(Math.random()*4)]},
  {id:'howareyou',k:['how are you','how r u','hows it going','how is it going','you good','whats up with you'],a:'I’m great, thanks for asking! I’m a yeti coach, so I’m always ready for a workout. ❄️ How are **you** feeling today?'},
  {id:'night',k:['good night','goodnight','gn','going to bed'],a:'Good night! Sleep is when your muscles rebuild, so you’re basically training right now. 😴 See you tomorrow.'},
- {id:'bored',k:['bored','nothing to do','boring'],a:'Bored? Try a **2-minute challenge**: as many jumping jacks as you can in 1 minute, then a 1-minute plank. Beat your score tomorrow! Or check off something on My day for XP.'},
+ {id:'bored',k:['bored','nothing to do','boring'],a:'Bored? Try a **2-minute challenge**: as many jumping jacks as you can in 1 minute, then a 1-minute plank. Beat your score tomorrow! Or check off something on My schedule for XP.'},
  {id:'me',k:['who made you','your name','are you real','are you a yeti','are you ai','what are you','who are you'],a:'I’m **Skeefo**, the yeti coach inside Routines Reimagined! ❄️ I’m an AI helper: I can build plans, edit your day and diet, and answer questions. I’m not a doctor, so for health problems always ask a real one.'},
  {id:'howapp',k:['how do i use','how does the app work','how do i add a task','how do i add a section','how do i make a tab','what can i say','commands'],a:'Things you can tell me:\n- **“add stretching to my evening at 8pm”**\n- **“move homework to 4:30”** or **“move reading to morning”**\n- **“I finished homework”** / **“uncheck breakfast”**\n- **“rename read to read 20 pages”**\n- **“make a tab called Practice”**\n- **“change Tuesday dinner to tacos”** / **“I don’t like fish”**\n- **“I drank 2 glasses of water”**\n- **“what’s on my schedule?”**\n- **“I want to work out 4 days a week”**\n- **“make me a 4 week workout plan”**\n- **“interview me for my diet”** / **“…for my day”** / **“…for my Practice tab”**'},
- {id:'yeti',k:['animation','animations','yeti','the cup','spilling'],a:'Every time you check something off on **My day**, the thing you used for it animates right beside the task: a cup of water spills, a toothbrush scrubs, a book flips its pages, and more. I pick the object from what your task means. Say **“show animation for walk the dog”** to preview one, or turn them off on the My day tab.'},
+ {id:'yeti',k:['animation','animations','yeti','the cup','spilling'],a:'Every time you check something off on **My schedule**, the thing you used for it animates right beside the task: a cup of water spills, a toothbrush scrubs, a book flips its pages, and more. I pick the object from what your task means. Say **“show animation for walk the dog”** to preview one, or turn them off on the My schedule tab.'},
 ];
 const GLOSS={rep:'A **rep** (repetition) is doing an exercise once, like one push-up.',set:'A **set** is a group of reps in a row. “3 × 10” means 3 sets of 10 reps, with rest between sets.',
   cardio:'**Cardio** is exercise that gets your heart pumping for a while, like running, biking or jumping jacks. It builds endurance.',hiit:'**HIIT** (high-intensity interval training) mixes short, hard bursts with rest. For example, 30 seconds of sprinting, then 60 seconds of walking.',
@@ -2473,7 +2549,10 @@ const ACT2={
     const sc=sched(),f=findTask(sc,title);if(!f)throw new Error(`I couldn’t find “${title}” on your schedule.`);
     const log=S.dayLog[todayKey()]||{};if(!(log[f.k.id]&&log[f.k.id].d))return`**${esc(f.k.title)}** isn’t checked off yet.`;
     taskToggle(f.k.id,$('.composer')||document.body);return`Unchecked **${esc(f.k.title)}**.`},
-  listDay(){ensureToday();const sc=sched(),log=S.dayLog[todayKey()]||{};if(!sc.sections.length)return'Your day is empty. Say **“build my schedule”** and I’ll make one.';
+  listDay(wd){ensureToday();const tw=(new Date().getDay()+6)%7;
+    if(wd!=null&&wd!==tw){const sc=schedForDay(wd);if(!sc.sections.length)return`Nothing is planned for **${DAYFULL[wd]}** yet. Say **“add piano on ${DAYFULL[wd].toLowerCase()}”** to add something.`;
+      return`**${DAYFULL[wd]}**${sc._custom?' (custom day)':' (same as every day)'}\n\n`+sc.sections.map(s=>`**${esc(s.name)}**\n`+s.tasks.map(k=>`- ${esc(k.title)}${k.time?` · ${hm(k.time)}`:''}`).join('\n')).join('\n\n')}
+    const sc=sched(),log=S.dayLog[todayKey()]||{};if(!sc.sections.length)return'Your day is empty. Say **“build my schedule”** and I’ll make one.';
     const lines=sc.sections.map(s=>`**${esc(s.name)}**\n`+s.tasks.map(k=>`- ${taskState(k,log).d?'✅':'⬜'} ${esc(k.title)}${k.time?` · ${hm(k.time)}`:''}`).join('\n'));
     const all=sc.sections.flatMap(s=>s.tasks),left=all.filter(k=>!taskState(k,log).d).length;
     return lines.join('\n\n')+`\n\n${left?`**${left}** left to go. You’ve got this!`:'Everything is done today! 🎉'}`},
@@ -2539,7 +2618,7 @@ const DIETQ=[
 const DAYQ=()=>[IV[5],IV[6],IV[7],
   {k:'acts',q:'What else do you do on most days? Like **soccer practice, piano, chores, walk the dog**. List them, or say **none**.',parse:(t,raw)=>listParse(raw),hint:'List a few things, or say none.'},
   {k:'withTimes',q:'Last one! Do you want **times** on your schedule, or keep it **flexible** with no times?',parse:t=>has(t,'time','yes','yeah','sure','yep')?true:has(t,'flex','no','nah','without','nope')?false:null,hint:'Say times or flexible.'}];
-function ivQuestions(mode){return mode==='goals'?[...IV.slice(0,5),DAYSQ]:mode==='times'?IV.slice(5):mode==='diet'?DIETQ:mode==='day'?DAYQ():[]}
+function ivQuestions(mode){return mode==='goals'?[...IV.slice(0,5),DAYSQ]:mode==='times'?IV.slice(5):mode==='diet'?DIETQ:mode==='day'?DAYQ():mode==='sched'?SCHEDQ.filter(q=>!(q.k==='when'&&S.iv&&S.iv.pre)):[]}
 function ivStartTab(name){
   let tb=findTab(name);if(!tb){try{tb=TABACT.create({name});renderTabs()}catch(e){return e.message}}
   S.iv={mode:'tab',tab:tb.id,step:0,a:{},items:[]};
@@ -2547,6 +2626,7 @@ function ivStartTab(name){
 }
 function ivFinish(mode,a){
   if(mode==='times'){S.ivDone={...(S.ivDone||{}),...a};const sc=offlineSched(true);return{t:sc.summary,sched:sc}}
+  if(mode==='sched')return schedInterviewFinish(a);
   if(mode==='diet'){
     if(R0()==='parent')return'Diet plans go on your kid’s own app. They can ask me there.';
     const pr={veg:a.meat!=='yes',vegan:a.meat==='vegan'};(a.allergy||[]).forEach(k=>pr[k]=true);
@@ -2583,10 +2663,12 @@ function ivAnswer2(text){
   if(iv.step<Q.length)return cheer+' '+Q[iv.step].q;
   const a=iv.a,mode=iv.mode||'goals';S.iv=null;return ivFinish(mode,a);
 }
-function ivStart2(mode){S.iv={mode,step:0,a:{}};const Q=ivQuestions(mode);
-  const intro={goals:`Let’s do it! I’ll ask ${Q.length} quick questions about your training.`,times:`Sure, let’s put times on your schedule. ${Q.length} quick questions.`,diet:`Let’s build your meal plan! ${Q.length} quick questions.`,day:`Let’s plan your day! ${Q.length} quick questions.`}[mode];
+function ivStart2(mode,pre){S.iv={mode,step:0,a:pre?{when:pre}:{},pre:!!pre};const Q=ivQuestions(mode);
+  const intro={goals:`Let’s do it! I’ll ask ${Q.length} quick questions about your training.`,times:`Sure, let’s put times on your schedule. ${Q.length} quick questions.`,diet:`Let’s build your meal plan! ${Q.length} quick questions.`,day:`Let’s plan your day! ${Q.length} quick questions.`,sched:`Let’s add to your schedule${pre?` for **${scopeLabel(pre==='all'?null:pre)}**`:''}! ${Q.length} quick questions, and I work offline.`}[mode];
   return intro+'\n\n'+Q[0].q}
 function interviewCommand(t){
+  {const sm=t.match(/\b(?:interview me|ask me)\b.*\bschedule\b|^ (?:help me )?add (?:something |stuff |things )?to my schedule $|\bhelp me add (?:something |stuff |things )?to my schedule\b/);
+   if(sm){if(lockedForKid())return'Your parent locked your schedule, so only they can change it.';const d=parseDayScope(t);return ivStart2('sched',d.days||(d.all?'all':null))}}
   if(R0()==='parent')return null;
   let m=t.match(/\b(?:interview|ask) me (?:about|for|on) (?:my |the )?(.+?) tab\b|\b(?:fill (?:in|out|up)|set up|help me (?:with|fill)) (?:my |the )?(.+?) tab\b/);
   if(m)return ivStartTab((m[1]||m[2]).trim());
@@ -2616,8 +2698,21 @@ function daysCommand(t){
   return null;
 }
 
-function tryCommand(raw){
+function withDays(d,f){if(!d||!d.length)return f();const p=parseDayScope(' '+[].concat(d).join(' and ')+' ');CMDDAYS=p.all?null:p.days;try{return f()}finally{CMDDAYS=null}}
+function dayScopeCommand(text,t){
+  if(/\b(interview|ask me)\b/.test(t))return null;
+  const sc=parseDayScope(' '+text+' ');if(!sc.days&&!sc.all)return null;
+  if(/\b(what s|whats|what is|show me|show|list|what do i have|what am i doing|what s on)\b/.test(t)&&/\b(schedule|on|plans?|to do|day)\b/.test(t)&&!/\b(workout|eat|meal|diet|lunch|dinner|breakfast)\b/.test(t)&&sc.days&&sc.days.length===1)return ACT2.listDay(sc.days[0]);
+  if(/\b(train|work ?out|workouts?|exercise|gym|rest day|breakfast|lunch|dinner|snack|meals?|diet|tab)\b/.test(t))return null;
+  if(!/\b(add|put|include|remove|delete|take off|take out|drop|get rid of|move|change|set|schedule|clear|build|make)\b/.test(t))return null;
+  CMDDAYS=sc.all?null:sc.days;
+  try{const r=tryCommand(sc.text,true);
+    if(r&&typeof r==='object'&&r.sched&&CMDDAYS){r.sched.days=CMDDAYS;r.t=(r.t||'')+` This one is for **${scopeLabel(CMDDAYS)}** only.`;if(r.sched.summary)r.sched.summary=r.t}
+    return r}finally{CMDDAYS=null}
+}
+function tryCommand(raw,inner){
   const text=raw.trim().replace(/[.!?]+$/,''),t=norm(text);
+  if(!inner){const ds=dayScopeCommand(text,t);if(ds!=null)return ds}
   const run=(f,...a)=>{try{return f(...a)}catch(e){return e.message||'I couldn’t do that.'}};
   const kindOf=()=>has(t,' plan',' workout')?'plan':has(t,'schedule',' day ',' routine')?'sched':null;
   // apply a proposal
@@ -2661,7 +2756,7 @@ function tryCommand(raw){
   if(m&&R0()==='me'){const n={one:1,two:2,three:3,four:4,a:1}[m[1]]||parseInt(m[1])||1;return run(()=>DIET.water(Math.min(n,8)))}
   m=t.match(/\bi\s+(?:just\s+)?(?:ate|had|finished|eat)\s+(?:my\s+|a\s+)?(breakfast|lunch|dinner|snack)\b/);
   if(m&&R0()==='me'){const k={breakfast:'b',lunch:'l',dinner:'d',snack:'s'}[m[1]];return run(()=>{const d0=dietDay().m[k];let out=d0?`You already logged ${m[1]} on Diet.`:DIET.meal(k);
-    const f=findTask(sched(),m[1]),log=S.dayLog[todayKey()]||{};if(f&&f.k.kind!=='workout'&&!(log[f.k.id]&&log[f.k.id].d)){taskToggle(f.k.id,$('.composer')||document.body);out+=` Checked off **${esc(f.k.title)}** on My day too.`}return out})}
+    const f=findTask(sched(),m[1]),log=S.dayLog[todayKey()]||{};if(f&&f.k.kind!=='workout'&&!(log[f.k.id]&&log[f.k.id].d)){taskToggle(f.k.id,$('.composer')||document.body);out+=` Checked off **${esc(f.k.title)}** on My schedule too.`}return out})}
   {const ym=text.match(/^(?:show me |play |preview )?(?:the )?(?:yeti|animation) (?:for |doing |of )?(.+)$/i);if(ym&&!/^(animations?|on|off)$/i.test(ym[1].trim())){const tl=ym[1].replace(/^["“']|["”']$/g,'');setTimeout(()=>yetiPlay(tl),300);const sp=yetiSpec(tl);return`Here’s the animation for **${esc(tl)}**! (${sp.ai?'picked by my Claude brain':'picked by my offline brain'}: *${itemKey(sp)}*)`}}
   {const r2=tryCommand2(text,t);if(r2!=null)return r2}
   // section
@@ -2700,9 +2795,9 @@ const TOOLS=()=>[
   {name:'log_water',description:'Log glasses of water on the Diet tab (negative to undo).',inputSchema:{type:'object',properties:{glasses:{type:'number'}},required:['glasses']},execute:i=>DIET.water(Math.max(-8,Math.min(8,parseInt(i.glasses)||1)))},
   {name:'log_meal',description:'Toggle a meal on the Diet tab: b=breakfast, l=lunch, d=dinner, s=snack.',inputSchema:{type:'object',properties:{meal:{type:'string',enum:['b','l','d','s']}},required:['meal']},execute:i=>DIET.meal(String(i.meal))},
   {name:'apply_latest_proposal',description:'Apply the most recent schedule or workout plan Skeefo proposed in this chat (for “update my schedule to yours”, “use that plan”). Returns what happened.',inputSchema:{type:'object',properties:{kind:{type:'string',enum:['sched','plan']}}},execute:i=>ACT.applyLatest(i.kind)},
-  {name:'add_task',description:'Add a task to the daily schedule. Only give a time if the user asked for one. Returns a confirmation.',inputSchema:{type:'object',properties:{title:{type:'string'},section:{type:'string',description:'Existing section name like Morning; a new one is created if missing'},time:{type:'string',description:'Like 5pm or 17:30, only if requested'},min:{type:'number'}},required:['title']},execute:i=>ACT.addTask(i)},
-  {name:'remove_task',description:'Remove a task from the schedule by (part of) its title.',inputSchema:{type:'object',properties:{title:{type:'string'}},required:['title']},execute:i=>ACT.removeTask(i)},
-  {name:'set_task_time',description:'Set or clear (empty string) the time of a task.',inputSchema:{type:'object',properties:{title:{type:'string'},time:{type:'string'}},required:['title','time']},execute:i=>ACT.setTime(i)},
+  {name:'add_task',description:'Add a task to the daily schedule. Only give a time if the user asked for one. Returns a confirmation.',inputSchema:{type:'object',properties:{days:{type:'array',items:{type:'string'},description:'Optional weekdays like ["monday","weekends"]. Leave out to change every day.'},title:{type:'string'},section:{type:'string',description:'Existing section name like Morning; a new one is created if missing'},time:{type:'string',description:'Like 5pm or 17:30, only if requested'},min:{type:'number'}},required:['title']},execute:i=>withDays(i.days,()=>ACT.addTask(i))},
+  {name:'remove_task',description:'Remove a task from the schedule by (part of) its title.',inputSchema:{type:'object',properties:{days:{type:'array',items:{type:'string'},description:'Optional weekdays like ["monday","weekends"]. Leave out to change every day.'},title:{type:'string'}},required:['title']},execute:i=>withDays(i.days,()=>ACT.removeTask(i))},
+  {name:'set_task_time',description:'Set or clear (empty string) the time of a task.',inputSchema:{type:'object',properties:{days:{type:'array',items:{type:'string'},description:'Optional weekdays like ["monday","weekends"]. Leave out to change every day.'},title:{type:'string'},time:{type:'string'}},required:['title','time']},execute:i=>withDays(i.days,()=>ACT.setTime(i))},
   {name:'clear_all_times',description:'Remove clock times from every task.',execute:()=>ACT.clearTimes()},
   {name:'add_section',description:'Add a new empty section to the schedule.',inputSchema:{type:'object',properties:{name:{type:'string'}},required:['name']},execute:i=>ACT.addSection(i)},
   {name:'complete_task',description:'Check off a task on today’s schedule for the user (earns XP). Not for the workout.',inputSchema:{type:'object',properties:{title:{type:'string'}},required:['title']},execute:i=>ACT.completeTask(i)},
@@ -2820,7 +2915,7 @@ function viewProgress(){
   `<section class="card"><div class="label">Rank ladder</div><div class="ladder">${ladder}</div>
     <ul class="rules">
       <li><span>1</span><div>Every exercise earns XP. Finishing the whole routine earns a ${BONUS} XP bonus, multiplied by the streak (up to ×2.0 at 10 days).</div></li>
-      <li><span>2</span><div>Tasks on My day earn ${TASK_XP} XP each (up to ${TASK_CAP} a day), plus ${SEC_XP} XP for finishing a whole section.</div></li>
+      <li><span>2</span><div>Tasks on My schedule earn ${TASK_XP} XP each (up to ${TASK_CAP} a day), plus ${SEC_XP} XP for finishing a whole section.</div></li>
       <li><span>3</span><div>One rest day is allowed. Missing two days in a row resets the streak to zero.</div></li>
       <li><span>4</span><div>Missing four days drops a level, then another level every three days after that, down to level 1. Finishing a routine stops the slide.</div></li>
     </ul></section>`;
@@ -2912,21 +3007,23 @@ document.addEventListener('click',e=>{
     case'guide':{SFX.soft();guideOpen=!guideOpen;const g=t.closest('.guide');g.classList.toggle('open',guideOpen);t.setAttribute('aria-expanded',guideOpen);break}
     case'task':taskToggle(t.dataset.id,t);break;
     case'start':{ensureToday();const d=todayKey(),log=S.dayLog[d]||(S.dayLog[d]={_x:0,_sec:{}});(log[t.dataset.id]||(log[t.dataset.id]={})).s=Date.now();SFX.start();save();render();break}
-    case'edit':draft=clone(sched());if(R0()==='parent')draft.locked=RULES().lockSchedule;draft.sections.forEach(s=>{s.id=s.id||rid();s.tasks.forEach(k=>k.id=k.id||rid())});render();break;
+    case'schday':{const v=+t.dataset.v,tw=(new Date().getDay()+6)%7;schDay=v===tw?null:v;SFX.soft();render();break}
+    case'resetday':{const wd=schDay??((new Date().getDay()+6)%7),r=clone(rawSched());if(r.days)delete r.days[wd];delete r._wd;delete r._custom;saveSchedule(r);render();toast(medal('✓',true),DAYFULL[wd]+' reset','It uses your every-day schedule again.');break}
+    case'edit':draft=clone(schedForDay(schDay??((new Date().getDay()+6)%7)));if(R0()==='parent')draft.locked=RULES().lockSchedule;draft.sections.forEach(s=>{s.id=s.id||rid();s.tasks.forEach(k=>k.id=k.id||rid())});render();break;
     case'cancel':draft=null;render();break;
     case'addsec':draft.sections.push({id:rid(),name:'New section',tasks:[{id:rid(),title:'',time:'',min:10}]});render();break;
     case'delsec':draft.sections.splice(si,1);render();break;
     case'addtask':draft.sections[si].tasks.push({id:rid(),title:'',time:'',min:10});render();document.querySelector(`#ed-${draft.sections[si].tasks.at(-1).id}-title`)?.focus();break;
     case'deltask':draft.sections[si].tasks.splice(ti,1);render();break;
     case'addworkout':(draft.sections.at(-1)||(draft.sections.push({id:rid(),name:'Workout',tasks:[]}),draft.sections[0])).tasks.push({id:'workout',kind:'workout',title:'Daily workout',time:'',min:S.profile.minutes||30});render();break;
-    case'savesched':{const sc=clone(draft);sc.sections=sc.sections.map(s=>({...s,name:(s.name||'').trim()||'Section',tasks:s.tasks.filter(k=>k.kind==='workout'||(k.title||'').trim()).map(k=>({...k,title:(k.title||'').trim()}))}));
-      sc.example=false;sc.by=R0()==='parent'?'parent':'me';if(R0()!=='parent')sc.locked=false;
-      draft=null;saveSchedule(sc);render();SFX.link();toast(medal('✓',true),'Schedule saved',R0()==='parent'?'It’s on your kid’s app now.':'Your day is updated.');break}
+    case'savesched':{const secs=clone(draft.sections).map(s=>({...s,name:(s.name||'').trim()||'Section',tasks:s.tasks.filter(k=>k.kind==='workout'||(k.title||'').trim()).map(k=>({...k,title:(k.title||'').trim()}))}));
+      const scope=t.dataset.v==='day'?'day':'all',wd=draft._wd??((new Date().getDay()+6)%7),extra=R0()==='parent'?{locked:!!draft.locked}:{locked:false};
+      draft=null;saveScheduleScope(secs,scope,wd,extra);render();SFX.link();toast(medal('✓',true),scope==='day'?DAYFULL[wd]+' saved':'Saved for every day',R0()==='parent'?'It’s on your kid’s app now.':scope==='day'?'Only '+DAYFULL[wd]+' changed.':'Every day of your week is updated.');break}
     case'ask':sendChat(t.dataset.q);break;
     case'buildplan':buildPlan();break;
     case'buildsched':buildSched();break;
     case'useplan':{const r=applyPlan(+t.dataset.i);render();if(r)toast(skeefoMark(40),'Skeefo plan is live','Your Workout tab now follows it.');break}
-    case'usesched':{const r=applySched(+t.dataset.i);render();if(r)toast(skeefoMark(40),'Schedule updated',R0()==='parent'?'It’s on your kid’s app now.':'Check it out on My day.');break}
+    case'usesched':{const r=applySched(+t.dataset.i);render();if(r)toast(skeefoMark(40),'Schedule updated',R0()==='parent'?'It’s on your kid’s app now.':'Check it out on My schedule.');break}
     case'link':doLink();break;
     case'managelink':manageLink();break;
     case'byokoff':try{localStorage.removeItem(BYOK_KEY)}catch(err){}SAMPLE=null;linkState='signedout';S.skMode='auto';save();render();toast(skeefoMark(40),'Unlinked','Skeefo is back on his offline brain.');break;
