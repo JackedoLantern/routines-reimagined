@@ -574,6 +574,103 @@ button.tag{border:0;cursor:pointer}
 }
 .famcode{display:flex;align-items:center;gap:12px;margin-top:12px;padding:10px 14px;border-radius:12px;background:var(--surface-2);flex-wrap:wrap}
 .famcode b{font-family:var(--f-mono);font-size:22px;letter-spacing:.2em;color:var(--gold)}
+/* ---------- Yeti animations ---------- */
+.yeti-pop{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));z-index:66;width:min(320px,calc(100% - 32px));transform:translate(-50%,40px) scale(.7);opacity:0;pointer-events:none;
+  background:radial-gradient(260px 140px at 50% 20%,var(--lvl-soft),transparent 75%),var(--raise);border:1px solid color-mix(in srgb,var(--gold) 45%,var(--line-2));border-radius:22px;padding:10px 14px 14px;box-shadow:0 18px 50px rgba(0,0,0,.6),0 0 30px var(--gold-glow);text-align:center;transition:transform .5s cubic-bezier(.2,1.5,.4,1),opacity .25s}
+.yeti-pop.show{transform:translate(-50%,0) scale(1);opacity:1;pointer-events:auto;cursor:pointer}
+.yeti-pop.out{transform:translate(-50%,30px) scale(.85);opacity:0;transition:transform .3s ease-in,opacity .3s}
+.yeti-stage{height:150px;display:grid;place-items:center}
+.yeti-svg{width:176px;height:158px;overflow:visible}
+.yeti-cap b{display:block;font-family:var(--f-display);font-weight:900;font-size:24px;text-transform:uppercase;letter-spacing:.03em;color:var(--gold)}
+.yeti-cap span{display:block;font-size:13px;color:var(--muted);margin-top:2px}
+.yeti-svg *{transform-box:view-box}
+.yeti-svg .y-all,.yeti-svg .y-head,.yeti-svg [class^="y-arm"],.yeti-svg [class^="y-leg"],.yeti-svg .y-water,.yeti-svg .y-page,.yeti-svg .y-eyes{transform-origin:0 0}
+.yeti-svg .y-all{transform-origin:100px 170px;animation:yBreathe 2.4s ease-in-out infinite}
+.yeti-svg .y-closed{display:none}
+.yeti-svg .y-eyes{animation:yBlink 3.2s infinite}
+.yeti-svg .y-armL{transform:rotate(12deg)}.yeti-svg .y-armR{transform:rotate(-12deg)}
+@keyframes yBreathe{50%{transform:scale(1.02,.98)}}
+@keyframes yBlink{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.1)}}
+/* drink */
+.y-drink .y-armR{animation:yDrinkArm 3s cubic-bezier(.45,0,.25,1) infinite}
+.y-drink .y-water{transform-origin:0 9px;animation:yWater 3s ease-in-out infinite}
+.y-drink .y-head{animation:yTilt 3s ease-in-out infinite}
+.y-drink .y-fx circle{opacity:0;animation:yBubble 3s ease-out infinite}.y-drink .y-fx .b2{animation-delay:.25s}
+@keyframes yDrinkArm{0%,8%{transform:rotate(-12deg)}30%,68%{transform:rotate(132deg)}90%,100%{transform:rotate(-12deg)}}
+@keyframes yWater{0%,30%{transform:scaleY(1)}68%,100%{transform:scaleY(.15)}}
+@keyframes yTilt{0%,25%,75%,100%{transform:rotate(0)}35%,65%{transform:rotate(-8deg)}}
+@keyframes yBubble{0%,40%{opacity:0;transform:translateY(0)}55%{opacity:1}80%,100%{opacity:0;transform:translateY(-14px)}}
+/* eat */
+.y-eat .y-armL{transform:rotate(-38deg)}
+.y-eat .y-armR{animation:yEatArm 1.1s ease-in-out infinite}
+.y-eat .y-mouth{transform-origin:center;transform-box:fill-box;animation:yChomp .55s ease-in-out infinite}
+@keyframes yEatArm{0%,100%{transform:rotate(30deg)}50%{transform:rotate(128deg)}}
+@keyframes yChomp{50%{transform:scaleY(.3)}}
+/* brush */
+.y-brush .y-armR{animation:yBrushArm .32s ease-in-out infinite alternate}
+.y-brush .y-fx circle{animation:yBubble 1.4s ease-out infinite}.y-brush .y-fx .b2{animation-delay:.4s}.y-brush .y-fx .b3{animation-delay:.8s}
+@keyframes yBrushArm{from{transform:rotate(118deg)}to{transform:rotate(132deg)}}
+/* shower */
+.y-shower .y-fx .d{animation:yDrop .7s linear infinite}.y-shower .y-fx .d1{animation-delay:.15s}.y-shower .y-fx .d2{animation-delay:.3s}.y-shower .y-fx .d3{animation-delay:.45s}.y-shower .y-fx .d4{animation-delay:.6s}
+.y-shower .y-fx circle{animation:yBubble 1.6s ease-out infinite}.y-shower .y-fx .b2{animation-delay:.6s}
+.y-shower .y-armL{animation:yScrubL .5s ease-in-out infinite alternate}.y-shower .y-armR{animation:yScrubR .5s ease-in-out infinite alternate}
+@keyframes yDrop{from{transform:translateY(0);opacity:1}to{transform:translateY(40px);opacity:0}}
+@keyframes yScrubL{from{transform:rotate(-140deg)}to{transform:rotate(-160deg)}}@keyframes yScrubR{from{transform:rotate(140deg)}to{transform:rotate(160deg)}}
+/* clean */
+.y-clean .y-armR{animation:ySweep .7s ease-in-out infinite alternate}
+.y-clean .y-fx circle{animation:yPuff .7s ease-out infinite}.y-clean .y-fx .p2{animation-delay:.35s}
+@keyframes ySweep{from{transform:rotate(-20deg)}to{transform:rotate(25deg)}}
+@keyframes yPuff{from{transform:translate(0,0) scale(.5);opacity:.7}to{transform:translate(10px,-10px) scale(1.4);opacity:0}}
+/* sleep */
+.y-sleep .y-eyes{display:none;animation:none}.y-sleep .y-closed{display:inline}
+.y-sleep .y-all{animation:yBreathe 3.6s ease-in-out infinite}.y-sleep .y-head{animation:yNod 3.6s ease-in-out infinite}
+.y-sleep .z{opacity:0;animation:yZ 3s ease-out infinite}.y-sleep .z2{animation-delay:.8s}.y-sleep .z3{animation-delay:1.6s}
+@keyframes yNod{50%{transform:rotate(6deg) translateY(2px)}}
+@keyframes yZ{0%{opacity:0;transform:translate(0,8px)}30%{opacity:1}100%{opacity:0;transform:translate(10px,-16px)}}
+/* read */
+.y-read .y-armL{transform:rotate(-40deg)}.y-read .y-armR{transform:rotate(40deg)}
+.y-read .y-page{transform-origin:1px 0;animation:yFlip 2.2s ease-in-out infinite}
+.y-read .y-eyes{animation:yLook 2.2s ease-in-out infinite}
+@keyframes yFlip{0%,40%{transform:scaleX(1)}60%,100%{transform:scaleX(-1)}}
+@keyframes yLook{0%,100%{transform:translate(-3px,3px)}50%{transform:translate(3px,3px)}}
+/* write */
+.y-write .y-armL{transform:rotate(-30deg)}.y-write .y-armR{animation:yScribble .25s ease-in-out infinite alternate}
+.y-write .y-lines{stroke-dasharray:30;animation:yDraw 1.6s linear infinite}
+.y-write .y-head{transform:rotate(6deg) translateY(3px)}
+@keyframes yScribble{from{transform:rotate(26deg)}to{transform:rotate(36deg) translateX(2px)}}
+@keyframes yDraw{from{stroke-dashoffset:30}to{stroke-dashoffset:0}}
+/* music */
+.y-music .y-armL{transform:rotate(-70deg)}.y-music .y-armR{animation:yStrum .3s ease-in-out infinite alternate}
+.y-music .y-head{animation:yBob .6s ease-in-out infinite}
+.y-music .n{opacity:0;animation:yNote 1.8s ease-out infinite}.y-music .n2{animation-delay:.6s}.y-music .n3{animation-delay:1.2s}
+@keyframes yStrum{from{transform:rotate(10deg)}to{transform:rotate(38deg)}}
+@keyframes yBob{50%{transform:rotate(-6deg)}}
+@keyframes yNote{0%{opacity:0;transform:translateY(6px)}30%{opacity:1}100%{opacity:0;transform:translate(6px,-22px) rotate(15deg)}}
+/* stretch */
+.y-stretch .y-armL{animation:yReachL 2s ease-in-out infinite}.y-stretch .y-armR{animation:yReachR 2s ease-in-out infinite}
+.y-stretch .y-all{animation:yTall 2s ease-in-out infinite}
+@keyframes yReachL{0%,100%{transform:rotate(12deg)}50%{transform:rotate(165deg)}}@keyframes yReachR{0%,100%{transform:rotate(-12deg)}50%{transform:rotate(-165deg)}}
+@keyframes yTall{50%{transform:scale(.97,1.05)}}
+/* run + walk */
+.y-run .y-legL,.y-walk .y-legL{animation:yStep .5s ease-in-out infinite alternate}
+.y-run .y-legR,.y-walk .y-legR{animation:yStep .5s ease-in-out infinite alternate-reverse}
+.y-run .y-armL,.y-walk .y-armL{animation:ySwing .5s ease-in-out infinite alternate}
+.y-run .y-armR,.y-walk .y-armR{animation:ySwing .5s ease-in-out infinite alternate-reverse}
+.y-run .y-all{animation:yRun .25s ease-in-out infinite alternate}
+.y-run .y-legL,.y-run .y-legR,.y-run .y-armL,.y-run .y-armR{animation-duration:.25s}
+.y-walk .y-all{animation:yWalk 2s ease-in-out infinite}
+.y-run .y-fx path{animation:yBubble 1s ease-out infinite}.y-run .y-fx .s2{animation-delay:.5s}
+@keyframes yStep{from{transform:rotate(-22deg)}to{transform:rotate(22deg)}}
+@keyframes ySwing{from{transform:rotate(-35deg)}to{transform:rotate(35deg)}}
+@keyframes yRun{from{transform:translateY(0) rotate(4deg)}to{transform:translateY(-8px) rotate(4deg)}}
+@keyframes yWalk{0%,100%{transform:translateX(-18px)}50%{transform:translateX(18px)}}
+/* cheer */
+.y-cheer .y-armL{animation:yCheerL .6s ease-in-out infinite alternate}.y-cheer .y-armR{animation:yCheerR .6s ease-in-out infinite alternate}
+.y-cheer .y-all{animation:yJump .6s cubic-bezier(.3,0,.3,1) infinite alternate}
+.y-cheer .st{opacity:0;animation:yStar 1.2s ease-out infinite}.y-cheer .st1{animation-delay:.2s}.y-cheer .st2{animation-delay:.4s}.y-cheer .st3{animation-delay:.6s}.y-cheer .st4{animation-delay:.8s}
+@keyframes yCheerL{from{transform:rotate(150deg)}to{transform:rotate(118deg)}}@keyframes yCheerR{from{transform:rotate(-150deg)}to{transform:rotate(-118deg)}}
+@keyframes yJump{from{transform:translateY(0)}to{transform:translateY(-14px)}}
+@keyframes yStar{0%{opacity:0;transform:scale(.3)}40%{opacity:1;transform:scale(1.2)}100%{opacity:0;transform:scale(.6)}}
 </style>
 
 <header class="board">
@@ -1307,7 +1404,7 @@ function viewDay(){
     <div class="meta"><span class="chip xp">+${TASK_XP} XP per task</span><span class="chip xp">+${SEC_XP} per finished section</span>${next?`<span class="chip">Next: ${esc(next.title)}${next.time?' · '+hm(next.time):''}</span>`:''}</div></div>
     <div class="ring ${pct===1?'full':''}"><svg viewBox="0 0 84 84"><circle class="trk" cx="42" cy="42" r="36"/><circle class="bar" cx="42" cy="42" r="36" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-pct)}"/></svg><div><div><b class="num">${dn}/${all.length}</b><span>done</span></div></div></div></div>
     <div class="dayfoot"><span class="note">Tap Start when you begin a task so ${famOK?'your parent':'you'} can see how long it took.</span>
-    <button class="btn" data-act="edit" ${lockedForMe?'disabled title="Your parent locked this schedule"':''}>Edit schedule</button></div></section>`;
+    <div class="row-act"><button class="btn sm ghost" data-act="yetitoggle" aria-pressed="${S.yeti!==false}" title="Yeti animations">❄️ Yeti ${S.yeti!==false?'on':'off'}</button><button class="btn" data-act="edit" ${lockedForMe?'disabled title="Your parent locked this schedule"':''}>Edit schedule</button></div></div></section>`;
   for(const sec of sc.sections){
     const sd=sec.tasks.filter(k=>taskState(k,log).d).length;
     h+=`<section class="block"><div class="block-h"><h3>${esc(sec.name)}</h3><span class="label">${sd}/${sec.tasks.length}${log._sec&&log._sec[sec.id]?' · bonus earned':''}</span></div>`;
@@ -1466,12 +1563,14 @@ async function refreshLink(){
   }catch(e){linkState=SAMPLE?'prompt':'signedout'}
 }
 function linkCard(compact){
-  if(window.RR_STANDALONE)return'';
+  if(window.RR_STANDALONE)return`<section class="card link prompt"><div class="lk-icons"><span class="lk-sk">${skeefoMark(34)}</span><span class="lk-line"><i></i></span><span class="lk-cl" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="9" r="3.6"/><path d="M5 19.5c1.4-3.2 4-4.6 7-4.6s5.6 1.4 7 4.6"/></svg></span></div>
+    <div class="lk-text"><div class="label">Optional · Claude link</div><b>Link Skeefo to Claude</b><p class="note">Skeefo’s Claude brain uses your Claude account, so it runs in the Claude version of Routines Reimagined. Open it while signed in to Claude, then tap <b>Link Skeefo to Claude</b> on its Me tab.</p></div>
+    <div class="lk-act"><a class="btn primary" href="https://claude.ai/artifact/WtR7pqRXcFC2njWBfPHRFN" target="_blank" rel="noopener">Open in Claude</a></div></section>`;
   const s=linkState,mark=`<div class="lk-icons"><span class="lk-sk">${skeefoMark(34)}</span><span class="lk-line ${s==='granted'?'on':''}"><i></i></span><span class="lk-cl" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="9" r="3.6"/><path d="M5 19.5c1.4-3.2 4-4.6 7-4.6s5.6 1.4 7 4.6"/></svg></span></div>`;
   let title,body,btn='';
   if(s==='checking'){title='Checking your Claude link…';body=''}
   else if(s==='granted'){const on=S.skMode!=='offline';title=on?'Skeefo is using his Claude brain':'Skeefo is using his offline brain';body=`${linkName?`Linked as <b>${esc(linkName)}</b>. `:''}${on?'He can answer almost anything in detail.':'He works without Claude right now. Switch back any time.'}`;btn=`<button class="btn sm" data-act="skmode">${on?'Use offline brain':'Use Claude brain'}</button>`}
-  else if(s==='prompt'){title='Skeefo works without Claude';body='His offline brain handles interviews, plans, schedules and common questions. Linking Claude is optional and makes him smarter.';btn=`<button class="btn primary" data-act="link">Link to Claude</button>`}
+  else if(s==='prompt'){title='Link Skeefo to Claude';body='His offline brain handles interviews, plans, schedules and common questions. Linking Claude is optional and makes him smarter.';btn=`<button class="btn primary" data-act="link">Link Skeefo to Claude</button>`}
   else if(s==='denied'){title='Skeefo is using his offline brain';body='His Claude link is turned off, so he’s answering offline. Turn it back on any time for a smarter Skeefo (optional).';btn=`<button class="btn primary" data-act="managelink">Turn it on</button>`}
   else if(s==='signedout'){title='Skeefo is using his offline brain';body='He works without an account. Signing in to Claude is optional and gives him a smarter brain.';btn=`<a class="btn primary" href="https://claude.ai/login" target="_blank" rel="noopener">Sign in to Claude</a>`}
   else{title='Skeefo is using his offline brain';body='He works fine here. A Claude link isn’t available in this view, and it’s optional anyway.'}
@@ -1627,14 +1726,16 @@ function offlineAnswer(text){
   if(S.iv&&!has(t,' stop ',' cancel ',' quit ',' exit '))return ivAnswer(text);
   if(S.iv){S.iv=null;return'No problem, I stopped the interview. Say **“interview me”** whenever you want to start again.'}
   const safety=KB.slice(0,3).find(k=>k.re.some(r=>t.includes(r)));if(safety)return safety.a();
+  const sm=smartAnswer(text);if(sm)return sm;
+  {const pool=[...TOPICS];let bt=null,bs=0;for(const tp of pool){const sc=topicScore(t,tp.k);if(sc>bs){bs=sc;bt=tp}}if(bt&&bs>=7){S.lastTopic=bt.id;return typeof bt.a==='function'?bt.a():bt.a}}
   const ex=findExercise(t);
   if(ex&&(has(t,'how','form','do a','do the','teach','explain','what is','whats','correct','proper','technique')||t.trim().split(' ').length<=4)){
-    const steps=HOW[ex.id]||[];return`**${ex.n}**\n`+steps.map((s,i)=>`${i+1}. ${s}`).join('\n')+(ex.cue?`\n\nKey tip: ${ex.cue}.`:'');
+    S.lastTopic='ex:'+ex.id;const steps=HOW[ex.id]||[];return`**${ex.n}**\n`+steps.map((s,i)=>`${i+1}. ${s}`).join('\n')+(ex.cue?`\n\nKey tip: ${ex.cue}.`:'');
   }
-  const hit=KB.slice(3).find(k=>k.re.some(r=>t.includes(r)));if(hit)return hit.a();
+  const hit=scoredAnswer(t);if(hit)return hit;
   if(ex)return`Want to learn the **${ex.n}**? Ask me “how do I do ${ex.n.toLowerCase()}?” and I’ll walk you through it.`;
-  return['I’m not sure about that one yet. Try asking me how to do an exercise, what to eat before training, how much sleep you need, or say **“interview me”** to build your plan.',
-    'Hmm, that’s outside what I know offline. I’m best at workouts, exercises, sleep, food timing, soreness, motivation and your schedule. Link me to Claude above if you want me to handle anything.'][Math.floor(Math.random()*2)];
+  const words=t.trim().split(' ').filter(w=>w.length>3);
+  return`I don’t know that one offline${words.length?` (“${esc(words.slice(0,4).join(' '))}”)`:''}. I’m best at:\n- Workouts and how to do any exercise\n- Food, water, sleep and energy\n- Motivation, focus and habits\n- Editing your day and diet plan\n\nSay **“what can I say”** for examples${window.RR_STANDALONE?'':', or link me to Claude for anything else'}.`;
 }
 function setAns(a,r){if(r&&typeof r==='object'){a.t=r.t;if(r.sched)a.sched=r.sched;if(r.plan)a.plan=r.plan}else a.t=r}
 function offlineChat(text){
@@ -1762,6 +1863,217 @@ function applySched(i){const m=typeof i==='object'?i:S.chat[i];if(!m||!m.sched)r
   allChat().forEach(x=>{if(x.sched)x.applied=0});m.applied=1;save();confetti(.6);SFX.bonus();
   return R0()==='parent'?'Done! That schedule is on your kid’s app now.':'Done! Your day is updated to my schedule. Check it out on My day.'}
 function pendingProposal(){for(let i=S.chat.length-1;i>=Math.max(0,S.chat.length-6);i--){const m=S.chat[i];if((m.sched||m.plan)&&!m.applied)return m.plan?'plan':'sched'}return null}
+/* ================= Yeti animation generator (My day) ================= */
+const YETI_ACTS=[
+  [/water|drink|hydrat|juice|smoothie|\btea\b|glass of milk/,'drink'],
+  [/teeth|tooth|brush|floss|mouthwash/,'brush'],
+  [/shower|bath|wash (?:up|face|hair)|skincare|get ready|deodorant/,'shower'],
+  [/make (?:your |my |the )?bed|chore|clean|tidy|laundry|dishes|vacuum|sweep|declutter|room|trash|garbage/,'clean'],
+  [/sleep|lights out|nap|screens? off|go to bed|bedtime|\bbed\b/,'sleep'],
+  [/breakfast|lunch|dinner|supper|snack|\beat\b|meal|food|fruit|veggie|cook/,'eat'],
+  [/read|book|novel|comic/,'read'],
+  [/homework|study|school|write|writing|math|essay|project|learn|class|notes|test|exam/,'write'],
+  [/music|guitar|piano|sing|instrument|drum|violin|band|ukulele|practice scales/,'music'],
+  [/stretch|yoga|meditat|breath|mindful|calm/,'stretch'],
+  [/run|jog|sprint|soccer|basketball|hockey|football|sport|practice|train|exercise|workout|gym|swim|skate|dance/,'run'],
+  [/walk|dog|outside|hike|bike|fresh air|park/,'walk'],
+];
+const YETI_LINES={
+  drink:['Glug, glug, glug!','Yeti stays hydrated.'],eat:['Nom nom nom!','Fuel for a strong yeti.'],brush:['Scrub scrub!','Sparkly yeti teeth.'],
+  shower:['Splish splash!','Fresh and fluffy.'],clean:['Swish swish!','Yeti cleaned it all up.'],sleep:['Zzz…','Sweet dreams, big yeti.'],
+  read:['Page after page!','Yeti brain getting bigger.'],write:['Scribble scribble!','Yeti is getting smarter.'],music:['La la laaa!','Yeti rocks out.'],
+  stretch:['Reeeach!','Nice and loose.'],run:['Zoom zoom!','Yeti is unstoppable.'],walk:['Stomp, stomp, stomp.','Out for a yeti walk.'],cheer:['Yeti high five!','Another one done.'],
+};
+function yetiAct(title){const t=' '+String(title||'').toLowerCase()+' ';const f=YETI_ACTS.find(([re])=>re.test(t));return f?f[1]:'cheer'}
+function yetiSVG(act){
+  const FUR='#F3F6FA',FUR2='#D8E1EB',FACE='#BCD6EE',FACE2='#8FB2D2',HORN='#AEB7C6',EYE='#172033',PINK='#F6A9B8';
+  const arm=(side,prop)=>`<g transform="translate(${side==='L'?62:138},100)"><g class="y-arm${side}"><rect x="-8" y="-4" width="16" height="44" rx="8" fill="${FUR}" stroke="${FUR2}" stroke-width="1.5"/><circle cx="0" cy="42" r="8.5" fill="${FACE}"/>${prop||''}</g></g>`;
+  const leg=x=>`<g transform="translate(${x},146)"><g class="y-leg${x<100?'L':'R'}"><rect x="-9" y="-2" width="18" height="22" rx="8" fill="${FUR}" stroke="${FUR2}" stroke-width="1.5"/><ellipse cx="0" cy="21" rx="12" ry="5.5" fill="${FACE2}"/></g></g>`;
+  const P={
+    drink:{R:`<g transform="translate(-2,47)"><rect x="-8" y="-11" width="16" height="22" rx="3" fill="rgba(170,215,255,.25)" stroke="#9AD3FF" stroke-width="1.6"/><g class="y-water"><rect x="-6.2" y="-6" width="12.4" height="15" rx="2" fill="#4FB6FF"/></g></g>`},
+    eat:{L:`<g transform="translate(2,48)"><path d="M-16 -4 h32 a16 13 0 0 1 -32 0z" fill="#E7894C"/><ellipse cx="0" cy="-4" rx="16" ry="4" fill="#F6D28B"/></g>`,R:`<g transform="translate(0,46)"><rect x="-1.5" y="-2" width="3" height="20" rx="1.5" fill="#C9D2DE"/><ellipse cx="0" cy="20" rx="4.5" ry="3" fill="#C9D2DE"/></g>`},
+    brush:{R:`<g transform="translate(0,46)"><rect x="-2" y="-4" width="4" height="26" rx="2" fill="#4FB6FF"/><rect x="-4" y="18" width="8" height="7" rx="2" fill="#fff"/></g>`},
+    clean:{R:`<g transform="translate(0,44)"><rect x="-2" y="-30" width="4" height="62" rx="2" fill="#B07A4A"/><path d="M-12 32 h24 l5 16 h-34z" fill="#F0C04A"/></g>`},
+    write:{R:`<g transform="translate(0,46)"><rect x="-2" y="-2" width="4" height="20" rx="1" fill="#FFC53D"/><path d="M-2 18 h4 l-2 5z" fill="${EYE}"/></g>`},
+    music:{R:`<g transform="translate(0,46)"><rect x="-2" y="0" width="4" height="8" rx="1" fill="#fff"/></g>`},
+  }[act]||{};
+  const front={
+    read:`<g class="y-book" transform="translate(100,124)"><rect x="-30" y="-18" width="60" height="38" rx="3" fill="#6E5BFF"/><rect x="-27" y="-16" width="26" height="33" fill="#fff"/><rect x="1" y="-16" width="26" height="33" fill="#fff"/><g class="y-page"><rect x="1" y="-16" width="26" height="33" fill="#F1EEFF"/></g><path d="M-23 -9 h18 M-23 -4 h18 M-23 1 h14 M5 -9 h18 M5 -4 h18" stroke="#B8B2D9" stroke-width="1.6"/></g>`,
+    write:`<g transform="translate(100,150)"><rect x="-58" y="-8" width="116" height="10" rx="3" fill="#8A5A36"/><rect x="-14" y="-24" width="40" height="17" rx="2" fill="#fff" transform="rotate(-4)"/><path class="y-lines" d="M-9 -19 h28 M-9 -14 h24" stroke="${FACE2}" stroke-width="2" stroke-linecap="round"/></g>`,
+    music:`<g transform="translate(100,124) rotate(-25)"><ellipse cx="-12" cy="6" rx="20" ry="17" fill="#C9772F"/><ellipse cx="-12" cy="6" rx="6" ry="6" fill="#4A2A14"/><rect x="2" y="-3" width="46" height="7" rx="2" fill="#7A4A22"/><rect x="44" y="-6" width="10" height="13" rx="2" fill="#4A2A14"/></g>`,
+  }[act]||'';
+  const stage={
+    shower:`<g><rect x="96" y="2" width="8" height="12" fill="#AEB7C6"/><path d="M78 14 h44 l-6 9 h-32z" fill="#C9D2DE"/></g>`,
+    sleep:`<g><rect x="34" y="150" width="132" height="14" rx="6" fill="#3B3363"/><rect x="34" y="132" width="132" height="22" rx="10" fill="#6E5BFF" opacity=".7"/></g>`,
+  }[act]||'';
+  const fx={
+    drink:`<g class="y-fx"><circle class="b1" cx="128" cy="52" r="3" fill="#9AD3FF"/><circle class="b2" cx="136" cy="44" r="2" fill="#9AD3FF"/></g>`,
+    brush:`<g class="y-fx"><circle class="b1" cx="112" cy="72" r="4" fill="#fff"/><circle class="b2" cx="120" cy="66" r="3" fill="#fff"/><circle class="b3" cx="106" cy="66" r="2.5" fill="#fff"/></g>`,
+    shower:`<g class="y-fx">${[82,92,100,108,118].map((x,i)=>`<rect class="d d${i}" x="${x}" y="24" width="2.4" height="8" rx="1.2" fill="#4FB6FF"/>`).join('')}<circle class="b1" cx="86" cy="30" r="4" fill="#fff" opacity=".9"/><circle class="b2" cx="114" cy="28" r="3" fill="#fff" opacity=".9"/></g>`,
+    sleep:`<g class="y-fx" font-family="Big Shoulders Display,Impact,sans-serif" font-weight="900" fill="#A98BFF"><text class="z z1" x="136" y="40" font-size="16">z</text><text class="z z2" x="146" y="30" font-size="20">Z</text><text class="z z3" x="158" y="18" font-size="24">Z</text></g>`,
+    clean:`<g class="y-fx"><circle class="p1" cx="156" cy="160" r="6" fill="#C9D2DE" opacity=".6"/><circle class="p2" cx="166" cy="154" r="4" fill="#C9D2DE" opacity=".5"/></g>`,
+    music:`<g class="y-fx" fill="#FFC53D" font-size="22" font-weight="900"><text class="n n1" x="150" y="80">♪</text><text class="n n2" x="40" y="70">♫</text><text class="n n3" x="160" y="50">♪</text></g>`,
+    run:`<g class="y-fx"><path class="s1" d="M140 40 q4 6 0 9 q-4 -3 0 -9z" fill="#9AD3FF"/><path class="s2" d="M60 46 q4 6 0 9 q-4 -3 0 -9z" fill="#9AD3FF"/></g>`,
+    cheer:`<g class="y-fx" fill="#FFC53D">${[[34,40],[166,36],[24,96],[176,92],[100,8]].map(([x,y],i)=>`<g transform="translate(${x},${y})"><path class="st st${i}" d="M0 -8 L2.4 -2.4 L8 0 L2.4 2.4 L0 8 L-2.4 2.4 L-8 0 L-2.4 -2.4Z"/></g>`).join('')}</g>`,
+  }[act]||'';
+  const hat=act==='sleep'?`<path d="M-26 -22 q20 -26 50 -8 q8 -18 20 -4 q-6 6 -14 6 q-30 -10 -56 6z" fill="#6E5BFF"/><circle cx="44" cy="-26" r="5" fill="#fff"/>`:'';
+  return`<svg class="yeti-svg y-${act}" viewBox="0 0 200 180" aria-hidden="true">
+    <ellipse class="y-shadow" cx="100" cy="170" rx="46" ry="6" fill="rgba(0,0,0,.4)"/>${stage}
+    <g class="y-all">${leg(84)}${leg(116)}
+      <path d="M56 114 Q56 68 100 68 Q144 68 144 114 Q144 150 100 156 Q56 150 56 114Z" fill="${FUR}" stroke="${FUR2}" stroke-width="1.5"/>
+      <ellipse cx="100" cy="120" rx="24" ry="26" fill="#E8EFF7"/>
+      <path d="M60 140 l6 8 l6 -7 l6 8 l6 -7 l6 8 l6 -7 l6 8 l6 -7 l6 8 l6 -7 l6 8 l6 -8" fill="none" stroke="${FUR2}" stroke-width="2" stroke-linejoin="round"/>
+      ${arm('L',P.L)}
+      <g transform="translate(100,58)"><g class="y-head">
+        <path d="M-22 -24 q-14 -12 -8 -26 q6 10 16 16z" fill="${HORN}"/><path d="M22 -24 q14 -12 8 -26 q-6 10 -16 16z" fill="${HORN}"/>
+        <circle r="34" fill="${FUR}" stroke="${FUR2}" stroke-width="1.5"/>
+        <path d="M-14 -32 l5 -8 l4 7 l5 -9 l4 9 l5 -7 l4 8" fill="${FUR}" stroke="${FUR2}" stroke-width="1.5" stroke-linejoin="round"/>
+        <ellipse cx="0" cy="6" rx="25" ry="21" fill="${FACE}"/>
+        <g class="y-eyes"><ellipse cx="-9" cy="1" rx="3.6" ry="4.4" fill="${EYE}"/><ellipse cx="9" cy="1" rx="3.6" ry="4.4" fill="${EYE}"/><circle cx="-8" cy="-.5" r="1.2" fill="#fff"/><circle cx="10" cy="-.5" r="1.2" fill="#fff"/></g>
+        <path class="y-closed" d="M-13 2 q4 3 8 0 M5 2 q4 3 8 0" fill="none" stroke="${EYE}" stroke-width="2.2" stroke-linecap="round"/>
+        <circle cx="-17" cy="11" r="3.5" fill="${PINK}" opacity=".7"/><circle cx="17" cy="11" r="3.5" fill="${PINK}" opacity=".7"/>
+        <path class="y-mouth" d="M-7 13 Q0 20 7 13" fill="${act==='brush'?'#fff':'none'}" stroke="${EYE}" stroke-width="2.4" stroke-linecap="round"/>
+        ${hat}</g></g>
+      ${front}${arm('R',P.R)}</g>${fx}</svg>`;
+}
+let yetiTimer=null;
+function yetiPlay(title){
+  if(S.yeti===false||R0()==='parent')return;
+  const act=yetiAct(title),[l1,l2]=YETI_LINES[act];
+  let el=$('#yetiPop');if(!el){el=document.createElement('div');el.id='yetiPop';el.className='yeti-pop';el.setAttribute('role','status');document.body.appendChild(el);el.addEventListener('click',()=>yetiClose())}
+  el.innerHTML=`<div class="yeti-stage">${yetiSVG(act)}</div><div class="yeti-cap"><b>${esc(l1)}</b><span>Yeti finished “${esc(title)}”. ${esc(l2)}</span></div>`;
+  el.classList.remove('out');void el.offsetWidth;el.classList.add('show');
+  SFX.yeti&&SFX.yeti(act);
+  clearTimeout(yetiTimer);yetiTimer=setTimeout(yetiClose,reduced?1800:3600);
+}
+function yetiClose(){const el=$('#yetiPop');if(!el||!el.classList.contains('show'))return;el.classList.add('out');setTimeout(()=>{el.classList.remove('show','out')},320)}
+
+/* ================= Skeefo offline brain v2: more answers ================= */
+const TOPICS=[
+ {id:'protein',k:['protein','muscle food','high protein'],a:'**Protein** helps your muscles repair and grow after training. Good sources:\n- Eggs, milk, yogurt, cheese\n- Beans, lentils, chickpeas, tofu, peanut butter\n- Chicken, fish, turkey\n\nNormal meals give most teens plenty. Try to have some protein at each meal.',more:'You don’t need protein powder or supplements. Spreading protein through breakfast, lunch, dinner and a snack works better than one huge serving.'},
+ {id:'carbs',k:['carb','carbs','carbohydrate','bread','pasta','rice','potato'],a:'**Carbs** are your body’s main fuel, especially for running, sports and hard workouts. Whole grains (oats, brown rice, whole-wheat bread), fruit and potatoes give steady energy.',more:'Carbs aren’t bad. Before a long game or run, a carb snack like a banana or toast helps you keep going.'},
+ {id:'fat',k:['healthy fat','fats','avocado','omega','olive oil'],a:'**Healthy fats** (nuts, seeds, avocado, olive oil, fish) help your brain, hormones and energy. Your body needs some every day.'},
+ {id:'sugar',k:['sugar','candy','junk food','fast food','soda','chips','sweets','dessert','pizza','fries','cheat meal'],a:'Treats are fine sometimes. A good rule is **mostly whole foods, some fun foods**. Swap soda for water most days, and pair sweets with a real meal so your energy doesn’t crash.'},
+ {id:'energy',k:['energy drink','caffeine','coffee','red bull','monster','prime','pre workout','preworkout'],a:'**Skip energy drinks.** Doctors recommend teens avoid them: the caffeine can mess with your heart rate and sleep. For energy, try sleep, water, and a snack like a banana.'},
+ {id:'supps',k:['supplement','creatine','protein powder','protein shake','steroid','fat burner','pills','gainer'],a:'Teens don’t need supplements to get fit. Real food, sleep and consistent training do the job. **Never** use steroids or fat burners. If you’re curious about anything else, ask a doctor first.'},
+ {id:'bfast',k:['breakfast idea','healthy breakfast','what to eat for breakfast','quick breakfast'],a:'Quick breakfast ideas:\n- Oatmeal with banana and peanut butter\n- Eggs on toast with fruit\n- Yogurt with berries and granola\n- A smoothie with milk, banana and oats\n\nOr say **“make me a diet plan”** for a full week.'},
+ {id:'snack',k:['snack idea','healthy snack','what to snack','good snack','hungry'],a:'Good snacks:\n- Apple or banana with peanut butter\n- Yogurt, cheese and crackers\n- Hummus and carrots\n- Trail mix or a boiled egg\n\nA snack 1–2 hours before training gives you energy.'},
+ {id:'veg',k:['vegetarian','vegan','plant protein','no meat','plant based'],a:'You can get plenty of protein without meat: beans, lentils, chickpeas, tofu, edamame, nuts, eggs and dairy (if you eat them). Say **“make my diet plan vegetarian”** and I’ll update it.'},
+ {id:'height',k:['taller','height','grow taller','growth','stunt','stunts'],a:'Good news: training with good form **doesn’t stunt your growth**. Height is mostly genetics, but sleep (8–10 hours), good food and staying active help you reach your full height.'},
+ {id:'results',k:['results','see results','how long until','how long does it take','when will i','progress','plateau','not working'],a:'Most people **feel** stronger in 2–4 weeks and **see** changes in about 8–12 weeks. Consistency beats everything: keep your streak, sleep well, and make workouts a little harder over time.',more:'Stuck? Change one thing: add a rep or a set, slow the reps down, or try a new exercise. Bodies adapt, so small changes restart progress.'},
+ {id:'besttime',k:['best time','morning or night','what time should i','when should i work out','time of day'],a:'The best time to work out is **whenever you’ll actually do it**. Mornings help build the habit; afternoons your body is warmer and stronger. Just avoid hard workouts right before bed.'},
+ {id:'sick',k:['sick','a cold','flu','fever','ill','throat'],a:'Use the **neck rule**: if it’s just a stuffy nose, a light workout is okay. If you have a fever, body aches, or a chest cough, **rest** until you’re better. Your streak allows one rest day, and your health matters more.'},
+ {id:'cramp',k:['cramp','side stitch','stitch','side pain','cramps'],a:'For a **side stitch**: slow down, breathe out hard, and press gently on the spot. For a **muscle cramp**: stop, gently stretch it, and drink water. Eating a big meal right before running makes stitches worse.'},
+ {id:'breathe',k:['breathe','breathing','out of breath','breath'],a:'Breathe **out** when you push (going up in a push-up or squat) and **in** when you lower. Never hold your breath. For running, find a steady rhythm, like in for 2 steps, out for 2.'},
+ {id:'posture',k:['posture','slouch','back straight','hunch','neck pain from phone'],a:'Better posture: plank, superman pulls, bird dogs and thread-the-needle all help. Keep screens at eye level and take a stretch break every 30 minutes.'},
+ {id:'pullup',k:['cant do a pull up','can t do a pull up','first pull up','pull up progression','cant do pull ups','can t do pull ups','get a pull up'],a:'Building to your first **pull-up**:\n1. Dead hangs: hang from the bar for 20–30 s\n2. Superman pulls and rows for back strength\n3. Jump up and lower yourself slowly (5 s down)\n4. Band-assisted pull-ups\n\nDo it 2–3 times a week and you’ll get there.'},
+ {id:'pushup',k:['cant do a push up','can t do a push up','cant do push ups','can t do push ups','push up progression','more push ups','better at push ups'],a:'Getting better at **push-ups**:\n1. Start with incline push-ups on a table or counter\n2. Move lower each week\n3. Try knee push-ups, then full ones\n4. Do a few extra sets through the day\n\nPerfect form beats more reps.'},
+ {id:'lift',k:['lift weights','lifting','weightlifting','how much weight','heavy weights','bench press','squat heavy'],a:'Teens can lift safely with **good form, light weights first, and an adult or coach around**. Start with weights you can lift 12–15 times cleanly. Add weight slowly, only when the last reps still look perfect.'},
+ {id:'cooldown',k:['cool down','cooldown'],a:'A **cool-down** is 3–5 minutes of easy movement and stretching after training. It brings your heart rate down slowly and helps you feel less stiff the next day.'},
+ {id:'heart',k:['heart rate','bpm','pulse'],a:'Your heart rate shows how hard you’re working. Easy cardio: you can talk in full sentences. Hard intervals: only a few words. If you ever feel chest pain or dizziness, stop and tell an adult.'},
+ {id:'calories',k:['calorie','calories','count calories','macros','how much should i eat'],a:'This app doesn’t count calories on purpose. Growing bodies and training need **plenty** of fuel. Eat regular meals, listen to hunger, and talk to a doctor if you have questions about how much to eat.'},
+ {id:'weight',k:['how much should i weigh','bmi','weigh myself','my weight','lose weight fast','gain weight'],a:'Weight is a better topic for a doctor than an app, because everyone grows differently. Focus on what you can control: moving every day, good food, water and sleep. Those build a strong body at any size.'},
+ {id:'stress',k:['stressed','stress','anxious','anxiety','sad','depressed','lonely','upset','overwhelmed','worried','bad day','crying'],a:'I’m sorry today feels heavy. A few things that can help:\n- Take a walk or do some stretching\n- Slow breathing: in for 4, out for 6\n- Talk to someone you trust, like a parent, friend or school counselor\n\nIf you ever feel unsafe, call or text **988** any time.'},
+ {id:'tired',k:['tired','no energy','exhausted','sleepy','drained'],a:'Low energy usually comes from one of these: not enough **sleep**, not enough **water**, or not enough **food**. Try a glass of water and a snack, and do just the warm-up. If you’re tired every day, talk to a parent or doctor.'},
+ {id:'focus',k:['focus','concentrate','study tips','procrastinat','distracted','homework help','cant focus'],a:'Focus tricks:\n- Put your phone in another room\n- Work 25 minutes, then a 5-minute break\n- Start with the easiest task to get going\n- Do 10 jumping jacks between subjects\n\nAdd “Homework” to My day and check it off for XP.'},
+ {id:'screens',k:['screen time','video games','gaming','tiktok','youtube','instagram','social media','phone addiction'],a:'Screens are fine in balance. Try **screens off an hour before bed** for better sleep, and earn game time by finishing your My day list first. I can add a “Screens off” task: say **“add screens off to my evening at 9pm”**.'},
+ {id:'wake',k:['wake up early','waking up','morning routine','get up early','cant wake up'],a:'Waking up easier:\n- Same bedtime every night, even weekends\n- Put your alarm across the room\n- Open the curtains and drink water right away\n- Make your bed: it’s your first win of the day'},
+ {id:'habit',k:['habit','consistent','consistency','discipline','stick to','keep going','give up'],a:'Habits stick when they’re **small and the same time every day**. Pick one cue (“after school snack”), do the smallest version (even 5 minutes), and protect your streak. Missing once is fine; never miss twice.'},
+ {id:'confidence',k:['confidence','insecure','body image','ugly','too skinny','too fat','hate how i look'],a:'Lots of people feel that way, and you’re not alone. Training is about feeling **strong and capable**, not looking a certain way. Notice what your body can do: more push-ups, faster runs. If these thoughts weigh on you, talk to a parent or school counselor.'},
+ {id:'speed',k:['faster','speed','jump higher','vertical','agility','quicker'],a:'To get **faster**: short sprints with full rest, skater hops, jump squats and calf raises. To **jump higher**: squats, jump squats and lunges. Do them fresh, at the start of a workout, with perfect form.'},
+ {id:'joke',k:['joke','funny','make me laugh','tell me something funny'],a:()=>['Why did the yeti start working out? He wanted to be the **abominable** snow-**man** of steel. 💪','What does a yeti eat for breakfast? **Frosted** flakes.','Why don’t yetis skip leg day? Their **big feet** would never let them hear the end of it.','How does a yeti stay cool at the gym? He stands near the **fans**.'][Math.floor(Math.random()*4)]},
+ {id:'motivate',k:['quote','inspire','motivate me','motivation','pump me up','hype me up'],a:()=>[`**“Start where you are. Use what you have. Do what you can.”** That’s all today needs.`,`Every rep counts. You’re on a **${S.streak}-day streak**, so let’s add another day!`,`Future you is going to be so glad you started today. Let’s go! 🔥`,`You don’t have to be great to start, but you have to start to be great.`][Math.floor(Math.random()*4)]},
+ {id:'howareyou',k:['how are you','how r u','hows it going','how is it going','you good','whats up with you'],a:'I’m great, thanks for asking! I’m a yeti coach, so I’m always ready for a workout. ❄️ How are **you** feeling today?'},
+ {id:'night',k:['good night','goodnight','gn','going to bed'],a:'Good night! Sleep is when your muscles rebuild, so you’re basically training right now. 😴 See you tomorrow.'},
+ {id:'bored',k:['bored','nothing to do','boring'],a:'Bored? Try a **2-minute challenge**: as many jumping jacks as you can in 1 minute, then a 1-minute plank. Beat your score tomorrow! Or check off something on My day for XP.'},
+ {id:'me',k:['who made you','your name','are you real','are you a yeti','are you ai','what are you','who are you'],a:'I’m **Skeefo**, the yeti coach inside Routines Reimagined! ❄️ I’m an AI helper: I can build plans, edit your day and diet, and answer questions. I’m not a doctor, so for health problems always ask a real one.'},
+ {id:'howapp',k:['how do i use','how does the app work','how do i add a task','how do i add a section','how do i make a tab','what can i say','commands'],a:'Things you can tell me:\n- **“add stretching to my evening at 8pm”**\n- **“move homework to 4:30”** or **“move reading to morning”**\n- **“I finished homework”** / **“uncheck breakfast”**\n- **“rename read to read 20 pages”**\n- **“make a tab called Practice”**\n- **“change Tuesday dinner to tacos”** / **“I don’t like fish”**\n- **“I drank 2 glasses of water”**\n- **“what’s on my schedule?”**'},
+ {id:'yeti',k:['yeti animation','the yeti','why is there a yeti','yeti'],a:'That’s my buddy! Every time you check something off on **My day**, a yeti acts it out: drinking water, brushing teeth, reading, sleeping and more. You can turn it off on the My day tab.'},
+];
+const GLOSS={rep:'A **rep** (repetition) is doing an exercise once, like one push-up.',set:'A **set** is a group of reps in a row. “3 × 10” means 3 sets of 10 reps, with rest between sets.',
+  cardio:'**Cardio** is exercise that gets your heart pumping for a while, like running, biking or jumping jacks. It builds endurance.',hiit:'**HIIT** (high-intensity interval training) mixes short, hard bursts with rest. For example, 30 seconds of sprinting, then 60 seconds of walking.',
+  core:'Your **core** is the muscles around your stomach, back and hips. A strong core helps with posture, balance and every sport.',glutes:'Your **glutes** are your butt muscles, the strongest muscles in your body. Squats, lunges and glute bridges train them.',
+  quads:'Your **quads** are the muscles on the front of your thighs. Squats and lunges train them.',hamstrings:'Your **hamstrings** are the muscles on the back of your thighs. Romanian deadlifts and glute bridges train them.',
+  biceps:'Your **biceps** are on the front of your upper arms. Curls and pull-ups train them.',triceps:'Your **triceps** are on the back of your upper arms. Push-ups and dips train them.',
+  lats:'Your **lats** are the big muscles on the sides of your back. Pull-ups and rows train them.',calves:'Your **calves** are on the back of your lower legs. Calf raises, running and jumping train them.',
+  doms:'**DOMS** (delayed onset muscle soreness) is the soreness 1–2 days after a new workout. It’s normal and fades as you get used to training.',metabolism:'**Metabolism** is how your body turns food into energy. Muscle, movement and good sleep all help it.',
+  mobility:'**Mobility** is how well your joints move through their full range. Warm-ups like hip circles and the world’s greatest stretch build it.',endurance:'**Endurance** is how long you can keep going before getting tired. Cardio builds it.',
+  superset:'A **superset** is two exercises back to back with no rest between them.',circuit:'A **circuit** is a few exercises done one after another, then repeated.',amrap:'**AMRAP** means “as many reps (or rounds) as possible” in a set time.',
+  form:'**Form** is doing an exercise the right way. Good form keeps you safe and makes the exercise work better.',fiber:'**Fiber** is in fruit, veggies, beans and whole grains. It keeps you full and helps digestion.',
+  hydration:'**Hydration** means drinking enough water. Aim for pale yellow pee and more water on training days.',xp:'**XP** (experience points) is what you earn in this app for exercises, tasks, water and meals. Earn enough and you level up!',
+  streak:'Your **streak** is how many days in a row you’ve finished your workout. One rest day is fine; two in a row resets it.',level:'Your **level** goes up as you earn XP. Miss four days in a row and you drop a level, so keep training!'};
+function topicScore(t,keys){let sc=0;for(const k0 of keys){const k=k0.trim();if(!k)continue;const re=new RegExp('(^| )'+k.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+(k.length<4?'( |$)':''));if(re.test(t))sc+=1+k.split(' ').length*2}return sc}
+function safeMath(t){const m=t.match(/^\s*(?:what s|what is|whats|calculate|solve)?\s*([\d\s+\-*/().x×÷^]+?)\s*(?:equal|equals)?\s*$/);if(!m||!/\d\s*[+\-*/x×÷^]\s*\d/.test(m[1]))return null;
+  const ex=m[1].replace(/x|×/g,'*').replace(/÷/g,'/').replace(/\^/g,'**');if(!/^[\d\s+\-*/().]+$/.test(ex))return null;try{const v=Function('"use strict";return('+ex+')')();if(typeof v==='number'&&isFinite(v))return`That’s **${+v.toFixed(6)}**. 🧮`}catch(e){}return null}
+function smartAnswer(text){
+  const t=norm(text).trim();
+  const math=safeMath(t);if(math)return math;
+  if(/^(what time is it|whats the time|what s the time|time)$/.test(t))return`It’s **${new Date().toLocaleTimeString([],{hour:'numeric',minute:'2-digit'})}**.`;
+  if(/^(what day is it|whats the date|what s the date|what is today|today s date|todays date)$/.test(t))return`Today is **${new Date().toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'})}**.`;
+  if(/^(more|tell me more|why|how come|explain|explain more|really|go on|and|like what|such as|what else)$/.test(t)){
+    const lt=S.lastTopic||'';if(lt.startsWith('ex:')){const e=EXI[lt.slice(3)];S.lastTopic=null;if(e)return`More on the **${e.n}**: ${e.cue?e.cue+'. ':''}Start with fewer reps and perfect form, rest about ${({muscle:90,fat:30,endurance:30,mobility:20,general:60})[S.profile.goal]||60} seconds between rounds, and add a rep or two each week.${e.hard?' This is an advanced move, so build up to it.':''}`}
+    const tp=TOPICS.find(x=>x.id===lt);if(tp&&tp.more){S.lastTopic=null;return tp.more}
+    return'Sure! What would you like to know more about? You can ask about an exercise, food, sleep, motivation or your schedule.'}
+  const g=t.match(/(?:what is|what s|whats|what are|define|meaning of|what does)\s+(?:a |an |the )?([a-z ]+?)(?:\s+mean)?$/);
+  if(g){const w=g[1].trim().replace(/s$/,''),key=Object.keys(GLOSS).find(k=>k===w||k===g[1].trim()||w===k.replace(/s$/,''));if(key)return GLOSS[key]}
+  return null;
+}
+function scoredAnswer(t){
+  const pool=[...KB.slice(3).map((k,i)=>({id:'kb'+i,k:k.re,a:k.a})),...TOPICS];let best=null,bs=0;
+  for(const tp of pool){const sc=topicScore(t,tp.k);if(sc>bs){bs=sc;best=tp}}
+  if(!best||bs<3)return null;S.lastTopic=best.id;const a=typeof best.a==='function'?best.a():best.a;return a;
+}
+
+/* ================= Skeefo offline brain v2: more things he can do ================= */
+const ACT2={
+  rename(from,to){const t0=String(to||'').trim().replace(/^["“']|["”']$/g,'').slice(0,40);if(!t0)throw new Error('What should the new name be?');
+    return mutSched(sc=>{const sec=findSection(sc,from);const f=findTask(sc,from);
+      if(sec&&(!f||nrm(sec.name)===nrm(from).replace(/\s*section$/,''))){const old=sec.name;sec.name=t0.replace(/^\w/,c=>c.toUpperCase());return`Renamed the **${esc(old)}** section to **${esc(sec.name)}**.`}
+      if(!f)throw new Error(`I couldn’t find “${from}” on your schedule.`);if(f.k.kind==='workout')throw new Error('Your daily workout keeps its name.');
+      const old=f.k.title;f.k.title=t0.replace(/^\w/,c=>c.toUpperCase());return`Renamed **${esc(old)}** to **${esc(f.k.title)}**.`})},
+  moveTo(title,section){return mutSched(sc=>{const f=findTask(sc,title);if(!f)throw new Error(`I couldn’t find “${title}” on your schedule.`);
+    let s=findSection(sc,section);if(!s){s={id:rid(),name:String(section).trim().replace(/^\w/,c=>c.toUpperCase()).slice(0,30),tasks:[]};sc.sections.push(s)}
+    if(s===f.s)return`**${esc(f.k.title)}** is already in ${esc(s.name)}.`;f.s.tasks.splice(f.ti,1);s.tasks.push(f.k);return`Moved **${esc(f.k.title)}** to **${esc(s.name)}**.`})},
+  delSection(name){return mutSched(sc=>{const s=findSection(sc,name);if(!s)throw new Error(`I couldn’t find a “${name}” section.`);
+    if(s.tasks.some(k=>k.kind==='workout'))throw new Error('That section has your daily workout in it. Move the workout first, then delete it.');
+    sc.sections=sc.sections.filter(x=>x!==s);return`Deleted the **${esc(s.name)}** section${s.tasks.length?` and its ${s.tasks.length} task${s.tasks.length>1?'s':''}`:''}.`})},
+  uncheck(title){if(R0()==='parent')throw new Error('Only your kid can change their own check marks.');
+    const sc=sched(),f=findTask(sc,title);if(!f)throw new Error(`I couldn’t find “${title}” on your schedule.`);
+    const log=S.dayLog[todayKey()]||{};if(!(log[f.k.id]&&log[f.k.id].d))return`**${esc(f.k.title)}** isn’t checked off yet.`;
+    taskToggle(f.k.id,$('.composer')||document.body);return`Unchecked **${esc(f.k.title)}**.`},
+  listDay(){ensureToday();const sc=sched(),log=S.dayLog[todayKey()]||{};if(!sc.sections.length)return'Your day is empty. Say **“build my schedule”** and I’ll make one.';
+    const lines=sc.sections.map(s=>`**${esc(s.name)}**\n`+s.tasks.map(k=>`- ${taskState(k,log).d?'✅':'⬜'} ${esc(k.title)}${k.time?` · ${hm(k.time)}`:''}`).join('\n'));
+    const all=sc.sections.flatMap(s=>s.tasks),left=all.filter(k=>!taskState(k,log).d).length;
+    return lines.join('\n\n')+`\n\n${left?`**${left}** left to go. You’ve got this!`:'Everything is done today! 🎉'}`},
+  dietToday(meal){const d=planToday();if(!d)return'You don’t have a meal plan yet. Say **“make me a diet plan”** and I’ll make one.';
+    if(meal){const k=MEALN[meal];return`Today’s ${meal}: **${esc(d[k])}**. Want something else? Say **“swap my ${meal}”**.`}
+    return`Today’s meals:\n- Breakfast: ${esc(d.b)}\n- Lunch: ${esc(d.l)}\n- Dinner: ${esc(d.d)}\n- Snack: ${esc(d.s)}`},
+  water(){const d=dietDay();return d.w>=WATER_GOAL?`You’ve had **${d.w} glasses** today. Goal smashed! 💧`:`You’ve had **${d.w}/${WATER_GOAL} glasses** today. ${WATER_GOAL-d.w} to go!`},
+  group(word){const map={fruit:'fv',fruits:'fv',veggies:'fv',vegetables:'fv',veggie:'fv',salad:'fv',protein:'p',eggs:'p',egg:'p',beans:'p',chicken:'p',fish:'p',tofu:'p',grains:'gr',oats:'gr',rice:'gr',bread:'gr',dairy:'da',milk:'da',yogurt:'da',cheese:'da'};
+    const k=map[word];if(!k)return null;const d=dietDay();if(d.g[k])return`You already logged that food group today. Nice!`;DIET.group(k);
+    const n=(GROUPS.find(x=>x[0]===k)||[])[1];return`Logged **${n}** on your Diet tab. +${XP_GROUP} XP!`},
+};
+function tryCommand2(text,t){
+  const run=(f,...a)=>{try{return f(...a)}catch(e){return e.message||'I couldn’t do that.'}};
+  const TIME='(\\d{1,2}(?::\\d{2})?\\s*(?:am|pm|a\\.m\\.|p\\.m\\.)?|noon)';
+  if(/\b(what s|whats|what is|show me|show|list|what do i have)\b.*\b(my schedule|my day|on my list|today|to do today|my tasks)\b/.test(t)&&!/\b(workout|eat|meal|diet|lunch|dinner|breakfast)\b/.test(t))return ACT2.listDay();
+  if(/\bhow many (?:things|tasks)\b.*\b(left|today)\b/.test(t))return ACT2.listDay();
+  let m=t.match(/\bwhat s (?:for|my) (breakfast|lunch|dinner|snack)\b|\bwhat am i (?:having|eating) for (breakfast|lunch|dinner|snack)\b|\bwhats for (breakfast|lunch|dinner|snack)\b/);if(m)return ACT2.dietToday(m[1]||m[2]||m[3]);
+  if(/\b(what s|whats|what is|show)\b.*\b(diet|meal) ?plan\b|\bwhat should i eat today\b|\bwhat am i eating today\b/.test(t))return ACT2.dietToday();
+  if(/\bhow (much|many) (water|glasses)\b/.test(t)&&R0()==='me')return ACT2.water();
+  m=t.match(/\bi (?:ate|had|just ate) (?:some |a |an |my )?(fruits?|veggies|vegetables|veggie|salad|protein|eggs?|beans|chicken|fish|tofu|grains|oats|rice|bread|dairy|milk|yogurt|cheese)\b/);
+  if(m&&R0()==='me'){const r=ACT2.group(m[1]);if(r)return r}
+  m=text.match(new RegExp('^(?:please\\s+|can you\\s+)?(?:remind me to|i need to|i have to|i gotta|i should|add a reminder to)\\s+(.+?)(?:\\s+at\\s+'+TIME+')?(?:\\s+(today|tonight|this morning|this afternoon|this evening|after school))?$','i'));
+  if(m&&!/\b(workout|exercise)\b.*\b(more|less)\b/i.test(m[1])){const when=(m[3]||'').toLowerCase(),sec=/tonight|evening/.test(when)?'Evening':/morning/.test(when)?'Morning':/afternoon|after school/.test(when)?'After school':'';
+    return run(ACT.addTask,{title:m[1],section:sec,time:m[2]})}
+  m=text.match(/^(?:please\s+|can you\s+)?(?:rename|change the name of)\s+(?:my\s+|the\s+)?(.+?)\s+to\s+(.+)$/i);if(m)return run(ACT2.rename,m[1],m[2]);
+  m=text.match(/^(?:please\s+|can you\s+)?(?:delete|remove)\s+(?:the\s+|my\s+)?(.+?)\s+section$/i);if(m)return run(ACT2.delSection,m[1]);
+  m=text.match(/^(?:please\s+|can you\s+)?(?:uncheck|unmark|undo)\s+(?:my\s+|the\s+)?(.+)$/i)||text.match(/^i didn['’]?t (?:actually )?(?:do|finish)\s+(?:my\s+|the\s+)?(.+)$/i);if(m)return run(ACT2.uncheck,m[1]);
+  m=text.match(new RegExp('^(?:please\\s+|can you\\s+)?(?:move|put)\\s+(?:my\\s+|the\\s+)?(.+?)\\s+(?:to|into|in)\\s+(?:my\\s+|the\\s+)?(.+?)(?:\\s+section)?$','i'));
+  if(m&&!new RegExp('^'+TIME+'$','i').test(m[2].trim())&&!/\btab$/i.test(m[2]))return run(ACT2.moveTo,m[1],m[2]);
+  return null;
+}
+
 function tryCommand(raw){
   const text=raw.trim().replace(/[.!?]+$/,''),t=norm(text);
   const run=(f,...a)=>{try{return f(...a)}catch(e){return e.message||'I couldn’t do that.'}};
@@ -1804,7 +2116,9 @@ function tryCommand(raw){
   m=t.match(/\b(?:drank|drink|had|finished|logged?)\b(?:\s+(\d|one|two|three|four|a))?.*\bwater\b/);
   if(m&&R0()==='me'){const n={one:1,two:2,three:3,four:4,a:1}[m[1]]||parseInt(m[1])||1;return run(()=>DIET.water(Math.min(n,8)))}
   m=t.match(/\bi\s+(?:just\s+)?(?:ate|had|finished|eat)\s+(?:my\s+|a\s+)?(breakfast|lunch|dinner|snack)\b/);
-  if(m&&R0()==='me'){const k={breakfast:'b',lunch:'l',dinner:'d',snack:'s'}[m[1]];return run(()=>dietDay().m[k]?`You already logged ${m[1]}.`:DIET.meal(k))}
+  if(m&&R0()==='me'){const k={breakfast:'b',lunch:'l',dinner:'d',snack:'s'}[m[1]];return run(()=>{const d0=dietDay().m[k];let out=d0?`You already logged ${m[1]} on Diet.`:DIET.meal(k);
+    const f=findTask(sched(),m[1]),log=S.dayLog[todayKey()]||{};if(f&&f.k.kind!=='workout'&&!(log[f.k.id]&&log[f.k.id].d)){taskToggle(f.k.id,$('.composer')||document.body);out+=` Checked off **${esc(f.k.title)}** on My day too.`}return out})}
+  {const r2=tryCommand2(text,t);if(r2!=null)return r2}
   // section
   m=text.match(/^(?:please\s+|can you\s+|could you\s+)?(?:add|make|create)\s+(?:a\s+|another\s+|new\s+)*section\s+(?:called|named|for)?\s*(.+)$/i);if(m)return run(ACT.addSection,{name:m[1]});
   // time for a task
@@ -1989,7 +2303,7 @@ async function fillNames(){
 /* ---------- Me ---------- */
 function viewMe(){
   const parent=R0()==='parent';
-  if(window.RR_STANDALONE&&!CLOUD())return accountCard()+remindersCard()+viewProfile()+(S.aiPlan?`<section class="card"><div class="label">Skeefo plan</div><h3 class="h3">Your workouts follow Skeefo’s 7-day plan</h3><button class="btn" data-act="clearplan">Clear Skeefo plan</button></section>`:'')+`<section class="card"><div class="label">Your data</div><h3 class="h3">Saved on this device</h3><p class="note">Your progress is stored in this browser only. Clearing your browser data erases it.</p></section>`;
+  if(window.RR_STANDALONE&&!CLOUD())return accountCard()+remindersCard()+linkCard(false)+viewProfile()+(S.aiPlan?`<section class="card"><div class="label">Skeefo plan</div><h3 class="h3">Your workouts follow Skeefo’s 7-day plan</h3><button class="btn" data-act="clearplan">Clear Skeefo plan</button></section>`:'')+`<section class="card"><div class="label">Your data</div><h3 class="h3">Saved on this device</h3><p class="note">Your progress is stored in this browser only. Clearing your browser data erases it.</p></section>`;
   let h=(window.RR_STANDALONE?accountCard()+(parent?'':remindersCard()):'')+`<section class="card"><div class="label">Who’s using this device</div><div class="seg wide" role="group" aria-label="Role" style="margin-top:10px">
     <button data-act="role" data-v="me" aria-pressed="${!parent}">I’m training</button><button data-act="role" data-v="parent" aria-pressed="${parent}">I’m a parent</button></div>
     <p class="note" style="margin:10px 0 0">${parent?'Parent view shows your kid’s daily report and lets you set their schedule.':'Switch to parent view if you’re a parent checking on your kid.'}</p></section>`;
@@ -2112,6 +2426,7 @@ document.addEventListener('click',e=>{
         SFX.link();toast(medal('+',true),'Request sent','A parent needs to approve you.');if(t.dataset.v==='kid'){S.fam={joined:true};save()}sbRefresh()});break}
     case'sbleave':if(SBX.kidFam)SBX.client.from('family_members').delete().eq('family_id',SBX.kidFam.id).eq('user_id',UID).then(()=>{S.fam={joined:false};save();sbRefresh()});break;
     case'copycode':{const v=t.dataset.v;try{navigator.clipboard.writeText(v).then(()=>toast(medal('✓',true),'Code copied',v),()=>{})}catch(err){}break}
+    case'yetitoggle':S.yeti=S.yeti===false;save();render();if(S.yeti)yetiPlay('Turn on yeti animations');break;
     case'clearchat':if(!busy){archiveChat();save();SFX.shuffle();render();toast(skeefoMark(40),'Chat cleared','Skeefo still remembers what you talked about.')}break;
     case'forget':{if(t.dataset.sure!=='1'){t.dataset.sure='1';t.textContent='Tap again to make Skeefo forget';break}S.mem=[];S.chat=[];save();render();toast(skeefoMark(40),'Memory wiped','Skeefo starts fresh. Your plans and schedule stay the same.');break}
     case'clearplan':S.aiPlan=null;save();render();toast(medal('✓',true),'Skeefo plan cleared','Back to automatic daily routines.');break;
@@ -2153,7 +2468,7 @@ function taskToggle(id,btn){
   const e=log[id]||(log[id]={}),h=S.history[t]||(S.history[t]={x:0,c:0}),L0=lvl(S.xp),rect=btn.getBoundingClientRect();
   let bonus=0;
   if(e.d){SFX.uncheck();delete e.d;if(e.g){S.xp=Math.max(0,S.xp-e.g);h.x=Math.max(0,h.x-e.g);log._x-=e.g;e.g=0}}
-  else{e.d=Date.now();SFX.check(Object.keys(log).filter(x=>x[0]!=='_'&&log[x].d).length-1);setTimeout(SFX.coin,90);const g=Math.min(TASK_XP,Math.max(0,TASK_CAP-log._x));
+  else{e.d=Date.now();{const yk=sched().sections.flatMap(x=>x.tasks).find(x=>x.id===id);if(yk&&yk.kind!=='workout')setTimeout(()=>yetiPlay(yk.title),280)}SFX.check(Object.keys(log).filter(x=>x[0]!=='_'&&log[x].d).length-1);setTimeout(SFX.coin,90);const g=Math.min(TASK_XP,Math.max(0,TASK_CAP-log._x));
     if(g){e.g=g;log._x+=g;S.xp+=g;h.x+=g;floatXP(rect,'+'+g+' XP')}sparks(rect);noteCheck();
     {const k=sched().sections.flatMap(x=>x.tasks).find(x=>x.id===id);if(k&&k.min>=10&&e.s&&e.d-e.s<k.min*60000*.25)flag('fast_task',`“${k.title}” took ${dur(e.d-e.s)} (planned ${k.min} min)`);
      const quick=Object.keys(log).filter(x=>x[0]!=='_'&&log[x].d&&e.d-log[x].d<60000).length;if(quick>=4)flag('bulk',`Checked off ${quick} tasks within one minute`)}
@@ -2245,6 +2560,7 @@ const SFX=(()=>{
       for(let i=0;i<10;i++)tone(note(4+i%7)*1,1.05+i*.07,.3,{vol:.05})},
     levelDown(){[392,370,349.2,293.7].forEach((f,i)=>tone(f,i*.32,i===3?.9:.3,{type:'sawtooth',vol:.07,to:i===3?220:null}));tone(98,1,.9,{type:'triangle',vol:.22,to:73})},
     badge(){[1318.5,1568,2093].forEach((f,i)=>{tone(f,i*.08,.9,{vol:.14});tone(f*2.76,i*.08,.4,{vol:.03})})},
+    yeti(act){const up=act==='sleep'?[392,330,262]:[587.33,784,988];up.forEach((f,i)=>tone(f,.05+i*.09,.18,{type:'triangle',vol:.14,to:f*1.06}));tone(196,0,.12,{type:'sine',vol:.2,to:260,wet:false})},
     link(){[523.25,783.99,1046.5,1568].forEach((f,i)=>tone(f,i*.08,.6,{type:'triangle',vol:.16}))},
   };
 })();
