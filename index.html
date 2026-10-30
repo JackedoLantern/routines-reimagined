@@ -15,7 +15,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Routines">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
-<script>window.RR_STANDALONE=true;window.RR_VERSION='0cb973aa82';</script>
+<script>window.RR_STANDALONE=true;window.RR_VERSION='eaa438f50c';</script>
 <script>window.RR_SUPABASE={url:'https://uszalonpjyssvvsikzvg.supabase.co',key:'sb_publishable_w-5rI0R9ht2-HAr5HghM0w_-3HYiAEg'};</script>
 <script src="supabase.js"></script>
 </head>
@@ -414,7 +414,7 @@ main .wrap>*{min-width:0}
 @media (max-width:560px){
   .tab{font-size:12.5px;padding:9px 2px}
   .ed-task{grid-template-columns:1fr 1fr 36px}
-  .ed-task>:first-child{grid-column:1/-1}
+  .ed-task>.grip+*{grid-column:1/-1}
   .week{gap:4px}
   .wd small{font-size:9px}
 }
@@ -492,6 +492,19 @@ html{scrollbar-color:#34343A #09090A}
 .kid-today,.rule-chips{display:flex;flex-wrap:wrap;gap:6px}
 .chip.bad{background:var(--bad-soft);color:var(--bad)}
 .row-act{display:flex;gap:6px}
+.ed-task{position:relative;padding-left:26px}
+.ed-row .grip{flex:none}
+.grip{display:grid;place-items:center;width:22px;height:34px;color:var(--faint);cursor:grab;touch-action:none;border-radius:6px;-webkit-user-select:none;user-select:none}
+.ed-task>.grip{position:absolute;left:0;top:6px}
+.grip svg{width:10px;height:15px;fill:currentColor}
+.grip:hover,.grip:focus-visible{color:var(--ink);background:var(--raise)}
+.ed-task,.ed-sec{-webkit-touch-callout:none;transition:opacity .15s}
+.ed-task.dragging,.ed-sec.dragging{opacity:.25}
+.drag-ghost{position:fixed;z-index:9999;pointer-events:none;margin:0;box-shadow:0 18px 40px rgba(0,0,0,.6),0 0 0 1px var(--lvl);border-radius:14px;background:var(--surface-2)!important;padding-top:6px;padding-bottom:6px;transform:scale(1.03);opacity:1}
+.drop-line{height:4px;border-radius:4px;background:var(--lvl);box-shadow:0 0 12px var(--lvl-glow);margin:2px 0;animation:dl .5s ease-in-out infinite alternate}
+@keyframes dl{from{opacity:.55}to{opacity:1}}
+body.is-dragging{-webkit-user-select:none;user-select:none;cursor:grabbing}
+@media (prefers-reduced-motion:reduce){.drop-line{animation:none}.drag-ghost{transform:none}}
 .savepick{margin-top:16px;padding-top:14px;border-top:1px solid var(--line)}
 .savepick .daystrip{margin:10px 0 8px}
 .daystrip.pick .dsb.on{background:var(--lvl);border-color:var(--lvl);color:#0b0b0c}
@@ -1772,13 +1785,13 @@ function viewEditor(){
   const parent=R0()==='parent',wd=draft._wd??((new Date().getDay()+6)%7),raw=rawSched(),cust=Object.keys(raw.days||{}).map(Number).filter(d=>d!==wd).sort();
   let h=`<section class="card"><div class="ed-head"><div><div class="label">Editing ${DAYFULL[wd]}${draft._custom?' · custom day':''}</div><h3 class="h3">${parent?esc(kidName(SEL))+'’s schedule':'Your schedule'}</h3></div>
     ${parent?`<label class="switch"><input type="checkbox" id="ed-lock" data-ed="lock" ${draft.locked?'checked':''}><span></span>Lock it so only you can change it</label>`:''}</div>
-    <p class="note">Sections group your day. Each task can have a start time, how many minutes it takes, and a link to another tab. Linked tasks get a shortcut, and Workout, Diet and your own tabs check them off for you.</p><div class="ed">`;
+    <p class="note"><b>Hold</b> any task or section (or its ⠿ handle) and drag to move it, even into another section. Sections group your day. Each task can have a start time, how many minutes it takes, and a link to another tab. Linked tasks get a shortcut, and Workout, Diet and your own tabs check them off for you.</p><div class="ed">`;
   draft.sections.forEach((s,si)=>{
-    h+=`<div class="ed-sec"><div class="ed-row"><input class="inp sec" id="ed-${s.id}-name" data-ed="sec" data-si="${si}" value="${esc(s.name)}" placeholder="Section name" aria-label="Section name">
+    h+=`<div class="ed-sec"><div class="ed-row"><span class="grip" data-grip="sec" role="button" tabindex="0" aria-label="Hold and drag to move this section"><svg viewBox="0 0 12 18" aria-hidden="true"><circle cx="3" cy="3" r="1.6"/><circle cx="9" cy="3" r="1.6"/><circle cx="3" cy="9" r="1.6"/><circle cx="9" cy="9" r="1.6"/><circle cx="3" cy="15" r="1.6"/><circle cx="9" cy="15" r="1.6"/></svg></span><input class="inp sec" id="ed-${s.id}-name" data-ed="sec" data-si="${si}" value="${esc(s.name)}" placeholder="Section name" aria-label="Section name">
       <button class="icon-btn" data-act="delsec" data-si="${si}" aria-label="Delete section ${esc(s.name)}">✕</button></div>
       <div class="ed-tasks">`;
     s.tasks.forEach((k,ti)=>{
-      h+=`<div class="ed-task">${k.kind==='workout'?`<div class="inp ro">Daily workout <span class="tag">linked</span></div>`:`<input class="inp" id="ed-${k.id}-title" data-ed="title" data-si="${si}" data-ti="${ti}" value="${esc(k.title)}" placeholder="Task" aria-label="Task name">`}
+      h+=`<div class="ed-task"><span class="grip" data-grip="task" role="button" tabindex="0" aria-label="Hold and drag to move this task"><svg viewBox="0 0 12 18" aria-hidden="true"><circle cx="3" cy="3" r="1.6"/><circle cx="9" cy="3" r="1.6"/><circle cx="3" cy="9" r="1.6"/><circle cx="9" cy="9" r="1.6"/><circle cx="3" cy="15" r="1.6"/><circle cx="9" cy="15" r="1.6"/></svg></span>${k.kind==='workout'?`<div class="inp ro">Daily workout <span class="tag">linked</span></div>`:`<input class="inp" id="ed-${k.id}-title" data-ed="title" data-si="${si}" data-ti="${ti}" value="${esc(k.title)}" placeholder="Task" aria-label="Task name">`}
         <input class="inp" type="time" id="ed-${k.id}-time" data-ed="time" data-si="${si}" data-ti="${ti}" value="${esc(k.time||'')}" aria-label="Start time">
         <div class="minbox"><input class="inp" type="number" min="1" max="240" id="ed-${k.id}-min" data-ed="min" data-si="${si}" data-ti="${ti}" value="${k.min||''}" aria-label="Minutes"><span>min</span></div>
         <button class="icon-btn" data-act="deltask" data-si="${si}" data-ti="${ti}" aria-label="Delete task">✕</button>
@@ -1798,6 +1811,72 @@ document.addEventListener('input',e=>{
   if(f==='lock')draft.locked=t.checked;
   else if(f==='sec')draft.sections[si].name=t.value;
   else{const k=draft.sections[si].tasks[ti];if(f==='link'){if(t.value)k.link=t.value;else delete k.link;return}if(f==='min')k.min=Math.max(0,Math.min(240,parseInt(t.value)||0));else k[f]=t.value}
+});
+/* ---------- hold-and-drag to move tasks and sections in the editor ---------- */
+let DRAG=null;
+function dragTargets(kind){
+  const secs=[...document.querySelectorAll('.ed>.ed-sec')];
+  return kind==='sec'?secs:secs.map(sec=>({sec,box:sec.querySelector('.ed-tasks'),rows:[...sec.querySelectorAll('.ed-tasks>.ed-task')]}));
+}
+function dragStart(row,kind,x,y){
+  const secs=[...document.querySelectorAll('.ed>.ed-sec')];
+  const sec=kind==='sec'?row:row.closest('.ed-sec'),si=secs.indexOf(sec),ti=kind==='task'?[...sec.querySelectorAll('.ed-tasks>.ed-task')].indexOf(row):-1;
+  if(si<0||(kind==='task'&&ti<0))return;
+  const r=row.getBoundingClientRect(),ghost=row.cloneNode(true);
+  ghost.classList.add('drag-ghost');ghost.style.width=r.width+'px';ghost.style.left=r.left+'px';ghost.style.top=r.top+'px';
+  ghost.querySelectorAll('input,select').forEach(i=>{i.removeAttribute('id');i.tabIndex=-1});
+  document.body.appendChild(ghost);row.classList.add('dragging');document.body.classList.add('is-dragging');
+  const line=document.createElement('div');line.className='drop-line';
+  DRAG={row,kind,si,ti,ghost,line,dy:y-r.top,to:null,lastY:y};
+  try{navigator.vibrate&&navigator.vibrate(12)}catch(e){}SFX.soft();dragMove(x,y);
+}
+function dragMove(x,y){
+  const D=DRAG;if(!D)return;D.lastY=y;D.ghost.style.top=(y-D.dy)+'px';
+  if(D.kind==='sec'){
+    const secs=dragTargets('sec');let idx=secs.length;for(let i=0;i<secs.length;i++){const r=secs[i].getBoundingClientRect();if(y<r.top+r.height/2){idx=i;break}}
+    D.to={si:idx};const ref=secs[idx];ref?ref.parentNode.insertBefore(D.line,ref):secs[0].parentNode.appendChild(D.line);
+  }else{
+    const T=dragTargets('task');let best=T[0],bd=1e9;
+    for(const t of T){const r=t.sec.getBoundingClientRect();const d=y<r.top?r.top-y:y>r.bottom?y-r.bottom:0;if(d<bd){bd=d;best=t}}
+    const rows=best.rows.filter(r=>r!==D.row);let idx=rows.length;
+    for(let i=0;i<rows.length;i++){const r=rows[i].getBoundingClientRect();if(y<r.top+r.height/2){idx=i;break}}
+    D.to={si:T.indexOf(best),ti:idx};const ref=rows[idx];ref?best.box.insertBefore(D.line,ref):best.box.appendChild(D.line);
+  }
+}
+function dragEnd(cancel){
+  const D=DRAG;if(!D)return;DRAG=null;cancelAnimationFrame(D.raf);
+  D.ghost.remove();D.line.remove();D.row.classList.remove('dragging');document.body.classList.remove('is-dragging');
+  if(cancel||!D.to||!draft)return;
+  if(D.kind==='sec'){let to=D.to.si;if(to>D.si)to--;if(to===D.si)return;const [m]=draft.sections.splice(D.si,1);draft.sections.splice(to,0,m)}
+  else{const {si,ti}=D.to;if(si===D.si&&ti===D.ti)return;const [m]=draft.sections[D.si].tasks.splice(D.ti,1);draft.sections[si].tasks.splice(ti,0,m)}
+  SFX.link();render();
+}
+function dragScroll(){const D=DRAG;if(!D)return;const y=D.lastY,h=innerHeight,top=Math.min(170,(document.querySelector('#tabbar')?.getBoundingClientRect().bottom||0)+90),bot=90;
+  const v=y<top?-Math.min(18,(top-y)/4+2):y>h-bot?Math.min(18,(y-(h-bot))/4+2):0;if(v){scrollBy(0,v);dragMove(0,y)}D.raf=requestAnimationFrame(dragScroll)}
+document.addEventListener('pointerdown',e=>{
+  if(!draft||e.button>0)return;const grip=e.target.closest('[data-grip]');
+  const row=grip?grip.closest(grip.dataset.grip==='sec'?'.ed-sec':'.ed-task'):e.target.closest('.ed-task,.ed-sec');
+  if(!row||!row.closest('.ed'))return;
+  if(!grip&&e.target.closest('input,select,button,textarea,label,.minbox'))return;
+  const kind=row.classList.contains('ed-sec')?'sec':'task',sx=e.clientX,sy=e.clientY,pid=e.pointerId;
+  if(grip)e.preventDefault();
+  let timer=setTimeout(()=>{timer=null;dragStart(row,kind,sx,sy);if(DRAG)DRAG.raf=requestAnimationFrame(dragScroll)},grip&&e.pointerType==='mouse'?0:300);
+  const mv=ev=>{if(ev.pointerId!==pid)return;if(DRAG){ev.preventDefault();dragMove(ev.clientX,ev.clientY);return}
+    if(timer&&Math.hypot(ev.clientX-sx,ev.clientY-sy)>8){if(grip){clearTimeout(timer);timer=null;dragStart(row,kind,ev.clientX,ev.clientY);if(DRAG)DRAG.raf=requestAnimationFrame(dragScroll)}else{clearTimeout(timer);done()}}};
+  const up=ev=>{if(ev.pointerId!==pid)return;clearTimeout(timer);const was=!!DRAG;dragEnd(ev.type==='pointercancel');done();if(was){ev.preventDefault()}};
+  const done=()=>{removeEventListener('pointermove',mv);removeEventListener('pointerup',up);removeEventListener('pointercancel',up)};
+  addEventListener('pointermove',mv,{passive:false});addEventListener('pointerup',up);addEventListener('pointercancel',up);
+});
+document.addEventListener('touchmove',e=>{if(DRAG)e.preventDefault()},{passive:false});
+document.addEventListener('contextmenu',e=>{if(draft&&e.target.closest('.ed-task,.ed-sec'))e.preventDefault()});
+document.addEventListener('keydown',e=>{const g=e.target.closest&&e.target.closest('[data-grip]');if(!g||!draft||!['ArrowUp','ArrowDown'].includes(e.key))return;e.preventDefault();
+  const secs=[...document.querySelectorAll('.ed>.ed-sec')],up=e.key==='ArrowUp';
+  if(g.dataset.grip==='sec'){const si=secs.indexOf(g.closest('.ed-sec')),to=si+(up?-1:1);if(to<0||to>=draft.sections.length)return;const [m]=draft.sections.splice(si,1);draft.sections.splice(to,0,m);render();document.querySelectorAll('.ed>.ed-sec')[to]?.querySelector('[data-grip]')?.focus();return}
+  const sec=g.closest('.ed-sec'),si=secs.indexOf(sec),ti=[...sec.querySelectorAll('.ed-tasks>.ed-task')].indexOf(g.closest('.ed-task'));
+  let nsi=si,nti=ti+(up?-1:1);const L=draft.sections;
+  if(nti<0){if(si===0)return;nsi=si-1;nti=L[nsi].tasks.length}else if(nti>=L[si].tasks.length+(0)){if(si===L.length-1)return;nsi=si+1;nti=0}
+  const [m]=L[si].tasks.splice(ti,1);L[nsi].tasks.splice(Math.min(nti,L[nsi].tasks.length),0,m);render();
+  document.querySelectorAll('.ed>.ed-sec')[nsi]?.querySelectorAll('.ed-tasks>.ed-task')[Math.min(nti,L[nsi].tasks.length-1)]?.querySelector('[data-grip]')?.focus();
 });
 document.addEventListener('change',e=>{if(draft&&e.target.id==='ed-lock')draft.locked=e.target.checked});
 
