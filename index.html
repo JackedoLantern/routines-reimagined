@@ -15,7 +15,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Routines">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
-<script>window.RR_STANDALONE=true;window.RR_VERSION='f4ff3b7b0d';</script>
+<script>window.RR_STANDALONE=true;window.RR_VERSION='905bb6823d';</script>
 <script>window.RR_SUPABASE={url:'https://uszalonpjyssvvsikzvg.supabase.co',key:'sb_publishable_w-5rI0R9ht2-HAr5HghM0w_-3HYiAEg'};</script>
 <script src="supabase.js"></script>
 </head>
@@ -70,11 +70,22 @@ h1,h2,h3{text-wrap:balance;margin:0}
 .lvl circle{fill:none;stroke-width:4}
 .lvl .trk{stroke:var(--line-2)}
 .lvl .bar{stroke:var(--lvl);stroke-linecap:round;filter:drop-shadow(0 0 6px var(--lvl-glow));transition:stroke-dashoffset 1s cubic-bezier(.2,.8,.2,1)}
+.lvl{--rk:var(--lvl)}
+.lvl-ico{width:58%;height:58%;display:grid;place-items:center;position:relative;z-index:1}
+.lvl-ico svg{width:100%;height:100%;filter:drop-shadow(0 4px 10px rgba(0,0,0,.6));animation:rankPop .6s cubic-bezier(.2,1.4,.4,1) both}
+@keyframes rankPop{from{transform:scale(.4);opacity:0}to{transform:none;opacity:1}}
+.lvl .bar{stroke:var(--rk)!important}
+#lvlRank{color:#0B0817!important;background:var(--rk)!important;white-space:nowrap;text-transform:uppercase}
+#lvlTitle{color:var(--gold)!important;text-shadow:0 0 14px var(--gold-glow)}
+.rk-pulse{animation:rkPulse 2.4s ease-in-out infinite;transform-origin:center}
+@keyframes rkPulse{50%{opacity:.35}}
+.rk-energy{animation:rkPulse 1.6s ease-in-out infinite}
+@media (prefers-reduced-motion:reduce){.lvl-ico svg,.rk-pulse,.rk-energy{animation:none}}
 .lvl b{font-family:var(--f-display);font-weight:900;font-size:40px;line-height:1;color:var(--lvl);text-shadow:0 0 18px var(--lvl-glow)}
 .lvl small{position:absolute;bottom:-8px;left:50%;transform:translateX(-50%);background:var(--lvl);color:#0B0817;font-family:var(--f-mono);font-size:10px;font-weight:500;letter-spacing:.12em;padding:2px 7px;border-radius:5px;box-shadow:0 0 12px var(--lvl-glow)}
 .who{min-width:0;display:grid;gap:8px}
 .who .title{font-family:var(--f-display);font-weight:800;font-size:26px;text-transform:uppercase;letter-spacing:.04em;line-height:1;color:var(--ink)}
-.who .title::before{content:"Rank · ";color:var(--lvl);font-size:.62em;letter-spacing:.12em;vertical-align:middle}
+.who .title::before{content:"";display:none;color:var(--lvl);font-size:.62em;letter-spacing:.12em;vertical-align:middle}
 .xpbar{height:12px;border-radius:6px;background:var(--surface-2);box-shadow:inset 0 0 0 1px var(--line);overflow:visible;position:relative}
 .xpbar i{position:absolute;inset:0 auto 0 0;width:0;background:linear-gradient(90deg,var(--gold-2),var(--gold));border-radius:6px;box-shadow:0 0 14px var(--gold-glow);transition:width 1s cubic-bezier(.2,.8,.2,1);overflow:hidden}
 .xpbar i::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.6),transparent);transform:translateX(-100%);animation:sheen 3s ease-in-out infinite}
@@ -514,12 +525,17 @@ svg.moose{display:block}
 svg.moose.big{position:relative;width:100%;height:100%;filter:drop-shadow(0 0 28px rgba(255,92,168,.35));animation:mooseIn 1.1s cubic-bezier(.2,.9,.2,1) both}
 @keyframes mooseIn{from{opacity:0;transform:scale(.7)}60%{opacity:1}to{transform:scale(1)}}
 .rung svg.rung-ico{width:34px;height:34px;float:right;margin:-2px -4px 0 4px}
-#lvlTitle.legend::after{content:"";display:inline-block;width:1.25em;height:1.25em;margin:-.3em 0 0 .3em;vertical-align:middle;background:var(--moose) center/contain no-repeat;filter:drop-shadow(0 0 6px rgba(255,92,168,.45))}
+#lvlTitle span{font-size:.55em;letter-spacing:.1em;color:var(--muted)}
+#lvlTitle.legend-off::after{content:"";display:inline-block;width:1.25em;height:1.25em;margin:-.3em 0 0 .3em;vertical-align:middle;background:var(--moose) center/contain no-repeat;filter:drop-shadow(0 0 6px rgba(255,92,168,.45))}
+svg.rank-ico{display:block}svg.rank-ico.big{position:relative;width:78%;height:78%;filter:drop-shadow(0 0 26px var(--lvl-glow));animation:mooseIn .9s cubic-bezier(.2,1.3,.3,1) both}
+svg.rank-ico.lb-ico,svg.moose.lb-ico{display:inline-block;width:16px;height:16px;vertical-align:-3px;margin-right:4px}
+svg.rank-ico.rung-ico{width:34px;height:34px;float:right;margin:-2px -4px 0 4px}
 svg.moose.lb-ico{display:inline-block;width:16px;height:16px;vertical-align:-3px;margin-right:3px}
 @media (prefers-reduced-motion:reduce){svg.moose.big{animation:none}}
-#lvlTitle.legend{background:linear-gradient(90deg,#FF5CA8,#FFC53D,#A98BFF,#FF5CA8);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent!important;animation:legendShine 4s linear infinite}
+#lvlRank.legend{background:linear-gradient(90deg,#FF5CA8,#FFC53D,#A98BFF,#FF5CA8);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent!important;animation:legendShine 4s linear infinite}
+#lvlRank.legend{background:linear-gradient(90deg,#FF5CA8,#FFC53D,#A98BFF,#FF5CA8)!important;background-size:300% 100%!important;-webkit-background-clip:border-box!important;background-clip:border-box!important;color:#0B0817!important}
 @keyframes legendShine{to{background-position:300% 0}}
-@media (prefers-reduced-motion:reduce){#lvlTitle.legend{animation:none}}
+@media (prefers-reduced-motion:reduce){#lvlRank.legend{animation:none}}
 .savepick{margin-top:16px;padding-top:14px;border-top:1px solid var(--line)}
 .savepick .daystrip{margin:10px 0 8px}
 .daystrip.pick .dsb.on{background:var(--lvl);border-color:var(--lvl);color:#0b0b0c}
@@ -966,7 +982,7 @@ body.gated{overflow:hidden}
     <div class="score">
       <div class="lvl" id="lvlBox">
         <svg viewBox="0 0 82 82"><circle class="trk" cx="41" cy="41" r="38"/><circle class="bar" id="lvlArc" cx="41" cy="41" r="38" stroke-dasharray="238.8" stroke-dashoffset="238.8"/></svg>
-        <b class="num" id="lvlNum">1</b><small>LVL</small>
+        <span class="lvl-ico" id="lvlIco"></span><small id="lvlRank">Wood</small><span id="lvlNum" hidden>1</span>
       </div>
       <div class="who">
         <div class="title" id="lvlTitle">Wood</div>
@@ -1673,7 +1689,9 @@ function updateSnd(){const b=$('#sndBtn');if(!b)return;const on=S.sound!==false;
 function renderHeader(bump){updateSnd();
   const parent=R0()==='parent',src=parent?(curKid()||{xp:0,streak:0}):S;
   const xp=src.xp||0,L=lvl(xp),lo=xpFor(L),hi=xpFor(L+1),pct=(xp-lo)/(hi-lo);
-  $('#lvlNum').textContent=L;{const rt=titleFor(L,xp),el=$('#lvlTitle');el.textContent=rt;el.style.color=RANKCOL[rt]||'';el.classList.toggle('legend',rt==='Legend')}
+  $('#lvlNum').textContent=L;{const rt=titleFor(L,xp),el=$('#lvlTitle'),rk=$('#lvlRank'),ic=$('#lvlIco');el.innerHTML=`${xp.toLocaleString()} <span>XP</span>`;
+    rk.textContent=rt;rk.style.setProperty('--rk',RANKCOL[rt]||'var(--lvl)');rk.classList.toggle('legend',rt==='Legend');
+    if(ic.dataset.r!==rt){ic.dataset.r=rt;ic.innerHTML=rankSVG(rt,'hdr');$('#lvlBox').style.setProperty('--rk',RANKCOL[rt]||'var(--lvl)');$('#lvlBox').setAttribute('aria-label',`${rt} rank, level ${L}, ${xp} XP`)}}
   $('#lvlArc').style.strokeDashoffset=238.8*(1-pct);
   $('#xpFill').style.width=(pct*100).toFixed(1)+'%';
   tweenXP(xp,hi,parent&&curKid()?(curKid().name||'Your kid'):'');
@@ -1684,7 +1702,7 @@ function renderHeader(bump){updateSnd();
 }
 function tweenXP(to,hi,who){
   const el=$('#xpText');const from=shownXP??to;shownXP=to;
-  const fmt=v=>`${who?esc(who)+' · ':''}<b>${Math.round(v).toLocaleString()}</b> XP · ${(hi-Math.round(v)).toLocaleString()} to level ${lvl(to)+1}`;
+  const fmt=v=>`${who?esc(who)+' · ':''}Level <b>${lvl(to)}</b> · ${(hi-Math.round(v)).toLocaleString()} XP to level ${lvl(to)+1}`;
   if(reduced||from===to){el.innerHTML=fmt(to);return}
   const t0=performance.now(),d=700;
   const step=t=>{const k=Math.min(1,(t-t0)/d),e=1-Math.pow(1-k,3);el.innerHTML=fmt(from+(to-from)*e);if(k<1)requestAnimationFrame(step)};
@@ -1936,7 +1954,7 @@ function viewReport(){
   if(isToday)(r.flags||[]).forEach(f=>alerts.unshift(['bad','Possible shortcut: '+esc(f.msg),`Noticed at ${clock(f.at)}.`]));
   const doneT=tasks.filter(k=>k.d).length;
   let h=kidBar()+`<section class="card"><div class="day"><div style="min-width:0"><div class="label">${isToday?'Today':'Last report · '+esc(r.date)}</div><h2>${esc(name)}’s day</h2>
-    <div class="meta"><span class="chip lv">Level ${r.level} · ${esc(titleFor(r.level,r.xp))}</span><span class="chip xp">${(r.xp||0).toLocaleString()} XP</span><span class="chip">${r.streak||0}-day streak</span><span class="chip">${r.total||0} workouts</span></div></div>
+    <div class="meta"><span class="chip lv">${rankSVG(titleFor(r.level,r.xp),'lb-ico')} ${esc(titleFor(r.level,r.xp))} · Lv ${r.level}</span><span class="chip xp">${(r.xp||0).toLocaleString()} XP</span><span class="chip">${r.streak||0}-day streak</span><span class="chip">${r.total||0} workouts</span></div></div>
     <div class="ring ${isToday&&w.complete&&doneT===tasks.length?'full':''}"><svg viewBox="0 0 84 84"><circle class="trk" cx="42" cy="42" r="36"/><circle class="bar" cx="42" cy="42" r="36" stroke-dasharray="${2*Math.PI*36}" stroke-dashoffset="${2*Math.PI*36*(1-((doneT+(w.complete?1:0))/Math.max(1,tasks.length+1)))}"/></svg><div><div><b class="num">${doneT+(isToday&&w.complete?1:0)}/${tasks.length+1}</b><span>done</span></div></div></div></div>
     <div class="dayfoot"><span class="note">Updated ${clock(r.updated)}. This page updates live.</span><button class="btn" data-go="schedule">Edit schedule</button></div></section>`;
   if(alerts.length)h+=`<section class="block"><div class="block-h"><h3>Alerts</h3><span class="label">${alerts.length}</span></div>${alerts.map(([k,a,b])=>banner(k,a,b)).join('')}</section>`;
@@ -3078,7 +3096,7 @@ function viewProgress(){
     cells+=`<div class="h ${l} ${k===t?'today':''}" title="${k}${h?` · ${h.x} XP${h.c?' · complete':''}`:''}"></div>`}
   const L=lvl(S.xp),earned=BADGES.filter(b=>S.badges[b.id]).length;
   const myR=titleFor(L,S.xp);
-  const ladder=[...TITLES.map(([m,n])=>[`Lv ${m}`,n]),[`${LEGEND_XP.toLocaleString()} XP`,'Legend']].map(([a,n])=>`<div class="rung ${myR===n&&R0()==='me'?'me':''}" style="--rk:${RANKCOL[n]}">${n==='Legend'?mooseSVG('rung-ico'):''}<span class="label">${a}</span><b>${n}</b></div>`).join('');
+  const ladder=[...TITLES.map(([m,n])=>[`Lv ${m}`,n]),[`${LEGEND_XP.toLocaleString()} XP`,'Legend']].map(([a,n])=>`<div class="rung ${myR===n&&R0()==='me'?'me':''}" style="--rk:${RANKCOL[n]}">${rankSVG(n,'rung-ico')}<span class="label">${a}</span><b>${n}</b></div>`).join('');
   return(R0()==='me'?`<div class="stats">
     <div class="stat"><span class="label">Routines</span><b class="num">${S.total}</b></div>
     <div class="stat"><span class="label">Best streak</span><b class="num">${S.best}</b></div>
@@ -3108,7 +3126,7 @@ function viewLeaders(){
   const unit={xp:'XP',streak:'days',week:'routines'}[lbMetric];
   return head+`<div class="lb">${rows.map((r,i)=>`<div class="row ${i<3?'p'+(i+1):''} ${r.id===UID?'me':''}" style="animation-delay:${Math.min(i,10)*40}ms">
     <div class="rk num">${i+1}</div>
-    <div style="min-width:0"><div class="nm" data-uid="${esc(r.id)}" data-handle="${esc(r.handle||'')}">${esc(r.handle||'…')}</div><div class="sub"><span class="lv">Lv ${r.level||1}</span> · ${titleFor(r.level||1,r.xp)==='Legend'?mooseSVG('lb-ico'):''}${esc(titleFor(r.level||1,r.xp))} · ${r.streak||0}-day streak</div></div>
+    <div style="min-width:0"><div class="nm" data-uid="${esc(r.id)}" data-handle="${esc(r.handle||'')}">${esc(r.handle||'…')}</div><div class="sub">${rankSVG(titleFor(r.level||1,r.xp),'lb-ico')}<span class="lv" style="color:${RANKCOL[titleFor(r.level||1,r.xp)]}">${esc(titleFor(r.level||1,r.xp))}</span> · ${(r.xp||0).toLocaleString()} XP · ${r.streak||0}-day streak</div></div>
     <div class="val num">${val(r).toLocaleString()}<small>${unit}</small></div></div>`).join('')}</div>
     <p class="note" style="margin:12px 0 0">${window.RR_STANDALONE?(CLOUD()?'Anyone with an account who trains shows up here. Set your name on Me.':'Make a free account on the Me tab to show up here.'):'Anyone you share this page with who signs in and trains shows up here.'}</p></section>`;
 }
@@ -3448,8 +3466,59 @@ function overlay(cls,html,ms){const o=document.createElement('div');o.className=
 const MOOSE_SRC=`<svg viewBox="0 0 200 200" role="img" aria-label="Legend: a huge dark moose"><defs><radialGradient id="mbg" cx="50%" cy="40%" r="64%"><stop offset="0" stop-color="#1c1222"/><stop offset=".5" stop-color="#09070b"/><stop offset="1" stop-color="#000"/></radialGradient><linearGradient id="mbody" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#18141c"/><stop offset=".55" stop-color="#0b0a0d"/><stop offset="1" stop-color="#030304"/></linearGradient><linearGradient id="mant" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#211b27"/><stop offset="1" stop-color="#0a090c"/></linearGradient><radialGradient id="mface" cx="50%" cy="30%" r="70%"><stop offset="0" stop-color="#1a1620"/><stop offset="1" stop-color="#08070a"/></radialGradient><filter id="mglow" x="-200%" y="-200%" width="500%" height="500%"><feGaussianBlur stdDeviation="2.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter><filter id="mfog" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="7"/></filter><clipPath id="mclip"><circle cx="100" cy="100" r="97"/></clipPath></defs><circle cx="100" cy="100" r="98" fill="url(#mbg)"/><g clip-path="url(#mclip)"><ellipse cx="100" cy="60" rx="80" ry="30" fill="#ff5ca8" opacity=".08" filter="url(#mfog)"/><ellipse cx="100" cy="112" rx="30" ry="18" fill="#ff3b6b" opacity=".05" filter="url(#mfog)"/><g transform="translate(100 64) scale(.84) translate(-100 -56)" fill="url(#mant)" stroke="#45304c" stroke-width=".7" stroke-opacity=".6"><path d="M82 60 C70 60 56 58 44 52 C30 45 20 36 14 22 L22 26 L18 12 L28 22 L28 8 L36 20 L40 6 L45 20 L52 8 L54 23 L61 13 L62 28 L70 20 L69 34 C72 42 78 48 86 52 Z"/><path d="M118 60 C130 60 144 58 156 52 C170 45 180 36 186 22 L178 26 L182 12 L172 22 L172 8 L164 20 L160 6 L155 20 L148 8 L146 23 L139 13 L138 28 L130 20 L131 34 C128 42 122 48 114 52 Z"/><path d="M60 56 C50 60 40 62 28 60 L36 56 L26 52 L40 52 C46 54 52 55 58 54 Z"/><path d="M140 56 C150 60 160 62 172 60 L164 56 L174 52 L160 52 C154 54 148 55 142 54 Z"/></g><path d="M4 210 C6 160 24 128 56 116 C68 112 76 106 80 98 L120 98 C124 106 132 112 144 116 C176 128 194 160 196 210 Z" fill="url(#mbody)"/><path d="M72 112 C70 96 74 80 80 68 L120 68 C126 80 130 96 128 112 C120 122 80 122 72 112 Z" fill="url(#mbody)"/><g fill="none" stroke="#2e2335" stroke-width="1.5" stroke-linecap="round"><path d="M56 117 C64 132 78 140 96 143"/><path d="M144 117 C136 132 122 140 104 143"/><path d="M100 142 L100 210"/><path d="M30 150 C40 140 52 140 60 150 C62 158 58 166 50 170"/><path d="M170 150 C160 140 148 140 140 150 C138 158 142 166 150 170"/><path d="M66 156 C78 168 90 170 98 166"/><path d="M134 156 C122 168 110 170 102 166"/><path d="M82 180 C90 184 96 184 98 182"/><path d="M118 180 C110 184 104 184 102 182"/><path d="M84 194 C90 197 96 197 98 195"/><path d="M116 194 C110 197 104 197 102 195"/><path d="M76 110 C80 116 86 118 90 118"/><path d="M124 110 C120 116 114 118 110 118"/></g><path d="M80 62 C70 58 60 62 54 70 C64 72 74 70 82 68 Z" fill="#141118" stroke="#2e2335" stroke-width=".6"/><path d="M120 62 C130 58 140 62 146 70 C136 72 126 70 118 68 Z" fill="#141118" stroke="#2e2335" stroke-width=".6"/><path d="M80 60 C82 50 90 44 100 44 C110 44 118 50 120 60 C123 72 122 84 119 96 C122 104 124 112 122 120 C120 130 112 136 100 136 C88 136 80 130 78 120 C76 112 78 104 81 96 C78 84 77 72 80 60 Z" fill="url(#mface)"/><path d="M84 104 C84 96 92 92 100 92 C108 92 116 96 116 104" fill="none" stroke="#2a2030" stroke-width="1.2"/><ellipse cx="93" cy="124" rx="3" ry="2" fill="#000"/><ellipse cx="107" cy="124" rx="3" ry="2" fill="#000"/><path d="M90 132 C94 135 106 135 110 132" fill="none" stroke="#000" stroke-width="1.4"/><path d="M94 135 C92 146 96 156 100 160 C104 156 108 146 106 135 Z" fill="#0a090c"/><path d="M84 74 L97 81 M116 74 L103 81" stroke="#2f2437" stroke-width="3" stroke-linecap="round"/><g filter="url(#mglow)"><path d="M86 81 L96 85 L88 86 Z" fill="#ff3b6b"/><path d="M114 81 L104 85 L112 86 Z" fill="#ff3b6b"/></g><g fill="#c9b7d6" opacity=".06" filter="url(#mfog)"><ellipse cx="86" cy="140" rx="10" ry="5"/><ellipse cx="114" cy="140" rx="10" ry="5"/></g><g fill="none" stroke="#ff5ca8" stroke-opacity=".3" stroke-width="1.1" stroke-linecap="round"><path d="M80 60 C82 50 90 44 100 44 C110 44 118 50 120 60"/><path d="M56 116 C24 128 6 160 4 200"/><path d="M144 116 C176 128 194 160 196 200"/><path d="M44 52 C30 45 20 36 14 22"/><path d="M156 52 C170 45 180 36 186 22"/></g></g><circle cx="100" cy="100" r="97" fill="none" stroke="#ff5ca8" stroke-opacity=".4" stroke-width="2.2"/></svg>`;
 let mooseN=0;try{document.documentElement.style.setProperty('--moose',`url("data:image/svg+xml,${encodeURIComponent(MOOSE_SRC.replace('<svg ','<svg xmlns="http://www.w3.org/2000/svg" '))}")`)}catch(e){}
 function mooseSVG(cls){const p='mz'+(++mooseN)+'_';return MOOSE_SRC.replace(/id="/g,'id="'+p).replace(/url\(#/g,'url(#'+p).replace('<svg ',`<svg class="moose ${cls||''}" `)}
+/* ================= Rank emblems ================= */
+const RANKMETAL={
+  Wood:['#C48A55','#7A4A24','#3E2412','#E8B887'],
+  Bronze:['#E9A060','#A8622B','#4D2A10','#FFD0A0'],
+  Silver:['#F2F4F8','#A9B0BC','#4A505B','#FFFFFF'],
+  Gold:['#FFE27A','#E9A21C','#6B4300','#FFF6C8'],
+  Platinum:['#E6FFFD','#8FD8D3','#2A5E5B','#FFFFFF'],
+  Diamond:['#C9F3FF','#4CC3F5','#0B4C78','#FFFFFF'],
+  Vibranium:['#D9CCFF','#7A55F0','#1A0F3F','#F2EAFF'],
+};
+let rankN=0;
+function rankSVG(name,cls){
+  if(name==='Legend')return mooseSVG(cls);
+  const m=RANKMETAL[name]||RANKMETAL.Wood,p='rk'+(++rankN)+'_',[hi,mid,lo,sh]=m;
+  const defs=`<defs><linearGradient id="${p}g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${hi}"/><stop offset=".55" stop-color="${mid}"/><stop offset="1" stop-color="${lo}"/></linearGradient>
+    <linearGradient id="${p}i" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${lo}"/><stop offset="1" stop-color="#0b0a0d"/></linearGradient>
+    <radialGradient id="${p}r" cx="50%" cy="45%" r="55%"><stop offset="0" stop-color="${mid}" stop-opacity=".55"/><stop offset="1" stop-color="${mid}" stop-opacity="0"/></radialGradient>
+    <filter id="${p}f" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="1.6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>`;
+  const shield='M32 4 L54 12 L54 30 C54 45 44 54 32 60 C20 54 10 45 10 30 L10 12 Z',inner='M32 10 L48 16 L48 30 C48 41 41 48 32 53 C23 48 16 41 16 30 L16 16 Z';
+  const chev=(n,b=40)=>Array.from({length:n},(_,i)=>`<path d="M22 ${b-i*7} L32 ${b-6-i*7} L42 ${b-i*7}" fill="none" stroke="url(#${p}g)" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round"/>`).join('');
+  let body='';
+  if(name==='Wood'){
+    body=`<path d="${shield}" fill="url(#${p}g)" stroke="${lo}" stroke-width="1.5"/>
+      <g fill="none" stroke="${lo}" stroke-opacity=".55" stroke-width="1.2" stroke-linecap="round"><path d="M18 18 C24 26 20 36 26 48"/><path d="M28 12 C33 22 28 34 33 54"/><path d="M40 14 C43 24 38 34 43 46"/><ellipse cx="38" cy="30" rx="3" ry="2"/></g>
+      <path d="M32 46 L32 34" stroke="#3d6b2a" stroke-width="2.6" stroke-linecap="round"/><path d="M32 36 C26 34 24 28 26 24 C31 25 33 30 32 36 Z" fill="#7cc35a"/><path d="M32 38 C38 36 41 30 39 26 C34 27 31 32 32 38 Z" fill="#5fa843"/>`;
+  }else if(name==='Bronze'||name==='Silver'||name==='Gold'){
+    const n=name==='Bronze'?1:name==='Silver'?2:3;
+    body=`<path d="${shield}" fill="url(#${p}g)" stroke="${lo}" stroke-width="1.2"/><path d="${inner}" fill="url(#${p}i)"/>${chev(n,n===3?46:40)}
+      ${name==='Gold'?`<path d="M32 13 l2.2 4.6 5 .6-3.7 3.4 1 5-4.5-2.5-4.5 2.5 1-5-3.7-3.4 5-.6z" fill="${sh}" filter="url(#${p}f)"/>`:''}
+      <path d="M32 4 L54 12 L54 18 C40 14 24 14 10 18 L10 12 Z" fill="#fff" opacity=".18"/>`;
+  }else if(name==='Platinum'){
+    body=`<g fill="url(#${p}g)" stroke="${lo}" stroke-width="1"><path d="M12 22 C6 22 2 28 2 34 C6 31 9 31 12 33 C7 35 5 40 6 45 C10 41 13 40 16 41 Z"/><path d="M52 22 C58 22 62 28 62 34 C58 31 55 31 52 33 C57 35 59 40 58 45 C54 41 51 40 48 41 Z"/></g>
+      <path d="${shield}" fill="url(#${p}g)" stroke="${lo}" stroke-width="1.2"/><path d="${inner}" fill="url(#${p}i)"/>${chev(3,46)}
+      <path d="M32 12 l2.6 5.4 5.9.7-4.4 4 1.2 5.8-5.3-2.9-5.3 2.9 1.2-5.8-4.4-4 5.9-.7z" fill="${sh}" filter="url(#${p}f)"/>`;
+  }else if(name==='Diamond'){
+    body=`<circle cx="32" cy="32" r="28" fill="url(#${p}r)"/>
+      <path d="M18 14 L46 14 L58 26 L32 58 L6 26 Z" fill="url(#${p}g)" stroke="${lo}" stroke-width="1.2" stroke-linejoin="round"/>
+      <g fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="1"><path d="M6 26 L58 26"/><path d="M18 14 L24 26 L32 58 L40 26 L46 14"/><path d="M24 26 L32 14 L40 26"/></g>
+      <path d="M18 14 L32 14 L24 26 L6 26 Z" fill="#fff" opacity=".35"/>
+      <path d="M50 8 l1.2 3 3 1.2-3 1.2-1.2 3-1.2-3-3-1.2 3-1.2z" fill="#fff" filter="url(#${p}f)"/>`;
+  }else{ // Vibranium
+    body=`<circle cx="32" cy="32" r="30" fill="url(#${p}r)" class="rk-pulse"/>
+      <path d="M32 3 L57 17.5 L57 46.5 L32 61 L7 46.5 L7 17.5 Z" fill="url(#${p}i)" stroke="url(#${p}g)" stroke-width="2.6"/>
+      <path d="M32 11 L50 21.5 L50 42.5 L32 53 L14 42.5 L14 21.5 Z" fill="none" stroke="${mid}" stroke-opacity=".6" stroke-width="1"/>
+      <g filter="url(#${p}f)" stroke="${sh}" stroke-width="1.6" stroke-linecap="round" fill="none" class="rk-energy"><path d="M32 18 L32 26 M32 38 L32 46 M20 25 L26 29 M38 35 L44 39 M44 25 L38 29 M26 35 L20 39"/></g>
+      <path d="M32 24 L39 28 L39 36 L32 40 L25 36 L25 28 Z" fill="${mid}" stroke="${sh}" stroke-width="1.2" filter="url(#${p}f)"/>
+      <circle cx="32" cy="32" r="3" fill="${sh}"/>`;
+  }
+  return`<svg class="rank-ico ${cls||''}" viewBox="0 0 64 64" role="img" aria-label="${name} rank">${defs}${body}</svg>`;
+}
+
 function legendUp(){SFX.levelUp();setTimeout(()=>SFX.bonus(),500);buzz([40,60,40,60,40,60,220]);overlay('lvlup legend-ov',`<div class="eyebrow">New rank</div><div class="moose-wrap"><span class="rays"></span>${mooseSVG('big')}</div><h2 style="color:${RANKCOL.Legend}">Legend</h2><p>You hit ${LEGEND_XP.toLocaleString()} XP. Keep doing your tasks to stay a Legend!</p>`);confetti(2)}
-function levelUp(L){SFX.levelUp();buzz([30,60,30,60,140]);overlay('lvlup',`<div class="eyebrow">Level up</div><div class="huge num"><span class="rays"></span>${L}</div><h2>${esc(titleFor(L,S.xp))}</h2><p>${xpFor(L+1)-S.xp} XP to level ${L+1}.</p>`);confetti(1.4)}
+function levelUp(L){SFX.levelUp();buzz([30,60,30,60,140]);const rkN=titleFor(L,S.xp),rkOld=titleFor(L-1,S.xp-1);overlay('lvlup',`<div class="eyebrow">${rkN!==rkOld?'New rank!':'Level up'}</div><div class="moose-wrap rk-wrap"><span class="rays"></span>${rankSVG(rkN,'big')}</div><h2 style="color:${RANKCOL[rkN]}">${esc(rkN)} · Level ${L}</h2><p>${xpFor(L+1)-S.xp} XP to level ${L+1}.</p>`);confetti(1.4)}
 function levelDown(d){SFX.levelDown();buzz([120,80,200]);overlay('lvldown',`<div class="eyebrow">Level lost</div><div class="huge num">${d.to}</div><h2>Down from level ${d.from}</h2><p>You missed ${d.missed} days in a row. Finish today’s routine to stop the slide and earn the Comeback badge.</p>`)}
 let toastQ=Promise.resolve();
 function toast(icon,title,sub){toastQ=toastQ.then(()=>new Promise(res=>{const t=$('#toast');t.innerHTML=`${icon}<div><b>${esc(title)}</b><span>${esc(sub)}</span></div>`;
@@ -3618,14 +3687,19 @@ function cloudJoinCard(asRole){
   return`<div class="ed-row" style="margin-top:12px"><input class="inp" id="fam-code" maxlength="6" placeholder="Family code" style="text-transform:uppercase;letter-spacing:.2em"><button class="btn primary" data-act="sbjoin" data-v="${asRole}">Join</button></div>`;
 }
 /* ================= Boot ================= */
+const XP_RESET='zero-2026-10-30';
+function xpReset(){if(S.xpReset===XP_RESET)return false;S.xpReset=XP_RESET;S.xp=0;Object.values(S.history||{}).forEach(h=>{if(h)h.x=0});
+  S.decay={applied:0};S.flags=S.flags||{};S.flags.legend=false;S.flags.demoted=false;S.missChk=addDays(todayKey(),-1);S.lbHidden=false;shownXP=0;return true}
 function boot(withDecay=true,quiet=false){
   ensureToday();
+  const wasReset=xpReset();if(wasReset)save();
   if(!busy&&(S.chat||[]).length){archiveChat();save()}
   const d=withDecay&&R0()==='me'?applyDecay():null;
   const mp=withDecay?applyMissPenalty():null;
   if(d||mp)save();
   {const h=location.hash.slice(1);if(h&&(TABS.me.some(([k])=>k===h)||h==='newtab'))tab=h}
   renderTabs();render();renderHeader();try{NOTIF.sync()}catch(e){}
+  if(wasReset&&!quiet&&R0()==='me')setTimeout(()=>toast(rankSVG('Wood','toast-ico'),'Fresh start: everyone is at 0 XP','New ranks are here. Climb from Wood to Legend!'),700);
   if(mp)setTimeout(()=>{SFX.levelDown();toast(medal('−',false),`−${mp.lost} XP`,`${mp.undone} task${mp.undone>1?'s':''} ${mp.days>1?`over ${mp.days} days were`:mp.undone>1?'were':'was'} left undone.${mp.to<mp.from?` You dropped to level ${mp.to}.`:''}${mp.rankTo!==mp.rankFrom?` Rank: ${mp.rankTo}.`:''}`)},d&&d.to?3200:600);
   if(d&&d.to)setTimeout(()=>levelDown(d),400);
   else if(d&&d.broke&&!quiet)toast(medal('0',false),'Streak reset','You missed two days in a row.');
