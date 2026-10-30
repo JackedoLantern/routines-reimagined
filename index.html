@@ -15,7 +15,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Routines">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
-<script>window.RR_STANDALONE=true;window.RR_VERSION='474225e1fa';</script>
+<script>window.RR_STANDALONE=true;window.RR_VERSION='8f70ce6bd3';</script>
 <script>window.RR_SUPABASE={url:'https://uszalonpjyssvvsikzvg.supabase.co',key:'sb_publishable_w-5rI0R9ht2-HAr5HghM0w_-3HYiAEg'};</script>
 <script src="supabase.js"></script>
 </head>
@@ -1190,7 +1190,7 @@ function md(t){
   h=h.replace(/(?:<li>.*<\/li>\n?)+/g,m=>'<ul>'+m.replace(/\n/g,'')+'</ul>');
   return h.replace(/\n{2,}/g,'<br><br>').replace(/\n/g,'<br>');
 }
-const TASK_XP=3,TASK_CAP=100,SEC_XP=5,FAST_XP=2;
+const TASK_XP=3,TASK_CAP=100,SEC_XP=5;
 
 /* ================= State ================= */
 const KEY='routines-better-v1';
@@ -1796,9 +1796,9 @@ function viewDay(){
   if(sc.example)h+=banner('info','This is an example schedule.','Edit it, ask Skeefo to build one for you, or let a parent set it.',`<button class="btn primary act" data-go="skeefo">Ask Skeefo</button>`);
   else if(sc.by==='parent')h+=banner('info','Your parent set this schedule.',lockedForMe?'Only your parent can change it. You can still check things off.':'You can still edit it.');
   h+=`<section class="card"><div class="day"><div style="min-width:0"><div class="label">${new Date().toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'})} · ${sc._custom?'custom for '+DAYFULL[tw]:'same as every day'}</div><h2>My schedule</h2>
-    <div class="meta"><span class="chip xp">+${TASK_XP} XP per task</span><span class="chip xp">+${SEC_XP} per finished section</span><span class="chip xp">⚡ +${FAST_XP} if done under 1 min</span>${next?`<span class="chip">Next: ${esc(next.title)}${next.time?' · '+hm(next.time):''}</span>`:''}</div></div>
+    <div class="meta"><span class="chip xp">+${TASK_XP} XP per task</span><span class="chip xp">+${SEC_XP} per finished section</span>${next?`<span class="chip">Next: ${esc(next.title)}${next.time?' · '+hm(next.time):''}</span>`:''}</div></div>
     <div class="ring ${pct===1?'full':''}"><svg viewBox="0 0 84 84"><circle class="trk" cx="42" cy="42" r="36"/><circle class="bar" cx="42" cy="42" r="36" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-pct)}"/></svg><div><div><b class="num">${dn}/${all.length}</b><span>done</span></div></div></div></div>
-    <div class="dayfoot"><span class="note">Tap Start when you begin a task so ${famOK?'your parent':'you'} can see how long it took.</span>
+    <div class="dayfoot"><span class="note">Check things off as you finish them for XP.</span>
     <div class="row-act"><button class="btn sm ghost" data-act="yetitoggle" aria-pressed="${S.yeti!==false}" title="Task animations">✨ Animations ${S.yeti!==false?'on':'off'}</button><button class="btn" data-act="edit" ${lockedForMe?'disabled title="Your parent locked this schedule"':''}>Edit ${DAYFULL[tw]}</button></div></div></section>`;
   for(const sec of sc.sections){
     const sd=sec.tasks.filter(k=>taskState(k,log).d).length;
@@ -1822,9 +1822,9 @@ function taskRow(k,log){
   const when=[k.time?hm(k.time):'',k.min?`~${k.min} min`:''].filter(Boolean).join(' · ');
   const right=wk?`<button class="btn sm" data-go="workout">${st.d?'View':'Open'}</button>`
     :st.auto?`<button class="btn sm" data-go="${esc(k.link)}">Open</button>`
-    :st.d?`<span class="xpv dose">+${(log[k.id]&&log[k.id].g)||TASK_XP} XP${log[k.id]&&log[k.id].fast?' ⚡':''}</span>`
+    :st.d?`<span class="xpv dose">+${(log[k.id]&&log[k.id].g)||TASK_XP} XP</span>`
     :st.s?`<span class="pulse" aria-hidden="true"></span>`
-    :`<button class="btn sm" data-act="start" data-id="${k.id}">Start</button>`;
+    :'';
   return`<div class="ex task ${st.d?'done':''} ${wk?'wk':''}" data-id="${k.id}">
     ${wk?`<button class="chk" data-go="workout" aria-label="Open today’s workout"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button>`
       :`<button class="chk" data-act="task" data-id="${k.id}" aria-pressed="${!!st.d}" aria-label="Mark ${esc(k.title)} done"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button>`}
@@ -2235,7 +2235,7 @@ const KB=[
   {re:['cardio','run','running','stamina','endurance','jog'],a:()=>'Build stamina slowly: start with **easy efforts you can talk through**, then add one harder interval day a week. Increase total time by about 10% a week. Good shoes help, and the endurance goal gives you more cardio days.'},
   {re:['how much exercise','how often','how many days','how long should'],a:()=>'Rough guidelines:\n- **Kids and teens:** about **60 minutes of activity a day**, with muscle and bone strengthening 3 days a week\n- **Adults:** **150+ minutes a week** of moderate activity plus 2 strength days\n\nYour daily routine plus normal moving around gets you there.'},
   {re:['rank','ranks','wood','bronze','silver','gold','platinum','diamond','vibranium','legend','lose xp','losing xp','lost xp'],a:()=>`Ranks go **Wood** (level 1), **Bronze** (2), **Silver** (3), **Gold** (4), **Platinum** (5), **Diamond** (6) and **Vibranium** (7). Reach **${LEGEND_XP.toLocaleString()} XP** to become a **Legend**! Level 2 takes 100 XP, and each level after costs 50 more. Careful: every task you leave undone costs **${MISS_XP} XP** the next day (up to ${MISS_CAP} a day). You’re **${titleFor(lvl(S.xp),S.xp)}** right now with ${S.xp.toLocaleString()} XP.`},
-  {re:['xp','level up','levels','how do i level','points'],a:()=>`You earn XP for each exercise (+${XP_MAIN} main, +${XP_SIDE} warm-up/cool-down), a **${BONUS} XP bonus** for finishing the routine (bigger with a longer streak), **+${TASK_XP}** per task on My schedule (⚡ **+${FAST_XP}** more if you tap Start and finish it in under a minute) and **+${SEC_XP}** for finishing a section. Levels get harder as you go.`},
+  {re:['xp','level up','levels','how do i level','points'],a:()=>`You earn XP for each exercise (+${XP_MAIN} main, +${XP_SIDE} warm-up/cool-down), a **${BONUS} XP bonus** for finishing the routine (bigger with a longer streak), **+${TASK_XP}** per task on My schedule and **+${SEC_XP}** for finishing a section. Levels get harder as you go.`},
   {re:['leaderboard','rank','ranking','compete','friends'],a:()=>'The leaderboard shows everyone you share Routines Reimagined with who signs in and trains. Rank by **XP**, **streak** or **workouts this week** on the Ranks tab.'},
   {re:['parent','mom','dad','guardian'],a:()=>'A parent can follow along: share this page with them from the Share menu with **edit access**. They pick “I’m a parent” on the Me tab to see your daily report, how long tasks took, and to set your schedule.'},
   {re:['remember','what did we talk','what did i say','last time','earlier','before i cleared'],a:()=>{const u=(S.mem||[]).filter(m=>m.r==='u').slice(-4).map(m=>m.t.slice(0,60));
@@ -2379,7 +2379,7 @@ const ACT={
     if(f.k.kind==='workout')throw new Error('Your workout gets checked off when you finish every move on the Workout tab.');
     ensureToday();const log=S.dayLog[todayKey()]||{};
     if(log[f.k.id]&&log[f.k.id].d)return`**${esc(f.k.title)}** is already done. Nice!`;
-    taskToggle(f.k.id,$('.composer')||document.body);const e2=(S.dayLog[todayKey()]||{})[f.k.id]||{};return`Checked off **${esc(f.k.title)}**! +${e2.g||TASK_XP} XP${e2.fast?' (⚡ speed bonus!)':''}.`;
+    taskToggle(f.k.id,$('.composer')||document.body);const e2=(S.dayLog[todayKey()]||{})[f.k.id]||{};return`Checked off **${esc(f.k.title)}**! +${e2.g||TASK_XP} XP.`;
   },
   profile(ch){
     if(R0()==='parent')throw new Error('Workout settings belong to your kid’s own app.');
@@ -3108,7 +3108,7 @@ function viewProgress(){
   `<section class="card"><div class="label">Rank ladder</div><div class="ladder">${ladder}</div>
     <ul class="rules">
       <li><span>1</span><div>Every exercise earns XP. Finishing the whole routine earns a ${BONUS} XP bonus, multiplied by the streak (up to ×2.0 at 10 days).</div></li>
-      <li><span>2</span><div>Tasks on My schedule earn ${TASK_XP} XP each (up to ${TASK_CAP} a day), plus ${SEC_XP} XP for finishing a whole section. Tap <b>Start</b> and finish a task in under a minute for ⚡ ${FAST_XP} extra XP.</div></li>
+      <li><span>2</span><div>Tasks on My schedule earn ${TASK_XP} XP each (up to ${TASK_CAP} a day), plus ${SEC_XP} XP for finishing a whole section.</div></li>
       <li><span>3</span><div>One rest day is allowed. Missing two days in a row resets the streak to zero.</div></li>
       <li><span>4</span><div>Level 2 takes 100 XP, and each level after costs 50 XP more than the last (150, 200, 250…). Ranks: Wood, Bronze, Silver, Gold, Platinum, Diamond, then Vibranium at level 7. Hit ${LEGEND_XP.toLocaleString()} XP to become a <b>Legend</b>.</div></li>
       <li><span>5</span><div>Each task left undone on My schedule costs ${MISS_XP} XP the next day (up to ${MISS_CAP} XP a day). You can drop a level or lose Legend this way.</div></li>
@@ -3327,8 +3327,8 @@ function taskToggle(id,btn){
   const e=log[id]||(log[id]={}),h=S.history[t]||(S.history[t]={x:0,c:0}),L0=lvl(S.xp),rect=btn.getBoundingClientRect();
   let bonus=0;
   if(e.d){SFX.uncheck();delete e.d;delete e.fast;if(e.g){S.xp=Math.max(0,S.xp-e.g);h.x=Math.max(0,h.x-e.g);log._x-=e.g;e.g=0}}
-  else{e.d=Date.now();{const yk=sched().sections.flatMap(x=>x.tasks).find(x=>x.id===id);if(yk&&yk.kind!=='workout')setTimeout(()=>yetiInline(yk.id,yk.title),40)}SFX.check(Object.keys(log).filter(x=>x[0]!=='_'&&log[x].d).length-1);setTimeout(SFX.coin,90);const fast=!!(e.s&&e.d-e.s<60000),g=Math.min(TASK_XP+(fast?FAST_XP:0),Math.max(0,TASK_CAP-log._x));
-    if(g){e.g=g;e.fast=fast?1:0;log._x+=g;S.xp+=g;h.x+=g;floatXP(rect,'+'+g+' XP'+(fast&&g>TASK_XP?' ⚡':''))}sparks(rect);noteCheck();
+  else{e.d=Date.now();{const yk=sched().sections.flatMap(x=>x.tasks).find(x=>x.id===id);if(yk&&yk.kind!=='workout')setTimeout(()=>yetiInline(yk.id,yk.title),40)}SFX.check(Object.keys(log).filter(x=>x[0]!=='_'&&log[x].d).length-1);setTimeout(SFX.coin,90);const g=Math.min(TASK_XP,Math.max(0,TASK_CAP-log._x));
+    if(g){e.g=g;log._x+=g;S.xp+=g;h.x+=g;floatXP(rect,'+'+g+' XP')}sparks(rect);noteCheck();
     {const k=sched().sections.flatMap(x=>x.tasks).find(x=>x.id===id);if(k&&k.min>=10&&e.s&&e.d-e.s<k.min*60000*.25)flag('fast_task',`“${k.title}” took ${dur(e.d-e.s)} (planned ${k.min} min)`);
      const quick=Object.keys(log).filter(x=>x[0]!=='_'&&log[x].d&&e.d-log[x].d<60000).length;if(quick>=4)flag('bulk',`Checked off ${quick} tasks within one minute`)}
     const sec=sched().sections.find(s=>s.tasks.some(k=>k.id===id));
