@@ -15,7 +15,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Routines">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
-<script>window.RR_STANDALONE=true;window.RR_VERSION='38d2fc790d';</script>
+<script>window.RR_STANDALONE=true;window.RR_VERSION='1a8f96a76b';</script>
 <script>window.RR_SUPABASE={url:'https://uszalonpjyssvvsikzvg.supabase.co',key:'sb_publishable_w-5rI0R9ht2-HAr5HghM0w_-3HYiAEg'};</script>
 <script src="supabase.js"></script>
 </head>
@@ -492,6 +492,10 @@ html{scrollbar-color:#34343A #09090A}
 .kid-today,.rule-chips{display:flex;flex-wrap:wrap;gap:6px}
 .chip.bad{background:var(--bad-soft);color:var(--bad)}
 .row-act{display:flex;gap:6px}
+.lnk-chip{display:inline-flex;align-items:center;gap:2px;margin-left:6px;padding:2px 8px;border-radius:999px;border:1px solid var(--lvl-soft);background:var(--lvl-soft);color:var(--lvl);font:600 11px/1.5 var(--f-body);cursor:pointer;vertical-align:middle;white-space:nowrap}
+.lnk-chip:active{transform:scale(.95)}
+.lnk-row{grid-column:1/-1;display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);margin:-2px 0 6px}
+.lnk-row .inp{flex:1;padding:6px 10px;font-size:13px}
 .name-row{display:flex;gap:8px;margin-top:12px}.name-row .inp{flex:1;min-width:0}
 @media(max-width:420px){.name-row{flex-direction:column}.name-row .btn{width:100%}}
 .daystrip{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;margin:0 0 12px}
@@ -1367,6 +1371,19 @@ function viewDiet(){
 const BUILTIN=new Set(['workout','day','diet','skeefo','ranks','me','family','report','schedule','newtab']);
 const ctab=id=>(S.tabs||[]).find(x=>x.id===id);
 const findTab=q=>{q=nrm(q).replace(/^(the|my)\s+/,'').replace(/\s+tab$/,'');return(S.tabs||[]).find(x=>nrm(x.name)===q)||(S.tabs||[]).find(x=>nrm(x.name).includes(q)||q.includes(nrm(x.name)))};
+/* ---- linking schedule tasks to tabs ---- */
+const LINKABLE=()=>{const b=[['workout','Workout'],['diet','Diet'],['skeefo','Skeefo'],['ranks','Ranks'],['family','Family'],['me','Me']];return R0()==='parent'?b:[...b,...(S.tabs||[]).map(t=>[t.id,t.name])]};
+function tabLinkName(id){const f=LINKABLE().find(x=>x[0]===id);return f?f[1]:(String(id||'').startsWith('c_')?'Their tab':'')}
+function linkAutoDone(k){if(!k.link||k.kind==='workout'||R0()==='parent')return 0;
+  try{if(k.link==='workout')return S.today&&S.today.complete?(S.today.end||Date.now()):0;
+    if(k.link==='diet'){const m=dietDay().m||{};return m.b&&m.l&&m.d?Math.max(+m.b||0,+m.l||0,+m.d||0)||1:0}
+    if(String(k.link).startsWith('c_')){const t=ctab(k.link),td=todayKey();return t&&t.items.length&&t.items.every(x=>x.d===td)?1:0}}catch(e){}
+  return 0}
+const LINKAUTO=id=>id==='workout'?'when you finish your workout':id==='diet'?'when you log breakfast, lunch and dinner':String(id).startsWith('c_')?'when everything on that tab is checked':'';
+function resolveLink(q){q=nrm(q).replace(/^(the|my|your)\s+/,'').replace(/\s+(tab|page|section)$/,'').trim();
+  const syn={workouts:'workout','work out':'workout','working out':'workout',exercise:'workout',training:'workout',gym:'workout',food:'diet',meals:'diet','meal plan':'diet','diet plan':'diet',eating:'diet',nutrition:'diet',leaderboard:'ranks',rank:'ranks',rankings:'ranks',ranking:'ranks',profile:'me',settings:'me',account:'me',coach:'skeefo',ai:'skeefo',chat:'skeefo',group:'family'};
+  q=syn[q]||q;const b=LINKABLE().find(([id,n])=>id===q||nrm(n)===q);if(b)return b[0];
+  const c=R0()==='parent'?null:findTab(q);return c?c.id:null}
 const TABACT={
   create({name,items}){name=String(name||'').trim().replace(/^["“']|["”']$/g,'').slice(0,18);if(!name)throw new Error('What should the tab be called?');
     S.tabs=S.tabs||[];const builtin=[...TABS.me,...TABS.parent,['diet','Diet']].some(([,n])=>n.toLowerCase()===name.toLowerCase());
@@ -1685,7 +1702,7 @@ function viewToday(){
 /* ---------- My schedule ---------- */
 function taskState(k,log){
   if(k.kind==='workout')return{d:S.today.complete?S.today.end||1:0,s:S.today.start||0};
-  const e=log[k.id]||{};return{d:e.d||0,s:e.s||0};
+  const e=log[k.id]||{},a=e.d?0:linkAutoDone(k);return{d:e.d||a||0,s:e.s||0,auto:!!a};
 }
 function viewDay(){
   ensureToday();
@@ -1716,19 +1733,21 @@ function taskRow(k,log){
   const st=taskState(k,log),now=Date.now(),wk=k.kind==='workout';
   const late=!st.d&&k.time&&now>hmToday(k.time)+Math.max(15,k.min||0)*60000;
   let status='';
-  if(st.d&&st.s)status=`Done ${clock(st.d)} · took ${dur(st.d-st.s)}`;
+  if(st.auto)status=`Done on ${esc(tabLinkName(k.link))}`;
+  else if(st.d&&st.s)status=`Done ${clock(st.d)} · took ${dur(st.d-st.s)}`;
   else if(st.d)status=`Done ${clock(st.d)}`;
   else if(st.s)status=`Started ${clock(st.s)} · <span class="live" data-since="${st.s}">${mmss(now-st.s)}</span>`;
   else if(late)status=`<span class="late">Running late</span>`;
   const when=[k.time?hm(k.time):'',k.min?`~${k.min} min`:''].filter(Boolean).join(' · ');
   const right=wk?`<button class="btn sm" data-go="workout">${st.d?'View':'Open'}</button>`
+    :st.auto?`<button class="btn sm" data-go="${esc(k.link)}">Open</button>`
     :st.d?`<span class="xpv dose">+${TASK_XP} XP</span>`
     :st.s?`<span class="pulse" aria-hidden="true"></span>`
     :`<button class="btn sm" data-act="start" data-id="${k.id}">Start</button>`;
   return`<div class="ex task ${st.d?'done':''} ${wk?'wk':''}" data-id="${k.id}">
     ${wk?`<button class="chk" data-go="workout" aria-label="Open today’s workout"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button>`
       :`<button class="chk" data-act="task" data-id="${k.id}" aria-pressed="${!!st.d}" aria-label="Mark ${esc(k.title)} done"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button>`}
-    <div class="exinfo static"><span class="exn">${esc(k.title)}${wk?' <span class="tag">Workout</span>':''}</span><span class="cue">${esc(when)}${when&&status?' · ':''}${status}</span></div>
+    <div class="exinfo static"><span class="exn">${esc(k.title)}${wk?' <span class="tag">Workout</span>':''}${!wk&&k.link&&tabLinkName(k.link)?` <button class="lnk-chip" data-go="${esc(k.link)}" aria-label="Open the ${esc(tabLinkName(k.link))} tab">↗ ${esc(tabLinkName(k.link))}</button>`:''}</span><span class="cue">${esc(when)}${when&&status?' · ':''}${status}</span></div>
     <div>${right}</div></div>`;
 }
 function tick(){document.querySelectorAll('[data-since]').forEach(e=>e.textContent=mmss(Date.now()-+e.dataset.since))}
@@ -1739,7 +1758,7 @@ function viewEditor(){
   const parent=R0()==='parent',wd=draft._wd??((new Date().getDay()+6)%7),raw=rawSched(),cust=Object.keys(raw.days||{}).map(Number).filter(d=>d!==wd).sort();
   let h=`<section class="card"><div class="ed-head"><div><div class="label">Editing ${DAYFULL[wd]}${draft._custom?' · custom day':''}</div><h3 class="h3">${parent?esc(kidName(SEL))+'’s schedule':'Your schedule'}</h3></div>
     ${parent?`<label class="switch"><input type="checkbox" id="ed-lock" data-ed="lock" ${draft.locked?'checked':''}><span></span>Lock it so only you can change it</label>`:''}</div>
-    <p class="note">Sections group your day. Each task can have a start time and how many minutes it should take.</p><div class="ed">`;
+    <p class="note">Sections group your day. Each task can have a start time, how many minutes it takes, and a link to another tab. Linked tasks get a shortcut, and Workout, Diet and your own tabs check them off for you.</p><div class="ed">`;
   draft.sections.forEach((s,si)=>{
     h+=`<div class="ed-sec"><div class="ed-row"><input class="inp sec" id="ed-${s.id}-name" data-ed="sec" data-si="${si}" value="${esc(s.name)}" placeholder="Section name" aria-label="Section name">
       <button class="icon-btn" data-act="delsec" data-si="${si}" aria-label="Delete section ${esc(s.name)}">✕</button></div>
@@ -1748,7 +1767,8 @@ function viewEditor(){
       h+=`<div class="ed-task">${k.kind==='workout'?`<div class="inp ro">Daily workout <span class="tag">linked</span></div>`:`<input class="inp" id="ed-${k.id}-title" data-ed="title" data-si="${si}" data-ti="${ti}" value="${esc(k.title)}" placeholder="Task" aria-label="Task name">`}
         <input class="inp" type="time" id="ed-${k.id}-time" data-ed="time" data-si="${si}" data-ti="${ti}" value="${esc(k.time||'')}" aria-label="Start time">
         <div class="minbox"><input class="inp" type="number" min="1" max="240" id="ed-${k.id}-min" data-ed="min" data-si="${si}" data-ti="${ti}" value="${k.min||''}" aria-label="Minutes"><span>min</span></div>
-        <button class="icon-btn" data-act="deltask" data-si="${si}" data-ti="${ti}" aria-label="Delete task">✕</button></div>`;
+        <button class="icon-btn" data-act="deltask" data-si="${si}" data-ti="${ti}" aria-label="Delete task">✕</button>
+        ${k.kind==='workout'?'':`<label class="lnk-row"><span>Link to</span><select class="inp lnk-sel" id="ed-${k.id}-link" data-ed="link" data-si="${si}" data-ti="${ti}" aria-label="Link ${esc(k.title||'task')} to a tab"><option value="">No link</option>${LINKABLE().concat(k.link&&!LINKABLE().some(x=>x[0]===k.link)?[[k.link,tabLinkName(k.link)]]:[]).map(([id,n])=>`<option value="${esc(id)}" ${k.link===id?'selected':''}>${esc(n)} tab</option>`).join('')}</select></label>`}</div>`;
     });
     h+=`</div><button class="btn sm ghost" data-act="addtask" data-si="${si}">+ Add task</button></div>`;
   });
@@ -1763,7 +1783,7 @@ document.addEventListener('input',e=>{
   const si=+t.dataset.si,ti=+t.dataset.ti,f=t.dataset.ed;
   if(f==='lock')draft.locked=t.checked;
   else if(f==='sec')draft.sections[si].name=t.value;
-  else{const k=draft.sections[si].tasks[ti];if(f==='min')k.min=Math.max(0,Math.min(240,parseInt(t.value)||0));else k[f]=t.value}
+  else{const k=draft.sections[si].tasks[ti];if(f==='link'){if(t.value)k.link=t.value;else delete k.link;return}if(f==='min')k.min=Math.max(0,Math.min(240,parseInt(t.value)||0));else k[f]=t.value}
 });
 document.addEventListener('change',e=>{if(draft&&e.target.id==='ed-lock')draft.locked=e.target.checked});
 
@@ -1887,7 +1907,7 @@ async function manageLink(){
 function scrollChat(instant){const c=$('#chat');if(!c)return;const last=c.lastElementChild;if(last)last.scrollIntoView({block:'end',behavior:instant||reduced?'auto':'smooth'})}
 function ctx(){
   const p=S.profile,sc=sched(),R=(ensureToday(),routine());
-  const fmtS=x=>x.sections.map(s=>`${s.name}: `+s.tasks.map(k=>`${k.title}${k.time?' at '+k.time:''}${k.min?' ('+k.min+' min)':''}`).join('; ')).join('\n'),rw=rawSched();
+  const fmtS=x=>x.sections.map(s=>`${s.name}: `+s.tasks.map(k=>`${k.title}${k.time?' at '+k.time:''}${k.min?' ('+k.min+' min)':''}${k.link?' [linked to '+tabLinkName(k.link)+' tab]':''}`).join('; ')).join('\n'),rw=rawSched();
   const schedTxt=`Every-day schedule (today is ${DAYFULL[(new Date().getDay()+6)%7]}${sc._custom?', which has its own custom schedule shown after':''}):\n`+fmtS(rw)+Object.keys(rw.days||{}).map(d=>`\nCustom ${DAYFULL[d]} schedule:\n`+fmtS(rw.days[d])).join('');
   if(R0()==='parent'){const r=curKid();
     return`You are talking to a PARENT who uses the app to set their kid's daily schedule and see reports.\nKid's name: ${r&&r.name||'unknown'}. Kid's level ${r?r.level:'?'}, streak ${r?r.streak:'?'} days, ${r?r.total:'?'} workouts done.\nKid's current schedule:\n${schedTxt||'(empty)'}`}
@@ -2178,6 +2198,19 @@ const ACT={
       if(!s){s={id:rid(),name:'To do',tasks:[]};sc.sections.push(s);made=true}
       s.tasks.push({id:rid(),title:title.replace(/^\w/,c=>c.toUpperCase()),time:tm||'',min:Math.max(1,Math.min(240,parseInt(min)||10))});
       return`Done! I added **${esc(title)}** to ${made?'a new ':'your '}**${esc(s.name)}**${made?' section':''}${tm?` at ${hm(tm)}`:''}. Check it out on My schedule.`});
+  },
+  linkTask({title,tab}){
+    title=String(title||'').trim().replace(/^["“']|["”']$/g,'');if(!title)throw new Error('Which task should I link?');
+    const id=tab?resolveLink(tab):'';
+    if(tab&&!id)throw new Error(`I couldn’t find a “${String(tab).replace(/\s+tab$/i,'')}” tab. You can link to ${LINKABLE().map(x=>x[1]).join(', ')}.`);
+    return mutSched(sc=>{let f=findTask(sc,title),made=false;
+      if(!f){if(!id)throw new Error(`I couldn’t find “${title}” on your schedule.`);
+        const s=sc.sections.find(x=>/after school|afternoon|midday/i.test(x.name))||sc.sections.at(-1)||(sc.sections.push({id:rid(),name:'To do',tasks:[]}),sc.sections[0]);
+        const k={id:rid(),title:title.replace(/^\w/,c=>c.toUpperCase()).slice(0,40),time:'',min:id==='workout'?(S.profile.minutes||30):15};s.tasks.push(k);f={s,k};made=true}
+      if(f.k.kind==='workout'){if(id==='workout')return`Already done! Your **${esc(f.k.title)}** task is linked to the Workout tab, and it checks itself off when you finish your workout.`;throw new Error('That’s your daily workout, so it stays linked to the Workout tab. Try another task.')}
+      if(!id){delete f.k.link;return`Unlinked **${esc(f.k.title)}**. It’s a normal task again.`}
+      f.k.link=id;const auto=LINKAUTO(id);
+      return`${made?`Added **${esc(f.k.title)}** to ${esc(f.s.name)} and linked it`:`Linked **${esc(f.k.title)}**`} to the **${esc(tabLinkName(id))}** tab! 🔗 Tap **↗ ${esc(tabLinkName(id))}** next to it on My schedule to jump there.${auto?` It checks itself off ${auto}.`:''}`});
   },
   removeTask({title}){
     return mutSched(sc=>{const f=findTask(sc,title);if(!f)throw new Error(`I couldn’t find “${title}” on your schedule.`);
@@ -2706,8 +2739,8 @@ function dayScopeCommand(text,t){
   if(/\b(interview|ask me)\b/.test(t))return null;
   const sc=parseDayScope(' '+text+' ');if(!sc.days&&!sc.all)return null;
   if(/\b(what s|whats|what is|show me|show|list|what do i have|what am i doing|what s on)\b/.test(t)&&/\b(schedule|on|plans?|to do|day)\b/.test(t)&&!/\b(workout|eat|meal|diet|lunch|dinner|breakfast)\b/.test(t)&&sc.days&&sc.days.length===1)return ACT2.listDay(sc.days[0]);
-  if(/\b(train|work ?out|workouts?|exercise|gym|rest day|breakfast|lunch|dinner|snack|meals?|diet|tab)\b/.test(t))return null;
-  if(!/\b(add|put|include|remove|delete|take off|take out|drop|get rid of|move|change|set|schedule|clear|build|make)\b/.test(t))return null;
+  if(!/\b(link|connect|unlink)\b/.test(t)&&/\b(train|work ?out|workouts?|exercise|gym|rest day|breakfast|lunch|dinner|snack|meals?|diet|tab)\b/.test(t))return null;
+  if(!/\b(link|connect|attach|unlink|add|put|include|remove|delete|take off|take out|drop|get rid of|move|change|set|schedule|clear|build|make)\b/.test(t))return null;
   CMDDAYS=sc.all?null:sc.days;
   try{const r=tryCommand(sc.text,true);
     if(r&&typeof r==='object'&&r.sched&&CMDDAYS){r.sched.days=CMDDAYS;r.t=(r.t||'')+` This one is for **${scopeLabel(CMDDAYS)}** only.`;if(r.sched.summary)r.sched.summary=r.t}
@@ -2771,6 +2804,11 @@ function tryCommand(raw,inner){
   // mark done
   m=text.match(/^(?:please\s+)?mark\s+(.+?)\s+(?:as\s+)?(?:done|complete|completed|finished)$/i)||text.match(/^(?:please\s+)?check off\s+(.+)$/i)||text.match(/^i(?:\s+just)?\s+(?:finished|did|completed|am done with|m done with|['’]m done with)\s+(.+)$/i)||text.match(/^done with\s+(.+)$/i);
   if(m&&!/\bworkout plan\b/i.test(m[1])&&!/^(it|that|this|them|everything|all|so much|nothing|good|great|bad)$/i.test(m[1].trim()))return run(ACT.completeTask,{title:m[1].replace(/^(my|the)\s+/i,'')});
+  // link a task to a tab
+  m=text.match(/^(?:please\s+|can you\s+|could you\s+)?(?:link|connect|attach|hook up|tie)\s+(?:the\s+|my\s+)?(.+?)\s+(?:task\s+)?(?:to|with|into)\s+(?:the\s+|my\s+)?(.+?)$/i);
+  if(m&&!/^(skeefo|claude|my account|account)$/i.test(m[1].trim()))return run(ACT.linkTask,{title:m[1],tab:m[2]});
+  m=text.match(/^(?:please\s+)?(?:unlink|disconnect|detach)\s+(?:the\s+|my\s+)?(.+?)(?:\s+(?:from|task).*)?$/i)||text.match(/^(?:please\s+)?remove the link (?:from|on)\s+(?:the\s+|my\s+)?(.+)$/i);
+  if(m&&!/^(skeefo|claude|my account|account|it)$/i.test(m[1].trim()))return run(ACT.linkTask,{title:m[1],tab:''});
   // remove task
   m=text.match(/^(?:please\s+|can you\s+|could you\s+)?(?:remove|delete|take off|take out|drop|get rid of)\s+(.+?)(?:\s+(?:from|off)\s+(?:my\s+|the\s+)?(?:schedule|day|list|.+))?$/i);if(m)return run(ACT.removeTask,{title:m[1]});
   // add task
@@ -2804,6 +2842,7 @@ const TOOLS=()=>[
   {name:'remove_task',description:'Remove a task from the schedule by (part of) its title.',inputSchema:{type:'object',properties:{days:{type:'array',items:{type:'string'},description:'Optional weekdays like ["monday","weekends"]. Leave out to change every day.'},title:{type:'string'}},required:['title']},execute:i=>withDays(i.days,()=>ACT.removeTask(i))},
   {name:'set_task_time',description:'Set or clear (empty string) the time of a task.',inputSchema:{type:'object',properties:{days:{type:'array',items:{type:'string'},description:'Optional weekdays like ["monday","weekends"]. Leave out to change every day.'},title:{type:'string'},time:{type:'string'}},required:['title','time']},execute:i=>withDays(i.days,()=>ACT.setTime(i))},
   {name:'clear_all_times',description:'Remove clock times from every task.',execute:()=>ACT.clearTimes()},
+  {name:'link_task',description:'Link a schedule task to a tab (workout, diet, skeefo, ranks, family, me, or one of the user\'s own tabs by name) so it gets a shortcut and auto-checks from Workout, Diet or custom tabs. Empty tab unlinks. Creates the task if missing.',inputSchema:{type:'object',properties:{days:{type:'array',items:{type:'string'},description:'Optional weekdays. Leave out for every day.'},title:{type:'string'},tab:{type:'string'}},required:['title','tab']},execute:i=>withDays(i.days,()=>ACT.linkTask(i))},
   {name:'add_section',description:'Add a new empty section to the schedule.',inputSchema:{type:'object',properties:{name:{type:'string'}},required:['name']},execute:i=>ACT.addSection(i)},
   {name:'complete_task',description:'Check off a task on today’s schedule for the user (earns XP). Not for the workout.',inputSchema:{type:'object',properties:{title:{type:'string'}},required:['title']},execute:i=>ACT.completeTask(i)},
   {name:'update_profile',description:'Change workout settings. goal: muscle|fat|endurance|mobility|general; level: beginner|intermediate|advanced; equip: none|db|gym; minutes 15-60; age 13-95. Rebuilds today’s workout.',inputSchema:{type:'object',properties:{goal:{type:'string'},level:{type:'string'},equip:{type:'string'},minutes:{type:'number'},age:{type:'number'}}},execute:i=>ACT.profile(i)},
