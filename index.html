@@ -15,7 +15,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Routines">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
-<script>window.RR_STANDALONE=true;</script>
+<script>window.RR_STANDALONE=true;window.RR_VERSION='38d2fc790d';</script>
 <script>window.RR_SUPABASE={url:'https://uszalonpjyssvvsikzvg.supabase.co',key:'sb_publishable_w-5rI0R9ht2-HAr5HghM0w_-3HYiAEg'};</script>
 <script src="supabase.js"></script>
 </head>
@@ -3453,7 +3453,19 @@ document.addEventListener('visibilitychange',()=>{if(!document.hidden&&S.today&&
 </script>
 
 <script>
-if('serviceWorker' in navigator&&location.protocol!=='file:'){window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}))}
+if('serviceWorker' in navigator&&location.protocol!=='file:'){window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).catch(()=>{}))}
+/* auto-update: reload into the newest version when the site changes */
+(function(){if(location.protocol==='file:')return;let busy=false;
+  async function check(){if(busy||document.visibilityState!=='visible')return;busy=true;
+    try{const r=await fetch('version.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const v=(await r.json()).v;
+      if(v&&v!==window.RR_VERSION){let tried='';try{tried=sessionStorage.getItem('rr-upd')||''}catch(e){}
+        if(tried===v)return;try{sessionStorage.setItem('rr-upd',v)}catch(e){}
+        const a=document.activeElement;if(a&&/^(INPUT|TEXTAREA)$/.test(a.tagName)&&a.value){setTimeout(()=>{busy=false;check()},20000);return}
+        try{const reg=navigator.serviceWorker&&await navigator.serviceWorker.getRegistration();if(reg)await reg.update()}catch(e){}
+        location.reload()}}catch(e){}finally{busy=false}}
+  window.addEventListener('load',()=>setTimeout(check,1500));
+  document.addEventListener('visibilitychange',check);window.addEventListener('focus',check);setInterval(check,10*60*1000);
+})();
 </script>
 </body>
 </html>

@@ -1,5 +1,5 @@
 // Routines Reimagined: offline support, reminders, badge and widget
-const CACHE='rr-v5';
+const CACHE='rr-v6';
 const CORE=['./','index.html','manifest.webmanifest','favicon.svg','icon-192.png','icon-512.png','apple-touch-icon.png','widget/today.json','supabase.js'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(CORE)).then(()=>self.skipWaiting()))});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==CACHE&&k!=='rr-data'&&k!=='rr-sent').map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});
