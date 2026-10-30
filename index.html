@@ -774,6 +774,128 @@ body.gated{overflow:hidden}
 .yeti-mini.out,.ym-cap.out{animation:ymOut .35s ease-in both}
 @keyframes ymIn{from{opacity:0;transform:translateY(-50%) scale(.3)}to{opacity:1;transform:translateY(-50%) scale(1)}}
 @keyframes ymOut{to{opacity:0;transform:translateY(-50%) scale(.6)}}
+/* ---------- Object animations ---------- */
+.item-svg{width:100%;height:100%;overflow:visible}
+.item-svg *{transform-box:view-box}
+.item-mini{width:70px;height:62px}
+.item-stage .item-svg{width:150px;height:135px}
+.ist{transform-box:fill-box!important;transform-origin:center;opacity:0;animation:iTw 1.2s ease-out infinite}.ist1{animation-delay:.25s}.ist2{animation-delay:.5s}.ist3{animation-delay:.75s}.ist4{animation-delay:1s}
+@keyframes iTw{0%{opacity:0;transform:scale(.3)}40%{opacity:1;transform:scale(1.2)}100%{opacity:0;transform:scale(.6)}}
+.it-cup .cupg{transform-origin:51px 66px;animation:iTip 2.6s cubic-bezier(.45,0,.25,1) infinite}
+.it-cup .wat{transform-origin:51px 63px;animation:iEmpty 2.6s ease-in-out infinite}
+.it-cup .dp{opacity:0;animation:iSpill 2.6s linear infinite}.it-cup .dp1{animation-delay:.15s}.it-cup .dp2{animation-delay:.3s}
+.it-cup .puddle{transform-origin:30px 82px;animation:iPud 2.6s ease-out infinite}
+@keyframes iTip{0%,12%{transform:rotate(0)}38%,72%{transform:rotate(-78deg)}92%,100%{transform:rotate(0)}}
+@keyframes iEmpty{0%,30%{transform:scaleY(1)}72%,100%{transform:scaleY(.12)}}
+@keyframes iSpill{0%,34%{opacity:0;transform:translateY(0)}38%{opacity:1}52%{opacity:1;transform:translateY(42px)}53%,100%{opacity:0}}
+@keyframes iPud{0%,36%{transform:scaleX(0)}70%,100%{transform:scaleX(1)}}
+.it-bowl .spoon{transform-origin:60px 8px;animation:iScoop 1s ease-in-out infinite}
+.sm{stroke-dasharray:30;animation:iSteam 1.6s ease-in-out infinite}.sm1{animation-delay:.5s}.sm2{animation-delay:1s}
+@keyframes iScoop{0%,100%{transform:rotate(0) translateY(0)}50%{transform:rotate(-22deg) translateY(-6px)}}
+@keyframes iSteam{0%{stroke-dashoffset:30;opacity:0}40%{opacity:.9}100%{stroke-dashoffset:-30;opacity:0}}
+.it-apple .bite{transform-box:fill-box!important;transform-origin:center;transform:scale(0);animation:iBite 2.4s ease-out infinite}.it-apple .b1{animation-delay:.5s}.it-apple .b2{animation-delay:1s}
+.it-apple .appl{transform-origin:50px 76px;animation:iChomp 2.4s ease-in-out infinite}
+.it-apple .crumb{opacity:0;animation:iCrumb 2.4s ease-in infinite}.it-apple .c1{animation-delay:.5s}.it-apple .c2{animation-delay:1s}
+@keyframes iBite{0%,10%{transform:scale(0)}18%,100%{transform:scale(1)}}
+@keyframes iChomp{10%,28%,48%{transform:scale(1)}14%,32%,52%{transform:scale(.94,1.04)}}
+@keyframes iCrumb{0%,12%{opacity:0;transform:translate(0,0)}16%{opacity:1}40%,100%{opacity:0;transform:translate(6px,10px)}}
+.it-toothbrush .tbr{animation:iScrub .22s ease-in-out infinite alternate}
+.bub{opacity:0;animation:iBub 1.4s ease-out infinite}.bu1{animation-delay:.45s}.bu2{animation-delay:.9s}
+@keyframes iScrub{from{transform:translateX(-9px)}to{transform:translateX(9px)}}
+@keyframes iBub{0%{opacity:0;transform:translateY(8px) scale(.5)}30%{opacity:1}100%{opacity:0;transform:translateY(-14px) scale(1.1)}}
+.it-showerhead .dp{animation:iFall .7s linear infinite}.it-showerhead .dp1{animation-delay:.14s}.it-showerhead .dp2{animation-delay:.28s}.it-showerhead .dp3{animation-delay:.42s}.it-showerhead .dp4{animation-delay:.56s}
+.it-showerhead .puddle{transform-origin:50px 84px;animation:iPulse 1.2s ease-in-out infinite}
+@keyframes iFall{from{transform:translateY(0);opacity:1}to{transform:translateY(52px);opacity:0}}
+@keyframes iPulse{50%{transform:scaleX(1.12)}}
+.it-broom .brm{transform-origin:50px 4px;animation:iSweep .6s ease-in-out infinite alternate}
+.dust{animation:iPuff .6s ease-out infinite}.du1{animation-delay:.3s}.du2{animation-delay:.15s}
+@keyframes iSweep{from{transform:rotate(-20deg)}to{transform:rotate(20deg)}}
+@keyframes iPuff{from{transform:scale(.4);opacity:.7}to{transform:translateY(-10px) scale(1.5);opacity:0}}
+.dust,.bub,.crumb{transform-box:fill-box!important;transform-origin:center}
+.it-shirt .shirt{transform-origin:50px 50px;animation:iFold 2.4s ease-in-out infinite}
+@keyframes iFold{0%,15%{transform:scale(1)}40%{transform:scale(.55,1)}65%,85%{transform:scale(.55,.5)}100%{transform:scale(1)}}
+.it-trash .bag{animation:iDrop 2s cubic-bezier(.5,0,.75,0) infinite}.it-trash .lid{transform-origin:24px 47px;animation:iLid 2s ease-in-out infinite}
+@keyframes iDrop{0%{transform:translateY(-6px);opacity:1}45%{transform:translateY(40px);opacity:1}50%,100%{transform:translateY(40px);opacity:0}}
+@keyframes iLid{0%,10%{transform:rotate(0)}20%,45%{transform:rotate(-60deg)}55%,100%{transform:rotate(0)}}
+.it-moon .moon{transform-origin:58px 44px;animation:iRock 3s ease-in-out infinite}
+.zz{opacity:0;animation:iZ 2.4s ease-out infinite}.z1{animation-delay:.7s}.z2{animation-delay:1.4s}
+@keyframes iRock{50%{transform:rotate(10deg)}}
+@keyframes iZ{0%{opacity:0;transform:translateY(6px)}30%{opacity:1}100%{opacity:0;transform:translate(8px,-12px)}}
+.it-book .page{transform-origin:51px 0;animation:iFlip 1.6s ease-in-out infinite}
+@keyframes iFlip{0%,30%{transform:scaleX(1)}70%,100%{transform:scaleX(-1)}}
+.it-pencil .ln{stroke-dasharray:46;animation:iWrite 2.4s linear infinite}
+.it-pencil .pen{animation:iPen 2.4s linear infinite}
+@keyframes iWrite{from{stroke-dashoffset:46}to{stroke-dashoffset:0}}
+@keyframes iPen{0%{transform:translate(-44px,-22px)}33%{transform:translate(0,-22px)}34%{transform:translate(-44px,-10px)}66%{transform:translate(-6px,-10px)}67%{transform:translate(-44px,2px)}100%{transform:translate(-14px,2px)}}
+.it-guitar .gtr{transform-origin:50px 50px;animation:iWob .18s ease-in-out infinite alternate}
+.nt{opacity:0;animation:iZ 1.6s ease-out infinite}.n1{animation-delay:.8s}
+@keyframes iWob{from{transform:rotate(-3deg)}to{transform:rotate(3deg)}}
+.it-dumbbell .db{animation:iLift .7s ease-in-out infinite alternate}
+.sw{opacity:0;animation:iBub 1s ease-out infinite}.sw1{animation-delay:.5s}
+@keyframes iLift{from{transform:translateY(8px)}to{transform:translateY(-16px)}}
+.it-ball .ball{animation:iBounce .8s cubic-bezier(.5,0,.5,1) infinite alternate}.it-ball .bshadow{transform-origin:50px 84px;animation:iShad .8s cubic-bezier(.5,0,.5,1) infinite alternate}
+@keyframes iBounce{from{transform:translateY(0)}to{transform:translateY(40px)}}
+@keyframes iShad{from{transform:scale(.5);opacity:.3}to{transform:scale(1.1);opacity:.6}}
+.it-phone .ph{transform-origin:50px 46px;animation:iRing 1.2s ease-in-out infinite}
+.ring{opacity:0;animation:iRings 1.2s ease-out infinite}.r1{animation-delay:.2s}
+@keyframes iRing{0%,50%,100%{transform:rotate(0)}5%,15%,25%,35%{transform:rotate(-9deg)}10%,20%,30%,40%{transform:rotate(9deg)}}
+@keyframes iRings{0%,50%,100%{opacity:0}10%,40%{opacity:1}}
+.it-laptop .scr{animation:iGlow 1.4s ease-in-out infinite alternate}.it-laptop .code{stroke-dasharray:40;animation:iWrite 2s steps(12) infinite}
+@keyframes iGlow{from{opacity:.25}to{opacity:.6}}
+.it-wateringcan .can{transform-origin:23px 31px;animation:iPour 2.4s ease-in-out infinite}
+.wd{opacity:0;animation:iWd 2.4s linear infinite}.wd1{animation-delay:.12s}.wd2{animation-delay:.24s}
+.it-wateringcan .grow{transform-origin:0 0;animation:iGrow 2.4s ease-in-out infinite}
+@keyframes iPour{0%,10%{transform:rotate(0)}30%,75%{transform:rotate(28deg)}95%,100%{transform:rotate(0)}}
+@keyframes iWd{0%,30%{opacity:0;transform:translate(0,0)}34%{opacity:1}50%{opacity:1;transform:translate(6px,26px)}51%,100%{opacity:0}}
+@keyframes iGrow{0%,30%{transform:scale(.6)}80%,100%{transform:scale(1.08)}}
+.it-pot .lidp{transform-origin:50px 36px;animation:iJig .3s ease-in-out infinite alternate}
+@keyframes iJig{from{transform:translateY(0) rotate(-3deg)}to{transform:translateY(-3px) rotate(3deg)}}
+.it-backpack .bp{transform-origin:50px 74px;animation:iSquash .6s ease-in-out infinite alternate}.it-backpack .zip{stroke-dasharray:24;animation:iWrite 1.2s linear infinite}
+@keyframes iSquash{from{transform:scale(1,1)}to{transform:scale(1.06,.92)}}
+.it-controller .ctl{transform-origin:50px 46px;animation:iWob .3s ease-in-out infinite alternate}
+.btn1{animation:iBlink .4s steps(2) infinite}.btn2{animation:iBlink .4s steps(2) infinite reverse}
+@keyframes iBlink{50%{opacity:.25}}
+.dab{transform-box:fill-box!important;transform-origin:center;transform:scale(0);animation:iDab 2.4s ease-out infinite}.d1{animation-delay:.4s}.d2{animation-delay:.8s}.d3{animation-delay:1.2s}
+.it-paint .pbr{transform-origin:76px 64px;animation:iWob .25s ease-in-out infinite alternate}
+@keyframes iDab{0%,5%{transform:scale(0)}15%,100%{transform:scale(1)}}
+.it-camera .cam{transform-origin:50px 50px;animation:iSnap 1.6s ease-in-out infinite}.it-camera .flash{opacity:0;transform-origin:50px 48px;animation:iFlash 1.6s ease-out infinite}
+@keyframes iSnap{0%,55%,100%{transform:scale(1)}60%{transform:scale(.94)}}
+@keyframes iFlash{0%,58%{opacity:0;transform:scale(.3)}62%{opacity:.95;transform:scale(1)}100%{opacity:0;transform:scale(1.2)}}
+.it-flower .petals{transform-origin:50px 34px;animation:iBloom 2.4s ease-in-out infinite}
+@keyframes iBloom{0%{transform:scale(.4) rotate(0)}50%,100%{transform:scale(1) rotate(60deg)}}
+.it-dog .dog{animation:iHop .35s ease-in-out infinite alternate}.it-dog .tail{transform-origin:23px 50px;animation:iWag .15s ease-in-out infinite alternate}
+@keyframes iHop{from{transform:translateY(0)}to{transform:translateY(-8px)}}
+@keyframes iWag{from{transform:rotate(-20deg)}to{transform:rotate(20deg)}}
+.it-sign .sgn{transform-origin:50px 86px;animation:iSignPop 2.4s cubic-bezier(.2,1.5,.4,1) infinite}
+.it-sign .tick{stroke-dasharray:40;animation:iWrite 2.4s ease-out infinite}
+@keyframes iSignPop{0%{transform:scale(.5) rotate(-8deg)}20%,100%{transform:scale(1) rotate(0)}}
+.it-shoe .shoe{transform-origin:50px 66px;animation:iRun .3s ease-in-out infinite alternate}.spd{stroke-dasharray:18;animation:iSpd .5s linear infinite}.s1{animation-delay:.15s}.s2{animation-delay:.3s}
+@keyframes iRun{from{transform:translateY(0) rotate(-4deg)}to{transform:translateY(-10px) rotate(6deg)}}
+@keyframes iSpd{from{stroke-dashoffset:-18;opacity:1}to{stroke-dashoffset:18;opacity:0}}
+.fp{opacity:0;animation:iFp 2.4s ease-out infinite}.f1{animation-delay:.4s}.f2{animation-delay:.8s}.f3{animation-delay:1.2s}
+@keyframes iFp{0%{opacity:0}10%,70%{opacity:1}100%{opacity:0}}
+.it-disco .disco{transform-origin:50px 2px;animation:iSwing 1s ease-in-out infinite alternate}
+@keyframes iSwing{from{transform:rotate(-10deg)}to{transform:rotate(10deg)}}
+.it-lotus .lotus{transform-origin:50px 56px;animation:iBreath 4s ease-in-out infinite}
+.br{transform-origin:50px 46px;opacity:0;animation:iRingOut 4s ease-out infinite}.br1{animation-delay:2s}
+@keyframes iBreath{50%{transform:scale(1.15)}}
+@keyframes iRingOut{0%{opacity:.8;transform:scale(.5)}100%{opacity:0;transform:scale(1.4)}}
+.it-heart .hrt{transform-origin:50px 50px;animation:iBeat .9s ease-in-out infinite}
+.mh{transform-box:fill-box!important;transform-origin:center;opacity:0;animation:iTw 1.8s ease-out infinite}.mh1{animation-delay:.6s}.mh2{animation-delay:1.2s}
+@keyframes iBeat{0%,40%,100%{transform:scale(1)}15%{transform:scale(1.15)}30%{transform:scale(1.05)}}
+.it-trophy .trp{transform-origin:50px 70px;animation:iHop .5s ease-in-out infinite alternate}
+.it-band .bnd{transform-origin:50px 49px;animation:iStretch .9s ease-in-out infinite alternate}
+@keyframes iStretch{from{transform:scale(.8,1.3)}to{transform:scale(1,.7)}}
+.byok{margin-top:12px;grid-column:1/-1}
+.byok summary{cursor:pointer;font-weight:700;color:var(--lvl);font-size:14px;list-style:none}
+.byok summary::-webkit-details-marker{display:none}
+.byok summary::before{content:"▸ ";}
+.byok[open] summary::before{content:"▾ ";}
+.byok .steps{margin-top:12px}
+.byok a{color:var(--lvl)}
+.byok code{font-family:var(--f-mono);font-size:12px;background:var(--surface-2);padding:1px 5px;border-radius:4px}
+.card.link:has(.byok){grid-template-columns:auto 1fr}
+.plan-days>div.rest{opacity:.55}
 </style>
 
 <header class="board">
@@ -1273,8 +1395,9 @@ function dietPlanCard(){
 /* ================= Routine generator ================= */
 function buildRoutine(p,date,variant){
   const wd=(parseKey(date).getDay()+6)%7;
-  const plan=PLANS[p.goal]||PLANS.general;
-  let [title,cycle,recovery]=plan[wd];
+  if(typeof isTrainDay==='function'&&!isTrainDay(date,p))return restDayRoutine(p,date);
+  const plan=PLANS[p.goal]||PLANS.general,td=trainDays(p);
+  let [title,cycle,recovery]=td.length===7?plan[wd]:(()=>{const ss=plan.filter(x=>!x[2]);return ss[td.indexOf(wd)%ss.length]})();
   const r=rng(hash(date+'|'+variant+'|'+p.goal+p.level+p.equip+p.age+p.minutes));
   const eqOK=p.equip==='gym'?['none','db','gym']:p.equip==='db'?['none','db']:['none'];
   const age=+p.age||28;
@@ -1300,7 +1423,9 @@ function buildRoutine(p,date,variant){
   const warm=shuffle(WARM.filter(x=>!used.has(x))).slice(0,age>=40?3:2).map(id=>item(EXI[id],p,true));
   const cool=shuffle(COOL.filter(x=>!used.has(x))).slice(0,age>=40?2:1).map(id=>item(EXI[id],p,true));
   const rest={muscle:90,fat:30,endurance:30,mobility:20,general:60}[p.goal]||60;
-  return{title,recovery:!!recovery,rest,fromAI,blocks:[{k:'warm',name:'Warm-up',items:warm},{k:'main',name:recovery?'Recovery work':'Main set',items:main},{k:'cool',name:'Cool-down',items:cool}]};
+  const prog=fromAI&&programInfo(date);
+  if(prog&&!prog.done){main.forEach(it=>{if(prog.phase===1)it.dose=String(it.dose).replace(/(\d+)–(\d+) reps/,(m0,a,b)=>`${+a+2}–${+b+2} reps`);else if(prog.phase===2)it.sets=it.sets+1;else if(prog.phase===3)it.sets=Math.max(1,it.sets-1)})}
+  return{title,recovery:!!recovery,rest,fromAI,prog,blocks:[{k:'warm',name:'Warm-up',items:warm},{k:'main',name:recovery?'Recovery work':'Main set',items:main},{k:'cool',name:'Cool-down',items:cool}]};
 }
 function item(e,p,side){
   const age=+p.age||28,g=p.goal;
@@ -1322,7 +1447,7 @@ const routine=()=>buildRoutine(effProfile(),S.today.date,S.today.variant);
 const allItems=r=>r.blocks.flatMap(b=>b.items);
 
 /* ================= Streak + decay ================= */
-function missedDays(){return S.last?Math.max(0,dayDiff(S.last,todayKey())-1):0}
+function missedDays(){return S.last?missedBetween(S.last,todayKey()):0}
 function applyDecay(){
   if(!S.last)return null;
   const missed=missedDays();let broke=false;
@@ -1456,11 +1581,12 @@ function viewToday(){
   const totalXP=items.reduce((a,i)=>a+i.xp,0)+BONUS;
   let h='';
   if(!p.set)h+=banner('info','This routine uses default settings.','Tell Skeefo your goals, or add your age and goal in Me.',`<button class="btn primary act" data-go="skeefo">Ask Skeefo</button>`);
-  h+=statusBanner();
+  if(R.prog&&!R.prog.done&&!R.restDay)h+=banner('info',`Week ${R.prog.week} of ${R.prog.weeks}`,R.prog.tip);
+  if(R.restDay)h+=banner('ok','Rest day 😴','Recovery is part of training. Do the light stretch for bonus XP if you want. Your streak is safe either way.');else h+=statusBanner();
   h+=`<section class="card"><div class="day"><div style="min-width:0">
       <div class="label">${new Date().toLocaleDateString(undefined,{weekday:'long'})} · ${esc(GOALS[p.goal])}</div>
       <h2>${esc(R.title)}</h2>
-      <div class="meta">${R.fromAI?'<span class="chip sk">Skeefo plan</span>':''}<span class="chip">~${p.minutes} min</span><span class="chip">${items.length} moves</span><span class="chip">rest ${R.rest}s</span><span class="chip xp">up to ${totalXP} XP</span></div>
+      <div class="meta">${R.prog?(R.prog.done?'<span class="chip sk">Program complete 🎉</span>':`<span class="chip sk">Week ${R.prog.week} of ${R.prog.weeks}</span>`):R.fromAI?'<span class="chip sk">Skeefo plan</span>':''}<span class="chip">~${p.minutes} min</span><span class="chip">${items.length} moves</span><span class="chip">rest ${R.rest}s</span><span class="chip xp">up to ${totalXP} XP</span></div>
     </div>
     <div class="ring ${pct===1?'full':''}"><svg viewBox="0 0 84 84"><circle class="trk" cx="42" cy="42" r="36"/><circle class="bar" cx="42" cy="42" r="36" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-pct)}"/></svg><div><div><b class="num">${dn}/${items.length}</b><span>done</span></div></div></div></div>
     <div class="dayfoot"><span class="note">${esc(LEVELS[p.level])} · ${esc(EQUIP[p.equip])} · age ${esc(p.age)}${+p.age>=55?' · low-impact':''}${S.today.start&&!locked?` · started ${clock(S.today.start)}`:''}</span>
@@ -1507,7 +1633,7 @@ function viewDay(){
     <div class="meta"><span class="chip xp">+${TASK_XP} XP per task</span><span class="chip xp">+${SEC_XP} per finished section</span>${next?`<span class="chip">Next: ${esc(next.title)}${next.time?' · '+hm(next.time):''}</span>`:''}</div></div>
     <div class="ring ${pct===1?'full':''}"><svg viewBox="0 0 84 84"><circle class="trk" cx="42" cy="42" r="36"/><circle class="bar" cx="42" cy="42" r="36" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-pct)}"/></svg><div><div><b class="num">${dn}/${all.length}</b><span>done</span></div></div></div></div>
     <div class="dayfoot"><span class="note">Tap Start when you begin a task so ${famOK?'your parent':'you'} can see how long it took.</span>
-    <div class="row-act"><button class="btn sm ghost" data-act="yetitoggle" aria-pressed="${S.yeti!==false}" title="Yeti animations">❄️ Yeti ${S.yeti!==false?'on':'off'}</button><button class="btn" data-act="edit" ${lockedForMe?'disabled title="Your parent locked this schedule"':''}>Edit schedule</button></div></div></section>`;
+    <div class="row-act"><button class="btn sm ghost" data-act="yetitoggle" aria-pressed="${S.yeti!==false}" title="Task animations">✨ Animations ${S.yeti!==false?'on':'off'}</button><button class="btn" data-act="edit" ${lockedForMe?'disabled title="Your parent locked this schedule"':''}>Edit schedule</button></div></div></section>`;
   for(const sec of sc.sections){
     const sd=sec.tasks.filter(k=>taskState(k,log).d).length;
     h+=`<section class="block"><div class="block-h"><h3>${esc(sec.name)}</h3><span class="label">${sd}/${sec.tasks.length}${log._sec&&log._sec[sec.id]?' · bonus earned':''}</span></div>`;
@@ -1633,7 +1759,7 @@ function bubble(m,i){
   if(m.r==='u')return`<div class="bubble u"><div class="txt">${esc(m.t)}</div></div>`;
   let extra='';
   if(m.plan){const lockedApply=false;
-    extra=`<div class="attach"><div class="label">7-day workout plan</div><div class="plan-days">${m.plan.days.map((d,j)=>`<div><span class="label">${['Mon','Tue','Wed','Thu','Fri','Sat','Sun'][j]}</span><b>${esc(d.title)}</b><small>${d.ex.length} moves</small></div>`).join('')}</div>
+    extra=`<div class="attach"><div class="label">${m.plan.weeks>1?m.plan.weeks+'-week program':'7-day workout plan'}</div><div class="plan-days">${m.plan.days.map((d,j)=>{const off=m.plan.profile.days&&!m.plan.profile.days.includes(j);return`<div class="${off?'rest':''}"><span class="label">${['Mon','Tue','Wed','Thu','Fri','Sat','Sun'][j]}</span><b>${off?'Rest Day':esc(d.title)}</b><small>${off?'recover':d.ex.length+' moves'}</small></div>`}).join('')}</div>
       <div class="note">${esc(GOALS[m.plan.profile.goal])} · ${esc(LEVELS[m.plan.profile.level])} · ${esc(EQUIP[m.plan.profile.equip])} · ${m.plan.profile.minutes} min · age ${m.plan.profile.age}</div>
       ${m.applied?`<div class="applied">✓ Plan in use</div>`:`<button class="btn primary" data-act="useplan" data-i="${i}">Use this plan</button>`}</div>`}
   if(m.sched){const sc=sched(),blocked=R0()==='me'&&sc.locked&&sc.by==='parent';
@@ -1666,9 +1792,7 @@ async function refreshLink(){
   }catch(e){linkState=SAMPLE?'prompt':'signedout'}
 }
 function linkCard(compact){
-  if(window.RR_STANDALONE)return`<section class="card link prompt"><div class="lk-icons"><span class="lk-sk">${skeefoMark(34)}</span><span class="lk-line"><i></i></span><span class="lk-cl" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="9" r="3.6"/><path d="M5 19.5c1.4-3.2 4-4.6 7-4.6s5.6 1.4 7 4.6"/></svg></span></div>
-    <div class="lk-text"><div class="label">Optional · Claude link</div><b>Link Skeefo to Claude</b><p class="note">Skeefo’s Claude brain uses your Claude account, so it runs in the Claude version of Routines Reimagined. Open it while signed in to Claude, then tap <b>Link Skeefo to Claude</b> on its Me tab.</p></div>
-    <div class="lk-act"><a class="btn primary" href="https://claude.ai/artifact/WtR7pqRXcFC2njWBfPHRFN" target="_blank" rel="noopener">Open in Claude</a></div></section>`;
+  if(window.RR_STANDALONE)return byokCard();
   const s=linkState,mark=`<div class="lk-icons"><span class="lk-sk">${skeefoMark(34)}</span><span class="lk-line ${s==='granted'?'on':''}"><i></i></span><span class="lk-cl" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="9" r="3.6"/><path d="M5 19.5c1.4-3.2 4-4.6 7-4.6s5.6 1.4 7 4.6"/></svg></span></div>`;
   let title,body,btn='';
   if(s==='checking'){title='Link Skeefo to Claude';body='Checking your Claude account…'}
@@ -1697,13 +1821,14 @@ function ctx(){
   const schedTxt=sc.sections.map(s=>`${s.name}: `+s.tasks.map(k=>`${k.title}${k.time?' at '+k.time:''}${k.min?' ('+k.min+' min)':''}`).join('; ')).join('\n');
   if(R0()==='parent'){const r=curKid();
     return`You are talking to a PARENT who uses the app to set their kid's daily schedule and see reports.\nKid's name: ${r&&r.name||'unknown'}. Kid's level ${r?r.level:'?'}, streak ${r?r.streak:'?'} days, ${r?r.total:'?'} workouts done.\nKid's current schedule:\n${schedTxt||'(empty)'}`}
-  return`You are talking to the person who trains with the app.\nProfile: ${p.set?`age ${p.age}, goal ${GOALS[p.goal]}, ${LEVELS[p.level]}, equipment ${EQUIP[p.equip]}, ${p.minutes} min per day`:'not set yet (ask them)'}.\nLevel ${lvl(S.xp)} (${titleFor(lvl(S.xp))}), ${S.xp} XP, ${S.streak}-day streak, ${S.total} workouts done.\nToday's workout: ${R.title}: ${allItems(R).map(i=>i.n).join(', ')}.\nTheir daily schedule:\n${schedTxt||'(empty)'}`;
+  return`You are talking to the person who trains with the app.\nProfile: ${p.set?`age ${p.age}, goal ${GOALS[p.goal]}, ${LEVELS[p.level]}, equipment ${EQUIP[p.equip]}, ${p.minutes} min per session, trains ${daysText(p)}`:'not set yet (ask them)'}.${programInfo()&&!programInfo().done?` On week ${programInfo().week} of a ${programInfo().weeks}-week program.`:''}\nLevel ${lvl(S.xp)} (${titleFor(lvl(S.xp))}), ${S.xp} XP, ${S.streak}-day streak, ${S.total} workouts done.\nToday's workout: ${R.title}: ${allItems(R).map(i=>i.n).join(', ')}.\nTheir daily schedule:\n${schedTxt||'(empty)'}`;
 }
 function persona(){return`You are Skeefo, the upbeat, friendly AI coach inside "Routines Reimagined", a workout and daily-routine app with XP, levels and streaks. Today is ${new Date().toDateString()}.
 ${ctx()}
 
 How you talk: warm, encouraging, direct, a little playful. Keep replies under 120 words unless they ask for detail. Use short paragraphs, "- " bullets and **bold** for key words. No headings.
-When interviewing about goals, ask ONE question at a time, in this order unless already known: main goal, age, experience, equipment, minutes per day, other activities. Only ask about wake-up, bed or school times if they say they want times on their schedule. After about 5 answers, summarize and tell them to tap "Build my workout plan" or "Build my daily schedule" (these buttons are under the chat). When the user asks you to change something (update their schedule to yours, add/remove/move a task, check something off, change their goal or minutes, shuffle today’s workout, mute sounds), DO IT with your tools right away, then confirm in one short sentence. Never claim you did something unless the tool succeeded.
+When interviewing about goals, ask ONE question at a time, in this order unless already known: main goal, age, experience, equipment, minutes per day, other activities. Only ask about wake-up, bed or school times if they say they want times on their schedule. After about 5 answers, summarize and tell them to tap "Build my workout plan" or "Build my daily schedule" (these buttons are under the chat). Interviews: if the user wants to be interviewed about their diet, day or a tab, tell them to say “interview me for my diet”, “interview me for my day” or “interview me for my <name> tab”. For multi-week programs, tell them to say “make me a 4 week workout plan”.
+When the user asks you to change something (update their schedule to yours, add/remove/move a task, check something off, change their goal or minutes, shuffle today’s workout, mute sounds), DO IT with your tools right away, then confirm in one short sentence. Never claim you did something unless the tool succeeded.
 You can edit the saved diet plan with edit_diet_meal, diet_avoid_food and diet_more when asked. Diet plans are meal ideas only: never give calorie targets, portion limits or weight-loss diets. You cannot browse the internet or look up live information (news, scores, prices); if asked, say so and share what you know, noting it may be out of date.
 Some earlier messages are from past chats the user cleared from the screen; you still remember them and can refer back naturally.
 App facts: one rest day is allowed; missing 2 days resets the streak; missing 4 days drops a level, then one more level every 3 days. Every exercise has a "How to do it" guide on the Workout tab.
@@ -1716,7 +1841,66 @@ function chatHistory(){
   return out;
 }
 function transcript(){return chatHistory().map(m=>(m.role==='user'?'User: ':'Skeefo: ')+m.content).join('\n')||'(no conversation yet)'}
+/* ================= Website: Skeefo on the person's own Claude API key ================= */
+const BYOK_KEY='rr-claude-key',BYOK_MODEL='claude-haiku-5-5';
+const byokGet=()=>{try{return localStorage.getItem(BYOK_KEY)||''}catch(e){return''}};
+function byokErr(status,body){const msg=(body&&body.error&&body.error.message)||'';const e=new Error(msg||('HTTP '+status));
+  e.code=status===401||status===403?'bad_key':status===429?'rate_limited':/credit|billing|balance/i.test(msg)?'no_credit':status===529||status>=500?'overloaded':'api_error';return e}
+async function byokCall(input,opts={},maxTok=1200){
+  const key=byokGet();if(!key){const e=new Error('No key');e.code='not_granted';throw e}
+  let messages=typeof input==='string'?[{role:'user',content:input}]:input.map(m=>({role:m.role,content:String(m.content)}));
+  const stream=!!opts.onText;
+  const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',signal:opts.signal,headers:{'content-type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+    body:JSON.stringify({model:BYOK_MODEL,max_tokens:maxTok,messages,stream})});
+  if(!res.ok){let b=null;try{b=await res.json()}catch(e){}throw byokErr(res.status,b)}
+  if(!stream){const j=await res.json();return{text:(j.content||[]).filter(c=>c.type==='text').map(c=>c.text).join(''),truncated:j.stop_reason==='max_tokens'}}
+  const rd=res.body.getReader(),dec=new TextDecoder();let buf='',text='';
+  for(;;){const{done,value}=await rd.read();if(done)break;buf+=dec.decode(value,{stream:true});let i;
+    while((i=buf.indexOf('\n'))>=0){const line=buf.slice(0,i).trim();buf=buf.slice(i+1);if(!line.startsWith('data:'))continue;
+      try{const ev=JSON.parse(line.slice(5));if(ev.type==='content_block_delta'&&ev.delta&&ev.delta.text){text+=ev.delta.text;opts.onText({text,delta:ev.delta.text})}else if(ev.type==='error'){throw byokErr(500,ev)}}catch(e){if(e.code)throw e}}}
+  return{text,truncated:false};
+}
+function byokSample(){
+  const f=(input,opts)=>byokCall(input,opts||{});
+  f.json=async(input,opts)=>{const r=await byokCall(input,{...(opts||{}),onText:null},2500);const m=r.text.match(/\{[\s\S]*\}/);if(!m){const e=new Error('bad json');e.code='invalid_json';throw e}
+    try{return JSON.parse(m[0])}catch(err){const e=new Error('bad json');e.code='invalid_json';throw e}};
+  f.limits=async()=>({maxPromptBytes:200000});return f;
+}
+function byokInit(){if(!window.RR_STANDALONE)return;if(byokGet()){SAMPLE=byokSample();linkState='granted'}else{SAMPLE=null;linkState='signedout'}}
+let byokMsg='';
+function byokCard(){
+  const on=!!byokGet(),useOn=S.skMode!=='offline';
+  const mark=`<div class="lk-icons"><span class="lk-sk">${skeefoMark(34)}</span><span class="lk-line ${on?'on':''}"><i></i></span><span class="lk-cl" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="9" r="3.6"/><path d="M5 19.5c1.4-3.2 4-4.6 7-4.6s5.6 1.4 7 4.6"/></svg></span></div>`;
+  if(on)return`<section class="card link granted ${justLinked?'just':''}">${mark}<div class="lk-text"><div class="label">Linked to Claude</div><b>${useOn?'Skeefo is linked to Claude':'Skeefo is linked, using offline brain'}</b>
+    <p class="note">He uses your own Claude API key, saved only on this device. Messages are charged to your Anthropic account.</p></div>
+    <div class="lk-act row-act"><button class="btn sm" data-act="skmode">${useOn?'Use offline brain':'Use Claude brain'}</button><button class="btn sm ghost danger" data-act="byokoff">Unlink</button></div></section>`;
+  return`<section class="card link prompt">${mark}<div class="lk-text"><div class="label">Optional · Claude link</div><b>Link Skeefo to Claude</b>
+    <p class="note">Skeefo works offline for free. Link him to Claude to make him much smarter. It uses <b>your own</b> Claude account, so any cost goes to you, not the app.</p></div>
+    <details class="byok"><summary>How to link Skeefo to Claude</summary>
+      <ol class="steps">
+        <li><b>Open the Claude Console.</b> Go to <a href="https://console.anthropic.com" target="_blank" rel="noopener">console.anthropic.com</a> and sign up or log in. You must be 18+, so ask a parent if you’re younger.</li>
+        <li><b>Add a payment method.</b> Open <b>Settings → Billing</b> and add a card or a few dollars of credit. Skeefo uses Claude’s cheapest model, usually well under 1¢ per message.</li>
+        <li><b>Make a key.</b> Open <b>API Keys</b>, tap <b>Create Key</b>, name it “Skeefo”, then copy the key. It starts with <code>sk-ant-</code>.</li>
+        <li><b>Paste it here</b> and tap <b>Link Skeefo to Claude</b>. The key is saved only on this device and never shared.</li>
+      </ol>
+      <form class="ed-row" id="byok-form" style="margin-top:12px"><input class="inp" id="byok-key" type="password" autocomplete="off" placeholder="sk-ant-…" aria-label="Claude API key"><button class="btn primary" type="submit">Link Skeefo to Claude</button></form>
+      ${byokMsg?`<p class="hint" style="margin-top:8px">${esc(byokMsg)}</p>`:''}
+      <p class="hint" style="margin-top:8px">A Claude.ai subscription (Pro or Max) can’t be used by other websites, so this needs an API key from the Console. Keep your key private, like a password.</p>
+    </details></section>`;
+}
+async function byokLink(){
+  const k=(($('#byok-key')||{}).value||'').trim();
+  if(!/^sk-ant-[A-Za-z0-9_\-]{20,}$/.test(k)){byokMsg='That doesn’t look like a Claude API key. It should start with sk-ant-.';render();return}
+  byokMsg='Checking your key…';render();
+  try{localStorage.setItem(BYOK_KEY,k)}catch(e){byokMsg='This browser blocked saving the key. Try a different browser.';render();return}
+  try{await byokCall('Reply with the word OK.',{},5);byokMsg='';SAMPLE=byokSample();linkState='granted';S.skMode='auto';save();justLinked=true;render();confetti(.7);SFX.link();toast(skeefoMark(40),'Skeefo is linked to Claude','He’s using your Claude account now.');setTimeout(()=>{justLinked=false},1500);try{yetiPrefetch()}catch(e){}}
+  catch(e){try{localStorage.removeItem(BYOK_KEY)}catch(x){}SAMPLE=null;linkState='signedout';
+    byokMsg=e.code==='bad_key'?'Claude didn’t accept that key. Copy it again from API Keys and paste the whole thing.':e.code==='no_credit'?'Your Anthropic account needs credit first. Add some under Settings → Billing, then try again.':e.code==='rate_limited'?'Claude is busy right now. Try again in a minute.':'Couldn’t reach Claude. Check your internet connection and try again.';render()}
+}
 function errText(e){const c=e&&e.code;
+  if(c==='bad_key')return'Claude didn’t accept your key anymore. Re-link me on the Me tab.';
+  if(c==='no_credit')return'Your Anthropic account is out of credit. Add some in the Console under Billing, or switch me to my offline brain on the Me tab.';
+  if(c==='overloaded')return'Claude is really busy right now. Try again in a minute.';
   if(c==='not_granted')return'I can’t reply because Claude access is turned off for this page. You can turn it back on in the page’s permissions.';
   if(c==='rate_limited')return'I’m catching my breath. Try again in a minute.';
   if(c==='invalid_json')return'I got mixed up building that. Tap the button again.';
@@ -1764,9 +1948,9 @@ const IV=[
    hint:'Try “8:30 to 3:15” or “none”.'},
 ];
 const IVQ={goals:IV.slice(0,5),times:IV.slice(5)};
-function ivStart(mode='goals'){S.iv={mode,step:0,a:{}};const Q=IVQ[mode];
+function ivStart(mode='goals'){return ivStart2(mode);const Q=IVQ[mode];
   return mode==='times'?`Sure, let’s put times on your schedule. ${Q.length} quick questions.\n\n`+Q[0].q:`Let’s do it! I’ll ask ${Q.length} quick questions.\n\n`+Q[0].q}
-function ivAnswer(text){
+function ivAnswer(text){return ivAnswer2(text);
   const Q=IVQ[S.iv.mode||'goals'],st=Q[S.iv.step],v=st.parse(norm(text));
   if(v==null)return`Hmm, I didn’t catch that. ${st.hint}`;
   S.iv.a[st.k]=v;S.iv.step++;
@@ -1850,7 +2034,7 @@ function offlinePlan(){
   const p=S.profile,ws=weekStart(todayKey()),days=[];
   for(let i=0;i<7;i++){const R=buildRoutine(p,addDays(ws,i),1+hash(ws)%97);const main=R.blocks.find(b=>b.k==='main').items;
     const ex=main.map(it=>({id:it.id,sets:it.sets,dose:it.dose}));days.push({title:dayName(ex,R.recovery),recovery:R.recovery,ex})}
-  const pr={age:+p.age,goal:p.goal,level:p.level,equip:p.equip,minutes:p.minutes};
+  const pr={age:+p.age,goal:p.goal,level:p.level,equip:p.equip,minutes:p.minutes,days:trainDays(p)};
   const why={muscle:'strength days for each muscle group, a core day and active recovery',fat:'full-body burns mixed with cardio circuits to keep your heart rate up',endurance:'steady cardio, intervals and leg strength to build your engine',mobility:'flows for your hips, spine and shoulders plus balance and core control',general:'a balanced mix of strength, cardio, core and recovery'}[p.goal];
   return{profile:pr,summary:`Here’s your 7-day plan, built for ${LEVELS[p.level].toLowerCase()}s with ${EQUIP[p.equip].toLowerCase()} in about ${p.minutes} minutes a day. It has ${why}.${+p.age<18?' I kept heavy lifts out since you’re under 18.':''}${+p.age>=55?' Everything is low-impact.':''}`,days};
 }
@@ -1957,7 +2141,7 @@ const ACT={
 };
 function applyPlan(i){const m=typeof i==='object'?i:S.chat[i];if(!m||!m.plan)return'';
   if(R0()==='parent')return'Workout plans go on your kid’s own app. Ask them to build one with me.';
-  S.profile={...S.profile,...m.plan.profile,set:true};S.aiPlan={days:m.plan.days,made:Date.now()};
+  S.profile={...S.profile,...m.plan.profile,set:true};S.aiPlan={days:m.plan.days,made:Date.now(),weeks:m.plan.weeks||1,start:weekStart(todayKey())};
   allChat().forEach(x=>{if(x.plan)x.applied=0});m.applied=1;if(!S.today.done.length)S.today.variant=0;save();renderHeader();confetti(.6);SFX.bonus();
   return'Done! Your workouts now follow my plan. Today is **'+esc(routine().title)+'**.'}
 function applySched(i){const m=typeof i==='object'?i:S.chat[i];if(!m||!m.sched)return'';
@@ -2035,12 +2219,12 @@ async function yetiPrefetchNow(){
   if(yPrefetching||!useClaude()||R0()==='parent')return;S.yetiCache=S.yetiCache||{};
   const titles=[...new Set(sched().sections.flatMap(s=>s.tasks).filter(k=>k.kind!=='workout').map(k=>k.title))].filter(t=>!S.yetiCache[yetiKey(t)]).slice(0,25);
   if(!titles.length)return;yPrefetching=true;
-  const prompt=`You direct short cartoon animations of a cute, fluffy white yeti mascot in a kids' routine app. When the user checks off a task, the yeti acts it out.
-For EACH task below, pick what the yeti does using ONLY these words.
+  const prompt=`You pick a small animated object for each task in a kids' routine app. When the user checks off a task, the object used for it animates beside the task (a cup of water tips and spills, a toothbrush scrubs, a broom sweeps).
+For EACH task below, pick the action and the object that best fits what the task means, using ONLY these words.
 motions: ${Y_MOTIONS.join(', ')} (show = proudly holds up the prop; wave = waves hello; calm = eyes closed, breathing; type = types on laptop; lift = presses a dumbbell; throw = throws a ball; call = phone to ear; water = waters a plant; cook = stirs a pot in a chef hat; pack = packs a backpack; game = plays with a controller; paint = paints on an easel; photo = takes a picture)
 props: ${Y_PROPS.join(', ')} (sign = a sign showing the task name; use it when nothing else fits)
 effects: ${Y_FX.join(', ')}
-Also write l1: a funny 2-4 word exclamation, and l2: one short, kind, upbeat sentence (max 60 characters) about the yeti doing it. Keep everything kid-friendly.
+Also write l1: a funny 2-4 word exclamation, and l2: one short, kind, upbeat sentence (max 60 characters) about finishing it. Keep everything kid-friendly.
 Tasks:
 ${titles.map((t,i)=>`${i+1}. ${t}`).join('\n')}
 Return ONLY JSON: {"items":[{"n":1,"m":"drink","p":"cup","fx":"bubbles","l1":"Glug glug!","l2":"Yeti stays hydrated."}]}`;
@@ -2129,17 +2313,66 @@ function yetiPlay(title){
   if(S.yeti===false||R0()==='parent')return;
   const sp=yetiSpec(title);
   let el=$('#yetiPop');if(!el){el=document.createElement('div');el.id='yetiPop';el.className='yeti-pop';el.setAttribute('role','status');document.body.appendChild(el);el.addEventListener('click',()=>yetiClose())}
-  el.innerHTML=`<div class="yeti-stage">${yetiSVG(sp,title)}</div><div class="yeti-cap"><b>${esc(sp.l1)}</b><span>${esc(sp.l2)}</span><small>${sp.ai?'✨ Scene by Skeefo · ':''}“${esc(title)}”</small></div>`;
+  el.innerHTML=`<div class="yeti-stage item-stage">${itemSVG(sp,title)}</div><div class="yeti-cap"><b>${esc(sp.l1)}</b><span>${esc(sp.l2)}</span><small>${sp.ai?'✨ Scene by Skeefo · ':''}“${esc(title)}”</small></div>`;
   el.classList.remove('out');void el.offsetWidth;el.classList.add('show');
   SFX.yeti&&SFX.yeti(sp.m);
   clearTimeout(yetiTimer);yetiTimer=setTimeout(yetiClose,reduced?1800:3800);
   if(!sp.ai)yetiPrefetch();
 }
+/* ================= Object animations (beside each step) ================= */
+function itemKey(sp){
+  if(sp.m==='sleep')return'moon';
+  const direct=['cup','bowl','apple','toothbrush','broom','shirt','trash','pencil','book','guitar','dumbbell','ball','phone','laptop','wateringcan','pot','backpack','controller','paint','camera','flower','dog'];
+  if(sp.p==='plate')return'bowl';if(direct.includes(sp.p))return sp.p;if(sp.p==='shower')return'showerhead';if(sp.p==='sign')return'sign';
+  return{run:'shoe',walk:'footprints',dance:'disco',calm:'lotus',wave:'heart',cheer:'trophy',show:'trophy',stretch:'band',lift:'dumbbell',throw:'ball',music:'guitar',drink:'cup',eat:'bowl',brush:'toothbrush',clean:'broom',write:'pencil',read:'book',type:'laptop',call:'phone',water:'wateringcan',cook:'pot',pack:'backpack',game:'controller',paint:'paint',photo:'camera',shower:'showerhead'}[sp.m]||'trophy';
+}
+function itemSVG(sp,title){
+  const k=itemKey(sp),B='var(--surface)',W='#4FB6FF',G='#FFC53D',V='#A98BFF',R='#FF5C67',GR='#3CCB8A',WD='#B07A4A',D='#3B3F47',L='#C9D2DE';
+  const drops=(xs,y,cls='dp')=>xs.map((x,i)=>`<rect class="${cls} ${cls}${i}" x="${x}" y="${y}" width="3" height="8" rx="1.5" fill="${W}"/>`).join('');
+  const stars=pts=>pts.map(([x,y],i)=>`<g transform="translate(${x},${y})"><path class="ist ist${i}" d="M0 -6 L1.8 -1.8 L6 0 L1.8 1.8 L0 6 L-1.8 1.8 L-6 0 L-1.8 -1.8Z" fill="${G}"/></g>`).join('');
+  const txt=esc(String(title||'Done').slice(0,14));
+  const S={
+    cup:`<ellipse class="puddle" cx="30" cy="82" rx="18" ry="4" fill="${W}" opacity=".7"/><g class="cupg"><rect x="38" y="26" width="26" height="40" rx="4" fill="rgba(170,215,255,.2)" stroke="#9AD3FF" stroke-width="2.5"/><g class="wat"><rect x="41" y="36" width="20" height="27" rx="2" fill="${W}"/></g></g>${drops([30,34,27],34)}`,
+    bowl:`<g class="spoon"><rect x="58" y="8" width="4" height="30" rx="2" fill="${L}"/><ellipse cx="60" cy="40" rx="7" ry="4.5" fill="${L}"/></g><path d="M22 50 h56 a28 22 0 0 1 -56 0z" fill="#E7894C"/><ellipse cx="50" cy="50" rx="28" ry="6" fill="#F6D28B"/>${[[40,30],[56,22]].map(([x,y],i)=>`<path class="sm sm${i}" d="M${x} ${y+16} q-4 -6 0 -12 q4 -6 0 -12" fill="none" stroke="${L}" stroke-width="2.5" stroke-linecap="round"/>`).join('')}`,
+    apple:`<g class="appl"><circle cx="50" cy="52" r="24" fill="${R}"/><rect x="48" y="20" width="4" height="10" rx="2" fill="#7A4A22"/><ellipse cx="58" cy="24" rx="8" ry="4" fill="${GR}"/><circle class="bite b0" cx="74" cy="44" r="8" fill="${B}"/><circle class="bite b1" cx="74" cy="58" r="8" fill="${B}"/><circle class="bite b2" cx="66" cy="70" r="7" fill="${B}"/></g>${[60,66,72].map((x,i)=>`<circle class="crumb c${i}" cx="${x}" cy="74" r="2" fill="#F6D28B"/>`).join('')}`,
+    toothbrush:`<path d="M30 66 q20 14 40 0 l-4 -18 h-32z" fill="#fff"/><g class="tbr"><rect x="20" y="34" width="56" height="7" rx="3.5" fill="${W}"/><rect x="62" y="26" width="16" height="9" rx="2" fill="#fff"/></g>${[[36,24],[50,16],[64,20]].map(([x,y],i)=>`<circle class="bub bu${i}" cx="${x}" cy="${y}" r="${4-i*.6}" fill="#fff"/>`).join('')}`,
+    showerhead:`<rect x="46" y="2" width="8" height="12" fill="#AEB7C6"/><path d="M28 14 h44 l-6 9 h-32z" fill="${L}"/>${drops([34,42,50,58,66],26)}<ellipse class="puddle" cx="50" cy="84" rx="26" ry="4" fill="${W}" opacity=".5"/>`,
+    broom:`<g class="brm"><rect x="48" y="4" width="4" height="56" rx="2" fill="${WD}"/><path d="M38 58 h24 l6 18 h-36z" fill="#F0C04A"/></g>${[[24,80],[76,80],[30,74]].map(([x,y],i)=>`<circle class="dust du${i}" cx="${x}" cy="${y}" r="5" fill="${L}" opacity=".6"/>`).join('')}`,
+    shirt:`<g class="shirt"><path d="M28 30 l14 -8 q8 6 16 0 l14 8 l-6 12 l-6 -3 v32 h-20 v-32 l-6 3z" fill="${W}"/></g>${stars([[20,24],[80,28]])}`,
+    trash:`<g class="bag"><path d="M38 16 q12 -10 24 0 l-3 22 h-18z" fill="${D}"/><path d="M46 14 l4 -5 l4 5" fill="none" stroke="${G}" stroke-width="2"/></g><rect x="28" y="50" width="44" height="34" rx="4" fill="#5C5C64"/><g class="lid"><rect x="24" y="44" width="52" height="7" rx="3" fill="#8B94A3"/></g>`,
+    moon:`<g class="moon"><path d="M58 18 a26 26 0 1 0 22 40 a22 22 0 1 1 -22 -40z" fill="${G}"/></g><g font-family="Big Shoulders Display,Impact,sans-serif" font-weight="900" fill="${V}"><text class="zz z0" x="64" y="40" font-size="12">z</text><text class="zz z1" x="72" y="30" font-size="15">Z</text><text class="zz z2" x="80" y="18" font-size="18">Z</text></g>`,
+    book:`<rect x="16" y="24" width="68" height="46" rx="3" fill="#6E5BFF"/><rect x="20" y="27" width="29" height="40" fill="#fff"/><rect x="51" y="27" width="29" height="40" fill="#fff"/><g class="page"><rect x="51" y="27" width="29" height="40" fill="#F1EEFF"/></g><path d="M25 36 h20 M25 42 h20 M25 48 h14 M55 36 h20 M55 42 h20" stroke="#B8B2D9" stroke-width="2"/>`,
+    pencil:`<rect x="12" y="20" width="62" height="54" rx="3" fill="#fff"/><path class="ln" d="M20 36 h46 M20 48 h40 M20 60 h30" stroke="#8FB2D2" stroke-width="3" stroke-linecap="round"/><g class="pen"><g transform="translate(66,58) rotate(35)"><rect x="-3" y="-30" width="6" height="28" rx="1" fill="${G}"/><path d="M-3 -2 h6 l-3 7z" fill="${D}"/></g></g>`,
+    guitar:`<g class="gtr"><g transform="translate(50,50) rotate(-35)"><ellipse cx="-12" cy="8" rx="20" ry="17" fill="#C9772F"/><ellipse cx="-12" cy="8" rx="6" ry="6" fill="#4A2A14"/><rect x="2" y="0" width="40" height="7" rx="2" fill="#7A4A22"/><rect x="40" y="-3" width="9" height="13" rx="2" fill="#4A2A14"/></g></g><g fill="${G}" font-size="18" font-weight="900"><text class="nt n0" x="76" y="38">♪</text><text class="nt n1" x="12" y="30">♫</text></g>`,
+    dumbbell:`<g class="db"><rect x="22" y="44" width="56" height="7" rx="3" fill="#8B94A3"/><rect x="14" y="32" width="12" height="30" rx="3" fill="${D}"/><rect x="74" y="32" width="12" height="30" rx="3" fill="${D}"/></g>${[[20,22],[80,20]].map(([x,y],i)=>`<path class="sw sw${i}" d="M${x} ${y} q4 6 0 9 q-4 -3 0 -9z" fill="#9AD3FF"/>`).join('')}`,
+    ball:`<ellipse class="bshadow" cx="50" cy="84" rx="16" ry="3.5" fill="rgba(0,0,0,.45)"/><g class="ball"><circle cx="50" cy="30" r="14" fill="#FF8A1F"/><path d="M36 30 h28 M50 16 v28" stroke="#7A3B00" stroke-width="2"/></g>`,
+    phone:`<g class="ph"><rect x="34" y="16" width="32" height="58" rx="7" fill="#1B1E26" stroke="${V}" stroke-width="2.5"/><rect x="38" y="24" width="24" height="40" rx="2" fill="${V}" opacity=".35"/></g>${[0,1].map(i=>`<path class="ring r${i}" d="M${74+i*7} ${30-i*4} q${8+i*4} 14 0 ${28+i*8}" fill="none" stroke="${V}" stroke-width="2.5" stroke-linecap="round"/>`).join('')}`,
+    laptop:`<rect x="18" y="16" width="64" height="42" rx="3" fill="#2A2D36" stroke="#5C5C64" stroke-width="2"/><rect class="scr" x="22" y="20" width="56" height="34" fill="${W}" opacity=".3"/><path class="code" d="M28 28 h22 M28 36 h34 M28 44 h16" stroke="${W}" stroke-width="3" stroke-linecap="round"/><path d="M10 60 h80 l-6 8 h-68z" fill="#8B94A3"/>`,
+    wateringcan:`<g transform="translate(74,62)"><path d="M-12 0 h24 l-3 18 h-18z" fill="#C9772F"/><g class="grow"><path d="M0 0 v-24" stroke="${GR}" stroke-width="3"/><ellipse cx="-7" cy="-14" rx="7" ry="4" fill="${GR}"/><ellipse cx="7" cy="-20" rx="7" ry="4" fill="${GR}"/><circle cx="0" cy="-28" r="5" fill="${G}"/></g></g><g class="can"><rect x="10" y="20" width="26" height="22" rx="4" fill="${GR}"/><path d="M36 26 l18 -10" stroke="${GR}" stroke-width="4" stroke-linecap="round"/><path d="M10 24 q-10 2 -6 12" fill="none" stroke="${GR}" stroke-width="3"/></g>${drops([58,63,68],22,'wd')}`,
+    pot:`<g class="lidp"><rect x="26" y="34" width="48" height="5" rx="2" fill="#5C5C64"/><rect x="45" y="29" width="10" height="5" rx="2" fill="#5C5C64"/></g><path d="M24 40 h52 v18 a14 12 0 0 1 -14 12 h-24 a14 12 0 0 1 -14 -12z" fill="#8B94A3"/>${[[38,8],[50,2],[62,8]].map(([x,y],i)=>`<path class="sm sm${i}" d="M${x} ${y+24} q-4 -6 0 -12 q4 -6 0 -12" fill="none" stroke="${L}" stroke-width="2.5" stroke-linecap="round"/>`).join('')}`,
+    backpack:`<g class="bp"><rect x="28" y="20" width="44" height="54" rx="14" fill="#FF6B2C"/><rect x="36" y="48" width="28" height="18" rx="5" fill="#E2551B"/><rect x="40" y="12" width="20" height="12" rx="6" fill="none" stroke="#E2551B" stroke-width="4"/><path class="zip" d="M38 40 h24" stroke="${G}" stroke-width="3" stroke-linecap="round"/></g>${stars([[18,24],[84,30],[80,70]])}`,
+    controller:`<g class="ctl"><path d="M20 40 q0 -14 16 -14 h28 q16 0 16 14 l5 16 q2 12 -10 12 q-7 0 -11 -9 h-28 q-4 9 -11 9 q-12 0 -10 -12z" fill="${D}"/><circle class="btn1" cx="66" cy="40" r="4" fill="${R}"/><circle class="btn2" cx="73" cy="47" r="4" fill="${GR}"/><path d="M28 44 h12 M34 38 v12" stroke="${L}" stroke-width="3.2"/></g>${stars([[16,20],[86,18]])}`,
+    paint:`<path d="M30 86 l8 -60 M70 86 l-8 -60" stroke="#8A5A36" stroke-width="3"/><rect x="22" y="14" width="56" height="46" fill="#fff" stroke="#8A5A36" stroke-width="2"/><circle class="dab d0" cx="38" cy="30" r="7" fill="${R}"/><circle class="dab d1" cx="58" cy="44" r="7" fill="${W}"/><circle class="dab d2" cx="56" cy="26" r="6" fill="${G}"/><circle class="dab d3" cx="40" cy="48" r="5" fill="${GR}"/><g class="pbr"><rect x="74" y="34" width="4" height="30" rx="2" fill="${WD}" transform="rotate(-30 76 49)"/></g>`,
+    camera:`<g class="cam"><rect x="20" y="30" width="60" height="40" rx="7" fill="${D}"/><rect x="34" y="23" width="18" height="9" rx="2" fill="${D}"/><circle cx="50" cy="50" r="13" fill="#8FB2D2" stroke="#1B1E26" stroke-width="4"/></g><circle class="flash" cx="50" cy="48" r="40" fill="#fff"/>`,
+    flower:`<path d="M50 84 v-34" stroke="${GR}" stroke-width="4"/><ellipse cx="40" cy="68" rx="9" ry="4" fill="${GR}" transform="rotate(-30 40 68)"/><g class="petals">${[0,60,120,180,240,300].map(a=>`<ellipse cx="50" cy="20" rx="7" ry="12" fill="#F6A9B8" transform="rotate(${a} 50 34)"/>`).join('')}<circle cx="50" cy="34" r="7" fill="${G}"/></g>`,
+    dog:`<g class="dog"><ellipse cx="44" cy="56" rx="22" ry="13" fill="#C9772F"/><circle cx="68" cy="42" r="12" fill="#C9772F"/><ellipse cx="65" cy="33" rx="4" ry="9" fill="#8A5A36"/><circle cx="73" cy="41" r="2.4" fill="${D}"/><circle cx="79" cy="46" r="2.2" fill="${D}"/><rect x="28" y="64" width="6" height="16" rx="3" fill="#8A5A36"/><rect x="52" y="64" width="6" height="16" rx="3" fill="#8A5A36"/><path class="tail" d="M23 50 q-10 -10 -8 -20" stroke="#C9772F" stroke-width="5" fill="none" stroke-linecap="round"/></g>`,
+    sign:`<g class="sgn"><rect x="47" y="40" width="6" height="46" rx="2" fill="${WD}"/><rect x="8" y="12" width="84" height="34" rx="6" fill="${G}"/><text x="50" y="34" text-anchor="middle" font-family="Figtree,system-ui,sans-serif" font-weight="800" font-size="${txt.length>10?9.5:12}" fill="#1A1300">${txt}</text></g><path class="tick" d="M64 64 l8 8 l16 -18" fill="none" stroke="${GR}" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>`,
+    shoe:`${[20,30,40].map((y,i)=>`<path class="spd s${i}" d="M8 ${y+20} h18" stroke="${L}" stroke-width="3" stroke-linecap="round"/>`).join('')}<g class="shoe"><path d="M30 46 q2 -16 16 -16 l8 12 q14 2 22 10 q6 6 0 12 h-46 q-6 -6 0 -18z" fill="${W}"/><path d="M26 66 h54" stroke="#fff" stroke-width="5" stroke-linecap="round"/><path d="M48 40 l6 -4 M52 46 l6 -4" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/></g>`,
+    footprints:[[22,72,-10],[38,56,10],[54,44,-10],[70,28,10]].map(([x,y,r],i)=>`<g transform="translate(${x},${y}) rotate(${r})"><g class="fp f${i}"><ellipse cx="0" cy="0" rx="6" ry="9" fill="${L}"/>${[-4,0,4].map(dx=>`<circle cx="${dx}" cy="-12" r="2" fill="${L}"/>`).join('')}</g></g>`).join(''),
+    disco:`<path d="M50 2 v14" stroke="${L}" stroke-width="2"/><g class="disco"><circle cx="50" cy="40" r="24" fill="#8B94A3"/>${[-16,-8,0,8,16].map(y=>`<path d="M${50-Math.sqrt(576-y*y)} ${40+y} h${2*Math.sqrt(576-y*y)}" stroke="#C9D2DE" stroke-width="1.5"/>`).join('')}<path d="M50 16 v48 M38 19 v42 M62 19 v42" stroke="#C9D2DE" stroke-width="1.5"/></g>${stars([[14,24],[86,30],[22,74],[80,74]])}`,
+    lotus:`<circle class="br br0" cx="50" cy="46" r="30" fill="none" stroke="${V}" stroke-width="2.5"/><circle class="br br1" cx="50" cy="46" r="30" fill="none" stroke="${V}" stroke-width="2"/><g class="lotus">${[-50,-25,0,25,50].map(a=>`<ellipse cx="50" cy="40" rx="7" ry="16" fill="#F6A9B8" opacity=".9" transform="rotate(${a} 50 56)"/>`).join('')}</g>`,
+    heart:`<g class="hrt"><path d="M50 74 C18 52 22 22 42 26 C48 27 50 32 50 34 C50 32 52 27 58 26 C78 22 82 52 50 74Z" fill="#FF5C8A"/></g>${[[18,30],[82,26],[80,62]].map(([x,y],i)=>`<g transform="translate(${x},${y})"><path class="mh mh${i}" d="M0 4 C-7 -2 -5 -8 0 -4 C5 -8 7 -2 0 4Z" fill="#FF5C8A"/></g>`).join('')}`,
+    trophy:`<g class="trp"><path d="M30 14 h40 v16 a20 20 0 0 1 -40 0z" fill="${G}"/><path d="M30 18 h-8 a8 10 0 0 0 10 14 M70 18 h8 a8 10 0 0 1 -10 14" fill="none" stroke="${G}" stroke-width="3.5"/><rect x="46" y="48" width="8" height="12" fill="${G}"/><rect x="34" y="60" width="32" height="10" rx="2" fill="#C98F00"/></g>${stars([[14,20],[86,16],[16,62],[86,58],[50,6]])}`,
+    band:`<rect x="12" y="38" width="10" height="22" rx="4" fill="${D}"/><rect x="78" y="38" width="10" height="22" rx="4" fill="${D}"/><g class="bnd"><rect x="22" y="45" width="56" height="8" rx="4" fill="${R}"/></g><g class="hl"><rect x="12" y="38" width="10" height="22" rx="4" fill="${D}"/></g>`,
+  };
+  return`<svg class="item-svg it-${k}" viewBox="0 0 100 90" aria-hidden="true">${S[k]||S.trophy}</svg>`;
+}
+
 function yetiInline(id,title){
   if(S.yeti===false||R0()==='parent')return;
   const row=document.querySelector(`.task[data-id="${id}"]`);if(!row){yetiPlay(title);return}
   const sp=yetiSpec(title);row.querySelectorAll('.yeti-mini,.ym-cap').forEach(e=>e.remove());
-  const m=document.createElement('div');m.className='yeti-mini';m.innerHTML=yetiSVG(sp,title);
+  const m=document.createElement('div');m.className='yeti-mini item-mini';m.innerHTML=itemSVG(sp,title);
   const c=document.createElement('span');c.className='ym-cap';c.textContent=sp.l1;
   row.classList.add('yeti-on');row.append(m);SFX.yeti&&SFX.yeti(sp.m);
   setTimeout(()=>{m.classList.add('out');c.classList.add('out');setTimeout(()=>{m.remove();c.remove();row.classList.remove('yeti-on')},400)},reduced?1800:3800);
@@ -2186,8 +2419,8 @@ const TOPICS=[
  {id:'night',k:['good night','goodnight','gn','going to bed'],a:'Good night! Sleep is when your muscles rebuild, so you’re basically training right now. 😴 See you tomorrow.'},
  {id:'bored',k:['bored','nothing to do','boring'],a:'Bored? Try a **2-minute challenge**: as many jumping jacks as you can in 1 minute, then a 1-minute plank. Beat your score tomorrow! Or check off something on My day for XP.'},
  {id:'me',k:['who made you','your name','are you real','are you a yeti','are you ai','what are you','who are you'],a:'I’m **Skeefo**, the yeti coach inside Routines Reimagined! ❄️ I’m an AI helper: I can build plans, edit your day and diet, and answer questions. I’m not a doctor, so for health problems always ask a real one.'},
- {id:'howapp',k:['how do i use','how does the app work','how do i add a task','how do i add a section','how do i make a tab','what can i say','commands'],a:'Things you can tell me:\n- **“add stretching to my evening at 8pm”**\n- **“move homework to 4:30”** or **“move reading to morning”**\n- **“I finished homework”** / **“uncheck breakfast”**\n- **“rename read to read 20 pages”**\n- **“make a tab called Practice”**\n- **“change Tuesday dinner to tacos”** / **“I don’t like fish”**\n- **“I drank 2 glasses of water”**\n- **“what’s on my schedule?”**'},
- {id:'yeti',k:['yeti animation','the yeti','why is there a yeti','yeti'],a:'That’s my buddy! Every time you check something off on **My day**, a yeti acts it out: drinking water, brushing teeth, reading, sleeping and more. You can turn it off on the My day tab.'},
+ {id:'howapp',k:['how do i use','how does the app work','how do i add a task','how do i add a section','how do i make a tab','what can i say','commands'],a:'Things you can tell me:\n- **“add stretching to my evening at 8pm”**\n- **“move homework to 4:30”** or **“move reading to morning”**\n- **“I finished homework”** / **“uncheck breakfast”**\n- **“rename read to read 20 pages”**\n- **“make a tab called Practice”**\n- **“change Tuesday dinner to tacos”** / **“I don’t like fish”**\n- **“I drank 2 glasses of water”**\n- **“what’s on my schedule?”**\n- **“I want to work out 4 days a week”**\n- **“make me a 4 week workout plan”**\n- **“interview me for my diet”** / **“…for my day”** / **“…for my Practice tab”**'},
+ {id:'yeti',k:['animation','animations','yeti','the cup','spilling'],a:'Every time you check something off on **My day**, the thing you used for it animates right beside the task: a cup of water spills, a toothbrush scrubs, a book flips its pages, and more. I pick the object from what your task means. Say **“show animation for walk the dog”** to preview one, or turn them off on the My day tab.'},
 ];
 const GLOSS={rep:'A **rep** (repetition) is doing an exercise once, like one push-up.',set:'A **set** is a group of reps in a row. “3 × 10” means 3 sets of 10 reps, with rest between sets.',
   cardio:'**Cardio** is exercise that gets your heart pumping for a while, like running, biking or jumping jacks. It builds endurance.',hiit:'**HIIT** (high-intensity interval training) mixes short, hard bursts with rest. For example, 30 seconds of sprinting, then 60 seconds of walking.',
@@ -2273,6 +2506,116 @@ function tryCommand2(text,t){
   return null;
 }
 
+/* ================= Training days + multi-week programs ================= */
+const WDN=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],WDFULL=['monday','tuesday','wednesday','thursday','friday','saturday','sunday'];
+const SPREAD={1:[2],2:[1,4],3:[0,2,4],4:[0,1,3,4],5:[0,1,2,3,4],6:[0,1,2,3,4,5],7:[0,1,2,3,4,5,6]};
+const trainDays=p=>{p=p||S.profile;return Array.isArray(p.days)&&p.days.length?p.days:[0,1,2,3,4,5,6]};
+const wdOf=k=>(parseKey(k).getDay()+6)%7;
+const isTrainDay=(k,p)=>trainDays(p).includes(wdOf(k));
+function missedBetween(a,b){if(!a)return 99;let n=0;const d=dayDiff(a,b);for(let i=1;i<d&&i<90;i++){if(isTrainDay(addDays(a,i)))n++}return n}
+const daysText=p=>{const d=trainDays(p);return d.length===7?'every day':d.length+' days a week ('+d.map(i=>WDN[i]).join(', ')+')'};
+function programInfo(date){
+  const P=S.aiPlan;if(!P||!(P.weeks>1))return null;const w=Math.floor(dayDiff(P.start||weekStart(todayKey()),weekStart(date||todayKey()))/7);
+  if(w<0)return null;if(w>=P.weeks)return{done:true,weeks:P.weeks};
+  const tip=[ 'Learn the moves and find a weight or level you can control.','Add 1–2 reps to every set.','One extra set on each main exercise.','Deload week: one set less so your body can recover.'][w%4];
+  return{week:w+1,weeks:P.weeks,phase:w%4,tip};
+}
+function restDayRoutine(p,date){
+  const r=rng(hash(date+'rest'));const ids=['catcow','worldgreat','hamstr','pigeon','thread','child','hipcircle'].sort(()=>r()-.5).slice(0,4);
+  return{title:'Rest Day',recovery:true,restDay:true,rest:20,fromAI:false,blocks:[{k:'main',name:'Optional light stretch',items:ids.map(id=>item(EXI[id],p,true))}]};
+}
+
+/* ================= Interviews for every tab ================= */
+const listParse=t=>{t=String(t).toLowerCase().replace(/[.!?]+$/,'').trim();if(/^(none|nope|nothing|nah|no|n a|not really)$/.test(t))return[];
+  return t.split(/,|\band\b|\bor\b|\bplus\b|;|\n/).map(x=>x.trim().replace(/^(i (?:have|do|go to|play|hate|don t like|dont like)|my|some|also|no more)\s+/,'').trim()).filter(x=>x.length>=3).slice(0,8)};
+const DAYSQ={k:'days',q:'How many **days a week** do you want to work out? Anywhere from **2 to 7**. Rest days are built in, so your streak stays safe on them.',
+  parse:t=>{const w={two:2,three:3,four:4,five:5,six:6,seven:7,every:7,everyday:7,daily:7};let n=parseInt((t.match(/\d/)||[])[0]);if(!n){const k=Object.keys(w).find(x=>t.includes(' '+x));n=k?w[k]:0}return n>=2&&n<=7?n:null},hint:'Type a number from 2 to 7.'};
+const DIETQ=[
+  {k:'meat',q:'Let’s plan your food! 🍽️ Do you eat **meat**? Say **yes**, **vegetarian** or **vegan**.',parse:t=>has(t,'vegan')?'vegan':has(t,'vegetarian','no meat','don t eat meat','dont eat meat')?'veg':has(t,' yes','yeah','yep','sure','i do','meat',' ya ')?'yes':has(t,' no ','nope')?'veg':null,hint:'Say yes, vegetarian or vegan.'},
+  {k:'allergy',q:'Any **allergies** or foods you can’t have? Like **dairy**, **nuts** or **eggs**, or say **none**.',parse:t=>{const a=[];if(has(t,'dairy','milk','lactose'))a.push('noDairy');if(has(t,'nut','peanut'))a.push('noNuts');if(has(t,'egg'))a.push('noEgg');return a.length||has(t,'none',' no ','nope','nothing','nah')?a:null},hint:'Say dairy, nuts, eggs, or none.'},
+  {k:'dislike',q:'Any foods you really **don’t like**? List them, or say **none**.',parse:(t,raw)=>listParse(raw),hint:'List foods like fish or mushrooms, or say none.'},
+  {k:'focus',q:'Last one! Do you want meals with **more protein** (for muscle), **more energy** (for sports and running), or **balanced**?',parse:t=>has(t,'protein','muscle')?'P':has(t,'energy','carb','sport','run')?'C':has(t,'balanc','normal','either','whatever','both','mix')?'':null,hint:'Say protein, energy or balanced.'},
+];
+const DAYQ=()=>[IV[5],IV[6],IV[7],
+  {k:'acts',q:'What else do you do on most days? Like **soccer practice, piano, chores, walk the dog**. List them, or say **none**.',parse:(t,raw)=>listParse(raw),hint:'List a few things, or say none.'},
+  {k:'withTimes',q:'Last one! Do you want **times** on your schedule, or keep it **flexible** with no times?',parse:t=>has(t,'time','yes','yeah','sure','yep')?true:has(t,'flex','no','nah','without','nope')?false:null,hint:'Say times or flexible.'}];
+function ivQuestions(mode){return mode==='goals'?[...IV.slice(0,5),DAYSQ]:mode==='times'?IV.slice(5):mode==='diet'?DIETQ:mode==='day'?DAYQ():[]}
+function ivStartTab(name){
+  let tb=findTab(name);if(!tb){try{tb=TABACT.create({name});renderTabs()}catch(e){return e.message}}
+  S.iv={mode:'tab',tab:tb.id,step:0,a:{},items:[]};
+  return`Let’s fill your **${esc(tb.name)}** tab! ✏️ What should go on it? Send things one at a time, or a list like **“practice scales, learn a new song”**. Say **done** when you’re finished.`;
+}
+function ivFinish(mode,a){
+  if(mode==='times'){S.ivDone={...(S.ivDone||{}),...a};const sc=offlineSched(true);return{t:sc.summary,sched:sc}}
+  if(mode==='diet'){
+    if(R0()==='parent')return'Diet plans go on your kid’s own app. They can ask me there.';
+    const pr={veg:a.meat!=='yes',vegan:a.meat==='vegan'};(a.allergy||[]).forEach(k=>pr[k]=true);
+    S.dpAvoid=[...new Set([...(S.dpAvoid||[]),...(a.dislike||[]).map(x=>x.toLowerCase().replace(/s$/,''))])];S.dpBias=a.focus||null;S.dpPrefs=pr;
+    return applyDietPlan(makeDietPlan(pr));
+  }
+  if(mode==='day'){
+    S.ivDone={...(S.ivDone||{}),wake:a.wake,bed:a.bed,school:a.school};
+    const sc=offlineSched(!!a.withTimes),as=sc.sections.find(x=>/after school|midday/i.test(x.name))||sc.sections[1]||sc.sections[0];
+    (a.acts||[]).forEach(x=>{const title=x.replace(/^\w/,c=>c.toUpperCase()).slice(0,40);if(!sc.sections.some(s=>s.tasks.some(k=>k.title.toLowerCase()===title.toLowerCase())))as.tasks.splice(Math.max(0,as.tasks.length-1),0,{id:rid(),title,time:'',min:30})});
+    sc.summary=`Here’s your day, built from your answers${(a.acts||[]).length?`, with ${a.acts.join(', ')} added`:''}${a.withTimes?'':', in order with no clock times'}. Tap **Use this schedule** to make it yours.`;
+    return{t:sc.summary,sched:sc};
+  }
+  // goals
+  const days=SPREAD[a.days]||SPREAD[7];
+  S.profile={...S.profile,age:a.age,goal:a.goal,level:a.level,equip:a.equip,minutes:a.minutes,days,set:true};S.ivDone={...(S.ivDone||{}),...a};
+  if(!S.today.done.length)S.today.variant=0;renderHeader();
+  return`That’s everything! Here’s what I’ve got:\n- **Goal:** ${GOALS[a.goal]}\n- **Age:** ${a.age} · **Experience:** ${LEVELS[a.level]}\n- **Equipment:** ${EQUIP[a.equip]} · **${a.minutes} min** a session\n- **Training:** ${daysText({days})}\n\nI’ve saved this to your profile. Next, try **“make me a 4 week workout plan”**, or let me interview you for your **diet** or your **day**.`;
+}
+function ivAnswer2(text){
+  const t=norm(text),iv=S.iv;
+  if(iv.mode==='tab'){
+    const tb=ctab(iv.tab);if(!tb){S.iv=null;return'That tab is gone, so I stopped.'}
+    if(/^ (done|that s it|thats it|that s all|thats all|finished|nothing else|no|nope|all done) $/.test(t)){S.iv=null;
+      return iv.items.length?`Your **${esc(tb.name)}** tab now has ${iv.items.length} new item${iv.items.length>1?'s':''}:\n${iv.items.map(x=>'- '+esc(x)).join('\n')}\n\nCheck them off there each day for XP!`:`No problem. Your **${esc(tb.name)}** tab is ready whenever you want to add things.`}
+    const its=listParse(text);
+    const add=(its.length?its:[text.trim()]).map(x=>x.replace(/^\w/,c=>c.toUpperCase()).slice(0,60));add.forEach(x=>{TABACT.addItem(tb.id,x);iv.items.push(x)});save();
+    return`Added ${add.map(x=>'**'+esc(x)+'**').join(', ')}! Anything else? Say **done** when you’re finished.`;
+  }
+  const Q=ivQuestions(iv.mode||'goals'),st=Q[iv.step],v=st.parse(t,text);
+  if(v==null)return`Hmm, I didn’t catch that. ${st.hint}`;
+  iv.a[st.k]=v;iv.step++;
+  const cheer=['Got it.','Nice.','Perfect.','Cool.','Love it.','Noted.','Great.'][iv.step%7];
+  if(iv.step<Q.length)return cheer+' '+Q[iv.step].q;
+  const a=iv.a,mode=iv.mode||'goals';S.iv=null;return ivFinish(mode,a);
+}
+function ivStart2(mode){S.iv={mode,step:0,a:{}};const Q=ivQuestions(mode);
+  const intro={goals:`Let’s do it! I’ll ask ${Q.length} quick questions about your training.`,times:`Sure, let’s put times on your schedule. ${Q.length} quick questions.`,diet:`Let’s build your meal plan! ${Q.length} quick questions.`,day:`Let’s plan your day! ${Q.length} quick questions.`}[mode];
+  return intro+'\n\n'+Q[0].q}
+function interviewCommand(t){
+  if(R0()==='parent')return null;
+  let m=t.match(/\b(?:interview|ask) me (?:about|for|on) (?:my |the )?(.+?) tab\b|\b(?:fill (?:in|out|up)|set up|help me (?:with|fill)) (?:my |the )?(.+?) tab\b/);
+  if(m)return ivStartTab((m[1]||m[2]).trim());
+  if(/\b(?:interview|ask) me (?:about|for|on) (?:my )?(?:diet|food|meals?|eating|nutrition)\b|\b(?:set up|plan|help me plan) my (?:diet|food|meals)\b(?! plan)/.test(t))return ivStart2('diet');
+  if(/\b(?:interview|ask) me (?:about|for|on) (?:my )?(?:day|schedule|routine|daily routine|my day)\b|\b(?:set up|help me plan|plan out) my day\b/.test(t))return ivStart2('day');
+  if(/\b(?:interview me|ask me about my goals|set me up)\b/.test(t)||/^ interview me $/.test(t))return ivStart2('goals');
+  return null;
+}
+/* commands: days per week + multi-week programs */
+function daysCommand(t){
+  let m=t.match(/\b(\d|two|three|four|five|six|seven)\s*(?:days?|times?)\s*(?:a|per|each)\s*week\b/);
+  const W={two:2,three:3,four:4,five:5,six:6,seven:7};
+  if(m&&/\b(work ?out|train|exercise|gym|lift|workouts?)\b/.test(t)&&!/\bweeks? (?:plan|program)/.test(t)){const n=W[m[1]]||parseInt(m[1]);if(n<2||n>7)return'I can set anywhere from 2 to 7 training days a week.';
+    S.profile={...S.profile,days:SPREAD[n],set:true};save();renderHeader();return`Done! You’ll train **${daysText()}**. The other days are rest days, and they won’t break your streak. 😴`}
+  const named=WDFULL.filter(d=>t.includes(' '+d)||t.includes(' '+d.slice(0,3)+' '));
+  if(named.length&&/\b(train|work ?out|workouts?|exercise|gym)\b.*\bon\b/.test(t)){const days=named.map(d=>WDFULL.indexOf(d)).sort();S.profile={...S.profile,days,set:true};save();return`Done! You’ll train on **${days.map(i=>WDN[i]).join(', ')}**. Everything else is a rest day.`}
+  if(named.length&&/\brest day\b/.test(t)&&/\b(make|set|add)\b/.test(t)){const off=named.map(d=>WDFULL.indexOf(d));const days=trainDays().filter(i=>!off.includes(i));if(days.length<1)return'You need at least one training day!';S.profile={...S.profile,days,set:true};save();return`${named.map(d=>d[0].toUpperCase()+d.slice(1)).join(' and ')} ${named.length>1?'are':'is'} now a rest day. You train **${daysText()}**.`}
+  if(named.length&&/\b(add|also)\b.*\b(train|work ?out|workout|day)\b/.test(t)){const days=[...new Set([...trainDays(),...named.map(d=>WDFULL.indexOf(d))])].sort();S.profile={...S.profile,days,set:true};save();return`Added! You train **${daysText()}**.`}
+  if(/\b(what|which) days do i (train|work ?out)\b|\bmy training days\b/.test(t))return`You train **${daysText()}**.`;
+  m=t.match(/\b(\d{1,2}|one|two|three|four|five|six|eight|ten|twelve)[ -]?weeks?\b/);
+  if(m&&/\b(plan|program|programme|schedule|routine|workouts?|training)\b/.test(t)){
+    if(R0()==='parent')return'Workout programs go on your kid’s own app.';
+    const NW={one:1,two:2,three:3,four:4,five:5,six:6,eight:8,ten:10,twelve:12},n=Math.max(1,Math.min(12,NW[m[1]]||parseInt(m[1])||4));
+    const pl=offlinePlan();pl.weeks=n;pl.summary=`Here’s your **${n}-week program**: ${daysText()}, about ${S.profile.minutes} min a session.${n>1?' It gets harder each week: week 1 learn the moves, week 2 add reps, week 3 add a set, week 4 an easier recovery week, then repeat.':''} Tap **Use this plan** to start it this week.`;
+    return{t:pl.summary,plan:pl};
+  }
+  return null;
+}
+
 function tryCommand(raw){
   const text=raw.trim().replace(/[.!?]+$/,''),t=norm(text);
   const run=(f,...a)=>{try{return f(...a)}catch(e){return e.message||'I couldn’t do that.'}};
@@ -2288,6 +2631,8 @@ function tryCommand(raw){
   if(/\b(mute|sounds? off|turn (the )?sounds? off|no sounds?)\b/.test(t))return run(ACT.sound,{on:false});
   // plan
   if(/\b(clear|remove|delete|stop|drop)\b.*\b(your|skeefo s|the|my)\b.*\bplan\b/.test(t)||has(t,'back to normal workouts','back to automatic'))return run(ACT.clearPlan);
+  {const iv=interviewCommand(t);if(iv!=null)return iv}
+  {const dc=daysCommand(t);if(dc!=null)return dc}
   // shuffle
   if(/\b(shuffle|reroll|re roll)\b/.test(t)||/\b(new|different|another)\b (workout|routine) (today|for today)?/.test(t))return run(ACT.shuffle);
   // tabs and diet
@@ -2317,7 +2662,7 @@ function tryCommand(raw){
   m=t.match(/\bi\s+(?:just\s+)?(?:ate|had|finished|eat)\s+(?:my\s+|a\s+)?(breakfast|lunch|dinner|snack)\b/);
   if(m&&R0()==='me'){const k={breakfast:'b',lunch:'l',dinner:'d',snack:'s'}[m[1]];return run(()=>{const d0=dietDay().m[k];let out=d0?`You already logged ${m[1]} on Diet.`:DIET.meal(k);
     const f=findTask(sched(),m[1]),log=S.dayLog[todayKey()]||{};if(f&&f.k.kind!=='workout'&&!(log[f.k.id]&&log[f.k.id].d)){taskToggle(f.k.id,$('.composer')||document.body);out+=` Checked off **${esc(f.k.title)}** on My day too.`}return out})}
-  {const ym=text.match(/^(?:show me |play |preview )?(?:the )?yeti (?:for |doing |animation for )?(.+)$/i);if(ym&&!/^(animations?|on|off)$/i.test(ym[1].trim())){const tl=ym[1].replace(/^["“']|["”']$/g,'');setTimeout(()=>yetiPlay(tl),300);const sp=yetiSpec(tl);return`Here’s Yeti doing **${esc(tl)}**! (${sp.ai?'scene picked by my Claude brain':'scene from my offline brain'}: *${sp.m}*)`}}
+  {const ym=text.match(/^(?:show me |play |preview )?(?:the )?(?:yeti|animation) (?:for |doing |of )?(.+)$/i);if(ym&&!/^(animations?|on|off)$/i.test(ym[1].trim())){const tl=ym[1].replace(/^["“']|["”']$/g,'');setTimeout(()=>yetiPlay(tl),300);const sp=yetiSpec(tl);return`Here’s the animation for **${esc(tl)}**! (${sp.ai?'picked by my Claude brain':'picked by my offline brain'}: *${itemKey(sp)}*)`}}
   {const r2=tryCommand2(text,t);if(r2!=null)return r2}
   // section
   m=text.match(/^(?:please\s+|can you\s+|could you\s+)?(?:add|make|create)\s+(?:a\s+|another\s+|new\s+)*section\s+(?:called|named|for)?\s*(.+)$/i);if(m)return run(ACT.addSection,{name:m[1]});
@@ -2344,6 +2689,7 @@ function tryCommand(raw){
   return null;
 }
 const TOOLS=()=>[
+  {name:'set_training_days',description:'Set which weekdays the user trains. days: array of weekday indexes 0=Mon..6=Sun, or count: number of days per week (2-7) to spread evenly.',inputSchema:{type:'object',properties:{days:{type:'array',items:{type:'number'}},count:{type:'number'}}},execute:i=>{const d=Array.isArray(i.days)&&i.days.length?[...new Set(i.days.map(Number).filter(x=>x>=0&&x<=6))].sort():SPREAD[Math.max(2,Math.min(7,parseInt(i.count)||7))];S.profile={...S.profile,days:d,set:true};save();return'Training days: '+daysText()}},
   {name:'edit_diet_meal',description:'Change one meal in the saved 7-day diet plan. day: monday..sunday or today/tomorrow. meal: breakfast|lunch|dinner|snack. Give text to set a specific meal, or leave it out to swap for a random healthy idea.',inputSchema:{type:'object',properties:{day:{type:'string'},meal:{type:'string'},text:{type:'string'}},required:['meal']},execute:i=>{const di=dayIdx(' '+String(i.day||'today').toLowerCase()+' '),k=MEALN[String(i.meal).toLowerCase()];if(!k)throw new Error('meal must be breakfast, lunch, dinner or snack');return i.text?'Set: '+DPLAN.set(di,k,i.text):'Swapped to: '+DPLAN.swap(di,k)}},
   {name:'diet_avoid_food',description:'Remove a food the user dislikes or is allergic to from the diet plan and keep it out of future plans.',inputSchema:{type:'object',properties:{food:{type:'string'}},required:['food']},execute:i=>'Replaced '+DPLAN.avoid(i.food)+' meals'},
   {name:'diet_more',description:'Rebuild the diet plan leaning toward more protein (P) or more carbs (C).',inputSchema:{type:'object',properties:{focus:{type:'string',enum:['P','C']}},required:['focus']},execute:i=>{S.dpBias=i.focus==='C'?'C':'P';return DPLAN.prefs({})}},
@@ -2368,16 +2714,16 @@ const TOOLS=()=>[
 
 async function sendChat(text){
   text=(text||'').trim();if(busy||!text)return;
-  if(!S.iv){const cmd=tryCommand(text);if(cmd!=null){SFX.send();S.chat.push({r:'u',t:text});S.chat.push({r:'a',t:cmd,act:1});SFX.reply();if(S.chat.length>40)S.chat=S.chat.slice(-40);save();renderHeader();render();scrollChat();return}}
-  if(!useClaude())return offlineChat(text);
+  if(!S.iv){const cmd=tryCommand(text);if(cmd!=null){SFX.send();S.chat.push({r:'u',t:text});{const am={r:'a',act:1};setAns(am,cmd);S.chat.push(am)}SFX.reply();if(S.chat.length>40)S.chat=S.chat.slice(-40);save();renderHeader();render();scrollChat();return}}
+  if(S.iv||!useClaude())return offlineChat(text);
   SFX.send();busy=true;S.chat.push({r:'u',t:text});const a={r:'a',t:'',pending:1};S.chat.push(a);render();scrollChat();
   try{
-    const msgs=[{role:'user',content:persona()+'\n\nReply "Ready." to confirm.'},{role:'assistant',content:'Ready.'},...history()];
+    const msgs=[{role:'user',content:persona()+'\n\nReply "Ready." to confirm.'},{role:'assistant',content:'Ready.'},...chatHistory()];
     if(msgs[msgs.length-1].role!=='user')msgs.push({role:'user',content:text});
     let tools;try{const L=await SAMPLE.limits();if(L&&L.tools)tools=TOOLS()}catch(e){}
     const res=await SAMPLE(msgs,{cache:false,...(tools?{tools}:{}),onText:({text})=>{a.t=text;const el=document.querySelector('#chat .bubble.a:last-child .txt');if(el){el.innerHTML=md(text);scrollChat()}}});
     a.t=res.text||a.t;if(tools){renderHeader()}
-  }catch(e){setAns(a,offlineAnswer(text));a.off=1}
+  }catch(e){if(e&&['bad_key','no_credit'].includes(e.code))a.t=errText(e);else{setAns(a,offlineAnswer(text));a.off=1}}
   a.pending=0;busy=false;SFX.reply();if(S.chat.length>40)S.chat=S.chat.slice(-40);save();if(tab==='skeefo')render();
 }
 async function buildPlan(){
@@ -2529,7 +2875,8 @@ function viewProfile(){
     <div class="field"><span class="lab">Main goal</span>${radios('goal',GOALS)}</div>
     <div class="field"><span class="lab">Experience</span>${radios('level',LEVELS)}</div>
     <div class="field"><span class="lab">Equipment</span>${radios('equip',EQUIP)}</div>
-    <div class="field"><label for="pf-min">Time per day</label><div class="range"><input type="range" id="pf-min" min="15" max="${RULES().maxMinutes||60}" step="5" value="${Math.min(p.minutes,RULES().maxMinutes||60)}"><output id="pf-minout" class="num">${p.minutes} min</output></div></div>
+    <div class="field"><span class="lab">Training days</span><div class="opts">${WDN.map((d,i)=>`<label class="opt"><input type="checkbox" name="pf-day" id="pf-day-${i}" value="${i}" ${trainDays(p).includes(i)?'checked':''}><span>${d}</span></label>`).join('')}</div><span class="hint">Days you don’t pick are rest days. They won’t break your streak.</span></div>
+    <div class="field"><label for="pf-min">Time per session</label><div class="range"><input type="range" id="pf-min" min="15" max="${RULES().maxMinutes||60}" step="5" value="${Math.min(p.minutes,RULES().maxMinutes||60)}"><output id="pf-minout" class="num">${p.minutes} min</output></div></div>
     <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><button class="btn primary" type="submit">Save and build my routine</button><span class="hint" id="pf-msg"></span></div>
   </form></section>`;
 }
@@ -2538,7 +2885,7 @@ function bindProfile(){
   f.addEventListener('submit',e=>{e.preventDefault();
     const age=Math.max(13,Math.min(95,parseInt($('#pf-age').value)||28)),g=n=>f.querySelector(`input[name="${n}"]:checked`)?.value;
     const started=S.today.done.length>0;
-    S.profile={...S.profile,name:$('#pf-name').value.trim().slice(0,24),age,goal:g('goal'),level:g('level'),equip:g('equip'),minutes:+$('#pf-min').value,set:true};
+    const dsel=[...f.querySelectorAll('input[name="pf-day"]:checked')].map(x=>+x.value);S.profile={...S.profile,name:$('#pf-name').value.trim().slice(0,24),age,goal:g('goal'),level:g('level'),equip:g('equip'),minutes:+$('#pf-min').value,days:dsel.length?dsel:[0,1,2,3,4,5,6],set:true};
     save();renderHeader();
     if(started)$('#pf-msg').textContent='Saved. You already started today, so the new settings start tomorrow.';
     else{tab='workout';render();scrollTo({top:0,behavior:reduced?'auto':'smooth'});toast(medal('✓',true),'Profile saved','Today’s routine is rebuilt for you.')}
@@ -2546,7 +2893,8 @@ function bindProfile(){
 }
 
 /* ================= Actions ================= */
-document.addEventListener('submit',e=>{if(e.target.id==='gate-form'){e.preventDefault();sbAuth(gateMode);return}
+document.addEventListener('submit',e=>{if(e.target.id==='byok-form'){e.preventDefault();byokLink();return}
+  if(e.target.id==='gate-form'){e.preventDefault();sbAuth(gateMode);return}
   if(e.target.id==='ti-form'){e.preventDefault();const i=$('#ti-in');if(i.value.trim()){TABACT.addItem(tab,i.value);SFX.soft();render();$('#ti-in')?.focus()}return}
   if(e.target.id==='sk-form'){e.preventDefault();const i=$('#sk-in');const v=i.value;i.value='';sendChat(v)}});
 document.addEventListener('keydown',e=>{if(e.target.id==='sk-in'&&e.key==='Enter'&&!e.shiftKey){e.preventDefault();$('#sk-form').requestSubmit()}});
@@ -2581,6 +2929,7 @@ document.addEventListener('click',e=>{
     case'usesched':{const r=applySched(+t.dataset.i);render();if(r)toast(skeefoMark(40),'Schedule updated',R0()==='parent'?'It’s on your kid’s app now.':'Check it out on My day.');break}
     case'link':doLink();break;
     case'managelink':manageLink();break;
+    case'byokoff':try{localStorage.removeItem(BYOK_KEY)}catch(err){}SAMPLE=null;linkState='signedout';S.skMode='auto';save();render();toast(skeefoMark(40),'Unlinked','Skeefo is back on his offline brain.');break;
     case'skmode':S.skMode=S.skMode==='offline'?'auto':'offline';save();render();toast(skeefoMark(40),S.skMode==='offline'?'Offline brain on':'Claude brain on',S.skMode==='offline'?'Skeefo answers without Claude now.':'Skeefo is back to full power.');break;
     case'sound':S.sound=S.sound===false;save();updateSnd();if(S.sound)SFX.link();break;
     case'famcreate':{const n=($('#fam-name')||{}).value||'';if(!n.trim()){$('#fam-name')?.focus();break}setGroup({name:n.trim().slice(0,30),parents:[UID],kids:[],ignored:[],created:Date.now()}).then(()=>{SFX.bonus();confetti(.7);render()});break}
@@ -2629,7 +2978,7 @@ document.addEventListener('click',e=>{
         SFX.link();toast(medal('+',true),'Request sent','A parent needs to approve you.');if(t.dataset.v==='kid'){S.fam={joined:true};save()}sbRefresh()});break}
     case'sbleave':if(SBX.kidFam)SBX.client.from('family_members').delete().eq('family_id',SBX.kidFam.id).eq('user_id',UID).then(()=>{S.fam={joined:false};save();sbRefresh()});break;
     case'copycode':{const v=t.dataset.v;try{navigator.clipboard.writeText(v).then(()=>toast(medal('✓',true),'Code copied',v),()=>{})}catch(err){}break}
-    case'yetitoggle':S.yeti=S.yeti===false;save();render();if(S.yeti)yetiPlay('Turn on yeti animations');break;
+    case'yetitoggle':S.yeti=S.yeti===false;save();render();if(S.yeti)yetiPlay('Animations on');break;
     case'clearchat':if(!busy){archiveChat();save();SFX.shuffle();render();toast(skeefoMark(40),'Chat cleared','Skeefo still remembers what you talked about.')}break;
     case'forget':{if(t.dataset.sure!=='1'){t.dataset.sure='1';t.textContent='Tap again to make Skeefo forget';break}S.mem=[];S.chat=[];save();render();toast(skeefoMark(40),'Memory wiped','Skeefo starts fresh. Your plans and schedule stay the same.');break}
     case'clearplan':S.aiPlan=null;save();render();toast(medal('✓',true),'Skeefo plan cleared','Back to automatic daily routines.');break;
@@ -2651,7 +3000,7 @@ function toggle(id,btn){
   else{if(!S.today.start)S.today.start=Date.now();S.today.done.push(id);S.xp+=it.xp;h.x+=it.xp;floatXP(btn,'+'+it.xp+' XP');sparks(btn);SFX.check(S.today.done.length-1);setTimeout(SFX.coin,90);noteCheck()}
   let finished=false;
   if(items.every(i=>S.today.done.includes(i.id))){
-    finished=true;const missed=S.last?dayDiff(S.last,d)-1:99;
+    finished=true;const missed=S.last?missedBetween(S.last,d):99;
     S.streak=(S.last&&missed<=1)?S.streak+1:1;S.best=Math.max(S.best,S.streak);
     const bonus=Math.round(BONUS*(1+Math.min(S.streak,10)*.1));
     S.xp+=bonus;h.x+=bonus;h.c=1;S.total++;S.last=d;S.today.end=Date.now();h.wm=Math.max(1,Math.round((S.today.end-S.today.start)/60000));
@@ -2986,6 +3335,7 @@ function boot(withDecay=true,quiet=false){
   if(d&&d.to)setTimeout(()=>levelDown(d),400);
   else if(d&&d.broke&&!quiet)toast(medal('0',false),'Streak reset','You missed two days in a row.');
 }
+byokInit();
 boot();
 sbInit();
 connect();
