@@ -671,6 +671,84 @@ button.tag{border:0;cursor:pointer}
 @keyframes yCheerL{from{transform:rotate(150deg)}to{transform:rotate(118deg)}}@keyframes yCheerR{from{transform:rotate(-150deg)}to{transform:rotate(-118deg)}}
 @keyframes yJump{from{transform:translateY(0)}to{transform:translateY(-14px)}}
 @keyframes yStar{0%{opacity:0;transform:scale(.3)}40%{opacity:1;transform:scale(1.2)}100%{opacity:0;transform:scale(.6)}}
+/* ---------- Yeti scene generator: generic effects + new motions ---------- */
+.yeti-cap small{display:block;font-size:11px;color:var(--faint);margin-top:6px;font-family:var(--f-mono)}
+.yeti-svg.y-eyesshut .y-eyes{display:none;animation:none}.yeti-svg.y-eyesshut .y-closed{display:inline}
+.fx-bub circle{opacity:0;animation:yBubble 1.6s ease-out infinite}.fx-bub .b2{animation-delay:.4s}.fx-bub .b3{animation-delay:.8s}
+.fx-drop .d{animation:yDrop .7s linear infinite}.fx-drop .d1{animation-delay:.15s}.fx-drop .d2{animation-delay:.3s}.fx-drop .d3{animation-delay:.45s}.fx-drop .d4{animation-delay:.6s}
+.fx-z .z{opacity:0;animation:yZ 3s ease-out infinite}.fx-z .z2{animation-delay:.8s}.fx-z .z3{animation-delay:1.6s}
+.fx-note .n{opacity:0;animation:yNote 1.8s ease-out infinite}.fx-note .n2{animation-delay:.6s}.fx-note .n3{animation-delay:1.2s}
+.fx-star .st{opacity:0;animation:yStar 1.2s ease-out infinite}.fx-star .st1{animation-delay:.2s}.fx-star .st2{animation-delay:.4s}.fx-star .st3{animation-delay:.6s}.fx-star .st4{animation-delay:.8s}
+.fx-heart .ht{opacity:0;animation:yHeart 1.8s ease-out infinite}.fx-heart .ht1{animation-delay:.6s}.fx-heart .ht2{animation-delay:1.2s}
+.fx-steam .sm{stroke-dasharray:40;animation:ySteam 1.6s ease-in-out infinite}.fx-steam .s2{animation-delay:.5s}
+.fx-dust circle{animation:yPuff .7s ease-out infinite}.fx-dust .p2{animation-delay:.35s}
+.fx-sweat path{opacity:0;animation:yBubble 1s ease-out infinite}.fx-sweat .s2{animation-delay:.5s}
+.fx-flash .fl{opacity:0;animation:yFlash 1.6s ease-out infinite}
+.fx-ring .r{transform-origin:100px 100px;opacity:0;animation:yRing 2.4s ease-out infinite}.fx-ring .r2{animation-delay:1.2s}
+.fx-dots .dt{animation:yDots 1.2s ease-in-out infinite}.fx-dots .dt1{animation-delay:.2s}.fx-dots .dt2{animation-delay:.4s}
+@keyframes yHeart{0%{opacity:0;transform:scale(.4)}30%{opacity:1;transform:scale(1.2)}100%{opacity:0;transform:translateY(-16px) scale(.9)}}
+@keyframes ySteam{0%{stroke-dashoffset:40;opacity:0}40%{opacity:.8}100%{stroke-dashoffset:-40;opacity:0}}
+@keyframes yFlash{0%,60%{opacity:0;transform:scale(.4)}66%{opacity:.95;transform:scale(1)}100%{opacity:0;transform:scale(1.3)}}
+@keyframes yRing{0%{opacity:.7;transform:scale(.6)}100%{opacity:0;transform:scale(1.5)}}
+@keyframes yDots{0%,100%{opacity:.3;transform:translateY(0)}50%{opacity:1;transform:translateY(-3px)}}
+.yeti-svg .fx-flash .fl,.yeti-svg .fx-heart .ht,.yeti-svg .fx-star .st{transform-box:fill-box;transform-origin:center}
+/* type */
+.y-type .y-armL{animation:yTapL .16s ease-in-out infinite alternate}.y-type .y-armR{animation:yTapR .16s ease-in-out infinite alternate-reverse}
+.y-type .y-screen{animation:yGlow 1.2s ease-in-out infinite alternate}.y-type .y-head{transform:rotate(4deg) translateY(2px)}
+@keyframes yTapL{from{transform:rotate(-46deg)}to{transform:rotate(-38deg)}}@keyframes yTapR{from{transform:rotate(46deg)}to{transform:rotate(38deg)}}
+@keyframes yGlow{from{opacity:.55}to{opacity:.95}}
+/* lift */
+.y-lift .y-armR{animation:yPress 1.1s ease-in-out infinite}.y-lift .y-armL{animation:yPressL 1.1s ease-in-out infinite}
+.y-lift .y-mouth{transform-box:fill-box;transform-origin:center;animation:yChomp 1.1s ease-in-out infinite}
+@keyframes yPress{0%,100%{transform:rotate(-40deg)}50%{transform:rotate(-165deg)}}@keyframes yPressL{0%,100%{transform:rotate(40deg)}50%{transform:rotate(165deg)}}
+/* throw */
+.y-throw .y-armR{animation:yThrow 1.6s cubic-bezier(.5,0,.2,1) infinite}
+.y-throw .y-held{animation:yHeld 1.6s step-end infinite}
+.y-throw .fx-throw .tb{opacity:0;animation:yBall 1.6s ease-out infinite}
+@keyframes yThrow{0%,15%{transform:rotate(-20deg)}45%{transform:rotate(-160deg)}58%{transform:rotate(-60deg)}80%,100%{transform:rotate(-20deg)}}
+@keyframes yHeld{0%{opacity:1}55%{opacity:0}90%{opacity:1}}
+@keyframes yBall{0%,52%{opacity:0;transform:translate(0,0)}56%{opacity:1;transform:translate(0,0)}85%{opacity:1;transform:translate(46px,-70px) scale(.6)}100%{opacity:0;transform:translate(56px,-90px) scale(.4)}}
+/* dance */
+.y-dance .y-all{animation:yDance .5s ease-in-out infinite alternate}
+.y-dance .y-armL{animation:yDanceL .5s ease-in-out infinite alternate}.y-dance .y-armR{animation:yDanceR .5s ease-in-out infinite alternate-reverse}
+.y-dance .y-legL{animation:yStep .5s ease-in-out infinite alternate}.y-dance .y-legR{animation:yStep .5s ease-in-out infinite alternate-reverse}
+@keyframes yDance{from{transform:rotate(-7deg) translateY(0)}to{transform:rotate(7deg) translateY(-6px)}}
+@keyframes yDanceL{from{transform:rotate(20deg)}to{transform:rotate(150deg)}}@keyframes yDanceR{from{transform:rotate(-20deg)}to{transform:rotate(-150deg)}}
+/* call */
+.y-call .y-armR{transform:rotate(150deg)}.y-call .y-head{animation:yNodTalk .9s ease-in-out infinite}
+.y-call .y-mouth{transform-box:fill-box;transform-origin:center;animation:yChomp .4s ease-in-out infinite}
+@keyframes yNodTalk{0%,100%{transform:rotate(6deg)}50%{transform:rotate(10deg)}}
+/* water */
+.y-water .y-armR{animation:yPour 1.4s ease-in-out infinite alternate}
+.y-water .y-grow{transform-box:fill-box;transform-origin:50% 100%;animation:yGrow 2.8s ease-in-out infinite}
+@keyframes yPour{from{transform:rotate(-55deg)}to{transform:rotate(-80deg)}}
+@keyframes yGrow{0%,20%{transform:scale(.6)}70%,100%{transform:scale(1.08)}}
+/* cook */
+.y-cook .y-armR{animation:yStir .5s ease-in-out infinite alternate}.y-cook .y-armL{transform:rotate(-20deg)}
+@keyframes yStir{from{transform:rotate(18deg) translateX(-3px)}to{transform:rotate(34deg) translateX(3px)}}
+/* show + wave */
+.y-show .y-armR{animation:yShow 1.4s cubic-bezier(.3,1.5,.5,1) infinite alternate}.y-show .y-all{animation:yJump .7s ease-in-out infinite alternate}
+.y-wave .y-armR{animation:yWave .35s ease-in-out infinite alternate}.y-wave .y-head{transform:rotate(-6deg)}
+@keyframes yShow{0%{transform:rotate(-30deg)}40%,100%{transform:rotate(-158deg)}}
+@keyframes yWave{from{transform:rotate(-150deg)}to{transform:rotate(-118deg)}}
+/* calm */
+.y-calm .y-all{animation:yBreathe 4s ease-in-out infinite}.y-calm .y-armL{transform:rotate(38deg)}.y-calm .y-armR{transform:rotate(-38deg)}
+/* pack */
+.y-pack .y-armR{animation:yPack .8s ease-in-out infinite}.y-pack .y-armL{transform:rotate(-30deg)}
+@keyframes yPack{0%,100%{transform:rotate(-40deg)}50%{transform:rotate(24deg)}}
+/* game */
+.y-game .y-armL{animation:yTapL .12s linear infinite alternate}.y-game .y-armR{animation:yTapR .12s linear infinite alternate-reverse}
+.y-game .y-head{animation:yBob .8s ease-in-out infinite}
+/* paint */
+.y-paint .y-armR{animation:yDab .5s ease-in-out infinite alternate}.y-paint .y-head{transform:rotate(-8deg)}
+.y-paint .y-dab{transform-box:fill-box;transform-origin:center;animation:yDabIn 2.4s ease-out infinite}.y-paint .d2{animation-delay:.5s}.y-paint .d3{animation-delay:1s}
+@keyframes yDab{from{transform:rotate(-62deg)}to{transform:rotate(-82deg)}}
+@keyframes yDabIn{0%{transform:scale(0)}30%,100%{transform:scale(1)}}
+/* photo */
+.y-photo .y-armR{transform:rotate(148deg)}.y-photo .y-armL{transform:rotate(-140deg)}
+/* walking dog */
+.y-dog{animation:yRun .3s ease-in-out infinite alternate}.y-tail{transform-box:fill-box;transform-origin:100% 100%;animation:yWag .2s ease-in-out infinite alternate}
+@keyframes yWag{from{transform:rotate(-15deg)}to{transform:rotate(15deg)}}
 </style>
 
 <header class="board">
@@ -1265,7 +1343,7 @@ async function flush(){
 async function saveSchedule(sc){
   sc.updated=Date.now();
   if(R0()==='parent'){if(!SEL)return;const locked=!!sc.locked;delete sc.locked;await setCtl(SEL,{schedule:clone(sc),rules:{...RULES(),lockSchedule:locked}});return}
-  S.schedule=clone(sc);save();
+  S.schedule=clone(sc);save();try{yetiPrefetch()}catch(e){}
 }
 async function connect(){
   try{
@@ -1288,7 +1366,7 @@ async function connect(){
       DB.collection('kids').onSnapshot(sn=>{KIDS={};sn.docs.forEach(d=>KIDS[d.id]=clone(d.data()));if(R0()==='parent'){renderHeader();safeRender(['family','report','schedule'])}},()=>{});
       DB.collection('ctl').onSnapshot(sn=>{CTLS={};sn.docs.forEach(d=>CTLS[d.id]=clone(d.data()));if(R0()==='parent')safeRender(['family','schedule'])},()=>{});
     }
-    renderTabs();render();renderHeader();flush();
+    renderTabs();render();renderHeader();flush();try{yetiPrefetch()}catch(e){}
   }catch(e){console.warn(e);render()}
 }
 
@@ -1863,67 +1941,148 @@ function applySched(i){const m=typeof i==='object'?i:S.chat[i];if(!m||!m.sched)r
   allChat().forEach(x=>{if(x.sched)x.applied=0});m.applied=1;save();confetti(.6);SFX.bonus();
   return R0()==='parent'?'Done! That schedule is on your kid’s app now.':'Done! Your day is updated to my schedule. Check it out on My day.'}
 function pendingProposal(){for(let i=S.chat.length-1;i>=Math.max(0,S.chat.length-6);i--){const m=S.chat[i];if((m.sched||m.plan)&&!m.applied)return m.plan?'plan':'sched'}return null}
-/* ================= Yeti animation generator (My day) ================= */
-const YETI_ACTS=[
-  [/water|drink|hydrat|juice|smoothie|\btea\b|glass of milk/,'drink'],
-  [/teeth|tooth|brush|floss|mouthwash/,'brush'],
-  [/shower|bath|wash (?:up|face|hair)|skincare|get ready|deodorant/,'shower'],
-  [/make (?:your |my |the )?bed|chore|clean|tidy|laundry|dishes|vacuum|sweep|declutter|room|trash|garbage/,'clean'],
-  [/sleep|lights out|nap|screens? off|go to bed|bedtime|\bbed\b/,'sleep'],
-  [/breakfast|lunch|dinner|supper|snack|\beat\b|meal|food|fruit|veggie|cook/,'eat'],
-  [/read|book|novel|comic/,'read'],
-  [/homework|study|school|write|writing|math|essay|project|learn|class|notes|test|exam/,'write'],
-  [/music|guitar|piano|sing|instrument|drum|violin|band|ukulele|practice scales/,'music'],
-  [/stretch|yoga|meditat|breath|mindful|calm/,'stretch'],
-  [/run|jog|sprint|soccer|basketball|hockey|football|sport|practice|train|exercise|workout|gym|swim|skate|dance/,'run'],
-  [/walk|dog|outside|hike|bike|fresh air|park/,'walk'],
+/* ================= Yeti scene generator (My day) ================= */
+const Y_MOTIONS=['drink','eat','brush','shower','clean','sleep','read','write','music','stretch','run','walk','cheer','type','lift','throw','dance','call','water','cook','show','wave','calm','pack','game','paint','photo'];
+const Y_PROPS=['none','cup','bowl','plate','apple','toothbrush','broom','shirt','trash','pencil','book','guitar','dumbbell','ball','phone','laptop','wateringcan','pot','backpack','controller','paint','camera','flower','sign','dog','bed','shower'];
+const Y_FX=['none','bubbles','drops','zzz','notes','stars','hearts','steam','dust','sweat','flash','rings','dots'];
+const Y_DEF={drink:{p:'cup',fx:'bubbles'},eat:{p:'bowl',fx:'hearts'},brush:{p:'toothbrush',fx:'bubbles'},shower:{p:'shower',fx:'drops'},clean:{p:'broom',fx:'dust'},sleep:{p:'bed',fx:'zzz'},
+  read:{p:'book',fx:'none'},write:{p:'pencil',fx:'none'},music:{p:'guitar',fx:'notes'},stretch:{p:'none',fx:'sweat'},run:{p:'none',fx:'sweat'},walk:{p:'dog',fx:'none'},cheer:{p:'none',fx:'stars'},
+  type:{p:'laptop',fx:'dots'},lift:{p:'dumbbell',fx:'sweat'},throw:{p:'ball',fx:'stars'},dance:{p:'none',fx:'notes'},call:{p:'phone',fx:'dots'},water:{p:'wateringcan',fx:'drops'},cook:{p:'pot',fx:'steam'},
+  show:{p:'sign',fx:'stars'},wave:{p:'none',fx:'hearts'},calm:{p:'none',fx:'rings'},pack:{p:'backpack',fx:'stars'},game:{p:'controller',fx:'stars'},paint:{p:'paint',fx:'stars'},photo:{p:'camera',fx:'flash'}};
+const Y_NEED={type:'laptop',read:'book',write:'pencil',music:'guitar',cook:'pot',pack:'backpack',game:'controller',paint:'paint',photo:'camera',water:'wateringcan',shower:'shower',sleep:'bed',brush:'toothbrush',lift:'dumbbell',call:'phone'};
+const Y_LINES={drink:['Glug, glug, glug!','Yeti stays hydrated.'],eat:['Nom nom nom!','Fuel for a strong yeti.'],brush:['Scrub scrub!','Sparkly yeti teeth.'],shower:['Splish splash!','Fresh and fluffy.'],
+  clean:['Swish swish!','Yeti cleaned it all up.'],sleep:['Zzz…','Sweet dreams, big yeti.'],read:['Page after page!','Yeti brain getting bigger.'],write:['Scribble scribble!','Yeti is getting smarter.'],
+  music:['La la laaa!','Yeti rocks out.'],stretch:['Reeeach!','Nice and loose.'],run:['Zoom zoom!','Yeti is unstoppable.'],walk:['Stomp, stomp.','Out for a yeti walk.'],cheer:['Yeti high five!','Another one done.'],
+  type:['Clickety-clack!','Yeti is in the zone.'],lift:['Hup! Hup!','Yeti gains incoming.'],throw:['Yeet!','What an arm.'],dance:['Bust a move!','Yeti has the moves.'],call:['Ring ring!','Yeti made the call.'],
+  water:['Grow, little plant!','Yeti has a green thumb.'],cook:['Chef Yeti!','Smells amazing.'],show:['Ta-da!','Yeti did the thing.'],wave:['Hiii!','Yeti says hello.'],calm:['Breathe in… out…','Calm, chill yeti.'],
+  pack:['All packed!','Yeti is ready to go.'],game:['Level up!','Yeti wins again.'],paint:['Masterpiece!','Yeti the artist.'],photo:['Say cheese!','Snap! Great shot.']};
+const Y_WORDS=[
+  [/water (?:the )?(?:plants?|garden|flowers?)|plants?\b|garden/,{m:'water'}],
+  [/speech|presentation|present|rehearse|lines|audition/,{m:'show',p:'sign',fx:'stars'}],
+  [/video game|gaming|xbox|playstation|nintendo|switch|minecraft|fortnite|roblox|\bgames?\b/,{m:'game'}],
+  [/water|hydrat|drink|juice|smoothie|\btea\b|milk(?!shake)|glass of/,{m:'drink',p:'cup'}],
+  [/vitamin|medicine|meds|pill/,{m:'drink',p:'cup',fx:'stars'}],
+  [/teeth|tooth|brush|floss|mouthwash|retainer|braces/,{m:'brush'}],
+  [/shower|bath|wash (?:up|face|hair|hands)|skincare|face wash|deodorant|hygiene|get ready/,{m:'shower'}],
+  [/make (?:your |my |the )?bed/,{m:'clean',p:'broom',fx:'stars'}],
+  [/laundry|fold|clothes|put away/,{m:'clean',p:'shirt',fx:'dust'}],
+  [/trash|garbage|recycl|take out/,{m:'clean',p:'trash',fx:'dust'}],
+  [/dishes|dishwasher|wipe|vacuum|sweep|mop|chore|clean|tidy|declutter|organi[sz]e|room/,{m:'clean',p:'broom'}],
+  [/sleep|lights out|nap|screens? off|go to bed|bedtime|\bbed\b|rest\b/,{m:'sleep'}],
+  [/cook|bake|make (?:dinner|lunch|breakfast|food)|kitchen|recipe/,{m:'cook'}],
+  [/fruit|apple|banana|orange|grape|veggie|vegetable|salad/,{m:'eat',p:'apple'}],
+  [/breakfast|lunch|dinner|supper|snack|\beat\b|meal|food|cereal|oatmeal|pizza/,{m:'eat',p:'bowl'}],
+  [/feed (?:the )?(?:dog|cat|pet|fish)|pet food/,{m:'show',p:'bowl',fx:'hearts'}],
+  [/walk (?:the )?dog|dog walk|dog|puppy|pet/,{m:'walk',p:'dog'}],
+  [/plant|garden|flower|water the/,{m:'water'}],
+  [/pack|backpack|bag|lunchbox|get ready for school/,{m:'pack'}],
+  [/read|book|novel|comic|chapter|library/,{m:'read'}],
+  [/email|computer|laptop|type|typing|code|coding|program|online class|zoom/,{m:'type'}],
+  [/homework|study|school|write|writing|math|essay|project|learn|class|notes|test|exam|quiz|worksheet|journal|diary/,{m:'write'}],
+  [/call|phone|text (?:mom|dad|grandma|grandpa|friend)|facetime/,{m:'call'}],
+  [/guitar|piano|instrument|drum|violin|band|ukulele|music|sing|choir|practice scales/,{m:'music'}],
+  [/dance|zumba|tiktok dance/,{m:'dance'}],
+  [/paint|draw|\bart\b|sketch|colou?r|\bcrafts?\b/,{m:'paint'}],
+  [/photo|picture|camera|selfie/,{m:'photo'}],
+  [/video game|game|gaming|xbox|playstation|switch|minecraft|fortnite/,{m:'game'}],
+  [/lift|weights|dumbbell|gym|strength|push ?ups?|pull ?ups?|squat|curl/,{m:'lift'}],
+  [/ball|catch|throw|baseball|basketball|football|soccer|volleyball|tennis|frisbee/,{m:'throw'}],
+  [/meditat|breath|mindful|calm|relax|pray|gratitude/,{m:'calm'}],
+  [/stretch|yoga|warm ?up|cool ?down|mobility/,{m:'stretch'}],
+  [/run|jog|sprint|hockey|sport|practice|train|exercise|workout|swim|skate|bike|cycle|hike/,{m:'run'}],
+  [/walk|outside|fresh air|park|stroll/,{m:'walk',p:'none'}],
+  [/hug|say hi|visit|friend|family|grandma|grandpa|mom|dad|thank/,{m:'wave',fx:'hearts'}],
 ];
-const YETI_LINES={
-  drink:['Glug, glug, glug!','Yeti stays hydrated.'],eat:['Nom nom nom!','Fuel for a strong yeti.'],brush:['Scrub scrub!','Sparkly yeti teeth.'],
-  shower:['Splish splash!','Fresh and fluffy.'],clean:['Swish swish!','Yeti cleaned it all up.'],sleep:['Zzz…','Sweet dreams, big yeti.'],
-  read:['Page after page!','Yeti brain getting bigger.'],write:['Scribble scribble!','Yeti is getting smarter.'],music:['La la laaa!','Yeti rocks out.'],
-  stretch:['Reeeach!','Nice and loose.'],run:['Zoom zoom!','Yeti is unstoppable.'],walk:['Stomp, stomp, stomp.','Out for a yeti walk.'],cheer:['Yeti high five!','Another one done.'],
-};
-function yetiAct(title){const t=' '+String(title||'').toLowerCase()+' ';const f=YETI_ACTS.find(([re])=>re.test(t));return f?f[1]:'cheer'}
-function yetiSVG(act){
-  const FUR='#F3F6FA',FUR2='#D8E1EB',FACE='#BCD6EE',FACE2='#8FB2D2',HORN='#AEB7C6',EYE='#172033',PINK='#F6A9B8';
+function yetiKey(t){return String(t||'').toLowerCase().replace(/[^a-z0-9 ]/g,' ').replace(/\s+/g,' ').trim()}
+function yetiValidate(sp,title){
+  const m=Y_MOTIONS.includes(sp&&sp.m)?sp.m:'show';const d=Y_DEF[m];
+  let p=Y_PROPS.includes(sp&&sp.p)?sp.p:d.p;if(Y_NEED[m])p=Y_NEED[m];
+  if(m==='eat'&&!['bowl','plate','apple'].includes(p))p='bowl';if(m==='clean'&&!['broom','shirt','trash'].includes(p))p='broom';
+  const fx=Y_FX.includes(sp&&sp.fx)?sp.fx:d.fx;
+  const clip=(s,n,f)=>{s=String(s||'').replace(/[<>]/g,'').trim();return s?s.slice(0,n):f};
+  return{m,p,fx,l1:clip(sp&&sp.l1,28,Y_LINES[m][0]),l2:clip(sp&&sp.l2,70,Y_LINES[m][1]),ai:!!(sp&&sp.ai)};
+}
+function yetiOffline(title){const t=' '+yetiKey(title)+' ';const f=Y_WORDS.find(([re])=>re.test(t));return yetiValidate(f?{...f[1]}:{m:'show',p:'sign',fx:'stars'},title)}
+function yetiSpec(title){const c=(S.yetiCache||{})[yetiKey(title)];return c?yetiValidate(c,title):yetiOffline(title)}
+let yPrefetchT=null,yPrefetching=false;
+function yetiPrefetch(){clearTimeout(yPrefetchT);yPrefetchT=setTimeout(yetiPrefetchNow,1500)}
+async function yetiPrefetchNow(){
+  if(yPrefetching||!useClaude()||R0()==='parent')return;S.yetiCache=S.yetiCache||{};
+  const titles=[...new Set(sched().sections.flatMap(s=>s.tasks).filter(k=>k.kind!=='workout').map(k=>k.title))].filter(t=>!S.yetiCache[yetiKey(t)]).slice(0,25);
+  if(!titles.length)return;yPrefetching=true;
+  const prompt=`You direct short cartoon animations of a cute, fluffy white yeti mascot in a kids' routine app. When the user checks off a task, the yeti acts it out.
+For EACH task below, pick what the yeti does using ONLY these words.
+motions: ${Y_MOTIONS.join(', ')} (show = proudly holds up the prop; wave = waves hello; calm = eyes closed, breathing; type = types on laptop; lift = presses a dumbbell; throw = throws a ball; call = phone to ear; water = waters a plant; cook = stirs a pot in a chef hat; pack = packs a backpack; game = plays with a controller; paint = paints on an easel; photo = takes a picture)
+props: ${Y_PROPS.join(', ')} (sign = a sign showing the task name; use it when nothing else fits)
+effects: ${Y_FX.join(', ')}
+Also write l1: a funny 2-4 word exclamation, and l2: one short, kind, upbeat sentence (max 60 characters) about the yeti doing it. Keep everything kid-friendly.
+Tasks:
+${titles.map((t,i)=>`${i+1}. ${t}`).join('\n')}
+Return ONLY JSON: {"items":[{"n":1,"m":"drink","p":"cup","fx":"bubbles","l1":"Glug glug!","l2":"Yeti stays hydrated."}]}`;
+  try{const j=await SAMPLE.json(prompt,{modelTier:'quick',cache:false});
+    (j&&Array.isArray(j.items)?j.items:[]).forEach(it=>{const t=titles[(parseInt(it.n)||0)-1];if(t)S.yetiCache[yetiKey(t)]={...yetiValidate(it,t),ai:true}});
+    const keys=Object.keys(S.yetiCache);if(keys.length>120)keys.slice(0,keys.length-120).forEach(k=>delete S.yetiCache[k]);save();
+  }catch(e){}
+  yPrefetching=false;
+}
+function yetiSVG(sp,title){
+  if(typeof sp==='string')sp=yetiValidate({m:sp},title);
+  const FUR='#F3F6FA',FUR2='#D8E1EB',FACE='#BCD6EE',FACE2='#8FB2D2',HORN='#AEB7C6',EYE='#172033',PINK='#F6A9B8',act=sp.m;
+  const signTxt=esc(String(title||'Done!').slice(0,16));
+  const PR={
+    cup:{R:`<g class="y-held" transform="translate(-2,47)"><rect x="-8" y="-11" width="16" height="22" rx="3" fill="rgba(170,215,255,.25)" stroke="#9AD3FF" stroke-width="1.6"/><g class="y-water"><rect x="-6.2" y="-6" width="12.4" height="15" rx="2" fill="#4FB6FF"/></g></g>`},
+    bowl:{L:`<g transform="translate(2,48)"><path d="M-16 -4 h32 a16 13 0 0 1 -32 0z" fill="#E7894C"/><ellipse cx="0" cy="-4" rx="16" ry="4" fill="#F6D28B"/></g>`,R:`<g transform="translate(0,46)"><rect x="-1.5" y="-2" width="3" height="20" rx="1.5" fill="#C9D2DE"/><ellipse cx="0" cy="20" rx="4.5" ry="3" fill="#C9D2DE"/></g>`},
+    plate:{L:`<g transform="translate(2,48)"><ellipse rx="18" ry="5" fill="#fff"/><circle cx="-5" cy="-3" r="4" fill="#3CCB8A"/><circle cx="5" cy="-3" r="4" fill="#E7894C"/></g>`,R:`<g transform="translate(0,46)"><rect x="-1.5" y="-2" width="3" height="20" rx="1.5" fill="#C9D2DE"/><path d="M-4 18 v6 M0 18 v6 M4 18 v6" stroke="#C9D2DE" stroke-width="1.6"/></g>`},
+    apple:{R:`<g class="y-held" transform="translate(0,50)"><circle r="9" fill="#FF5C67"/><rect x="-1" y="-13" width="2" height="5" fill="#7A4A22"/><ellipse cx="4" cy="-11" rx="4" ry="2" fill="#3CCB8A"/></g>`},
+    toothbrush:{R:`<g transform="translate(0,46)"><rect x="-2" y="-4" width="4" height="26" rx="2" fill="#4FB6FF"/><rect x="-4" y="18" width="8" height="7" rx="2" fill="#fff"/></g>`},
+    broom:{R:`<g transform="translate(0,44)"><rect x="-2" y="-30" width="4" height="62" rx="2" fill="#B07A4A"/><path d="M-12 32 h24 l5 16 h-34z" fill="#F0C04A"/></g>`},
+    shirt:{R:`<g transform="translate(0,52)"><path d="M-12 -8 l7 -4 q5 4 10 0 l7 4 l-3 7 l-4 -2 v15 h-10 v-15 l-4 2z" fill="#4FB6FF"/></g>`},
+    trash:{R:`<g transform="translate(0,54)"><path d="M-11 -6 q11 -10 22 0 l-3 18 h-16z" fill="#3B3F47"/><path d="M-3 -8 l3 -5 l3 5" fill="none" stroke="#FFC53D" stroke-width="2"/></g>`},
+    pencil:{R:`<g transform="translate(0,46)"><rect x="-2" y="-2" width="4" height="20" rx="1" fill="#FFC53D"/><path d="M-2 18 h4 l-2 5z" fill="${EYE}"/></g>`,front:`<g transform="translate(100,150)"><rect x="-58" y="-8" width="116" height="10" rx="3" fill="#8A5A36"/><rect x="-14" y="-24" width="40" height="17" rx="2" fill="#fff" transform="rotate(-4)"/><path class="y-lines" d="M-9 -19 h28 M-9 -14 h24" stroke="${FACE2}" stroke-width="2" stroke-linecap="round"/></g>`},
+    book:{front:`<g transform="translate(100,124)"><rect x="-30" y="-18" width="60" height="38" rx="3" fill="#6E5BFF"/><rect x="-27" y="-16" width="26" height="33" fill="#fff"/><rect x="1" y="-16" width="26" height="33" fill="#fff"/><g class="y-page"><rect x="1" y="-16" width="26" height="33" fill="#F1EEFF"/></g><path d="M-23 -9 h18 M-23 -4 h18 M-23 1 h14 M5 -9 h18 M5 -4 h18" stroke="#B8B2D9" stroke-width="1.6"/></g>`},
+    guitar:{R:`<g transform="translate(0,46)"><rect x="-2" y="0" width="4" height="8" rx="1" fill="#fff"/></g>`,front:`<g transform="translate(100,124) rotate(-25)"><ellipse cx="-12" cy="6" rx="20" ry="17" fill="#C9772F"/><ellipse cx="-12" cy="6" rx="6" ry="6" fill="#4A2A14"/><rect x="2" y="-3" width="46" height="7" rx="2" fill="#7A4A22"/><rect x="44" y="-6" width="10" height="13" rx="2" fill="#4A2A14"/></g>`},
+    dumbbell:{R:`<g transform="translate(0,46) rotate(90)"><rect x="-12" y="-2.5" width="24" height="5" rx="2" fill="#8B94A3"/><rect x="-17" y="-8" width="7" height="16" rx="2" fill="#3B3F47"/><rect x="10" y="-8" width="7" height="16" rx="2" fill="#3B3F47"/></g>`},
+    ball:{R:`<g class="y-held" transform="translate(0,51)"><circle r="9" fill="#FF8A1F"/><path d="M-9 0 h18 M0 -9 v18" stroke="#7A3B00" stroke-width="1.4"/></g>`},
+    phone:{R:`<g transform="translate(0,44)"><rect x="-6" y="-2" width="12" height="20" rx="3" fill="#1B1E26" stroke="#A98BFF" stroke-width="1.5"/></g>`},
+    laptop:{front:`<g transform="translate(100,136)"><path d="M-30 -30 h60 v30 h-60z" fill="#2A2D36" stroke="#5C5C64" stroke-width="2"/><rect x="-26" y="-26" width="52" height="22" fill="#4FB6FF" opacity=".75" class="y-screen"/><path d="M-38 0 h76 l-6 6 h-64z" fill="#8B94A3"/></g>`},
+    wateringcan:{R:`<g transform="translate(4,48)"><rect x="-9" y="-8" width="18" height="15" rx="3" fill="#3CCB8A"/><path d="M9 -4 l13 -8" stroke="#3CCB8A" stroke-width="3.5" stroke-linecap="round"/><path d="M-9 -6 q-9 0 -6 9" fill="none" stroke="#3CCB8A" stroke-width="2.4"/></g>`,stage:`<g transform="translate(168,150)"><path d="M-12 0 h24 l-3 16 h-18z" fill="#C9772F"/><g class="y-grow"><path d="M0 0 v-22" stroke="#3CCB8A" stroke-width="3"/><ellipse cx="-7" cy="-14" rx="7" ry="4" fill="#3CCB8A"/><ellipse cx="7" cy="-20" rx="7" ry="4" fill="#3CCB8A"/><circle cx="0" cy="-26" r="5" fill="#FFC53D"/></g></g>`},
+    pot:{R:`<g transform="translate(0,46)"><rect x="-1.5" y="-2" width="3" height="24" rx="1.5" fill="#B07A4A"/><ellipse cx="0" cy="22" rx="4" ry="3" fill="#B07A4A"/></g>`,front:`<g transform="translate(100,148)"><path d="M-26 -14 h52 v12 a12 10 0 0 1 -12 10 h-28 a12 10 0 0 1 -12 -10z" fill="#8B94A3"/><rect x="-30" y="-17" width="60" height="5" rx="2" fill="#5C5C64"/><ellipse cx="0" cy="-14" rx="24" ry="3" fill="#E7894C"/></g>`,hat:`<g transform="translate(0,-30)"><rect x="-16" y="-4" width="32" height="10" rx="2" fill="#fff"/><circle cx="-10" cy="-10" r="9" fill="#fff"/><circle cx="2" cy="-14" r="10" fill="#fff"/><circle cx="12" cy="-9" r="8" fill="#fff"/></g>`},
+    backpack:{front:`<g transform="translate(100,132)"><rect x="-24" y="-24" width="48" height="44" rx="12" fill="#FF6B2C"/><rect x="-16" y="0" width="32" height="16" rx="5" fill="#E2551B"/><rect x="-10" y="-30" width="20" height="10" rx="5" fill="none" stroke="#E2551B" stroke-width="4"/></g>`,R:`<g class="y-held" transform="translate(0,50)"><rect x="-7" y="-9" width="14" height="18" rx="2" fill="#6E5BFF"/></g>`},
+    controller:{front:`<g transform="translate(100,130)"><path d="M-26 -8 q0 -10 12 -10 h28 q12 0 12 10 l4 14 q2 10 -8 10 q-6 0 -10 -8 h-24 q-4 8 -10 8 q-10 0 -8 -10z" fill="#3B3F47"/><circle cx="14" cy="-6" r="3" fill="#FF5C67"/><circle cx="20" cy="-1" r="3" fill="#3CCB8A"/><path d="M-17 -4 h10 M-12 -9 v10" stroke="#C9D2DE" stroke-width="2.6"/></g>`},
+    paint:{R:`<g transform="translate(0,46)"><rect x="-1.6" y="-2" width="3.2" height="22" rx="1.5" fill="#B07A4A"/><path d="M-3 20 h6 l-3 8z" fill="#FF5C67"/></g>`,stage:`<g transform="translate(172,106)"><path d="M-16 50 l8 -50 M16 50 l-8 -50" stroke="#8A5A36" stroke-width="3"/><rect x="-20" y="-14" width="40" height="34" fill="#fff" stroke="#8A5A36" stroke-width="2"/><circle class="y-dab d1" cx="-8" cy="-2" r="5" fill="#FF5C67"/><circle class="y-dab d2" cx="6" cy="6" r="5" fill="#4FB6FF"/><circle class="y-dab d3" cx="4" cy="-6" r="4" fill="#FFC53D"/></g>`},
+    camera:{R:`<g transform="translate(0,46)"><rect x="-11" y="-6" width="22" height="15" rx="3" fill="#3B3F47"/><circle cy="1.5" r="5" fill="#8FB2D2" stroke="#1B1E26" stroke-width="2"/><rect x="4" y="-9" width="5" height="3" fill="#3B3F47"/></g>`},
+    flower:{R:`<g class="y-held" transform="translate(0,44)"><path d="M0 0 v18" stroke="#3CCB8A" stroke-width="2.6"/>${[0,72,144,216,288].map(a=>`<ellipse cx="0" cy="-6" rx="3.6" ry="6" fill="#F6A9B8" transform="rotate(${a})"/>`).join('')}<circle r="3.4" fill="#FFC53D"/></g>`},
+    sign:{R:`<g transform="translate(0,40)"><rect x="-2" y="-34" width="4" height="40" rx="2" fill="#B07A4A"/><rect x="-36" y="-58" width="72" height="26" rx="5" fill="#FFC53D"/><text x="0" y="-41" text-anchor="middle" font-family="Figtree,system-ui,sans-serif" font-weight="800" font-size="${signTxt.length>11?8.5:10.5}" fill="#1A1300">${signTxt}</text></g>`},
+    dog:{stage:`<g transform="translate(166,148)"><g class="y-dog"><ellipse cx="0" cy="0" rx="16" ry="9" fill="#C9772F"/><circle cx="16" cy="-8" r="8" fill="#C9772F"/><ellipse cx="14" cy="-14" rx="3" ry="6" fill="#8A5A36"/><circle cx="19" cy="-9" r="1.6" fill="${EYE}"/><rect x="-12" y="6" width="4" height="10" rx="2" fill="#8A5A36"/><rect x="8" y="6" width="4" height="10" rx="2" fill="#8A5A36"/><path class="y-tail" d="M-15 -2 q-8 -8 -6 -14" stroke="#C9772F" stroke-width="3" fill="none" stroke-linecap="round"/></g></g>`},
+    bed:{stage:`<g><rect x="34" y="150" width="132" height="14" rx="6" fill="#3B3363"/><rect x="34" y="132" width="132" height="22" rx="10" fill="#6E5BFF" opacity=".7"/></g>`,hat:`<path d="M-26 -22 q20 -26 50 -8 q8 -18 20 -4 q-6 6 -14 6 q-30 -10 -56 6z" fill="#6E5BFF"/><circle cx="44" cy="-26" r="5" fill="#fff"/>`},
+    shower:{stage:`<g><rect x="96" y="2" width="8" height="12" fill="#AEB7C6"/><path d="M78 14 h44 l-6 9 h-32z" fill="#C9D2DE"/></g>`},
+  };
+  const pr=PR[sp.p]||{};
+  const FX={
+    bubbles:`<g class="y-fx fx-bub"><circle class="b1" cx="128" cy="52" r="3.2" fill="#9AD3FF"/><circle class="b2" cx="136" cy="42" r="2.4" fill="#9AD3FF"/><circle class="b3" cx="118" cy="66" r="2.6" fill="#fff"/></g>`,
+    drops:`<g class="y-fx fx-drop">${(act==='water'?[150,156,162]:[82,92,100,108,118]).map((x,i)=>`<rect class="d d${i}" x="${x}" y="${act==='water'?112:24}" width="2.4" height="8" rx="1.2" fill="#4FB6FF"/>`).join('')}</g>`,
+    zzz:`<g class="y-fx fx-z" font-family="Big Shoulders Display,Impact,sans-serif" font-weight="900" fill="#A98BFF"><text class="z z1" x="136" y="40" font-size="16">z</text><text class="z z2" x="146" y="30" font-size="20">Z</text><text class="z z3" x="158" y="18" font-size="24">Z</text></g>`,
+    notes:`<g class="y-fx fx-note" fill="#FFC53D" font-size="22" font-weight="900"><text class="n n1" x="150" y="80">♪</text><text class="n n2" x="40" y="70">♫</text><text class="n n3" x="160" y="50">♪</text></g>`,
+    stars:`<g class="y-fx fx-star" fill="#FFC53D">${[[34,40],[166,36],[24,96],[176,92],[100,8]].map(([x,y],i)=>`<g transform="translate(${x},${y})"><path class="st st${i}" d="M0 -8 L2.4 -2.4 L8 0 L2.4 2.4 L0 8 L-2.4 2.4 L-8 0 L-2.4 -2.4Z"/></g>`).join('')}</g>`,
+    hearts:`<g class="y-fx fx-heart" fill="#FF5C8A">${[[40,60],[160,54],[150,24]].map(([x,y],i)=>`<g transform="translate(${x},${y})"><path class="ht ht${i}" d="M0 4 C-8 -2 -6 -9 0 -5 C6 -9 8 -2 0 4Z"/></g>`).join('')}</g>`,
+    steam:`<g class="y-fx fx-steam" fill="none" stroke="#C9D2DE" stroke-width="3" stroke-linecap="round" opacity=".8"><path class="sm s1" d="M92 128 q-6 -8 0 -16 q6 -8 0 -16"/><path class="sm s2" d="M108 128 q-6 -8 0 -16 q6 -8 0 -16"/></g>`,
+    dust:`<g class="y-fx fx-dust"><circle class="p1" cx="156" cy="160" r="6" fill="#C9D2DE" opacity=".6"/><circle class="p2" cx="166" cy="154" r="4" fill="#C9D2DE" opacity=".5"/></g>`,
+    sweat:`<g class="y-fx fx-sweat"><path class="s1" d="M140 40 q4 6 0 9 q-4 -3 0 -9z" fill="#9AD3FF"/><path class="s2" d="M60 46 q4 6 0 9 q-4 -3 0 -9z" fill="#9AD3FF"/></g>`,
+    flash:`<g class="y-fx fx-flash"><circle class="fl" cx="122" cy="66" r="26" fill="#fff"/></g>`,
+    rings:`<g class="y-fx fx-ring" fill="none" stroke="#A98BFF" stroke-width="2"><circle class="r r1" cx="100" cy="100" r="40"/><circle class="r r2" cx="100" cy="100" r="40"/></g>`,
+    dots:`<g class="y-fx fx-dots"><rect x="132" y="18" width="40" height="22" rx="11" fill="#fff"/><circle class="dt dt0" cx="143" cy="29" r="3" fill="#6E5BFF"/><circle class="dt dt1" cx="152" cy="29" r="3" fill="#6E5BFF"/><circle class="dt dt2" cx="161" cy="29" r="3" fill="#6E5BFF"/></g>`,
+  };
+  const throwFx=act==='throw'?`<g class="y-fx fx-throw"><circle class="tb" cx="150" cy="70" r="8" fill="#FF8A1F"/></g>`:'';
   const arm=(side,prop)=>`<g transform="translate(${side==='L'?62:138},100)"><g class="y-arm${side}"><rect x="-8" y="-4" width="16" height="44" rx="8" fill="${FUR}" stroke="${FUR2}" stroke-width="1.5"/><circle cx="0" cy="42" r="8.5" fill="${FACE}"/>${prop||''}</g></g>`;
   const leg=x=>`<g transform="translate(${x},146)"><g class="y-leg${x<100?'L':'R'}"><rect x="-9" y="-2" width="18" height="22" rx="8" fill="${FUR}" stroke="${FUR2}" stroke-width="1.5"/><ellipse cx="0" cy="21" rx="12" ry="5.5" fill="${FACE2}"/></g></g>`;
-  const P={
-    drink:{R:`<g transform="translate(-2,47)"><rect x="-8" y="-11" width="16" height="22" rx="3" fill="rgba(170,215,255,.25)" stroke="#9AD3FF" stroke-width="1.6"/><g class="y-water"><rect x="-6.2" y="-6" width="12.4" height="15" rx="2" fill="#4FB6FF"/></g></g>`},
-    eat:{L:`<g transform="translate(2,48)"><path d="M-16 -4 h32 a16 13 0 0 1 -32 0z" fill="#E7894C"/><ellipse cx="0" cy="-4" rx="16" ry="4" fill="#F6D28B"/></g>`,R:`<g transform="translate(0,46)"><rect x="-1.5" y="-2" width="3" height="20" rx="1.5" fill="#C9D2DE"/><ellipse cx="0" cy="20" rx="4.5" ry="3" fill="#C9D2DE"/></g>`},
-    brush:{R:`<g transform="translate(0,46)"><rect x="-2" y="-4" width="4" height="26" rx="2" fill="#4FB6FF"/><rect x="-4" y="18" width="8" height="7" rx="2" fill="#fff"/></g>`},
-    clean:{R:`<g transform="translate(0,44)"><rect x="-2" y="-30" width="4" height="62" rx="2" fill="#B07A4A"/><path d="M-12 32 h24 l5 16 h-34z" fill="#F0C04A"/></g>`},
-    write:{R:`<g transform="translate(0,46)"><rect x="-2" y="-2" width="4" height="20" rx="1" fill="#FFC53D"/><path d="M-2 18 h4 l-2 5z" fill="${EYE}"/></g>`},
-    music:{R:`<g transform="translate(0,46)"><rect x="-2" y="0" width="4" height="8" rx="1" fill="#fff"/></g>`},
-  }[act]||{};
-  const front={
-    read:`<g class="y-book" transform="translate(100,124)"><rect x="-30" y="-18" width="60" height="38" rx="3" fill="#6E5BFF"/><rect x="-27" y="-16" width="26" height="33" fill="#fff"/><rect x="1" y="-16" width="26" height="33" fill="#fff"/><g class="y-page"><rect x="1" y="-16" width="26" height="33" fill="#F1EEFF"/></g><path d="M-23 -9 h18 M-23 -4 h18 M-23 1 h14 M5 -9 h18 M5 -4 h18" stroke="#B8B2D9" stroke-width="1.6"/></g>`,
-    write:`<g transform="translate(100,150)"><rect x="-58" y="-8" width="116" height="10" rx="3" fill="#8A5A36"/><rect x="-14" y="-24" width="40" height="17" rx="2" fill="#fff" transform="rotate(-4)"/><path class="y-lines" d="M-9 -19 h28 M-9 -14 h24" stroke="${FACE2}" stroke-width="2" stroke-linecap="round"/></g>`,
-    music:`<g transform="translate(100,124) rotate(-25)"><ellipse cx="-12" cy="6" rx="20" ry="17" fill="#C9772F"/><ellipse cx="-12" cy="6" rx="6" ry="6" fill="#4A2A14"/><rect x="2" y="-3" width="46" height="7" rx="2" fill="#7A4A22"/><rect x="44" y="-6" width="10" height="13" rx="2" fill="#4A2A14"/></g>`,
-  }[act]||'';
-  const stage={
-    shower:`<g><rect x="96" y="2" width="8" height="12" fill="#AEB7C6"/><path d="M78 14 h44 l-6 9 h-32z" fill="#C9D2DE"/></g>`,
-    sleep:`<g><rect x="34" y="150" width="132" height="14" rx="6" fill="#3B3363"/><rect x="34" y="132" width="132" height="22" rx="10" fill="#6E5BFF" opacity=".7"/></g>`,
-  }[act]||'';
-  const fx={
-    drink:`<g class="y-fx"><circle class="b1" cx="128" cy="52" r="3" fill="#9AD3FF"/><circle class="b2" cx="136" cy="44" r="2" fill="#9AD3FF"/></g>`,
-    brush:`<g class="y-fx"><circle class="b1" cx="112" cy="72" r="4" fill="#fff"/><circle class="b2" cx="120" cy="66" r="3" fill="#fff"/><circle class="b3" cx="106" cy="66" r="2.5" fill="#fff"/></g>`,
-    shower:`<g class="y-fx">${[82,92,100,108,118].map((x,i)=>`<rect class="d d${i}" x="${x}" y="24" width="2.4" height="8" rx="1.2" fill="#4FB6FF"/>`).join('')}<circle class="b1" cx="86" cy="30" r="4" fill="#fff" opacity=".9"/><circle class="b2" cx="114" cy="28" r="3" fill="#fff" opacity=".9"/></g>`,
-    sleep:`<g class="y-fx" font-family="Big Shoulders Display,Impact,sans-serif" font-weight="900" fill="#A98BFF"><text class="z z1" x="136" y="40" font-size="16">z</text><text class="z z2" x="146" y="30" font-size="20">Z</text><text class="z z3" x="158" y="18" font-size="24">Z</text></g>`,
-    clean:`<g class="y-fx"><circle class="p1" cx="156" cy="160" r="6" fill="#C9D2DE" opacity=".6"/><circle class="p2" cx="166" cy="154" r="4" fill="#C9D2DE" opacity=".5"/></g>`,
-    music:`<g class="y-fx" fill="#FFC53D" font-size="22" font-weight="900"><text class="n n1" x="150" y="80">♪</text><text class="n n2" x="40" y="70">♫</text><text class="n n3" x="160" y="50">♪</text></g>`,
-    run:`<g class="y-fx"><path class="s1" d="M140 40 q4 6 0 9 q-4 -3 0 -9z" fill="#9AD3FF"/><path class="s2" d="M60 46 q4 6 0 9 q-4 -3 0 -9z" fill="#9AD3FF"/></g>`,
-    cheer:`<g class="y-fx" fill="#FFC53D">${[[34,40],[166,36],[24,96],[176,92],[100,8]].map(([x,y],i)=>`<g transform="translate(${x},${y})"><path class="st st${i}" d="M0 -8 L2.4 -2.4 L8 0 L2.4 2.4 L0 8 L-2.4 2.4 L-8 0 L-2.4 -2.4Z"/></g>`).join('')}</g>`,
-  }[act]||'';
-  const hat=act==='sleep'?`<path d="M-26 -22 q20 -26 50 -8 q8 -18 20 -4 q-6 6 -14 6 q-30 -10 -56 6z" fill="#6E5BFF"/><circle cx="44" cy="-26" r="5" fill="#fff"/>`:'';
-  return`<svg class="yeti-svg y-${act}" viewBox="0 0 200 180" aria-hidden="true">
-    <ellipse class="y-shadow" cx="100" cy="170" rx="46" ry="6" fill="rgba(0,0,0,.4)"/>${stage}
+  const closedEyes=act==='sleep'||act==='calm';
+  return`<svg class="yeti-svg y-${act}${closedEyes?' y-eyesshut':''}" viewBox="0 0 200 180" aria-hidden="true">
+    <ellipse class="y-shadow" cx="100" cy="170" rx="46" ry="6" fill="rgba(0,0,0,.4)"/>${pr.stage||''}
     <g class="y-all">${leg(84)}${leg(116)}
       <path d="M56 114 Q56 68 100 68 Q144 68 144 114 Q144 150 100 156 Q56 150 56 114Z" fill="${FUR}" stroke="${FUR2}" stroke-width="1.5"/>
       <ellipse cx="100" cy="120" rx="24" ry="26" fill="#E8EFF7"/>
       <path d="M60 140 l6 8 l6 -7 l6 8 l6 -7 l6 8 l6 -7 l6 8 l6 -7 l6 8 l6 -7 l6 8 l6 -8" fill="none" stroke="${FUR2}" stroke-width="2" stroke-linejoin="round"/>
-      ${arm('L',P.L)}
+      ${arm('L',pr.L)}
       <g transform="translate(100,58)"><g class="y-head">
         <path d="M-22 -24 q-14 -12 -8 -26 q6 10 16 16z" fill="${HORN}"/><path d="M22 -24 q14 -12 8 -26 q-6 10 -16 16z" fill="${HORN}"/>
         <circle r="34" fill="${FUR}" stroke="${FUR2}" stroke-width="1.5"/>
@@ -1933,18 +2092,19 @@ function yetiSVG(act){
         <path class="y-closed" d="M-13 2 q4 3 8 0 M5 2 q4 3 8 0" fill="none" stroke="${EYE}" stroke-width="2.2" stroke-linecap="round"/>
         <circle cx="-17" cy="11" r="3.5" fill="${PINK}" opacity=".7"/><circle cx="17" cy="11" r="3.5" fill="${PINK}" opacity=".7"/>
         <path class="y-mouth" d="M-7 13 Q0 20 7 13" fill="${act==='brush'?'#fff':'none'}" stroke="${EYE}" stroke-width="2.4" stroke-linecap="round"/>
-        ${hat}</g></g>
-      ${front}${arm('R',P.R)}</g>${fx}</svg>`;
+        ${pr.hat||''}</g></g>
+      ${pr.front||''}${arm('R',pr.R)}</g>${FX[sp.fx]||''}${throwFx}</svg>`;
 }
 let yetiTimer=null;
 function yetiPlay(title){
   if(S.yeti===false||R0()==='parent')return;
-  const act=yetiAct(title),[l1,l2]=YETI_LINES[act];
+  const sp=yetiSpec(title);
   let el=$('#yetiPop');if(!el){el=document.createElement('div');el.id='yetiPop';el.className='yeti-pop';el.setAttribute('role','status');document.body.appendChild(el);el.addEventListener('click',()=>yetiClose())}
-  el.innerHTML=`<div class="yeti-stage">${yetiSVG(act)}</div><div class="yeti-cap"><b>${esc(l1)}</b><span>Yeti finished “${esc(title)}”. ${esc(l2)}</span></div>`;
+  el.innerHTML=`<div class="yeti-stage">${yetiSVG(sp,title)}</div><div class="yeti-cap"><b>${esc(sp.l1)}</b><span>${esc(sp.l2)}</span><small>${sp.ai?'✨ Scene by Skeefo · ':''}“${esc(title)}”</small></div>`;
   el.classList.remove('out');void el.offsetWidth;el.classList.add('show');
-  SFX.yeti&&SFX.yeti(act);
-  clearTimeout(yetiTimer);yetiTimer=setTimeout(yetiClose,reduced?1800:3600);
+  SFX.yeti&&SFX.yeti(sp.m);
+  clearTimeout(yetiTimer);yetiTimer=setTimeout(yetiClose,reduced?1800:3800);
+  if(!sp.ai)yetiPrefetch();
 }
 function yetiClose(){const el=$('#yetiPop');if(!el||!el.classList.contains('show'))return;el.classList.add('out');setTimeout(()=>{el.classList.remove('show','out')},320)}
 
@@ -2118,6 +2278,7 @@ function tryCommand(raw){
   m=t.match(/\bi\s+(?:just\s+)?(?:ate|had|finished|eat)\s+(?:my\s+|a\s+)?(breakfast|lunch|dinner|snack)\b/);
   if(m&&R0()==='me'){const k={breakfast:'b',lunch:'l',dinner:'d',snack:'s'}[m[1]];return run(()=>{const d0=dietDay().m[k];let out=d0?`You already logged ${m[1]} on Diet.`:DIET.meal(k);
     const f=findTask(sched(),m[1]),log=S.dayLog[todayKey()]||{};if(f&&f.k.kind!=='workout'&&!(log[f.k.id]&&log[f.k.id].d)){taskToggle(f.k.id,$('.composer')||document.body);out+=` Checked off **${esc(f.k.title)}** on My day too.`}return out})}
+  {const ym=text.match(/^(?:show me |play |preview )?(?:the )?yeti (?:for |doing |animation for )?(.+)$/i);if(ym&&!/^(animations?|on|off)$/i.test(ym[1].trim())){const tl=ym[1].replace(/^["“']|["”']$/g,'');setTimeout(()=>yetiPlay(tl),300);const sp=yetiSpec(tl);return`Here’s Yeti doing **${esc(tl)}**! (${sp.ai?'scene picked by my Claude brain':'scene from my offline brain'}: *${sp.m}*)`}}
   {const r2=tryCommand2(text,t);if(r2!=null)return r2}
   // section
   m=text.match(/^(?:please\s+|can you\s+|could you\s+)?(?:add|make|create)\s+(?:a\s+|another\s+|new\s+)*section\s+(?:called|named|for)?\s*(.+)$/i);if(m)return run(ACT.addSection,{name:m[1]});
