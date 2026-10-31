@@ -15,7 +15,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Routines">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
-<script>window.RR_STANDALONE=true;window.RR_VERSION='97a84e92f5';</script>
+<script>window.RR_STANDALONE=true;window.RR_VERSION='02f99fb42c';</script>
 <script>window.RR_SUPABASE={url:'https://uszalonpjyssvvsikzvg.supabase.co',key:'sb_publishable_w-5rI0R9ht2-HAr5HghM0w_-3HYiAEg'};</script>
 <script src="supabase.js"></script>
 </head>
@@ -270,7 +270,7 @@ main .wrap>*{min-width:0}
 .hint{font-size:12px;color:var(--muted)}
 
 /* ---------- Effects ---------- */
-.float{position:fixed;pointer-events:none;z-index:50;font-family:var(--f-display);font-weight:900;font-size:24px;color:var(--gold);text-shadow:0 0 14px var(--gold-glow)}
+.float{position:fixed;pointer-events:none;z-index:90;font-family:var(--f-display);font-weight:900;font-size:24px;color:var(--gold);text-shadow:0 0 14px var(--gold-glow)}
 #fx{position:fixed;inset:0;pointer-events:none;z-index:40;width:100%;height:100%}
 .overlay{position:fixed;inset:0;z-index:60;display:grid;place-items:center;background:rgba(5,5,6,.86);padding:24px;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
 .ov{text-align:center;color:var(--ink);display:grid;gap:10px;justify-items:center;max-width:360px}
@@ -564,6 +564,13 @@ svg.moose.lb-ico{display:inline-block;width:16px;height:16px;vertical-align:-3px
 .w-imp{margin-top:14px;padding:12px;border-radius:12px;background:var(--surface-2)}.w-imp summary{cursor:pointer;font-weight:600;color:var(--ink)}
 .w-imp textarea{width:100%;margin-top:8px;resize:vertical;font:13px/1.5 var(--f-mono)}
 @media(max-width:480px){.w-row{grid-template-columns:auto minmax(0,1fr) auto}.w-row .w-n{grid-column:2/4}.w-row .w-dose{grid-column:2/3;grid-row:2}.w-row>.icon-btn{grid-column:3;grid-row:2}.w-mv{grid-row:1/3}}
+.rep-hero{display:flex;gap:16px;align-items:center}.rep-rank{width:72px;height:72px;flex:none}.rep-rank svg{width:100%;height:100%}
+.rep-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.rep-stats .stat small{display:block;color:var(--muted);font-size:11.5px;margin-top:2px}
+.rep-h{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:8px}
+.rep-chart{width:100%;height:auto;display:block}.rep-chart text{fill:var(--muted);font:9px var(--f-mono)}.rep-axis{stroke:var(--line-2)}
+.rep-dots{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}.rep-dots i{width:22px;height:22px;border-radius:7px;background:var(--surface-2);border:1px solid var(--line)}.rep-dots i.on{background:var(--gold);border-color:var(--gold);box-shadow:0 0 8px var(--gold-glow)}.rep-dots i.today{outline:2px solid var(--lvl);outline-offset:1px}
+.rep-ex{display:grid;gap:6px;margin-top:8px}.rep-ex div{display:flex;justify-content:space-between;padding:8px 10px;border-radius:10px;background:var(--surface-2)}.rep-ex b{color:var(--gold)}
+.fg-b .xpv{font-size:11px;margin-left:4px}
 .lnk-chip{display:inline-flex;align-items:center;gap:2px;margin-left:6px;padding:2px 8px;border-radius:999px;border:1px solid var(--lvl-soft);background:var(--lvl-soft);color:var(--lvl);font:600 11px/1.5 var(--f-body);cursor:pointer;vertical-align:middle;white-space:nowrap}
 .lnk-chip:active{transform:scale(.95)}
 .lnk-row{grid-column:1/-1;display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);margin:-2px 0 6px}
@@ -1233,7 +1240,7 @@ let FAM={schedule:undefined,report:undefined},draft=null,busy=false,seeded=false
 let PERM=null,linkState='checking',linkName='',justLinked=false;
 try{role=localStorage.getItem('rb-role')}catch(e){}
 const R0=()=>role||'me';
-const TABS={me:[['workout','Workout'],['day','My schedule'],['diet','Diet'],['skeefo','Skeefo'],['ranks','Ranks'],['family','Family'],['me','Me']],
+const TABS={me:[['workout','Workout'],['day','My schedule'],['diet','Diet'],['skeefo','Skeefo'],['ranks','Ranks'],['progress','Reports'],['family','Family'],['me','Me']],
   parent:[['family','Family'],['report','Report'],['schedule','Schedule'],['skeefo','Skeefo'],['me','Me']]};
 function rawSched(){
   if(R0()==='parent'){const c=CTLS[SEL],k=KIDS[SEL],a=c&&c.schedule,b=k&&k.schedule;return(a&&(!b||(a.updated||0)>=(b.updated||0))?a:b)||defaultSchedule()}
@@ -1421,7 +1428,7 @@ const WATER_GOAL=8,XP_WATER=2,XP_MEAL=5,XP_GROUP=3,XP_ITEM=3;
 function dietDay(){ensureToday();const t=todayKey();S.diet=S.diet||{};for(const k of Object.keys(S.diet))if(k<addDays(t,-30))delete S.diet[k];
   return S.diet[t]||(S.diet[t]={w:0,m:{},g:{}})}
 function giveXP(n,el){if(!n)return;const L0=lvl(S.xp),h=S.history[todayKey()]||(S.history[todayKey()]={x:0,c:0});
-  S.xp=Math.max(0,S.xp+n);h.x=Math.max(0,h.x+n);if(n>0&&el){floatXP(el,'+'+n+' XP');sparks(el)}afterXP(L0,300,checkBadges())}
+  S.xp=Math.max(0,S.xp+n);h.x=Math.max(0,h.x+n);if(n>0&&el){floatXP(el,'+'+n+' XP');sparks(el)}afterXP(L0,300,checkBadges());setTimeout(()=>{try{renderHeader(true)}catch(e){}},0)}
 const DIET={
   water(delta,el){const d=dietDay(),before=d.w;d.w=Math.max(0,Math.min(16,d.w+delta));const ch=d.w-before;if(!ch)return'';
     const xp=(Math.min(d.w,WATER_GOAL)-Math.min(before,WATER_GOAL))*XP_WATER;giveXP(xp,el);
@@ -1442,7 +1449,7 @@ function viewDiet(){
     <div class="glasses">${Array.from({length:WATER_GOAL},(_,i)=>`<button class="glass ${i<d.w?'full':''}" data-act="water" data-v="${i<d.w&&i===d.w-1?-1:1}" aria-label="Glass ${i+1}${i<d.w?' (full)':''}"><svg viewBox="0 0 30 40"><path class="g-out" d="M4 3h22l-3 33H7z"/><path class="g-in" d="M6.2 14h17.6l-2.2 21H8.4z"/></svg></button>`).join('')}</div>
     <div class="dayfoot"><span class="note">Tap a glass each time you finish one. Drink more on training days and hot days.</span><div class="row-act"><button class="btn sm" data-act="water" data-v="-1" ${d.w?'':'disabled'}>−1</button><button class="btn sm primary" data-act="water" data-v="1">+1 glass</button></div></div></section>`;
   h+=`<section class="block"><div class="block-h"><h3>Meals</h3><span class="label">${meals}/4</span></div>${MEALS.map(([k,n])=>`<div class="ex task ${d.m[k]?'done':''}" data-id="meal-${k}"><button class="chk" data-act="meal" data-v="${k}" aria-pressed="${!!d.m[k]}" aria-label="Log ${n}"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button><div class="exinfo static"><span class="exn">${n}</span><span class="cue">${d.m[k]?'Eaten at '+clock(d.m[k]):planToday()?'Plan: '+esc(planToday()[k]):({b:'Fuel up before the day starts',l:'Refuel midday',d:'Recover from the day',s:'A banana or yogurt before training works great'})[k]}</span></div><span class="xpv dose">+${XP_MEAL} XP</span></div>`).join('')}</section>`;
-  h+=`<section class="card"><div class="label">Food groups today</div><div class="fg">${GROUPS.map(([k,n,tip])=>`<button class="fg-b ${d.g[k]?'on':''}" data-act="food" data-v="${k}" aria-pressed="${!!d.g[k]}"><b>${n}</b><small>${tip}</small></button>`).join('')}</div></section>`;
+  h+=`<section class="card"><div class="label">Food groups today</div><div class="fg">${GROUPS.map(([k,n,tip])=>`<button class="fg-b ${d.g[k]?'on':''}" data-act="food" data-v="${k}" aria-pressed="${!!d.g[k]}"><b>${n}${d.g[k]?` <span class="xpv">+${XP_GROUP} XP</span>`:''}</b><small>${tip}</small></button>`).join('')}</div></section>`;
   h+=`<section class="card"><div class="label">Fuel tips</div><ul class="rules">
     <li><span>1</span><div><b>Before training:</b> a light snack 1–2 hours before, like a banana, toast or yogurt.</div></li>
     <li><span>2</span><div><b>After training:</b> a normal meal with some protein and carbs within a couple of hours.</div></li>
@@ -1658,7 +1665,9 @@ function applyDecay(){
 
 /* ================= Persistence ================= */
 let saveTimer=null,saving=false,again=false;
-function save(){S.saved=Date.now();try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}clearTimeout(saveTimer);saveTimer=setTimeout(()=>{flush();try{NOTIF.sync()}catch(e){}},800)}
+const DEV_ID=(()=>{try{let d=localStorage.getItem('rr-dev');if(!d){d=Math.random().toString(36).slice(2,10);localStorage.setItem('rr-dev',d)}return d}catch(e){return'x'}})();
+const actScore=x=>x?Object.keys(x.history||{}).length*5+(x.total||0)*10+(x.xp||0)+Object.keys(x.dayLog||{}).length*3:0;
+function save(){S.saved=Date.now();S.dev=DEV_ID;try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}clearTimeout(saveTimer);saveTimer=setTimeout(()=>{flush();try{NOTIF.sync()}catch(e){}},800)}
 function buildReport(){
   const t=todayKey(),sc=sched(),log=S.dayLog[t]||{},R=routine(),items=allItems(R);
   const tasks=[];sc.sections.forEach(sec=>sec.tasks.forEach(k=>{if(k.kind==='workout')return;const e=log[k.id]||{};tasks.push({sec:sec.name,title:k.title,time:k.time||'',min:k.min||0,s:e.s||0,d:e.d||0})}));
@@ -1752,7 +1761,7 @@ function renderTabs(){
 }
 
 /* ================= Views ================= */
-const VIEWS={diet:()=>viewDiet(),newtab:()=>viewNewTab(),workout:()=>wDraft?viewWorkoutEditor():viewToday(),day:()=>draft?viewEditor():viewDay(),skeefo:()=>viewSkeefo(),ranks:()=>viewRanks(),me:()=>viewMe(),
+const VIEWS={progress:()=>viewReports(),diet:()=>viewDiet(),newtab:()=>viewNewTab(),workout:()=>wDraft?viewWorkoutEditor():viewToday(),day:()=>draft?viewEditor():viewDay(),skeefo:()=>viewSkeefo(),ranks:()=>viewRanks(),me:()=>viewMe(),
   family:()=>R0()==='parent'?viewFamily():viewKidFamily(),report:()=>viewReport(),schedule:()=>draft?viewEditor():viewParentSchedule()};
 let lastTab=null;
 function render(){
@@ -1784,7 +1793,8 @@ function viewToday(){
   let h='';
   if(!p.set)h+=banner('info','This routine uses default settings.','Tell Skeefo your goals, or add your age and goal in Me.',`<button class="btn primary act" data-go="skeefo">Ask Skeefo</button>`);
   if(R.prog&&!R.prog.done&&!R.restDay)h+=banner('info',`Week ${R.prog.week} of ${R.prog.weeks}`,R.prog.tip);
-  if(R.restDay)h+=banner('ok','Rest day 😴','Recovery is part of training. Do the light stretch for bonus XP if you want. Your streak is safe either way.');else h+=statusBanner();
+  if(R.noSched)h+=banner('ok','No workout on your schedule today','Your streak is safe. To train today, add the Daily workout to My schedule. You can still do the light stretch below for bonus XP.');
+  else if(R.restDay)h+=banner('ok','Rest day 😴','Recovery is part of training. Do the light stretch for bonus XP if you want. Your streak is safe either way.');else h+=statusBanner();
   h+=`<section class="card"><div class="day"><div style="min-width:0">
       <div class="label">${new Date().toLocaleDateString(undefined,{weekday:'long'})} · ${esc(GOALS[p.goal])}</div>
       <h2>${esc(R.title)}</h2>
@@ -2009,6 +2019,51 @@ document.addEventListener('change',e=>{if(e.target.id!=='sk-file')return;const f
 document.addEventListener('change',e=>{if(e.target.id!=='w-file'||!wDraft)return;const f=e.target.files&&e.target.files[0];if(!f)return;
   toast(medal('…',true),'Reading '+f.name,'One moment.');
   readWorkoutFile(f).then(txt=>{const ta=$('#w-paste');if(ta){ta.value=txt.slice(0,8000);toast(medal('✓',true),'File loaded','Check the text, then tap Replace list or Add to list.')}}).catch(err=>toast(medal('!',false),'Couldn’t read that file',String(err.message||err).replace(/\*\*/g,'')))});
+
+/* ================= Reports tab: all your progress ================= */
+let repRange=14;
+function barsSVG(vals,labels,color,fmt){
+  const W=320,H=120,n=vals.length,max=Math.max(1,...vals),bw=W/n;
+  return`<svg class="rep-chart" viewBox="0 0 ${W} ${H+18}" role="img" aria-label="Chart">${vals.map((v,i)=>{const h=Math.max(v?3:0,Math.round(v/max*H)),x=i*bw+bw*.15,w=bw*.7;
+    return`<g><rect x="${x.toFixed(1)}" y="${H-h}" width="${w.toFixed(1)}" height="${h}" rx="${Math.min(4,w/3).toFixed(1)}" fill="${color}" opacity="${v?1:.25}"><title>${esc(labels[i])}: ${fmt?fmt(v):v}</title></rect>${n<=14||i%Math.ceil(n/10)===0?`<text x="${(x+w/2).toFixed(1)}" y="${H+13}" text-anchor="middle">${esc(labels[i].slice(0,3))}</text>`:''}</g>`}).join('')}<line x1="0" y1="${H+.5}" x2="${W}" y2="${H+.5}" class="rep-axis"/></svg>`}
+function repDays(n){const t=todayKey(),out=[];for(let i=n-1;i>=0;i--)out.push(addDays(t,-i));return out}
+function viewReports(){
+  if(R0()==='parent')return`<section class="card empty">Your kid’s progress is on the <b>Report</b> tab.<br><br><button class="btn primary" data-go="report">Open Report</button></section>`;
+  ensureToday();const t=todayKey(),days=repDays(repRange),lab=k=>parseKey(k).toLocaleDateString(undefined,repRange>14?{month:'short',day:'numeric'}:{weekday:'short'});
+  const H=S.history||{},L=lvl(S.xp),rk=titleFor(L,S.xp);
+  const xpVals=days.map(k=>(H[k]&&H[k].x)||0),xpSum=xpVals.reduce((a,b)=>a+b,0);
+  const taskInfo=k=>{if(!S.dayLog[k])return{n:0,d:0};const wd=(parseKey(k).getDay()+6)%7,sc=schedForDay(wd),log=S.dayLog[k]||{},ts=sc.sections.flatMap(s=>s.tasks).filter(x=>x.kind!=='workout');const n=log._tt||ts.length;const d=Object.keys(log).filter(x=>x[0]!=='_'&&log[x]&&log[x].d).length;return{n,d:Math.min(d,n||d)}};
+  const tk=days.map(taskInfo),tDone=tk.reduce((a,b)=>a+b.d,0),tAll=tk.reduce((a,b)=>a+b.n,0),tPct=tAll?Math.round(tDone/tAll*100):0;
+  const wDays=days.filter(k=>H[k]&&H[k].c).length,allW=S.total||0,active=Object.keys(H).filter(k=>H[k]&&(H[k].x>0||H[k].c)).length;
+  const dist=S.distLog||{},kmR=days.reduce((a,k)=>a+(dist[k]||0),0),kmAll=Object.values(dist).reduce((a,b)=>a+b,0);
+  const ex=Object.entries(S.exLog||{}).sort((a,b)=>b[1]-a[1]).slice(0,6);
+  const diet=S.diet||{},dd=days.map(k=>diet[k]||{w:0,m:{},g:{}}),water=dd.reduce((a,x)=>a+(x.w||0),0),meals=dd.reduce((a,x)=>a+Object.values(x.m||{}).filter(Boolean).length,0),groups=dd.reduce((a,x)=>a+Object.values(x.g||{}).filter(Boolean).length,0);
+  const lost=(S.missLog||[]).reduce((a,x)=>a+(x.lost||0),0);
+  const next=rk==='Legend'?null:(L>=7?{n:'Legend',need:LEGEND_XP-S.xp}:{n:titleFor(L+1,xpFor(L+1)),need:xpFor(L+1)-S.xp});
+  let h=`<section class="card rep-hero"><div class="rep-rank">${rankSVG(rk,'rep-ico')}</div><div style="min-width:0"><div class="label">Your progress</div><h2 class="h2" style="color:${RANKCOL[rk]}">${esc(rk)} · Level ${L}</h2>
+    <p class="note" style="margin:4px 0 0"><b class="num" style="color:var(--gold)">${S.xp.toLocaleString()} XP</b>${next?` · ${next.need.toLocaleString()} XP to ${esc(next.n)}`:' · top rank!'}</p></div></section>
+  <div class="stats rep-stats">
+    <div class="stat"><span class="label">Streak</span><b class="num">${S.streak||0}</b><small>best ${S.best||0}</small></div>
+    <div class="stat"><span class="label">Workouts</span><b class="num">${allW}</b><small>all time</small></div>
+    <div class="stat"><span class="label">Days active</span><b class="num">${active}</b><small>all time</small></div>
+    <div class="stat"><span class="label">Distance</span><b class="num">${+kmAll.toFixed(1)}</b><small>km · ${+(kmAll*0.621371).toFixed(1)} mi</small></div>
+  </div>
+  <div class="seg wide" role="group" aria-label="Time range" style="margin:4px 0 12px">${[[7,'7 days'],[14,'2 weeks'],[30,'30 days']].map(([v,l])=>`<button data-act="reprange" data-v="${v}" aria-pressed="${repRange===v}">${l}</button>`).join('')}</div>
+  <section class="card"><div class="rep-h"><span class="label">XP earned</span><b class="num" style="color:var(--gold)">+${xpSum.toLocaleString()}</b></div>${barsSVG(xpVals,days.map(lab),'var(--gold)',v=>v+' XP')}</section>
+  <section class="card"><div class="rep-h"><span class="label">Schedule tasks done</span><b class="num">${tDone}/${tAll} · ${tPct}%</b></div>${barsSVG(tk.map(x=>x.d),days.map(lab),'var(--lvl)',v=>v+' tasks')}
+    ${lost?`<p class="note" style="margin:8px 0 0">XP lost to undone tasks: <b style="color:var(--bad)">−${lost}</b></p>`:''}</section>
+  <section class="card"><div class="rep-h"><span class="label">Workouts finished</span><b class="num">${wDays} of ${repRange} days</b></div>
+    <div class="rep-dots">${days.map(k=>`<i class="${H[k]&&H[k].c?'on':''} ${k===t?'today':''}" title="${esc(lab(k))}${H[k]&&H[k].c?' · done':''}"></i>`).join('')}</div>
+    ${kmR?`<p class="note" style="margin:10px 0 0">Distance in this time: <b>${+kmR.toFixed(2)} km · ${+(kmR*0.621371).toFixed(2)} mi</b></p>`:''}</section>
+  ${ex.length?`<section class="card"><div class="label">Your most-done exercises</div><div class="rep-ex">${ex.map(([n,c])=>`<div><span>${esc(n)}</span><b class="num">${c}×</b></div>`).join('')}</div></section>`:''}
+  <section class="card"><div class="label">Diet in this time</div><div class="kid-today" style="margin-top:8px"><span class="pill ${water>=WATER_GOAL*repRange*.7?'ok':'no'}">${water} glasses of water</span><span class="pill">${meals} meals logged</span><span class="pill">${groups} food groups</span></div></section>`;
+  return h;
+}
+function logExercise(it,on){
+  const d=todayKey();S.exLog=S.exLog||{};S.distLog=S.distLog||{};
+  const key=String(it.n||'Exercise').slice(0,40);S.exLog[key]=Math.max(0,(S.exLog[key]||0)+(on?1:-1));if(!S.exLog[key])delete S.exLog[key];
+  if(it.km!=null){S.distLog[d]=Math.max(0,Math.round(((S.distLog[d]||0)+(on?it.km:-it.km))*100)/100);if(!S.distLog[d])delete S.distLog[d]}
+}
 
 /* ---------- My schedule ---------- */
 function taskState(k,log){
@@ -2593,8 +2648,7 @@ const ACT={
   },
   removeTask({title}){
     return mutSched(sc=>{const f=findTask(sc,title);if(!f)throw new Error(`I couldn’t find “${title}” on your schedule.`);
-      if(f.k.kind==='workout')throw new Error('Your daily workout stays on the schedule. You can move it with the editor though.');
-      f.s.tasks.splice(f.ti,1);return`Removed **${esc(f.k.title)}** from ${esc(f.s.name)}.`});
+      f.s.tasks.splice(f.ti,1);return f.k.kind==='workout'?`Removed your **daily workout**${CMDDAYS?'':' from your schedule'}. On days without it there’s no workout to do, and your streak is safe. Say **“add my workout back”** to undo.`:`Removed **${esc(f.k.title)}** from ${esc(f.s.name)}.`});
   },
   setTime({title,time}){
     const tm=time?parseClock(String(time),1):'';if(time&&!tm)throw new Error('I didn’t understand that time. Try something like 5pm or 17:30.');
@@ -3007,7 +3061,8 @@ const WDN=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],WDFULL=['monday','tuesday'
 const SPREAD={1:[2],2:[1,4],3:[0,2,4],4:[0,1,3,4],5:[0,1,2,3,4],6:[0,1,2,3,4,5],7:[0,1,2,3,4,5,6]};
 const trainDays=p=>{p=p||S.profile;return Array.isArray(p.days)&&p.days.length?p.days:[0,1,2,3,4,5,6]};
 const wdOf=k=>(parseKey(k).getDay()+6)%7;
-const isTrainDay=(k,p)=>trainDays(p).includes(wdOf(k));
+const schedHasWorkout=wd=>{try{if(typeof rawSched!=='function')return true;const sc=schedForDay(wd);return sc.sections.some(s=>s.tasks.some(k=>k.kind==='workout'||k.link==='workout'))}catch(e){return true}};
+const isTrainDay=(k,p)=>trainDays(p).includes(wdOf(k))&&schedHasWorkout(wdOf(k));
 function missedBetween(a,b){if(!a)return 99;let n=0;const d=dayDiff(a,b);for(let i=1;i<d&&i<90;i++){if(isTrainDay(addDays(a,i)))n++}return n}
 const daysText=p=>{const d=trainDays(p);return d.length===7?'every day':d.length+' days a week ('+d.map(i=>WDN[i]).join(', ')+')'};
 function programInfo(date){
@@ -3018,7 +3073,8 @@ function programInfo(date){
 }
 function restDayRoutine(p,date){
   const r=rng(hash(date+'rest'));const ids=['catcow','worldgreat','hamstr','pigeon','thread','child','hipcircle'].sort(()=>r()-.5).slice(0,4);
-  return{title:'Rest Day',recovery:true,restDay:true,rest:20,fromAI:false,blocks:[{k:'main',name:'Optional light stretch',items:ids.map(id=>item(EXI[id],p,true))}]};
+  const noSched=trainDays(p).includes(wdOf(date))&&!schedHasWorkout(wdOf(date));
+  return{title:noSched?'No workout today':'Rest Day',noSched,recovery:true,restDay:true,rest:20,fromAI:false,blocks:[{k:'main',name:'Optional light stretch',items:ids.map(id=>item(EXI[id],p,true))}]};
 }
 
 /* ================= Interviews for every tab ================= */
@@ -3096,6 +3152,7 @@ function interviewCommand(t){
 }
 /* commands: days per week + multi-week programs */
 function daysCommand(t){
+  if(/\b(remove|delete|take off|take out|drop|get rid of)\b/.test(t)&&!/\brest day\b/.test(t))return null;
   let m=t.match(/\b(\d|two|three|four|five|six|seven)\s*(?:days?|times?)\s*(?:a|per|each)\s*week\b/);
   const W={two:2,three:3,four:4,five:5,six:6,seven:7};
   if(m&&/\b(work ?out|train|exercise|gym|lift|workouts?)\b/.test(t)&&!/\bweeks? (?:plan|program)/.test(t)){const n=W[m[1]]||parseInt(m[1]);if(n<2||n>7)return'I can set anywhere from 2 to 7 training days a week.';
@@ -3120,7 +3177,7 @@ function dayScopeCommand(text,t){
   if(/\b(interview|ask me)\b/.test(t))return null;
   const sc=parseDayScope(' '+text+' ');if(!sc.days&&!sc.all)return null;
   if(/\b(what s|whats|what is|show me|show|list|what do i have|what am i doing|what s on)\b/.test(t)&&/\b(schedule|on|plans?|to do|day)\b/.test(t)&&!/\b(workout|eat|meal|diet|lunch|dinner|breakfast)\b/.test(t)&&sc.days&&sc.days.length===1)return ACT2.listDay(sc.days[0]);
-  if(!/\b(link|connect|unlink)\b/.test(t)&&/\b(train|work ?out|workouts?|exercise|gym|rest day|breakfast|lunch|dinner|snack|meals?|diet|tab)\b/.test(t))return null;
+  if(!/\b(link|connect|unlink)\b/.test(t)&&!/\b(remove|delete|take off|drop|add|put)\b.*\bdaily workout\b/.test(t)&&/\b(train|work ?out|workouts?|exercise|gym|rest day|breakfast|lunch|dinner|snack|meals?|diet|tab)\b/.test(t))return null;
   if(!/\b(link|connect|attach|unlink|add|put|include|remove|delete|take off|take out|drop|get rid of|move|change|set|schedule|clear|build|make)\b/.test(t))return null;
   CMDDAYS=sc.all?null:sc.days;
   try{const r=tryCommand(sc.text,true);
@@ -3197,6 +3254,7 @@ function tryCommand(raw,inner){
   // mark done
   m=text.match(/^(?:please\s+)?mark\s+(.+?)\s+(?:as\s+)?(?:done|complete|completed|finished)$/i)||text.match(/^(?:please\s+)?check off\s+(.+)$/i)||text.match(/^i(?:\s+just)?\s+(?:finished|did|completed|am done with|m done with|['’]m done with)\s+(.+)$/i)||text.match(/^done with\s+(.+)$/i);
   if(m&&!/\bworkout plan\b/i.test(m[1])&&!/^(it|that|this|them|everything|all|so much|nothing|good|great|bad)$/i.test(m[1].trim()))return run(ACT.completeTask,{title:m[1].replace(/^(my|the)\s+/i,'')});
+  if(/^(?:please\s+)?(?:add|put)\s+(?:my\s+|the\s+)?(?:daily\s+)?workout\s+back(?:\s+on(?:\s+my\s+schedule)?)?$|^(?:please\s+)?add\s+(?:my\s+|the\s+)?daily workout(?:\s+to\s+my\s+schedule)?$/i.test(text))return run(()=>mutSched(sc=>{if(sc.sections.some(s=>s.tasks.some(k=>k.kind==='workout')))return'Your daily workout is already on your schedule.';const s=sc.sections.find(x=>/after school|afternoon|evening/i.test(x.name))||sc.sections.at(-1)||(sc.sections.push({id:rid(),name:'Workout',tasks:[]}),sc.sections[0]);s.tasks.push({id:'workout',kind:'workout',title:'Daily workout',time:'',min:S.profile.minutes||30});return`Added your **daily workout** back to ${esc(s.name)}. 💪`}));
   // link a task to a tab
   m=text.match(/^(?:please\s+|can you\s+|could you\s+)?(?:link|connect|attach|hook up|tie)\s+(?:the\s+|my\s+)?(.+?)\s+(?:task\s+)?(?:to|with|into)\s+(?:the\s+|my\s+)?(.+?)$/i);
   if(m&&!/^(skeefo|claude|my account|account)$/i.test(m[1].trim()))return run(ACT.linkTask,{title:m[1],tab:m[2]});
@@ -3462,6 +3520,7 @@ document.addEventListener('click',e=>{
     case'toggle':toggle(t.dataset.id,t);break;
     case'how':{SFX.soft();const id=t.dataset.id,row=t.closest('.ex');if(openHow.has(id))openHow.delete(id);else openHow.add(id);const o=openHow.has(id);row.classList.toggle('open',o);t.setAttribute('aria-expanded',o);break}
     case'guide':{SFX.soft();guideOpen=!guideOpen;const g=t.closest('.guide');g.classList.toggle('open',guideOpen);t.setAttribute('aria-expanded',guideOpen);break}
+    case'reprange':repRange=+t.dataset.v||14;SFX.soft();render();break;
     case'editw':wStartEdit(false);render();scrollTo({top:0});break;
     case'importw':tab='workout';wStartEdit(true);render();scrollTo({top:0});setTimeout(()=>$('#w-paste')?.focus(),300);break;
     case'wup':case'wdown':{const i=+t.dataset.i,j=i+(a==='wup'?-1:1);const L=wDraft.items;if(j<0||j>=L.length)break;[L[i],L[j]]=[L[j],L[i]];SFX.soft();render();break}
@@ -3580,8 +3639,8 @@ function toggle(id,btn){
   ensureToday();if(S.today.complete)return;
   const R=routine(),items=allItems(R),it=items.find(i=>i.id===id);if(!it)return;
   const L0=lvl(S.xp),d=S.today.date,h=S.history[d]||(S.history[d]={x:0,c:0}),idx=S.today.done.indexOf(id);
-  if(idx>=0){SFX.uncheck();S.today.done.splice(idx,1);S.xp=Math.max(0,S.xp-it.xp);h.x=Math.max(0,h.x-it.xp)}
-  else{if(!S.today.start)S.today.start=Date.now();S.today.done.push(id);S.xp+=it.xp;h.x+=it.xp;floatXP(btn,'+'+it.xp+' XP');sparks(btn);SFX.check(S.today.done.length-1);setTimeout(SFX.coin,90);noteCheck()}
+  if(idx>=0){SFX.uncheck();S.today.done.splice(idx,1);S.xp=Math.max(0,S.xp-it.xp);h.x=Math.max(0,h.x-it.xp);try{logExercise(it,false)}catch(e){}}
+  else{if(!S.today.start)S.today.start=Date.now();S.today.done.push(id);S.xp+=it.xp;h.x+=it.xp;try{logExercise(it,true)}catch(e){}floatXP(btn,'+'+it.xp+' XP');sparks(btn);SFX.check(S.today.done.length-1);setTimeout(SFX.coin,90);noteCheck()}
   let finished=false;
   if(items.every(i=>S.today.done.includes(i.id))){
     finished=true;const missed=S.last?missedBetween(S.last,d):99;
@@ -3734,7 +3793,7 @@ function confetti(power){if(reduced)return;const cols=[css('--gold'),css('--gold
       parts.push({x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,g:.22,drag:.985,s:(7+Math.random()*6)*sz,c:cols[i%6],rot:Math.random()*6,vr:(Math.random()-.5)*.3,flip:Math.random()*6,vf:.12+Math.random()*.2,life:110+Math.random()*60,shape:1})}}
   buzz(power>=1?[20,40,20,40,60]:[15,30,15]);kick()}
 function floatXP(el,text){const r=rectOf(el);if(!r||!r.width)return;const f=document.createElement('div');f.className='float';f.textContent=text;
-  f.style.left=(r.left+r.width/2)+'px';f.style.top=(r.top-6)+'px';document.body.appendChild(f);
+  f.style.left=(r.left+r.width/2)+'px';{const nav=document.querySelector('.tabs'),nb=nav?nav.getBoundingClientRect().bottom:0;f.style.top=Math.max(nb+40,r.top+Math.min(r.height/2,30))+'px'}document.body.appendChild(f);
   const a=f.animate([{transform:'translate3d(-50%,8px,0) scale(.5)',opacity:0},{transform:'translate3d(-50%,-26px,0) scale(1.25)',opacity:1,offset:.22},{transform:'translate3d(-50%,-40px,0) scale(1)',opacity:1,offset:.5},{transform:'translate3d(-50%,-84px,0) scale(.95)',opacity:0}],{duration:reduced?300:1300,easing:'cubic-bezier(.16,1,.3,1)'});
   a.onfinish=()=>f.remove()}
 function overlay(cls,html,ms){const o=document.createElement('div');o.className='overlay '+cls;o.innerHTML=`<div class="ov">${html}<button class="btn primary" style="margin-top:8px">Continue</button></div>`;
@@ -3863,13 +3922,20 @@ async function sbAfterAuth(){
   clearInterval(SBX.timer);
   if(!SBX.user){UID=null;famOK=false;GROUP=undefined;KIDS={};CTLS={};MYCTL=undefined;SBX.kidFam=null;renderTabs();render();renderHeader();return}
   UID=SBX.user.id;famOK=true;
-  try{const r=await SBX.client.from('user_state').select('data').eq('user_id',UID).maybeSingle();
-    if(r.data&&r.data.data&&(r.data.data.saved||0)>(S.saved||0)){S=Object.assign(fresh(),r.data.data);boot(true,true)}}catch(e){}
+  try{const r=await SBX.client.from('user_state').select('data,updated_at').eq('user_id',UID).maybeSingle();const cloud=r.data&&r.data.data;
+    let take=false;
+    if(cloud){if(S.owner&&S.owner!==UID)take=true;else if(!S.owner)take=actScore(cloud)>=actScore(S);else take=(cloud.saved||0)>(S.saved||0)}
+    else if(S.owner&&S.owner!==UID){S=fresh();}
+    if(take){const keepRole=S.role;S=Object.assign(fresh(),cloud);if(keepRole&&!S.role)S.role=keepRole}
+    SBX.cloudAt=r.data&&r.data.updated_at||null;S.owner=UID;save();boot(true,true)}catch(e){console.warn('load failed',e)}
   await sbRefresh();SBX.timer=setInterval(sbRefresh,20000);
   flush();renderTabs();render();renderHeader();
 }
 async function sbRefresh(){
   if(!CLOUD())return;const c=SBX.client;
+  try{const r=await c.from('user_state').select('updated_at').eq('user_id',UID).maybeSingle();
+    if(r.data&&r.data.updated_at&&r.data.updated_at!==SBX.cloudAt){SBX.cloudAt=r.data.updated_at;const f=(await c.from('user_state').select('data').eq('user_id',UID).maybeSingle()).data;const cl=f&&f.data;
+      if(cl&&cl.dev!==DEV_ID&&(cl.saved||0)>(S.saved||0)&&!draft&&!wDraft&&!busy){S=Object.assign(fresh(),cl);S.owner=UID;try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}boot(true,true)}}}catch(e){}
   try{
     await sbLoadBoard();
     const mine=(await c.from('family_members').select('family_id,role,status,name,families(name,code)').eq('user_id',UID)).data||[];
@@ -3898,7 +3964,7 @@ async function sbRefresh(){
 async function sbFlush(){
   if(!CLOUD())return;const c=SBX.client,now=new Date().toISOString(),t=todayKey();
   try{
-    await c.from('user_state').upsert({user_id:UID,data:clone(S),updated_at:now});
+    S.owner=UID;await c.from('user_state').upsert({user_id:UID,data:clone(S),updated_at:now});SBX.cloudAt=now;
     if(R0()==='me'){
       if(RULES().hideBoard)await c.from('leaderboard').delete().eq('user_id',UID);
       else if(S.xp>0||S.profile.set){const wk=weekStart(t),week=Object.entries(S.history).filter(([k,v])=>v.c&&k>=wk).length;
@@ -3965,19 +4031,16 @@ function cloudJoinCard(asRole){
   return`<div class="ed-row" style="margin-top:12px"><input class="inp" id="fam-code" maxlength="6" placeholder="Family code" style="text-transform:uppercase;letter-spacing:.2em"><button class="btn primary" data-act="sbjoin" data-v="${asRole}">Join</button></div>`;
 }
 /* ================= Boot ================= */
-const XP_RESET='zero-2026-10-30';
-function xpReset(){if(S.xpReset===XP_RESET)return false;S.xpReset=XP_RESET;S.xp=0;Object.values(S.history||{}).forEach(h=>{if(h)h.x=0});
+function xpResetUnused(){if(S.xpReset===XP_RESET)return false;S.xpReset=XP_RESET;S.xp=0;Object.values(S.history||{}).forEach(h=>{if(h)h.x=0});
   S.decay={applied:0};S.flags=S.flags||{};S.flags.legend=false;S.flags.demoted=false;S.missChk=addDays(todayKey(),-1);S.lbHidden=false;shownXP=0;return true}
 function boot(withDecay=true,quiet=false){
   ensureToday();
-  const wasReset=xpReset();if(wasReset)save();
   if(!busy&&(S.chat||[]).length){archiveChat();save()}
   const d=withDecay&&R0()==='me'?applyDecay():null;
   const mp=withDecay?applyMissPenalty():null;
   if(d||mp)save();
   {const h=location.hash.slice(1);if(h&&(TABS.me.some(([k])=>k===h)||h==='newtab'))tab=h}
   renderTabs();render();renderHeader();try{NOTIF.sync()}catch(e){}
-  if(wasReset&&!quiet&&R0()==='me')setTimeout(()=>toast(rankSVG('Wood','toast-ico'),'Fresh start: everyone is at 0 XP','New ranks are here. Climb from Wood to Legend!'),700);
   if(mp)setTimeout(()=>{SFX.levelDown();toast(medal('−',false),`−${mp.lost} XP`,`${mp.undone} task${mp.undone>1?'s':''} ${mp.days>1?`over ${mp.days} days were`:mp.undone>1?'were':'was'} left undone.${mp.to<mp.from?` You dropped to level ${mp.to}.`:''}${mp.rankTo!==mp.rankFrom?` Rank: ${mp.rankTo}.`:''}`)},d&&d.to?3200:600);
   if(d&&d.to)setTimeout(()=>levelDown(d),400);
   else if(d&&d.broke&&!quiet)toast(medal('0',false),'Streak reset','You missed two days in a row.');
@@ -3986,7 +4049,8 @@ byokInit();
 boot();
 sbInit();
 connect();
-document.addEventListener('visibilitychange',()=>{if(!document.hidden&&S.today&&S.today.date!==todayKey())boot()});
+document.addEventListener('visibilitychange',()=>{if(document.hidden){clearTimeout(saveTimer);try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}flush();return}if(S.today&&S.today.date!==todayKey())boot();else if(CLOUD())sbRefresh()});
+window.addEventListener('pagehide',()=>{clearTimeout(saveTimer);try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}flush()});
 </script>
 
 <script>
