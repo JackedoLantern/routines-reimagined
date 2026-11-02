@@ -5,8 +5,8 @@
   "description": "Daily workouts, routines, diet and Skeefo, your coach.",
   "start_url": "./",
   "scope": "./",
-  "display": "standalone",
-  "display_override": ["window-controls-overlay", "standalone"],
+  "display": "fullscreen",
+  "display_override": ["fullscreen", "standalone"],
   "orientation": "portrait",
   "background_color": "#09090A",
   "theme_color": "#09090A",
@@ -17,7 +17,7 @@
   ],
   "shortcuts": [
     {"name": "Today's workout", "short_name": "Workout", "url": "./#workout", "icons": [{"src": "icon-192.png", "sizes": "192x192"}]},
-    {"name": "My day", "short_name": "My day", "url": "./#day", "icons": [{"src": "icon-192.png", "sizes": "192x192"}]},
+    {"name": "My schedule", "short_name": "Schedule", "url": "./#day", "icons": [{"src": "icon-192.png", "sizes": "192x192"}]},
     {"name": "Diet", "short_name": "Diet", "url": "./#diet", "icons": [{"src": "icon-192.png", "sizes": "192x192"}]},
     {"name": "Ask Skeefo", "short_name": "Skeefo", "url": "./#skeefo", "icons": [{"src": "icon-192.png", "sizes": "192x192"}]}
   ],
