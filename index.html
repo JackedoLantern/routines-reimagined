@@ -15,7 +15,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Routines">
 <style>:root{padding-top:0;padding-bottom:0}html{background:#09090A}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
-<script>window.RR_STANDALONE=true;window.RR_VERSION='e8fb49a014';</script>
+<script>window.RR_STANDALONE=true;window.RR_VERSION='6c72424a74';</script>
 <script>window.RR_SUPABASE={url:'https://uszalonpjyssvvsikzvg.supabase.co',key:'sb_publishable_w-5rI0R9ht2-HAr5HghM0w_-3HYiAEg'};</script>
 <script src="supabase.js"></script>
 </head>
@@ -706,6 +706,12 @@ svg.moose:not(.big){animation:breathe 3.4s ease-in-out infinite}
 .who .title{animation:titleFloat 4.5s ease-in-out infinite}.streak span,.lvl small{animation:labelGlow 4s ease-in-out infinite}
 .dayfoot .note,.cue,.note,p,small,.hint,.bd,.sub{animation:none}
 @media (prefers-reduced-motion:reduce){#view h2,#view .h2,#view h3,#view .h3,.block-h h3,.ob-card h2,.ov h2,#view .label,.ob-step,.eyebrow,.tabs .tab,#view .card,#view .stat,#view .block .ex,.stat,.who .title,.streak span{animation:none!important}}
+#tabbar{position:relative}
+.tab-ind{position:absolute;left:0;top:6px;bottom:6px;border-radius:14px;background:var(--surface-2);box-shadow:inset 0 0 0 1px var(--line-2),0 4px 14px -6px var(--lvl-glow);pointer-events:none;z-index:0}
+.tab-ind.go{transition:transform .42s cubic-bezier(.3,1.35,.4,1),width .42s cubic-bezier(.3,1.35,.4,1)}
+.tab-ind::after{content:"";position:absolute;left:50%;bottom:3px;width:18px;height:3px;margin-left:-9px;border-radius:3px;background:var(--lvl);box-shadow:0 0 8px var(--lvl-glow)}
+.tabs .tab{position:relative;z-index:1}
+.tab[aria-selected="true"]{background:transparent!important;box-shadow:none!important}
 /* looping idle animations: small, satisfying, never distracting */
 @keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
 @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
@@ -1995,11 +2001,16 @@ function tweenXP(to,hi,who){
   const step=t=>{const k=Math.min(1,(t-t0)/d),e=1-Math.pow(1-k,3);el.innerHTML=fmt(from+(to-from)*e);if(k<1)requestAnimationFrame(step)};
   requestAnimationFrame(step);
 }
+let TABIND=null;
 function renderTabs(){
   const list=tabsFor(),noNew=R0()==='me'&&RULES().allowTabs===false;
   if(!tab||!((tab==='newtab'&&!noNew)||list.some(([k])=>k===tab)))tab=list[0][0];
   $('#tabbar').innerHTML=list.map(([k,l])=>`<button class="tab ${String(k).startsWith('c_')?'mine':''}" role="tab" data-tab="${k}" aria-selected="${k===tab}">${tabIco(k)}<span>${esc(l)}</span></button>`).join('')+(noNew?'':`<button class="tab add" role="tab" data-tab="newtab" aria-selected="${tab==='newtab'}" aria-label="Make a new tab" title="Make a new tab">${tabIco('newtab')}<span>New</span></button>`);
   document.body.classList.toggle('editing',editing());
+  {const bar=$('#tabbar'),sel=bar.querySelector('.tab[aria-selected="true"]');const ind=document.createElement('i');ind.className='tab-ind';bar.prepend(ind);
+   if(sel){const to={x:sel.offsetLeft,w:sel.offsetWidth},from=TABIND||to;ind.style.transform=`translateX(${from.x}px)`;ind.style.width=from.w+'px';
+     if(TABIND&&(from.x!==to.x||from.w!==to.w)&&!reduced){void ind.offsetWidth;ind.classList.add('go');ind.style.transform=`translateX(${to.x}px)`;ind.style.width=to.w+'px'}
+     else{ind.style.transform=`translateX(${to.x}px)`;ind.style.width=to.w+'px'}TABIND=to}else ind.style.opacity='0'}
   const sel=document.querySelector('#tabbar .tab[aria-selected="true"]'),bar=$('#tabbar');if(sel&&bar){const l=sel.offsetLeft-bar.clientWidth/2+sel.offsetWidth/2;try{bar.scrollTo({left:l,behavior:reduced?'auto':'smooth'})}catch(e){bar.scrollLeft=l}}
 }
 
