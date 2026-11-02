@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<title>CHORES</title>
+<title>PEPE CHORES</title>
 <meta name="description" content="Family chores that rotate every month. Earn XP, climb the leaderboard, unlock 55 badges.">
 <meta name="theme-color" content="#0a0a0b"><meta name="color-scheme" content="dark">
 <link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="apple-touch-icon.png">
-<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="CHORES">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="PEPE CHORES">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Figtree:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap">
-<script>window.CH_STANDALONE=true;window.CH_VERSION='fb9adcc899';window.CH_SUPABASE={url:'https://uszalonpjyssvvsikzvg.supabase.co',key:'sb_publishable_w-5rI0R9ht2-HAr5HghM0w_-3HYiAEg'};</script>
+<script>window.CH_STANDALONE=true;window.CH_VERSION='a3e0a8cb9e';window.CH_SUPABASE={url:'https://uszalonpjyssvvsikzvg.supabase.co',key:'sb_publishable_w-5rI0R9ht2-HAr5HghM0w_-3HYiAEg'};</script>
 <script src="../supabase.js"></script>
 <style>:root{--bg:#0a0a0b;--bg2:#121214;--card:#17171a;--card2:#1e1e22;--line:#2b2b31;--grey:#8d8d96;--grey2:#5c5c64;--text:#f4f2ef;--o:#ff7a00;--o2:#ffad5a;--o3:#ff9a2e;--oglow:rgba(255,122,0,.45);--red:#e3241b;--red2:#ff5a4a;--ok:#ff9a2e;
   --f-d:"Big Shoulders Display","Oswald",Impact,sans-serif;--f-b:"Figtree",system-ui,-apple-system,sans-serif;--f-m:"DM Mono",ui-monospace,Menlo,monospace;
@@ -23,7 +23,7 @@ button,input,select,textarea{font:inherit;color:inherit}
 .app.noTabs{padding-bottom:calc(30px + var(--sab))}
 /* header */
 .hdr{position:sticky;top:0;z-index:30;margin:0 -14px;padding:calc(10px + var(--sat)) 16px 10px;display:flex;align-items:center;gap:10px;background:linear-gradient(#0a0a0bf2,#0a0a0bd9 70%,#0a0a0b00);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
-.brand{font:900 30px/1 var(--f-d);letter-spacing:.06em;display:flex;gap:1px;flex:1;min-width:0}
+.brand{font:900 26px/1 var(--f-d);letter-spacing:.06em;display:flex;gap:1px;flex:1;min-width:0}
 .brand i{font-style:normal;display:inline-block;animation:bWave 3.2s ease-in-out infinite;color:var(--text)}
 .brand i:nth-child(odd){color:var(--o)}
 .brand i.dot{color:var(--red)}
@@ -194,6 +194,25 @@ label.f{display:block;margin:10px 0 0}label.f>span{display:block;margin-bottom:5
 .tag{display:inline-block;padding:3px 8px;border-radius:8px;font-size:11px;font-weight:700;background:#26262b;color:var(--grey)}
 .tag.o{background:#3a1c02;color:var(--o2)}.tag.r{background:#3a0f0c;color:var(--red2)}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+
+/* line icons */
+.i{width:1.2em;height:1.2em;vertical-align:-.22em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none;display:inline-block}
+.big-e .i,.choice .ci .i{width:60%;height:60%;color:var(--o);stroke-width:1.7;filter:drop-shadow(0 0 8px var(--oglow))}
+.chore-chip .e .i,.chore-chip .i{color:var(--o)}
+.tabs .ti .i{width:24px;height:24px}
+.tabs button.on .ti .i{stroke-width:2.3}
+.toast .e .i{width:28px;height:28px;color:var(--o)}
+.inbox-i .e .i{color:var(--o);width:24px;height:24px}
+.ov .big-n .i{width:84px;height:84px;stroke-width:1.6}
+.lb>span:first-child .i,.row>span .i{color:var(--o)}
+.banner .i{color:inherit}
+.brand{align-items:baseline}
+.brand .pepe{font:900 13px/1 var(--f-d);letter-spacing:.16em;color:var(--o);background:#241204;border:1px solid #5a2a00;border-radius:7px;padding:4px 6px 3px;margin-right:6px;align-self:center;animation:ttl 3.5s ease-in-out infinite}
+.pepe-big{display:flex;align-items:center;justify-content:center;gap:8px;font:900 28px/1 var(--f-d);letter-spacing:.3em;color:var(--o);margin-bottom:-6px}
+.pepe-big .i{width:42px;height:42px;stroke-width:1.6;animation:heroE 2.4s ease-in-out infinite;filter:drop-shadow(0 0 10px var(--oglow))}
+.emb.rank-ico{overflow:visible}.emb .spin{transform-origin:32px 32px}
+.legend .spin{animation:embSpin 6s linear infinite}
+.sq{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-1px;margin-right:3px}
 </style>
 </head>
 <body>
@@ -242,7 +261,7 @@ label.f{display:block;margin:10px 0 0}label.f>span{display:block;margin-bottom:5
 @keyframes ppNote{0%{transform:translate(0,0) rotate(0);opacity:0}20%{opacity:1}100%{transform:translate(var(--dx),-120px) rotate(var(--r));opacity:0}}
 @keyframes ppLetter{from{transform:translateY(30px) scale(.4) rotate(-12deg);opacity:0}to{transform:none;opacity:1}}
 @keyframes ppFade{to{opacity:1}}
-#pepeIntro .pp-skip .s2,#pepeIntro.snd .pp-skip .s1{display:none}#pepeIntro.snd .pp-skip .s2{display:inline}`;
+#pepeIntro .pp-skip .s1{display:inline-block;padding:10px 18px;border:1px solid rgba(255,122,0,.55);border-radius:999px;color:#ffb15c;font-size:13px;animation:ppPulse 1.2s ease-in-out infinite}#pepeIntro .pp-skip .s2,#pepeIntro.snd .pp-skip .s1{display:none}#pepeIntro.snd .pp-skip .s2{display:inline}`;
   const st=document.createElement('style');st.textContent=css;document.head.appendChild(st);
   const fur='url(#ppFur)',skin='url(#ppSkin)',dk='#0e0a09';
   const monkey=`<svg class="pp-monkey" viewBox="-14 6 268 268" aria-hidden="true"><defs>
@@ -302,7 +321,7 @@ label.f{display:block;margin:10px 0 0}label.f>span{display:block;margin-bottom:5
   const el=document.createElement('div');el.id='pepeIntro';el.setAttribute('role','img');el.setAttribute('aria-label','Pepe Apps');
   el.innerHTML=`<div class="pp-glow"></div><div class="pp-stage"><div class="pp-floor"></div>${monkey}
     ${[0,1,2,3].map(i=>`<span class="pp-note" style="left:${[30,190,10,210][i]}px;top:${[60,40,130,120][i]}px;--dx:${[-30,30,-20,24][i]}px;--r:${[-30,25,-15,40][i]}deg;animation-delay:${i*.45}s">${['♪','♫','♪','♬'][i]}</span>`).join('')}
-    <div class="pp-word">${word('PEPE APPS')}</div><div class="pp-sub">PRESENTS</div></div><div class="pp-skip"><span class="s1">🔊 TAP FOR SOUND</span><span class="s2">TAP TO SKIP</span></div>`;
+    <div class="pp-word">${word('PEPE APPS')}</div><div class="pp-sub">PRESENTS</div></div><div class="pp-skip"><span class="s1"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#ff7a00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-4px;margin-right:6px"><path d="M4 9.5h4l5-4.5v14l-5-4.5H4z M16.5 9a4 4 0 0 1 0 6 M19 6.5a7.5 7.5 0 0 1 0 11"/></svg>TAP FOR SOUND</span><span class="s2">TAP TO SKIP</span></div>`;
   let ac=null,played=false;
   const add=()=>{document.body.appendChild(el);tryPlay()};
   if(document.body)add();else document.addEventListener('DOMContentLoaded',add);
@@ -335,12 +354,79 @@ label.f{display:block;margin:10px 0 0}label.f>span{display:block;margin-bottom:5
     if(ac.state==='suspended'){if(!force)return false;ac.resume()}
     played=true;ppSound(ac,ac.destination,ac.currentTime+.02);el.classList.add('snd');return true}catch(e){return false}}
   let done=false,timer;const close=()=>{if(done)return;done=true;el.classList.add('out');setTimeout(()=>el.remove(),520)};
-  el.addEventListener('click',()=>{if(!played&&tryPlay(true)){clearTimeout(timer);timer=setTimeout(close,3400);return}close()});
+  el.addEventListener('click',()=>{if(!played&&tryPlay(true)){el.innerHTML=el.innerHTML;clearTimeout(timer);timer=setTimeout(close,3600);return}close()});
   timer=setTimeout(close,rm?900:3400);
 })();
 </script><!--/PEPE-INTRO-->
 <div id="app" class="app"></div>
-<script>/* ================= CHORES by Pepe Apps — core ================= */
+<script>/* ================= PEPE CHORES icon set (hand-drawn line icons, no emojis) ================= */
+const ICP={
+  dishes:'M12 6a7 7 0 1 0 0 14 7 7 0 0 0 0-14z M12 9.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7z M2.5 3v5 M4.5 3v5 M3.5 8v13 M21 3c-2 2-2 6 0 8v10',
+  laundry:'M3.5 10h17l-2 10.5H5.5z M8 10l2.5-5.5 M16 10l-2.5-5.5 M9 13.5v4 M12 13.5v4 M15 13.5v4',
+  animals:'M12 12.5c-3 0-5.5 3.2-5.5 5.3 0 1.8 2.2 2.7 5.5 2.7s5.5-.9 5.5-2.7c0-2.1-2.5-5.3-5.5-5.3z M5.5 9.3a1.8 2.2 0 1 0 .01 0z M9.5 5.3a1.8 2.2 0 1 0 .01 0z M14.5 5.3a1.8 2.2 0 1 0 .01 0z M18.5 9.3a1.8 2.2 0 1 0 .01 0z',
+  floors:'M15 2.5l-3.5 9 M7 11.5h9l2.5 9.5h-14z M9.5 15l-1 6 M12.5 15v6 M15.5 15l1 6',
+  sparkle:'M10 3l1.8 4.7L16.5 9.5l-4.7 1.8L10 16l-1.8-4.7L3.5 9.5l4.7-1.8z M18 14l.9 2.1 2.1.9-2.1.9-.9 2.1-.9-2.1-2.1-.9 2.1-.9z',
+  trophy:'M7.5 3.5h9V9a4.5 4.5 0 0 1-9 0z M7.5 5.5H4.5a3 3 0 0 0 3.2 4.2 M16.5 5.5h3a3 3 0 0 1-3.2 4.2 M12 13.5v3.5 M8.5 21h7 M9.5 17h5v4h-5z',
+  medal:'M7.5 2.5l4.5 7.5 4.5-7.5 M12 21.5a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11z M12 13.3l1 2 2.2.3-1.6 1.5.4 2.2-2-1.1-2 1.1.4-2.2-1.6-1.5 2.2-.3z',
+  home:'M3 11.5l9-7.5 9 7.5 M5.5 10v10.5h5v-6h3v6h5V10',
+  crown:'M3 8l4.5 4.5L12 5l4.5 7.5L21 8l-2 11.5H5z M5.5 16h13',
+  key:'M8 10.5a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9z M11.2 11.8L20.5 2.5 M17.5 5.5l2.5 2.5 M15 8l2 2',
+  shield:'M12 2.5l8 3v6.5c0 5-3.6 8.2-8 9.5-4.4-1.3-8-4.5-8-9.5V5.5z M8.5 12l2.5 2.5 4.5-4.5',
+  gear:'M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7z M12 2v3 M12 19v3 M2 12h3 M19 12h3 M4.9 4.9L7 7 M17 17l2.1 2.1 M4.9 19.1L7 17 M17 7l2.1-2.1',
+  chart:'M4 3.5V20h16.5 M8 16v-4 M12 16V8 M16 16v-6.5',
+  fire:'M12 2.5c1 4 5.5 5.5 5.5 11a5.5 5.5 0 0 1-11 0c0-3.2 2-4.5 2-6.5 2 1 3.2 3.2 3.2 3.2 1.2-2.4.3-5.5.3-7.7z',
+  check:'M5 12.5l4.5 4.5L19 7.5',
+  checkbox:'M4 4h16v16H4z M7.5 12.5l3 3 6-6.5',
+  lock:'M5.5 11h13v10h-13z M8 11V8a4 4 0 0 1 8 0v3 M12 15v2.5',
+  unlock:'M5.5 11h13v10h-13z M8 11V8a4 4 0 0 1 7.7-1.5',
+  bell:'M6 16.5V11a6 6 0 0 1 12 0v5.5l2 2H4z M10 20.5a2 2 0 0 0 4 0',
+  gift:'M3.5 9.5h17v4h-17z M5.5 13.5V21h13v-7.5 M12 9.5V21 M12 9.5C9.5 9.5 7 8.6 7 6.8S9.8 4.7 12 9.5c2.2-4.8 5-4.5 5-2.7s-2.5 2.7-5 2.7',
+  clock:'M12 4a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17z M12 8v4.5l3 2 M4 4.5l2.5-2 M20 4.5l-2.5-2',
+  hourglass:'M6.5 2.5h11 M6.5 21.5h11 M8 2.5c0 5.5 8 5 8 9.5s-8 4-8 9.5 M16 2.5c0 5.5-8 5-8 9.5s8 4 8 9.5',
+  warn:'M12 3.5l9.5 17h-19z M12 10v4.5 M12 17.5v.3',
+  swap:'M4 8h14l-3.5-3.5 M20 16H6l3.5 3.5',
+  calendar:'M3.5 5.5h17v15h-17z M3.5 10h17 M8 2.5v5 M16 2.5v5 M7.5 14h2 M11 14h2 M14.5 14h2 M7.5 17h2 M11 17h2',
+  star:'M12 2.8l2.8 5.7 6.2.9-4.5 4.4 1.1 6.2L12 17l-5.6 3 1.1-6.2L3 9.4l6.2-.9z',
+  moon:'M20 14.5A8.5 8.5 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z',
+  sunrise:'M2.5 18.5h19 M6.5 18.5a5.5 5.5 0 0 1 11 0 M12 6v3 M4.5 11.5l2 1.2 M19.5 11.5l-2 1.2 M9.5 4.5L12 2l2.5 2.5',
+  mail:'M3 5.5h18v13H3z M3 6.5l9 6.5 9-6.5',
+  chat:'M4 4.5h16v11.5H9.5L4 20.5z M8 9h8 M8 12.5h5',
+  thumbs:'M7 10.5V21H3.5V10.5z M7 10.5l4-7.5c1.8 0 3 1.2 2.6 3.2L13 9.5h6a2 2 0 0 1 2 2.4l-1.5 6.6A2 2 0 0 1 17.6 20H7',
+  bolt:'M13.5 2L4.5 14h7l-1 8 9-12.5h-7z',
+  rocket:'M12 2.5c4 2 6.3 6.3 5 11.5l-3 3h-4l-3-3C5.7 8.8 8 4.5 12 2.5z M12 8a1.8 1.8 0 1 0 0 3.6A1.8 1.8 0 0 0 12 8z M9.5 17.5L7 21.5 M14.5 17.5l2.5 4',
+  gorilla:'M12 3.5c-3 0-5 1.8-5.6 3.8C4.8 8.3 4.6 11.5 5.6 14c.9 3.9 3.3 6.5 6.4 6.5s5.5-2.6 6.4-6.5c1-2.5.8-5.7-.8-6.7C17 5.3 15 3.5 12 3.5z M7.5 10.5c1.7-1.1 3.3-1.1 4.5.3 1.2-1.4 2.8-1.4 4.5-.3 M9 16c2 1.4 4 1.4 6 0 M10.2 13h.01 M13.8 13h.01 M9.5 16.3l.6 1.6 M14.5 16.3l-.6 1.6',
+  eye:'M2 12s3.8-7 10-7 10 7 10 7-3.8 7-10 7S2 12 2 12z M12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6z',
+  pencil:'M4 20l4.5-1L19.5 8l-3.5-3.5L5 15.5z M13.5 7l3.5 3.5',
+  up:'M12 20.5V4.5 M5.5 11l6.5-6.5 6.5 6.5',
+  right:'M4.5 12h15 M13.5 5.5L20 12l-6.5 6.5',
+  x:'M6 6l12 12 M18 6L6 18',
+  clip:'M8.5 3h7v3.5h-7z M6.5 4.5H5V21h14V4.5h-1.5 M8.5 11.5h7 M8.5 15.5h5',
+  party:'M3.5 20.5l4.5-12 7.5 7.5z M7 13l4 4 M14 3v2.5 M19.5 8.5H22 M17.5 4.5l-1.5 2 M20 13h-2.5 M15.5 9.5l2-2',
+  hand:'M7 12V5a1.5 1.5 0 0 1 3 0v5.5 M10 10.5V3.5a1.5 1.5 0 0 1 3 0v7 M13 10.5V5a1.5 1.5 0 0 1 3 0v7 M16 12V9.5a1.5 1.5 0 0 1 3 0V14c0 4.2-3 7.5-7 7.5-3 0-5-1.8-6.2-4.3l-2-4a1.5 1.5 0 0 1 2.6-1.5L7 14',
+  snow:'M12 2.5v19 M3.8 7.2l16.4 9.6 M20.2 7.2L3.8 16.8 M9.5 4l2.5 2 2.5-2 M9.5 20l2.5-2 2.5 2',
+  skull:'M12 2.5a8 8 0 0 0-8 8c0 3 1.8 5 3 6v4h10v-4c1.2-1 3-3 3-6a8 8 0 0 0-8-8z M9 10.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z M15 10.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z M10 20.5v-2.5 M14 20.5v-2.5',
+  flex:'M5.5 14.5c0-5.5 3.2-9.5 6.5-10.5l2 3.2-3 1.8c.8 2 2.2 3.2 4 3.2 2.3-2.2 5.3-1.2 6.5 1 0 4.3-4.2 7.3-9.5 7.3-4 0-6.5-2-6.5-6z',
+  globe:'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z M3 12h18 M12 3c3 3 3 15 0 18 M12 3c-3 3-3 15 0 18',
+  gem:'M6.5 3.5h11l4 5.5L12 21 2.5 9z M2.5 9h19 M9 3.5L12 21l3-17.5',
+  board:'M2.5 13.5h19 M5 13.5l1.2 3 M19 13.5l-1.2 3 M7 17.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z M17 17.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z',
+  sound:'M4 9.5h4l5-4.5v14l-5-4.5H4z M16.5 9a4 4 0 0 1 0 6 M19 6.5a7.5 7.5 0 0 1 0 11',
+  hundred:'M3.5 8.5l2-1.5V17 M10.5 7a2.5 2.5 0 0 0-2.5 2.5v5a2.5 2.5 0 0 0 5 0v-5A2.5 2.5 0 0 0 10.5 7z M17.5 7a2.5 2.5 0 0 0-2.5 2.5v5a2.5 2.5 0 0 0 5 0v-5A2.5 2.5 0 0 0 17.5 7z M3 20.5h18',
+  bee:'M12 7.5c-3 0-5 2.8-5 6s2 6 5 6 5-2.8 5-6-2-6-5-6z M7.3 12h9.4 M7.5 15.5h9 M10 7.8L8.5 4.5 M14 7.8l1.5-3.3 M7 11c-2.5-1-4.5-.5-4.5 1.5S5 15 7 14 M17 11c2.5-1 4.5-.5 4.5 1.5S19 15 17 14'
+};
+const EMO={'🍽️':'dishes','🧺':'laundry','🐾':'animals','🧹':'floors','🧽':'sparkle','✨':'sparkle','🏆':'trophy','🎖️':'medal','🏅':'medal','🥇':'medal','🥈':'medal','🥉':'medal','🏠':'home','👑':'crown','🔱':'crown','⚜️':'crown','🔑':'key',
+  '🛡️':'shield','⚙️':'gear','📊':'chart','🔥':'fire','🌋':'fire','✅':'checkbox','✓':'check','💯':'hundred','🔒':'lock','🔓':'unlock','🔔':'bell','🎁':'gift','⏰':'clock','⏳':'hourglass','⚠️':'warn','🔄':'swap','🔁':'swap','↩️':'swap',
+  '📅':'calendar','🗓️':'calendar','🍂':'calendar','⭐':'star','🌟':'star','🌈':'star','☄️':'star','🌙':'moon','🌗':'moon','🌅':'sunrise','✉️':'mail','💬':'chat','👍':'thumbs','🤝':'thumbs','⚡':'bolt','💥':'bolt','🚀':'rocket',
+  '🦍':'gorilla','👀':'eye','✏️':'pencil','👆':'up','⬆️':'up','→':'right','✕':'x','❌':'x','📋':'clip','🎉':'party','🎆':'party','👋':'hand','🧊':'snow','💀':'skull','💪':'flex','🌍':'globe','🪐':'globe','💎':'gem','💠':'gem','🛹':'board','🐝':'bee','⚙':'gear','🛡':'shield'};
+const ico=(n,cls='')=>`<svg class="i ${cls}" viewBox="0 0 24 24" aria-hidden="true"><path d="${ICP[n]||ICP.star}"/></svg>`;
+const EMO_RE=new RegExp(Object.keys(EMO).sort((a,b)=>b.length-a.length).map(k=>k.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('|')+'|[\\u{1F300}-\\u{1FAFF}\\u{2600}-\\u{27BF}]\\uFE0F?','gu');
+function emo(h){return String(h).replace(EMO_RE,m=>EMO[m]?ico(EMO[m]):'')}
+function emoNode(el){if(!el)return;const w=document.createTreeWalker(el,NodeFilter.SHOW_TEXT),list=[];while(w.nextNode()){const n=w.currentNode;if(n.parentNode&&/^(TEXTAREA|SCRIPT|STYLE|OPTION)$/.test(n.parentNode.nodeName))continue;EMO_RE.lastIndex=0;if(EMO_RE.test(n.nodeValue))list.push(n)}
+  for(const n of list){EMO_RE.lastIndex=0;const s=document.createElement('span');s.innerHTML=emo(esc(n.nodeValue));n.replaceWith(...s.childNodes)}
+  el.querySelectorAll('option').forEach(o=>{o.textContent=o.textContent.replace(EMO_RE,'').trim()})}
+/* any HTML added to the page gets its emojis swapped for icons */
+new MutationObserver(ms=>{for(const m of ms)for(const n of m.addedNodes){if(n.nodeType===1&&n.id!=='pepeIntro'&&!n.closest?.('#pepeIntro'))emoNode(n);else if(n.nodeType===3&&n.parentNode&&n.parentNode.nodeType===1&&!n.parentNode.closest('#pepeIntro,textarea')){EMO_RE.lastIndex=0;if(EMO_RE.test(n.nodeValue))emoNode(n.parentNode)}}}).observe(document.documentElement,{childList:true,subtree:true});
+
+/* ================= PEPE CHORES by Pepe Apps — core ================= */
 const $=(q,r=document)=>r.querySelector(q),$$=(q,r=document)=>[...r.querySelectorAll(q)];
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -374,21 +460,77 @@ const needFor=L=>Math.round(150*Math.pow(1.3,L-1));       // XP to go from L to 
 const LV_CUM=[0,0];for(let L=1;L<120;L++)LV_CUM[L+1]=LV_CUM[L]+needFor(L);
 const lvlOf=xp=>{let L=1;while(L<119&&xp>=LV_CUM[L+1])L++;return L};
 const lvlProg=xp=>{const L=lvlOf(xp),a=LV_CUM[L],b=LV_CUM[L+1];return{L,into:xp-a,need:b-a,pct:Math.min(1,(xp-a)/(b-a))}};
-const TIERS=[ // [name, minLevel, colorA, colorB]
-  ['Rookie',1,'#6b6b73','#3a3a40'],['Helper',3,'#9a9aa3','#55555c'],['Hustler',5,'#c96f2e','#6b3412'],['Grinder',7,'#ff8a1f','#8a3c00'],
-  ['Pro',10,'#ffb15c','#c25600'],['Elite',13,'#ff5a4a','#7a0f0a'],['Master',16,'#ff7a00','#2a0d00'],['Champion',20,'#ffd08a','#ff7a00'],
-  ['Titan',25,'#e3241b','#140404'],['Mythic',30,'#ffffff','#ff7a00'],['Legendary',40,'#ff7a00','#e3241b'],['Gorilla King',50,'#ffb000','#000000']];
+const TIERS=[ // [name, minLevel, color] — extremely hard: every level costs 30% more XP than the last
+  ['Wood',1,'#B07A4A'],['Bronze',4,'#CD7F32'],['Silver',7,'#C9CED6'],['Gold',10,'#FFC53D'],['Platinum',13,'#9FE3E0'],['Diamond',16,'#6FD3FF'],['Vibranium',20,'#A98BFF'],['Legend',25,'#FF7A00']];
 const tierOf=L=>{let t=TIERS[0];for(const x of TIERS)if(L>=x[1])t=x;return t};
-function embSVG(L,cls=''){const t=tierOf(L),i=TIERS.indexOf(t),id='e'+i+Math.random().toString(36).slice(2,6);
-  const spikes=Math.min(12,4+i),pts=[];for(let k=0;k<spikes*2;k++){const a=k/(spikes*2)*Math.PI*2-Math.PI/2,r=k%2?40:47;pts.push((50+Math.cos(a)*r).toFixed(1)+','+(50+Math.sin(a)*r).toFixed(1))}
-  return`<svg class="emb ${cls}" viewBox="0 0 100 100" aria-hidden="true"><defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${t[2]}"/><stop offset="1" stop-color="${t[3]}"/></linearGradient></defs>
-  ${i>=3?`<polygon class="spin" points="${pts.join(' ')}" fill="${t[3]}" stroke="${t[2]}" stroke-width="1.5" opacity=".9"/>`:''}
-  <path d="M50 8 L84 22 V50 C84 72 68 86 50 94 C32 86 16 72 16 50 V22Z" fill="url(#${id})" stroke="#0a0a0b" stroke-width="3"/>
-  <path d="M50 16 L77 27 V50 C77 67 65 79 50 86 C35 79 23 67 23 50 V27Z" fill="#0a0a0b" opacity=".55"/>
-  ${i>=8?`<path d="M30 30 L38 22 L44 30 L50 18 L56 30 L62 22 L70 30 L66 38 H34Z" fill="${t[2]}"/>`:''}
-  <text x="50" y="${i>=8?64:60}" text-anchor="middle" font-family="Big Shoulders Display,Impact,sans-serif" font-weight="900" font-size="${L>99?22:28}" fill="${i===11?'#ffb000':'#fff'}">${L}</text></svg>`}
+const RANKMETAL={
+  Wood:['#C48A55','#7A4A24','#3E2412','#E8B887'],
+  Bronze:['#E9A060','#A8622B','#4D2A10','#FFD0A0'],
+  Silver:['#F2F4F8','#A9B0BC','#4A505B','#FFFFFF'],
+  Gold:['#FFE27A','#E9A21C','#6B4300','#FFF6C8'],
+  Platinum:['#E6FFFD','#8FD8D3','#2A5E5B','#FFFFFF'],
+  Diamond:['#C9F3FF','#4CC3F5','#0B4C78','#FFFFFF'],
+  Vibranium:['#D9CCFF','#7A55F0','#1A0F3F','#F2EAFF'],
+};
+let rankN=0;
+function rankSVG(name,cls){
+  if(name==='Legend')return gorillaSVG(cls);
+  const m=RANKMETAL[name]||RANKMETAL.Wood,p='rk'+(++rankN)+'_',[hi,mid,lo,sh]=m;
+  const defs=`<defs><linearGradient id="${p}g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${hi}"/><stop offset=".55" stop-color="${mid}"/><stop offset="1" stop-color="${lo}"/></linearGradient>
+    <linearGradient id="${p}i" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${lo}"/><stop offset="1" stop-color="#0b0a0d"/></linearGradient>
+    <radialGradient id="${p}r" cx="50%" cy="45%" r="55%"><stop offset="0" stop-color="${mid}" stop-opacity=".55"/><stop offset="1" stop-color="${mid}" stop-opacity="0"/></radialGradient>
+    <filter id="${p}f" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="1.6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>`;
+  const shield='M32 4 L54 12 L54 30 C54 45 44 54 32 60 C20 54 10 45 10 30 L10 12 Z',inner='M32 10 L48 16 L48 30 C48 41 41 48 32 53 C23 48 16 41 16 30 L16 16 Z';
+  const chev=(n,b=40)=>Array.from({length:n},(_,i)=>`<path d="M22 ${b-i*7} L32 ${b-6-i*7} L42 ${b-i*7}" fill="none" stroke="url(#${p}g)" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round"/>`).join('');
+  let body='';
+  if(name==='Wood'){
+    body=`<path d="${shield}" fill="url(#${p}g)" stroke="${lo}" stroke-width="1.5"/>
+      <g fill="none" stroke="${lo}" stroke-opacity=".55" stroke-width="1.2" stroke-linecap="round"><path d="M18 18 C24 26 20 36 26 48"/><path d="M28 12 C33 22 28 34 33 54"/><path d="M40 14 C43 24 38 34 43 46"/><ellipse cx="38" cy="30" rx="3" ry="2"/></g>
+      <path d="M32 46 L32 34" stroke="#3d6b2a" stroke-width="2.6" stroke-linecap="round"/><path d="M32 36 C26 34 24 28 26 24 C31 25 33 30 32 36 Z" fill="#7cc35a"/><path d="M32 38 C38 36 41 30 39 26 C34 27 31 32 32 38 Z" fill="#5fa843"/>`;
+  }else if(name==='Bronze'||name==='Silver'||name==='Gold'){
+    const n=name==='Bronze'?1:name==='Silver'?2:3;
+    body=`<path d="${shield}" fill="url(#${p}g)" stroke="${lo}" stroke-width="1.2"/><path d="${inner}" fill="url(#${p}i)"/>${chev(n,n===3?46:40)}
+      ${name==='Gold'?`<path d="M32 13 l2.2 4.6 5 .6-3.7 3.4 1 5-4.5-2.5-4.5 2.5 1-5-3.7-3.4 5-.6z" fill="${sh}" filter="url(#${p}f)"/>`:''}
+      <path d="M32 4 L54 12 L54 18 C40 14 24 14 10 18 L10 12 Z" fill="#fff" opacity=".18"/>`;
+  }else if(name==='Platinum'){
+    body=`<g fill="url(#${p}g)" stroke="${lo}" stroke-width="1"><path d="M12 22 C6 22 2 28 2 34 C6 31 9 31 12 33 C7 35 5 40 6 45 C10 41 13 40 16 41 Z"/><path d="M52 22 C58 22 62 28 62 34 C58 31 55 31 52 33 C57 35 59 40 58 45 C54 41 51 40 48 41 Z"/></g>
+      <path d="${shield}" fill="url(#${p}g)" stroke="${lo}" stroke-width="1.2"/><path d="${inner}" fill="url(#${p}i)"/>${chev(3,46)}
+      <path d="M32 12 l2.6 5.4 5.9.7-4.4 4 1.2 5.8-5.3-2.9-5.3 2.9 1.2-5.8-4.4-4 5.9-.7z" fill="${sh}" filter="url(#${p}f)"/>`;
+  }else if(name==='Diamond'){
+    body=`<circle cx="32" cy="32" r="28" fill="url(#${p}r)"/>
+      <path d="M18 14 L46 14 L58 26 L32 58 L6 26 Z" fill="url(#${p}g)" stroke="${lo}" stroke-width="1.2" stroke-linejoin="round"/>
+      <g fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="1"><path d="M6 26 L58 26"/><path d="M18 14 L24 26 L32 58 L40 26 L46 14"/><path d="M24 26 L32 14 L40 26"/></g>
+      <path d="M18 14 L32 14 L24 26 L6 26 Z" fill="#fff" opacity=".35"/>
+      <path d="M50 8 l1.2 3 3 1.2-3 1.2-1.2 3-1.2-3-3-1.2 3-1.2z" fill="#fff" filter="url(#${p}f)"/>`;
+  }else{ // Vibranium
+    body=`<circle cx="32" cy="32" r="30" fill="url(#${p}r)" class="rk-pulse"/>
+      <path d="M32 3 L57 17.5 L57 46.5 L32 61 L7 46.5 L7 17.5 Z" fill="url(#${p}i)" stroke="url(#${p}g)" stroke-width="2.6"/>
+      <path d="M32 11 L50 21.5 L50 42.5 L32 53 L14 42.5 L14 21.5 Z" fill="none" stroke="${mid}" stroke-opacity=".6" stroke-width="1"/>
+      <g filter="url(#${p}f)" stroke="${sh}" stroke-width="1.6" stroke-linecap="round" fill="none" class="rk-energy"><path d="M32 18 L32 26 M32 38 L32 46 M20 25 L26 29 M38 35 L44 39 M44 25 L38 29 M26 35 L20 39"/></g>
+      <path d="M32 24 L39 28 L39 36 L32 40 L25 36 L25 28 Z" fill="${mid}" stroke="${sh}" stroke-width="1.2" filter="url(#${p}f)"/>
+      <circle cx="32" cy="32" r="3" fill="${sh}"/>`;
+  }
+  return`<svg class="rank-ico ${cls||''}" viewBox="0 0 64 64" role="img" aria-label="${name} rank">${defs}${body}</svg>`;
+}
+function gorillaSVG(cls){return`<svg class="rank-ico legend ${cls||''}" viewBox="0 0 64 64" role="img" aria-label="Legend rank"><circle cx="32" cy="32" r="30" fill="#0a0604" stroke="#ff7a00" stroke-width="3"/><circle cx="32" cy="32" r="26" fill="none" stroke="#e3241b" stroke-width="1.2" stroke-dasharray="3 4" class="spin"/>
+  <g transform="translate(32 33) scale(.62) translate(-120 -73)">
+        <path d="M120 30 C108 30 98 40 94 50 C84 54 82 70 84 84 C86 104 100 114 120 114 C140 114 154 104 156 84 C158 70 156 54 146 50 C142 40 132 30 120 30Z" fill="#0a0604" stroke="#ff7a00" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
+        
+        <path d="M92 70 C92 58 108 54 120 60 C132 54 148 58 148 70 C152 86 146 108 120 110 C94 108 88 86 92 70Z" fill="#0a0604" stroke="#ff7a00" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
+        <path d="M90 66 C100 58 112 60 119 68 L121 68 C128 60 140 58 150 66 C148 74 138 72 128 76 L112 76 C102 72 92 74 90 66Z" fill="#0a0604" stroke="#ff7a00" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
+        <path d="M98 78 C103 74 109 74 113 79 C109 82 102 82 98 78Z" fill="#0a0604" stroke="#ff7a00" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><path d="M127 79 C131 74 137 74 142 78 C138 82 131 82 127 79Z" fill="#0a0604" stroke="#ff7a00" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
+        <circle cx="106" cy="78.5" r="3" fill="url(#ppIris)"/><circle cx="134" cy="78.5" r="3" fill="url(#ppIris)"/><circle cx="106" cy="78.5" r="1.2" fill="#0a0604"/><circle cx="134" cy="78.5" r="1.2" fill="#0a0604"/>
+        <path d="M96 75 L114 80 M144 75 L126 80" stroke="#ff7a00" stroke-width="3" stroke-linecap="round"/>
+        <path d="M110 84 C106 90 108 96 114 96 C116 98 124 98 126 96 C132 96 134 90 130 84 C126 82 114 82 110 84Z" fill="#0a0604" stroke="#ff7a00" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
+        <ellipse cx="114.5" cy="92" rx="4" ry="2.6" fill="#ff7a00"/><ellipse cx="125.5" cy="92" rx="4" ry="2.6" fill="#ff7a00"/>
+        <path d="M100 98 C108 96 132 96 140 98 C140 112 128 116 120 116 C112 116 100 112 100 98Z" fill="#0a0604" stroke="#ff7a00" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
+        <path d="M103 98 L106 108 L109 98Z M131 98 L134 108 L137 98Z" fill="#0a0604" stroke="#ff7a00" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><path d="M110 98 h20 v3 h-20z" fill="#0a0604" stroke="#ff7a00" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><path d="M106 112 L108 106 L110 112Z M130 112 L132 106 L134 112Z" fill="#0a0604" stroke="#ff7a00" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
+        <path d="M100 98 C108 96 132 96 140 98" fill="none" stroke="#ff7a00" stroke-width="1.6"/>
+        <path d="M94 96 C92 102 94 108 98 112 M146 96 C148 102 146 108 142 112 M112 66 C116 62 124 62 128 66" fill="none" stroke="#ff7a00" stroke-width="1.3"/>
+        </g></svg>`}
+function embSVG(L,cls=''){return rankSVG(tierOf(L)[0],'emb '+cls)}
 function avSVG(name,L){const t=tierOf(L||1);const c=(name||'?').trim().charAt(0).toUpperCase()||'?';
-  return`<svg class="av" viewBox="0 0 40 40"><circle cx="20" cy="20" r="19" fill="#1d1d21" stroke="${t[2]}" stroke-width="2.5"/><text x="20" y="26.5" text-anchor="middle" font-family="Big Shoulders Display,Impact,sans-serif" font-weight="900" font-size="19" fill="${t[2]==='#6b6b73'?'#ff7a00':t[2]}">${esc(c)}</text></svg>`}
+  return`<svg class="av" viewBox="0 0 40 40"><circle cx="20" cy="20" r="19" fill="#1d1d21" stroke="${t[2]}" stroke-width="2.5"/><text x="20" y="26.5" text-anchor="middle" font-family="Big Shoulders Display,Impact,sans-serif" font-weight="900" font-size="19" fill="${t[2]}">${esc(c)}</text></svg>`}
 
 /* ---------- 55 badges ---------- */
 const BADGES=[];(()=>{const B=(id,n,d,e,tier,test)=>BADGES.push({id,n,d,e,tier,test});
@@ -409,15 +551,14 @@ const BADGES=[];(()=>{const B=(id,n,d,e,tier,test)=>BADGES.push({id,n,d,e,tier,t
   B('comeback','Comeback Kid','Come back after missing a day','🔁',1,s=>s.comeback>=1);
   B('top','Top of the Family','Be #1 on the family leaderboard','🥇',3,s=>s.top>=1);
   B('goal','Reward Earned','Reach a level goal your parent set','🏆',2,s=>s.goals>=1);
-  B('allfour','Jack of All Chores','Do every chore type','🃏',3,s=>CHORES.every(c=>(s['c_'+c.k]||0)>0));
+  B('allfour','Jack of All Chores','Do every chore type','⭐',3,s=>CHORES.every(c=>(s['c_'+c.k]||0)>0));
 })();
 const TIERC=[['#9a9aa3','#3a3a40'],['#c96f2e','#4a2208'],['#ff8a1f','#6b2a00'],['#ffb15c','#c25600'],['#ff5a4a','#5a0a06']];
-function badgeSVG(b,got){const [a,c]=TIERC[b.tier],id='b'+b.id;
+function badgeSVG(b,got){const [a,c]=TIERC[b.tier],id='b'+b.id+Math.random().toString(36).slice(2,5),n=got?(EMO[b.e]||'star'):'lock';
   return`<svg viewBox="0 0 64 64" aria-hidden="true"><defs><radialGradient id="${id}" cx="40%" cy="30%" r="75%"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${c}"/></radialGradient></defs>
-  <circle cx="32" cy="32" r="29" fill="url(#${id})" stroke="#0a0a0b" stroke-width="2"/><circle cx="32" cy="32" r="23" fill="#0f0f11" opacity=".75"/>
+  <circle cx="32" cy="32" r="29" fill="url(#${id})" stroke="#0a0a0b" stroke-width="2"/><circle cx="32" cy="32" r="23" fill="#0f0f11" opacity=".8"/>
   <circle cx="32" cy="32" r="26" fill="none" stroke="${a}" stroke-width="1" stroke-dasharray="2 3" opacity=".8"/>
-  <text x="32" y="40" text-anchor="middle" font-size="22">${got?b.e:'🔒'}</text></svg>`}
-
+  <g transform="translate(19 19) scale(1.08)" fill="none" stroke="${got?a:'#5c5c64'}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="${ICP[n]}"/></g></svg>`}
 /* ---------- state ---------- */
 const KEY='chores-v1';
 let C;
@@ -567,7 +708,7 @@ function afterXP(pid,slot,L0,quiet){const p=prog(pid),L=lvlOf(p.xp);
     if(C.me&&pid===C.me.pid){p.goalSeen=p.goalSeen||{};p.goalSeen[g.id]=1;setTimeout(()=>goalOverlay(g),1800)}}}
   checkBadges(pid)}
 function unseenGoals(){if(!C.me||isParent()||!fam())return;const p=prog(C.me.pid);p.goalSeen=p.goalSeen||{};for(const g of fam().goals||[]){if(p.goalsHit[g.id]&&!p.goalSeen[g.id]){p.goalSeen[g.id]=1;save();setTimeout(()=>goalOverlay(g),600)}}}
-function goalOverlay(g){const ct=fam().contact||{},msg=`I reached level ${g.lvl} in CHORES!${g.reward?' My reward: '+g.reward+' 🏆':''}`;
+function goalOverlay(g){const ct=fam().contact||{},msg=`I reached level ${g.lvl} in PEPE CHORES!${g.reward?' My reward: '+g.reward+' 🏆':''}`;
   SFX.badge();confetti(1.5);overlay(`<div class="rays"></div><div class="eyebrow">Level goal reached</div><div class="big-n">🏆</div><h2 class="ttl">Level ${g.lvl}!</h2>${g.reward?`<p>Your reward:</p><h3 style="color:var(--o)">${esc(g.reward)}</h3>`:'<p>You hit the goal your parent set!</p>'}<p class="note">Your parent has been told.</p>
     <div class="btns">${ct.phone?`<a class="btn" href="sms:${esc(ct.phone)}?&body=${encodeURIComponent(msg)}">💬 Text ${esc(ct.name||'parent')}</a>`:''}${ct.email?`<a class="btn" href="mailto:${esc(ct.email)}?subject=${encodeURIComponent('CHORES: level '+g.lvl+'!')}&body=${encodeURIComponent(msg)}">✉️ Email</a>`:''}</div>`,{btn:'Awesome!'})}
 function cheatFlag(pid,slot){const R=rulesFor(slot);bump(pid,'flags');dayLog(pid).flag=(dayLog(pid).flag||0)+1;SFX.warn();
@@ -582,7 +723,7 @@ function reportFor(k=dkey()){return kids().map(p=>{const pr=prog(p.pid),d=pr.day
   const done=ts.filter(t=>d.t[t.id]&&d.t[t.id].ok).length,wait=ts.filter(t=>d.t[t.id]&&!d.t[t.id].ok).length;
   return{p,ch,done,wait,total:ts.length,x:d.x||0,streak:pr.streak,L:lvlOf(pr.xp),xp:pr.xp,off:dayOff(p.slot,k),flag:d.flag||0,missing:ts.filter(t=>!d.t[t.id]).map(t=>t.t),month:!!d.t[monthTask(p.slot,k).id]}})}
 function reportText(k=dkey()){const r=reportFor(k),dt=fromKey(k).toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'});
-  return`CHORES daily report — ${dt}\n\n`+r.map(x=>`${x.p.name} (${x.ch.n}): ${x.off?'day off':`${x.done}/${x.total} done${x.wait?`, ${x.wait} waiting for approval`:''}`} · +${x.x} XP · level ${x.L} · ${x.streak}-day streak${x.flag?' · ⚠️ checked very fast':''}${!x.off&&x.missing.length?`\n   Not done: ${x.missing.join(', ')}`:''}`).join('\n')+`\n\nSent from CHORES by Pepe Apps`}
+  return`PEPE CHORES daily report — ${dt}\n\n`+r.map(x=>`${x.p.name} (${x.ch.n}): ${x.off?'day off':`${x.done}/${x.total} done${x.wait?`, ${x.wait} waiting for approval`:''}`} · +${x.x} XP · level ${x.L} · ${x.streak}-day streak${x.flag?' · ⚠️ checked very fast':''}${!x.off&&x.missing.length?`\n   Not done: ${x.missing.join(', ')}`:''}`).join('\n')+`\n\nSent from PEPE CHORES by Pepe Apps`}
 
 /* ================= views ================= */
 let STEP=C.fam?null:'start',CREATE={mode:'kid',names:['','','',''],slot:0,fam:'',pname:'',cloud:false},TAB=null,LBSEG='fam',RULESLOT=0,REPDAY=dkey();
@@ -595,7 +736,7 @@ function render(dir){const app=$('#app');if(!app)return;
   if(!C.fam||STEP){app.className='app noTabs';app.innerHTML=viewStart();$('#tabs')?.remove();bindStart();return}
   const tabs=tabsNow();if(!TAB||!tabs.find(t=>t[0]===TAB))TAB=tabs[0][0];
   const me=meP(),pr=me?prog(me.pid):null,lp=pr?lvlProg(pr.xp):null;
-  const hdr=`<header class="hdr"><div class="brand" aria-label="CHORES">${[...'CHORES'].map((c,i)=>`<i style="animation-delay:${i*.15}s">${c}</i>`).join('')}<i class="dot" style="animation-delay:.9s">.</i></div>
+  const hdr=`<header class="hdr"><div class="brand" aria-label="PEPE CHORES"><span class="pepe">PEPE</span>${[...'CHORES'].map((c,i)=>`<i style="animation-delay:${i*.15}s">${c}</i>`).join('')}<i class="dot" style="animation-delay:.9s">.</i></div>
     <button class="me-chip" data-act="me">${avSVG(me?.name,lp?.L)}<div style="min-width:0;text-align:left"><b>${esc(me?.name||'Parent')}</b>${isParent()?`<small>PARENT${C.cloud?.uid?' · ONLINE':''}</small>`:`<small>LV ${lp.L} · ${fmt(pr.xp)} XP</small><div class="xpbar"><i style="width:${lp.pct*100}%"></i></div>`}</div></button></header>`;
   const V={chores:viewChores,ranks:viewRanks,badges:viewBadges,family:viewFamily,reports:viewReports,rules:viewRules,more:viewMore}[TAB];
   app.className='app';app.innerHTML=hdr+`<main class="view ${dir||''}">${V()}</main>`;
@@ -616,7 +757,7 @@ function goTab(k){const tabs=tabsNow(),a=tabs.findIndex(t=>t[0]===TAB),b=tabs.fi
 /* ---------- start / create / join ---------- */
 function viewStart(){
   if(STEP==='create'){const f={startMonth:monthIdx()},P=CREATE.mode==='parent';
-    return`<div class="start view r"><div><div class="lbl">${P?'I’m a parent':'Create a family'}</div><h1 class="ttl">${P?'Set up your family':'Create a Family'}</h1>
+    return`<div class="start view r"><div><div class="lbl">${P?'I’m a parent':'Create a family'}</div><h1 class="ttl">Create a Family</h1>
       <p class="note">Put up to four names. Each person gets one chore for the month, and the chores rotate every month so nobody gets stuck.</p></div>
       <label class="f"><span class="lbl">Family name</span><input class="inp" id="c-fam" maxlength="30" placeholder="The Smiths" value="${esc(CREATE.fam)}"></label>
       <div class="card"><div class="lbl">This month (${MONTHS[new Date().getMonth()]})</div>
@@ -636,12 +777,11 @@ function viewStart(){
   if(STEP==='pending')return`<div class="start view"><div class="big" style="font-size:64px">⏳</div><h1 class="ttl" style="text-align:center">Waiting for your parent</h1>
       <p class="tagline">You asked to join <b>${esc(C.pending?.name||'the family')}</b>. A parent needs to let you in. This screen checks every few seconds.</p>
       <button class="btn" data-act="recheck">Check now</button><button class="btn ghost" data-act="back">Back</button></div>`;
-  return`<div class="start"><div class="big" aria-label="CHORES">${[...'CHORES'].map((c,i)=>`<i style="animation-delay:${i*.08}s,${.8+i*.15}s;color:${i%2?'var(--text)':'var(--o)'}">${c}</i>`).join('')}</div>
+  return`<div class="start"><div class="pepe-big">${ico('gorilla')}<span>PEPE</span></div><div class="big" aria-label="PEPE CHORES">${[...'CHORES'].map((c,i)=>`<i style="animation-delay:${i*.08}s,${.8+i*.15}s;color:${i%2?'var(--text)':'var(--o)'}">${c}</i>`).join('')}</div>
     <p class="tagline">Do your chore. Earn XP. Climb the family leaderboard. 🦍</p>
-    <button class="choice" data-act="newfam"><span class="ci">🏠</span><span><b>Create a Family</b><small>Four names, four chores, a new one every month</small></span></button>
-    <button class="choice" data-act="newpar"><span class="ci">👑</span><span><b>I’m a Parent</b><small>Manage the family, set rules, approve chores</small></span></button>
-    <button class="choice" data-act="tojoin"><span class="ci">🔑</span><span><b>Join with a code</b><small>Your family already uses CHORES</small></span></button></div>`}
-function authForm(next){if(!window.supabase||!window.CH_SUPABASE)return`<div class="banner o">Joining with a code works on the CHORES website (where accounts are on). In here, create the family on this device and switch between people.</div><button class="btn ghost" data-act="back">Back</button>`;
+    <button class="choice" data-act="newpar"><span class="ci">👑</span><span><b>I’m a Parent</b><small>Create your family, set rules, approve chores</small></span></button>
+    <button class="choice" data-act="tojoin"><span class="ci">🔑</span><span><b>Join with a code</b><small>Your family already uses PEPE CHORES</small></span></button></div>`}
+function authForm(next){if(!window.supabase||!window.CH_SUPABASE)return`<div class="banner o">Joining with a code works on the PEPE CHORES website (where accounts are on). In here, create the family on this device and switch between people.</div><button class="btn ghost" data-act="back">Back</button>`;
   return`<label class="f"><span class="lbl">Email</span><input class="inp" id="a-email" type="email" autocomplete="email"></label>
     <label class="f"><span class="lbl">Password</span><input class="inp" id="a-pass" type="password" autocomplete="current-password" minlength="6"></label>
     <div class="note" id="a-msg" style="min-height:20px;margin-top:6px"></div>
@@ -695,7 +835,7 @@ function viewRanks(){const me=meP(),p=prog(me.pid),lp=lvlProg(p.xp),t=tierOf(lp.
     if(LBSEG==='fam'&&rows.length>1&&rows[0].mine&&rows[0].xp>0&&!p.stats.top){p.stats.top=1;save();setTimeout(()=>checkBadges(me.pid),300)}
     h+=`<div class="sec-h"><h3 class="ttl">Leaderboard</h3><span class="lbl">by total XP</span></div>${world?`<div class="seg" id="lbseg"><span class="ind"></span><button data-seg="fam" class="${LBSEG==='fam'?'on':''}">Family</button><button data-seg="world" class="${LBSEG==='world'?'on':''}">World</button></div>`:''}
       ${rows.map((r,i)=>`<div class="lb ${i<3?'p'+(i+1):''} ${r.mine?'mine':''}" style="animation-delay:${i*.06}s"><span class="pos">${i===0?'👑':i+1}</span>${embSVG(r.L,'sm')}<div class="grow"><b>${esc(r.name)}${r.mine?' (you)':''}</b><div class="note">LV ${r.L} · 🔥 ${r.streak||0}</div></div><span class="x">${fmt(r.xp)}</span></div>`).join('')||'<div class="note">Nobody here yet.</div>'}`}
-  h+=`<div class="sec-h"><h3>All ranks</h3><span class="lbl">insanely hard</span></div><div class="tiers">${TIERS.map(x=>`<div class="tier ${lp.L>=x[1]?'':'lock'}" data-tier="${x[1]}">${embSVG(x[1])}<div>${x[0]}</div><div class="note" style="font-size:10px">LV ${x[1]}</div></div>`).join('')}</div>
+  h+=`<div class="sec-h"><h3>All ranks</h3><span class="lbl">extremely hard</span></div><div class="tiers">${TIERS.map(x=>`<div class="tier ${lp.L>=x[1]?'':'lock'}" data-tier="${x[1]}">${embSVG(x[1])}<div>${x[0]}</div><div class="note" style="font-size:10px">LV ${x[1]}</div></div>`).join('')}</div>
     <p class="note" style="text-align:center;margin-top:12px">Level ${lp.L+1} needs ${fmt(needFor(lp.L))} XP. Every level costs 30% more than the last.</p>`;
   return h}
 /* ---------- KID: badges ---------- */
@@ -732,10 +872,10 @@ function viewReports(){const f=fam(),days=[...Array(7)].map((_,i)=>addDays(dkey(
       ${!x.off&&x.missing.length?`<tr><td colspan="4" class="note" style="border-bottom:1px solid #232327">Not done: ${esc(x.missing.join(', '))}</td></tr>`:''}`).join('')}</table>
     <div class="btns">${ct.email?`<a class="btn sm" href="mailto:${esc(ct.email)}?subject=${encodeURIComponent('CHORES report '+REPDAY)}&body=${encodeURIComponent(txt)}">✉️ Email</a>`:''}${ct.phone?`<a class="btn sm" href="sms:${esc(ct.phone)}?&body=${encodeURIComponent(txt)}">💬 Text</a>`:''}<button class="btn sm" data-act="sharerep">Share</button><button class="btn sm" data-act="copyrep">Copy</button></div>
     ${!ct.email&&!ct.phone?'<p class="note">Add parent contact info in Settings to email or text reports in one tap.</p>':''}</section>
-    <section class="card"><div class="lbl">Every day</div><label class="sw"><div class="grow"><b>Daily report time</b><small>CHORES pops up the report and notifies you at this time each day.</small></div><input class="inp" type="time" data-fam="reportTime" value="${esc(f.reportTime||'19:00')}"></label>
+    <section class="card"><div class="lbl">Every day</div><label class="sw"><div class="grow"><b>Daily report time</b><small>PEPE CHORES pops up the report and notifies you at this time each day.</small></div><input class="inp" type="time" data-fam="reportTime" value="${esc(f.reportTime||'19:00')}"></label>
       <label class="sw"><div class="grow"><b>Phone notifications</b><small>${typeof Notification==='undefined'?'Not supported here':Notification.permission==='granted'?'On':'Allow notifications for reports, level-ups and alerts'}</small></div><button class="btn sm" data-act="notifs">${typeof Notification!=='undefined'&&Notification.permission==='granted'?'Test':'Turn on'}</button></label></section>
     <section class="card"><div class="lbl">Last 7 days</div>${kids().map(p=>{const pr=prog(p.pid);return`<div class="row" style="margin:10px 0"><b style="width:70px;overflow:hidden;text-overflow:ellipsis">${esc(p.name)}</b><div class="grow" style="display:flex;gap:4px">${days.slice().reverse().map(d=>{const s=dayStats(p.pid,p.slot,d),off=dayOff(p.slot,d);return`<span title="${d}" style="flex:1;height:26px;border-radius:6px;background:${off?'#1d1d21':s.total&&s.ok>=s.total?'var(--o)':s.ok?'#7a3a00':'#3a0f0c'}"></span>`}).join('')}</div></div>`}).join('')}
-      <div class="note">🟧 all done · 🟫 some · 🟥 none · ⬛ day off</div></section>`}
+      <div class="note"><span class="sq" style="background:var(--o)"></span>all done · <span class="sq" style="background:#7a3a00"></span>some · <span class="sq" style="background:#3a0f0c"></span>none · <span class="sq" style="background:#1d1d21"></span>day off</div></section>`}
 const RULE_DEFS=[['needApproval','Parent approves chores','XP only counts after you approve'],['noUncheck','No unchecking','Once checked, it stays checked'],['lockName','Lock their name','They can’t rename themselves'],['lockSettings','Lock settings','No switching profiles or changing sound'],
   ['hideBoard','Hide leaderboard','No leaderboard on their Ranks tab'],['hideGlobal','Family leaderboard only','Hide the world leaderboard'],['hideOthers','Hide siblings’ progress','Only see their own chores'],['hideBadges','Hide the Badges tab',''],
   ['weekendsOff','Weekends off','No chores Saturday and Sunday'],['paused','Pause chores','Vacation or sick day — no chores, streak kept'],['streakFreeze','Streak freeze','One missed day a week won’t break the streak'],['doubleXP','Double XP','Every chore gives 2× XP'],
@@ -769,7 +909,7 @@ function viewMore(){const f=fam(),ct=f.contact||{};
     <label class="f"><span class="lbl">Parent PIN</span><input class="inp" data-fam="pin" inputmode="numeric" maxlength="6" placeholder="none" value="${esc(f.pin||'')}"></label></section>
   <section class="card"><label class="sw"><div class="grow"><b>Sounds</b></div><input type="checkbox" data-act="snd" ${C.sound!==false?'checked':''}></label>
     ${window.CH_SUPABASE&&window.supabase?(C.cloud&&C.cloud.uid?`<div class="sw"><div class="grow"><b>Signed in</b><small>${esc(C.cloud.email)}</small></div><button class="btn sm" data-act="signout">Sign out</button></div>`:`<div class="sw"><div class="grow"><b>Account</b><small>Sign in to sync and use a family code</small></div><button class="btn sm" data-act="toauth">Sign in</button></div>`):''}</section>
-  <p class="note" style="text-align:center">CHORES by Pepe Apps 🦍</p>`}
+  <p class="note" style="text-align:center">PEPE CHORES by Pepe Apps 🦍</p>`}
 
 /* ================= event binding ================= */
 function bindView(){const a=$('#app');
@@ -788,7 +928,7 @@ function bindView(){const a=$('#app');
       bonus:()=>bonusSheet(b.dataset.pid),actas:()=>switchTo(b.dataset.pid),
       kidrules:()=>{RULESLOT=+b.dataset.slot;goTab('rules')},readall:()=>{C.inbox.forEach(n=>n.read=true);save();render()},
       given:()=>{const n=C.inbox.find(x=>x.id===b.dataset.n);if(n){n.data.given=!n.data.given;n.read=true;save();render()}},
-      sharecode:()=>shareText(`Join our family on CHORES! Code: ${fam().code}`),gocloud:async()=>{if(!(C.cloud&&C.cloud.uid)){STEP='auth';C.afterAuth='mkcloud';render();return}try{await cloudCreate();render()}catch(e){toast('⚠️','Couldn’t go online',String(e.message||e))}},
+      sharecode:()=>shareText(`Join our family on PEPE CHORES! Code: ${fam().code}`),gocloud:async()=>{if(!(C.cloud&&C.cloud.uid)){STEP='auth';C.afterAuth='mkcloud';render();return}try{await cloudCreate();render()}catch(e){toast('⚠️','Couldn’t go online',String(e.message||e))}},
       jok:()=>cloudAdmit(b.dataset.u,true),jdeny:()=>cloudAdmit(b.dataset.u,false),
       sharerep:()=>shareText(reportText(REPDAY)),copyrep:()=>{try{navigator.clipboard.writeText(reportText(REPDAY));toast('📋','Copied','Report copied.')}catch(e){}},
       notifs:async()=>{if(typeof Notification==='undefined')return;if(Notification.permission!=='granted')await Notification.requestPermission();if(Notification.permission==='granted'){SFX.notify();sysNotify('CHORES notifications are on','You’ll get reports, level-ups and alerts.','ch-test')}render()},
@@ -855,7 +995,7 @@ async function cloudCreate(){const f=fam(),me=C.me,P=me.role==='parent';const my
   const old=me.pid;f.id=data.id;f.code=data.code;
   if(P){f.parents=[{pid:C.cloud.uid,name:myName}]}else f.slots[me.slot].pid=C.cloud.uid;
   migratePid(old,C.cloud.uid);C.me={...me,pid:C.cloud.uid};save();await famPush();await cloudPush(true);SFX.allDone();confetti(1);
-  overlay(`<div class="eyebrow">Your family is online</div><h2>Family code</h2><div class="code">${f.code}</div><p>Everyone downloads CHORES, taps <b>Join with a code</b> and types this in. You choose if they’re a parent or a kid.</p>`)}
+  overlay(`<div class="eyebrow">Your family is online</div><h2>Family code</h2><div class="code">${f.code}</div><p>Everyone downloads PEPE CHORES, taps <b>Join with a code</b> and types this in. You choose if they’re a parent or a kid.</p>`)}
 async function famPush(){if(!famOnline()||!isParent())return;const f=fam();
   const {error}=await SB.from('ch_families').update({name:f.name,slots:f.slots,rules:{...f.rules,_meta:{reportTime:f.reportTime,pin:f.pin}},goals:f.goals||[],contact:f.contact||{},approvals:f.approvals||{},start_month:f.startMonth,updated_at:new Date().toISOString()}).eq('id',f.id);
   if(error)console.warn(error)}
