@@ -15,7 +15,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Routines">
 <style>:root{padding-top:0;padding-bottom:0}html{background:#09090A}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
-<script>window.RR_STANDALONE=true;window.RR_VERSION='18b1141ddb';</script>
+<script>window.RR_STANDALONE=true;window.RR_VERSION='10ec42bd64';</script>
 <script>window.RR_SUPABASE={url:'https://uszalonpjyssvvsikzvg.supabase.co',key:'sb_publishable_w-5rI0R9ht2-HAr5HghM0w_-3HYiAEg'};</script>
 <script src="supabase.js"></script>
 </head>
@@ -729,6 +729,17 @@ svg.moose:not(.big){animation:breathe 3.4s ease-in-out infinite}
 .once-btn{border-color:var(--gold)!important;color:var(--gold)!important}
 .badges .badge{perspective:600px}.badges svg.bdg{transform-style:preserve-3d;backface-visibility:visible}
 @media (prefers-reduced-motion:reduce){.btn svg,.icon-btn,.attach svg,.snd svg,.howlink .chev,.guide-h .chev,.lk-icons svg,.grip svg,.toast svg,.chip svg,.kidbar svg,.sk-head svg,.empty svg,.send svg,.dsb.once::after{animation:none!important}}
+.focus-hero{display:flex;align-items:center;gap:14px}.focus-hero h2{margin:2px 0}
+.focus-lock{width:62px;height:62px;flex:none;display:grid;place-items:center;border-radius:18px;background:var(--lvl-soft)}.focus-lock.open{background:var(--gold-soft)}
+.focus-lock svg{width:44px;height:44px;animation:breathe 2.6s ease-in-out infinite}.focus-lock:not(.open) svg{animation:lockShake 4s ease-in-out infinite}
+.focus-lock.big{width:120px;height:120px;margin:10px auto;border-radius:30px}.focus-lock.big svg{width:84px;height:84px}.focus-lock.big .shackle{animation:shackleUp .8s .3s cubic-bezier(.2,1.5,.4,1) both}
+@keyframes lockShake{0%,88%,100%{transform:rotate(0)}91%{transform:rotate(-9deg)}94%{transform:rotate(8deg)}97%{transform:rotate(-4deg)}}
+@keyframes shackleUp{from{transform:translateY(8px)}to{transform:none}}
+.focus-hero.open{box-shadow:0 0 0 1px rgba(255,197,61,.4),0 0 30px -8px var(--gold-glow)}
+.focus-apps{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.fapp{padding:6px 10px;border-radius:999px;background:var(--lvl-soft);color:var(--ink);font-size:13px;animation:breathe 3s ease-in-out infinite}.fapp:nth-child(2n){animation-delay:.6s}.fapp.open{background:var(--gold-soft)}
+.focus-pick{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.focus-pick .chip-btn.on{background:var(--lvl);border-color:var(--lvl);color:#0b0817}
+.focus-rule{padding:12px;border-radius:14px;background:var(--surface-2);margin-bottom:8px}
+.sc-steps li{margin-bottom:10px}.sc-copy{display:flex;gap:8px;align-items:center;margin-top:6px;padding:8px;border-radius:10px;background:var(--surface-2);min-width:0}.sc-copy code{flex:1;min-width:0;font:11.5px/1.4 var(--f-mono);color:var(--ink);word-break:break-all}
 /* looping idle animations: small, satisfying, never distracting */
 @keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
 @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
@@ -1485,7 +1496,7 @@ let FAM={schedule:undefined,report:undefined},draft=null,busy=false,seeded=false
 let PERM=null,linkState='checking',linkName='',justLinked=false;
 try{role=localStorage.getItem('rb-role')}catch(e){}
 const R0=()=>role||'me';
-const TABS={me:[['workout','Workout'],['day','My schedule'],['diet','Diet'],['skeefo','Skeefo'],['ranks','Ranks'],['progress','Reports'],['family','Family'],['me','Me']],
+const TABS={me:[['workout','Workout'],['day','My schedule'],['focus','Focus'],['diet','Diet'],['skeefo','Skeefo'],['ranks','Ranks'],['progress','Reports'],['family','Family'],['me','Me']],
   parent:[['family','Family'],['report','Report'],['schedule','Schedule'],['skeefo','Skeefo'],['me','Me']]};
 function rawSched(){
   if(R0()==='parent'){const c=CTLS[SEL],k=KIDS[SEL],a=c&&c.schedule,b=k&&k.schedule;return(a&&(!b||(a.updated||0)>=(b.updated||0))?a:b)||defaultSchedule()}
@@ -1638,6 +1649,7 @@ function ruleEditor(id){
     ${sw('noHard','No advanced moves','Removes hard exercises like pull-ups, pike push-ups and burpees.')}
     ${sw('noImpact','No high-impact moves','Removes jumping moves like jump squats and skater hops.')}
     ${sw('hideBoard','Hide leaderboard','They won’t see the leaderboard or show up on it.')}
+    ${focusRuleEditor(id)}
     ${sw('cheatAlerts','Cheat alerts','Tell you when check-offs happen too fast to be real.')}
     ${sw('allowDiet','Diet tab','Let them use the Diet tab.')}
     ${sw('allowTabs','Their own tabs','Let them make and use their own tabs.')}
@@ -1948,7 +1960,7 @@ function buildReport(){
   for(let i=0;i<14;i++){const k=addDays(t,-i),h=S.history[k],l=S.dayLog[k]||{};
     days[k]={w:h&&h.c?1:0,x:h?h.x:0,wm:h&&h.wm||0,t:Object.keys(l).filter(x=>x[0]!=='_'&&l[x].d).length,tt:l._tt||0}}
   days[t].tt=tasks.length;
-  return{name:(S.profile.name||'').slice(0,24),date:t,xp:S.xp,level:lvl(S.xp),streak:S.streak,best:S.best,total:S.total,last:S.last||'',
+  return{focus:focusReport(),name:(S.profile.name||'').slice(0,24),date:t,xp:S.xp,level:lvl(S.xp),streak:S.streak,best:S.best,total:S.total,last:S.last||'',
     workout:{title:R.title,done:S.today.done.length,total:items.length,complete:!!S.today.complete,start:S.today.start||0,end:S.today.end||0,time:(sc.sections.flatMap(s=>s.tasks).find(k=>k.kind==='workout')||{}).time||''},
     diet:(d=>({w:d.w,m:MEALS.filter(([k])=>d.m[k]).map(([,n])=>n),g:GROUPS.filter(([k])=>d.g[k]).length}))(dietDay()),
     tasks,days,flags:S.today.flags||[],schedule:clone(rawSched()),req:true,updated:Date.now()};
@@ -2040,11 +2052,12 @@ function renderTabs(){
 }
 
 /* ================= Views ================= */
-const VIEWS={progress:()=>viewReports(),diet:()=>viewDiet(),newtab:()=>viewNewTab(),workout:()=>wDraft?viewWorkoutEditor():viewToday(),day:()=>draft?viewEditor():viewDay(),skeefo:()=>viewSkeefo(),ranks:()=>viewRanks(),me:()=>viewMe(),
+const VIEWS={focus:()=>viewFocus(),progress:()=>viewReports(),diet:()=>viewDiet(),newtab:()=>viewNewTab(),workout:()=>wDraft?viewWorkoutEditor():viewToday(),day:()=>draft?viewEditor():viewDay(),skeefo:()=>viewSkeefo(),ranks:()=>viewRanks(),me:()=>viewMe(),
   family:()=>R0()==='parent'?viewFamily():viewKidFamily(),report:()=>viewReport(),schedule:()=>draft?viewEditor():viewParentSchedule()};
 let lastTab=null;
 function render(){
   try{syncLinked()}catch(e){}
+  try{focusCheckUnlock()}catch(e){}
   renderTabs();
   const v=$('#view'),changed=lastTab!==tab;lastTab=tab;v.innerHTML=(R0()==='parent'&&tab!=='me'?`<div class="pv-bar"><span><b>Parent view</b> · Workout, My schedule and Diet are hidden here</span><button class="btn sm primary" data-act="role" data-v="me">Switch to my app</button></div>`:'')+(VIEWS[tab]||(String(tab).startsWith('c_')?()=>viewCustom(tab):VIEWS.workout))();
   if(tab==='ranks'&&rankView==='board')fillNames();
@@ -2347,6 +2360,7 @@ function logExercise(it,on){
 
 /* ================= Bottom tab bar, swipe between tabs, smooth transitions ================= */
 const TAB_ICO={
+  focus:'<rect x="5" y="11" width="14" height="10" rx="3"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/><path d="M12 15v2"/>',
   workout:'<path d="M6.5 6.5v11M17.5 6.5v11M3.5 9v6M20.5 9v6M6.5 12h11"/>',
   day:'<rect x="4" y="5" width="16" height="15" rx="3"/><path d="M8 3v4M16 3v4M4 10h16M9 15l2 2 4-4"/>',
   diet:'<path d="M12 7c-1.5-2.5-6-2.5-7 1.5-.8 3.5 1.5 9.5 4.5 11 1.2.6 1.8 0 2.5 0s1.3.6 2.5 0c3-1.5 5.3-7.5 4.5-11C18 4.5 13.5 4.5 12 7z"/><path d="M12 7c0-2 1-3.5 3-4"/>',
@@ -2487,6 +2501,78 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-ob]');if(!
     OB.a[s.k]=v;SFX.tick();OB.i++;quizRender()}
 });
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target&&e.target.id==='ob-num'){e.preventDefault();$('[data-ob="next"]')?.click()}});
+
+/* ================= Focus mode: lock chosen apps until required tasks are done ================= */
+const FOCUS_APPS=['TikTok','Instagram','Snapchat','YouTube','Netflix','Roblox','Fortnite','Minecraft','Discord','X (Twitter)','Reddit','Facebook','Twitch','Pinterest','BeReal','Clash Royale','Brawl Stars','Disney+'];
+const FOCUS_DEF={on:false,apps:['TikTok','Instagram','Snapchat','YouTube'],req:['__all']};
+function focusCfg(){const par=R0()==='me'&&inFamily()&&RULES().focus&&RULES().focus.on;return par?{...FOCUS_DEF,...RULES().focus,byParent:true}:{...FOCUS_DEF,...(S.focus||{}),byParent:false}}
+function focusTasks(cfg){cfg=cfg||focusCfg();const ts=sched().sections.flatMap(s=>s.tasks);const req=cfg.req||['__all'];
+  if(req.includes('__all'))return ts;return ts.filter(k=>req.includes(k.kind==='workout'?'__workout':nrm(k.title)))}
+function focusState(){const cfg=focusCfg();if(!cfg.on)return{on:false,cfg};ensureToday();const log=S.dayLog[todayKey()]||{},ts=focusTasks(cfg);
+  const done=ts.filter(k=>taskState(k,log).d).length;return{on:true,cfg,ts,done,total:ts.length,open:done>=ts.length}}
+function focusCheckUnlock(){if(R0()!=='me')return;const f=focusState();if(!f.on)return;const t=todayKey();S.focusDay=S.focusDay||{};
+  if(f.open&&S.focusDay.unlocked!==t&&f.total){S.focusDay.unlocked=t;S.focusDay.at=Date.now();bumpStat('focusUnlocks');save();
+    setTimeout(()=>{try{SFX.notify();SFX.bonus()}catch(e){}if(!reduced)confetti(1);
+      overlay('lvlup focus-ov',`<div class="eyebrow">Focus complete</div><div class="focus-lock open big">${lockSVG(true)}</div><h2>Unlocked! 🎉</h2><p>You finished everything. ${esc(f.cfg.apps.slice(0,4).join(', '))}${f.cfg.apps.length>4?' and more':''} ${f.cfg.apps.length>1?'are':'is'} free to use. Enjoy your break!</p>${f.cfg.byParent?'<p class="note">Your parent can see you unlocked it.</p>':''}`);
+      try{if(typeof Notification!=='undefined'&&Notification.permission==='granted'&&S.notif&&navigator.serviceWorker)navigator.serviceWorker.ready.then(r=>r.showNotification('Focus complete 🔓',{body:'Your apps are unlocked. Great work!',icon:'icon-192.png',tag:'rr-focus'}))}catch(e){}},500)}
+  else if(!f.open&&S.focusDay.unlocked===t){S.focusDay.unlocked=null;save()}}
+function lockSVG(open){return`<svg viewBox="0 0 64 64" aria-hidden="true"><rect x="12" y="28" width="40" height="30" rx="8" fill="${open?'var(--gold)':'var(--lvl)'}"/><path d="${open?'M22 28 V20 a12 12 0 0 1 23-5':'M20 28 V20 a12 12 0 0 1 24 0 V28'}" fill="none" stroke="${open?'var(--gold)':'var(--lvl)'}" stroke-width="6" stroke-linecap="round" class="shackle"/><circle cx="32" cy="41" r="4.5" fill="#0b0817"/><rect x="30" y="43" width="4" height="8" rx="2" fill="#0b0817"/></svg>`}
+let focusEdit=false;
+function viewFocus(){
+  const f=focusState(),cfg=f.cfg,lock=cfg.byParent;
+  if(focusEdit&&!lock)return viewFocusEdit(cfg);
+  let h='';
+  if(!f.on){h+=`<section class="card focus-hero"><div class="focus-lock">${lockSVG(true)}</div><div style="min-width:0"><div class="label">Focus</div><h2>Focus mode is off</h2><p class="note" style="margin:4px 0 0">Turn it on to lock your distracting apps until your tasks are done.</p></div></section>
+      <section class="card"><div class="dayfoot" style="margin-top:0;border:0;padding:0"><button class="btn" data-act="focusedit">Choose apps and tasks</button><button class="btn primary" data-act="focuson">Turn on Focus</button></div></section>`}
+  else{const pct=f.total?f.done/f.total:1,C=2*Math.PI*36;
+    h+=`<section class="card focus-hero ${f.open?'open':''}"><div class="focus-lock ${f.open?'open':''}">${lockSVG(f.open)}</div><div style="min-width:0;flex:1"><div class="label">${lock?'Focus · set by your parent':'Focus mode is on'}</div><h2>${f.open?'Unlocked!':`Locked · ${f.total-f.done} to go`}</h2>
+      <p class="note" style="margin:4px 0 0">${f.open?(f.total?'Everything is done. Enjoy your apps!':'No required tasks today, so you’re free.'):`Finish ${f.total-f.done===1?'1 more task':(f.total-f.done)+' more tasks'} to unlock your apps.`}</p></div>
+      <div class="ring ${f.open?'full':''}"><svg viewBox="0 0 84 84"><circle class="trk" cx="42" cy="42" r="36"/><circle class="bar" cx="42" cy="42" r="36" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-pct)}"/></svg><div><div><b class="num">${f.done}/${f.total}</b><span>done</span></div></div></div></section>`;
+    h+=`<section class="card"><div class="label">${f.open?'Unlocked apps':'Locked apps'}</div><div class="focus-apps">${cfg.apps.map(a=>`<span class="fapp ${f.open?'open':''}">${f.open?'🔓':'🔒'} ${esc(a)}</span>`).join('')||'<span class="note">No apps chosen yet.</span>'}</div></section>`;
+    const log=S.dayLog[todayKey()]||{};
+    h+=`<section class="block"><div class="block-h"><h3>Finish these to unlock</h3><span class="label">${f.done}/${f.total}</span></div>${f.ts.map(k=>taskRow(k,log)).join('')||'<div class="empty">No required tasks on today’s schedule.</div>'}</section>`;
+    h+=`<section class="card"><div class="dayfoot" style="margin-top:0;border:0;padding:0">${lock?'<span class="note">🔒 Your parent controls Focus mode.</span>':`<button class="btn" data-act="focusedit">Change apps and tasks</button><button class="btn ghost danger" data-act="focusoff" ${f.open?'':'title="Finish your tasks first"'}>Turn off Focus</button>`}</div></section>`}
+  h+=focusBlockGuide();
+  return h;
+}
+function focusToken(){if(!S.focusToken){const a='ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789';let t='';const r=crypto.getRandomValues(new Uint8Array(24));for(const x of r)t+=a[x%a.length];S.focusToken=t;save()}return S.focusToken}
+function focusCheckURL(){const c=window.RR_SUPABASE||{};return(c.url||'')+'/rest/v1/rpc/focus_check?t='+focusToken()}
+function focusBlockGuide(){
+  const signed=typeof CLOUD==='function'&&CLOUD(),key=(window.RR_SUPABASE||{}).key||'',home=window.RR_STANDALONE?location.origin+location.pathname+'#focus':'';
+  const iphone=!window.RR_STANDALONE?`<p class="note">The iPhone block works from the Routines Reimagined website. Open it there, sign in, and come back to this tab.</p>`
+    :!signed?`<p class="note">Sign in on the <b>Me</b> tab first. Your phone checks your account to know if your tasks are done.</p>`
+    :`<p class="note">Every time you open a locked app, your iPhone asks Routines Reimagined if you’re done. If not, it sends you back here. Set it up once (about 5 minutes):</p>
+    <ol class="steps sc-steps">
+      <li>Open the <b>Shortcuts</b> app → <b>Automation</b> tab → <b>+</b> → <b>App</b>. Choose your locked apps, pick <b>Is Opened</b> and <b>Run Immediately</b>, then <b>Next</b> → <b>New Blank Automation</b>.</li>
+      <li>Add the action <b>Get Contents of URL</b>. Tap the URL and paste this link:<div class="sc-copy"><code>${esc(focusCheckURL())}</code><button class="btn sm" data-act="sccopy" data-v="url">Copy link</button></div></li>
+      <li>In that action tap <b>Show More</b> → <b>Headers</b> → <b>Add new header</b>. Key: <b>apikey</b>. Value:<div class="sc-copy"><code>${esc(key)}</code><button class="btn sm" data-act="sccopy" data-v="key">Copy key</button></div></li>
+      <li>Add the action <b>If</b>. Set it to: <b>Contents of URL</b> → <b>contains</b> → <b>LOCKED</b>.</li>
+      <li>Inside the If, add <b>Show Notification</b> (type “Finish your tasks first! 💪”), then <b>Open URLs</b> with this link:<div class="sc-copy"><code>${esc(home)}</code><button class="btn sm" data-act="sccopy" data-v="home">Copy link</button></div></li>
+      <li>Tap <b>Done</b>. Try opening a locked app: you’ll bounce back here until your tasks are done. ✅</li></ol>
+    <div class="row-act" style="flex-wrap:wrap;margin-top:8px"><a class="btn primary" href="shortcuts://">Open Shortcuts</a><button class="btn" data-act="sctest">Test my status</button></div>
+    <p class="note" style="font-size:12px">Keep your link private: it only tells someone whether your tasks are done. Parents can protect the automation by turning on Screen Time with their own passcode.</p>`;
+  return`<section class="card"><div class="label">Real blocking</div><h3 class="h3">Block apps on your phone</h3>
+    <details class="byok" open><summary><b>iPhone · with the Shortcuts app</b></summary>${iphone}</details>
+    <details class="byok"><summary><b>Android · with Focus mode</b></summary><p class="note">Settings → <b>Digital Wellbeing & parental controls</b> → <b>Focus mode</b> → pick the same apps → <b>Turn on now</b>. Turn it off when this tab says <b>Unlocked</b>. Parents can use <b>Family Link</b>.</p></details></section>`}
+function viewFocusEdit(cfg){
+  const ts=sched().sections.flatMap(s=>s.tasks),req=cfg.req||['__all'],all=req.includes('__all');
+  const custom=(cfg.apps||[]).filter(a=>!FOCUS_APPS.includes(a));
+  return`<section class="card"><div class="label">Focus settings</div><h3 class="h3">Which apps get locked?</h3>
+    <div class="focus-pick">${[...FOCUS_APPS,...custom].map(a=>`<button class="chip-btn ${cfg.apps.includes(a)?'on':''}" data-act="fapp" data-v="${esc(a)}" aria-pressed="${cfg.apps.includes(a)}">${esc(a)}</button>`).join('')}</div>
+    <div class="ed-row" style="margin-top:10px"><input class="inp" id="fapp-new" maxlength="24" placeholder="Add another app"><button class="btn" data-act="fappadd">Add</button></div></section>
+  <section class="card"><h3 class="h3">Which tasks must be done first?</h3>
+    <div class="focus-pick"><button class="chip-btn ${all?'on':''}" data-act="freq" data-v="__all">All of today’s tasks</button>${ts.map(k=>{const v=k.kind==='workout'?'__workout':nrm(k.title);return`<button class="chip-btn ${!all&&req.includes(v)?'on':''}" data-act="freq" data-v="${esc(v)}">${esc(k.title)}</button>`}).join('')}</div></section>
+  <section class="card"><div class="dayfoot" style="margin-top:0;border:0;padding:0"><button class="btn" data-act="focusdone">Done</button></div></section>`}
+function focusSet(patch){S.focus={...FOCUS_DEF,...(S.focus||{}),...patch};save()}
+function focusReport(){const f=focusState();return f.on?{on:true,apps:f.cfg.apps,done:f.done,total:f.total,open:f.open,byParent:f.cfg.byParent,at:S.focusDay&&S.focusDay.unlocked===todayKey()?S.focusDay.at:0}:{on:false}}
+/* parent: focus controls inside the restrictions editor */
+function focusRuleEditor(id){const R={...DEF_RULES,...((CTLS[id]||{}).rules||{})},F={...FOCUS_DEF,...(R.focus||{})},sc=(CTLS[id]&&CTLS[id].schedule)||(KIDS[id]&&KIDS[id].schedule)||defaultSchedule();
+  const wd=(new Date().getDay()+6)%7,ov=sc.days&&sc.days[wd],ts=(ov?ov.sections:sc.sections||[]).flatMap(s=>s.tasks),all=(F.req||['__all']).includes('__all');
+  return`<div class="focus-rule"><label class="switch rule"><input type="checkbox" id="r-focusOn" ${F.on?'checked':''}><span></span><div><b>Focus mode</b><small>Lock their chosen apps until the tasks you pick are done. They can’t turn it off.</small></div></label>
+    <div class="label" style="margin-top:8px">Apps to lock</div><div class="focus-pick" id="rf-apps">${FOCUS_APPS.map(a=>`<label class="chip-btn ${F.apps.includes(a)?'on':''}"><input type="checkbox" value="${esc(a)}" ${F.apps.includes(a)?'checked':''} hidden>${esc(a)}</label>`).join('')}</div>
+    <div class="label" style="margin-top:8px">Tasks they must finish</div><div class="focus-pick" id="rf-req"><label class="chip-btn ${all?'on':''}"><input type="checkbox" value="__all" ${all?'checked':''} hidden>All of today’s tasks</label>${ts.map(k=>{const v=k.kind==='workout'?'__workout':nrm(k.title);return`<label class="chip-btn ${!all&&F.req.includes(v)?'on':''}"><input type="checkbox" value="${esc(v)}" ${!all&&F.req.includes(v)?'checked':''} hidden>${esc(k.title)}</label>`}).join('')}</div></div>`}
+document.addEventListener('change',e=>{const c=e.target;if(!c.closest||!c.closest('#rf-apps,#rf-req'))return;const l=c.closest('label');if(l)l.classList.toggle('on',c.checked);
+  if(c.closest('#rf-req')){const box=c.closest('#rf-req');if(c.value==='__all'&&c.checked)box.querySelectorAll('input').forEach(x=>{if(x!==c){x.checked=false;x.closest('label').classList.remove('on')}});else if(c.checked){const a=box.querySelector('input[value="__all"]');a.checked=false;a.closest('label').classList.remove('on')}}});
 
 /* ---------- My schedule ---------- */
 function taskState(k,log){
@@ -2670,6 +2756,7 @@ function viewReport(){
   if(alerts.length)h+=`<section class="block"><div class="block-h"><h3>Alerts</h3><span class="label">${alerts.length}</span></div>${alerts.map(([k,a,b])=>banner(k,a,b)).join('')}</section>`;
   h+=`<section class="card"><div class="label">Workout</div><div class="rep-w"><div><b>${esc(w.title||'Today’s routine')}</b><div class="note">${w.complete?`Done · ${w.start?clock(w.start)+' – ':''}${clock(w.end)}${w.start?' · '+dur(w.end-w.start):''}`:w.start?`In progress · ${w.done}/${w.total} moves since ${clock(w.start)}`:`Not started${w.time?' · planned '+hm(w.time):''}`}</div></div>
     <span class="pill ${w.complete?'ok':w.start?'mid':'no'}">${w.complete?'Done':w.start?'Going':'Not yet'}</span></div></section>`;
+  if(isToday&&r.focus&&r.focus.on)h+=`<section class="card"><div class="label">Focus mode</div><div class="kid-today" style="margin-top:8px"><span class="pill ${r.focus.open?'ok':'no'}">${r.focus.open?'🔓 Unlocked'+(r.focus.at?' at '+clock(r.focus.at):''):'🔒 Locked'}</span><span class="pill">${r.focus.done}/${r.focus.total} required tasks</span><span class="pill">${esc((r.focus.apps||[]).slice(0,5).join(', '))}</span></div></section>`;
   if(isToday&&r.diet)h+=`<section class="card"><div class="label">Diet today</div><div class="kid-today" style="margin-top:8px"><span class="pill ${r.diet.w>=8?'ok':'no'}">${r.diet.w}/8 glasses of water</span><span class="pill ${r.diet.m.length>=3?'ok':'no'}">Meals: ${r.diet.m.length?esc(r.diet.m.join(', ')):'none logged'}</span><span class="pill ${r.diet.g>=4?'ok':'no'}">${r.diet.g}/4 food groups</span></div></section>`;
   h+=`<section class="card"><div class="label">Tasks and how long they took</div><div class="tl">`;
   if(!tasks.length)h+=`<div class="empty">${isToday?'No tasks on today’s schedule.':'Nothing logged yet today.'}</div>`;
@@ -3784,6 +3871,11 @@ function tryCommand(raw,inner){
   m=text.match(/^(?:please\s+)?mark\s+(.+?)\s+(?:as\s+)?(?:done|complete|completed|finished)$/i)||text.match(/^(?:please\s+)?check off\s+(.+)$/i)||text.match(/^i(?:\s+just)?\s+(?:finished|did|completed|am done with|m done with|['’]m done with)\s+(.+)$/i)||text.match(/^done with\s+(.+)$/i);
   if(m&&!/\bworkout plan\b/i.test(m[1])&&!/^(it|that|this|them|everything|all|so much|nothing|good|great|bad)$/i.test(m[1].trim()))return run(ACT.completeTask,{title:m[1].replace(/^(my|the)\s+/i,'')});
   if(/^(?:please\s+)?(?:add|put)\s+(?:my\s+|the\s+)?(?:daily\s+)?workout\s+back(?:\s+on(?:\s+my\s+schedule)?)?$|^(?:please\s+)?add\s+(?:my\s+|the\s+)?daily workout(?:\s+to\s+my\s+schedule)?$/i.test(text))return run(()=>mutSched(sc=>{if(sc.sections.some(s=>s.tasks.some(k=>k.kind==='workout')))return'Your daily workout is already on your schedule.';const s=sc.sections.find(x=>/after school|afternoon|evening/i.test(x.name))||sc.sections.at(-1)||(sc.sections.push({id:rid(),name:'Workout',tasks:[]}),sc.sections[0]);s.tasks.push({id:'workout',kind:'workout',title:'Daily workout',time:'',min:S.profile.minutes||30});return`Added your **daily workout** back to ${esc(s.name)}. 💪`}));
+  if(R0()==='me'&&/\b(focus|block my apps|lock my apps|block social media|lock social media)\b/i.test(text)&&!/\b(how|tips|help me focus|cant focus|can t focus)\b/i.test(t)){
+    const f=focusState();
+    if(/\b(turn on|start|enable|block|lock)\b/i.test(text)){if(f.cfg.byParent)return'Your parent controls Focus mode, and it’s already set up for you.';focusSet({on:true});setTimeout(()=>{render();renderHeader()},50);const g=focusState();return`🔒 **Focus is on!** ${esc(g.cfg.apps.join(', '))} ${g.cfg.apps.length>1?'are':'is'} locked until you finish ${g.total} task${g.total===1?'':'s'}. See the **Focus** tab.`}
+    if(/\b(turn off|stop|disable|unlock)\b/i.test(text)){if(!f.on)return'Focus is already off.';if(f.cfg.byParent)return'Your parent controls Focus mode, so only they can turn it off.';if(!f.open)return`Not yet! Finish **${f.total-f.done}** more task${f.total-f.done===1?'':'s'} and your apps unlock. 💪`;focusSet({on:false});return'Focus is off. Nice work finishing everything!'}
+    if(/\b(status|how many|left|unlocked|locked)\b/i.test(text)||/^ focus $/.test(t))return f.on?(f.open?'🔓 You’re **unlocked**! Everything’s done.':`🔒 **Locked**: ${f.done}/${f.total} tasks done. ${f.total-f.done} to go!`):'Focus mode is off. Say **“turn on focus”** to lock your distracting apps until your tasks are done.'}
   // link a task to a tab
   m=text.match(/^(?:please\s+|can you\s+|could you\s+)?(?:link|connect|attach|hook up|tie)\s+(?:the\s+|my\s+)?(.+?)\s+(?:task\s+)?(?:to|with|into)\s+(?:the\s+|my\s+)?(.+?)$/i);
   if(m&&!/^(skeefo|claude|my account|account)$/i.test(m[1].trim()))return run(ACT.linkTask,{title:m[1],tab:m[2]});
@@ -4056,6 +4148,16 @@ document.addEventListener('click',e=>{
     case'sharerank':shareRank(t);break;
     case'editprof':pEdit=true;render();setTimeout(()=>$('#pf')?.scrollIntoView({block:'start',behavior:reduced?'auto':'smooth'}),60);break;
     case'profcancel':pEdit=false;render();break;
+    case'focuson':{const c=focusCfg();if(!c.apps.length){focusEdit=true;render();toast(medal('🔒',false),'Pick some apps first','Choose which apps Focus should lock.');break}focusSet({on:true});SFX.link();render();toast(medal('🔒',true),'Focus is on','Finish your tasks to unlock your apps.');break}
+    case'focusoff':{const f=focusState();if(f.cfg.byParent)break;if(!f.open){toast(medal('🔒',false),'Finish your tasks first',`${f.total-f.done} left before you can turn Focus off.`);SFX.soft();break}focusSet({on:false});render();break}
+    case'sccopy':{const v=t.dataset.v,txt=v==='url'?focusCheckURL():v==='key'?((window.RR_SUPABASE||{}).key||''):location.origin+location.pathname+'#focus';
+      (navigator.clipboard?navigator.clipboard.writeText(txt):Promise.reject()).then(()=>{SFX.tick();toast(medal('✓',true),'Copied','Now paste it into Shortcuts.')}).catch(()=>{prompt('Copy this:',txt)});break}
+    case'sctest':{flush();setTimeout(async()=>{try{const c=window.RR_SUPABASE||{};const r=await fetch(focusCheckURL(),{headers:{apikey:c.key}});const tx=(await r.text()).replace(/"/g,'');toast(medal(/UNLOCKED/.test(tx)?'🔓':'🔒',/UNLOCKED/.test(tx)),'Your phone will see:',tx)}catch(e){toast(medal('!',false),'Couldn’t check','Make sure you’re online and signed in.')}},900);break}
+    case'focusedit':focusEdit=true;render();break;
+    case'focusdone':focusEdit=false;render();break;
+    case'fapp':{const v=t.dataset.v,c=focusCfg(),a=new Set(c.apps);a.has(v)?a.delete(v):a.add(v);focusSet({apps:[...a]});SFX.tick();render();break}
+    case'fappadd':{const i=$('#fapp-new'),v=String(i&&i.value||'').trim().slice(0,24);if(!v)break;const c=focusCfg();focusSet({apps:[...new Set([...c.apps,v])]});render();break}
+    case'freq':{const v=t.dataset.v,c=focusCfg();let r=new Set((c.req||['__all']).filter(x=>x!=='__all'));if(v==='__all')r=new Set(['__all']);else{r.has(v)?r.delete(v):r.add(v);if(!r.size)r.add('__all')}focusSet({req:[...r]});SFX.tick();render();break}
     case'reprange':repRange=+t.dataset.v||14;SFX.soft();render();break;
     case'editw':if(RULES().allowEditWorkout===false){toast(medal('🔒',false),'Locked by your parent','Only your parent can change your workout.');break}wStartEdit(false);render();scrollTo({top:0});break;
     case'importw':if(RULES().allowEditWorkout===false){toast(medal('🔒',false),'Locked by your parent','Only your parent can change your workout.');break}tab='workout';wStartEdit(true);render();scrollTo({top:0});setTimeout(()=>$('#w-paste')?.focus(),300);break;
@@ -4122,6 +4224,7 @@ document.addEventListener('click',e=>{
     case'rclose':openR=null;render();break;
     case'rsave':{const id=t.dataset.id,g=k=>$('#r-'+k);const rules={...DEF_RULES,...((CTLS[id]||{}).rules||{})};
       ['lockSchedule','noHard','noImpact','hideBoard','cheatAlerts','allowDiet','allowTabs','allowEditWorkout','allowShare','lockName','lockProfile'].forEach(k=>rules[k]=!!g(k).checked);
+      rules.focus={on:!!g('focusOn').checked,apps:[...document.querySelectorAll('#rf-apps input:checked')].map(x=>x.value),req:[...document.querySelectorAll('#rf-req input:checked')].map(x=>x.value)};if(!rules.focus.req.length)rules.focus.req=['__all'];
       rules.notif=g('notif').value||'kid';rules.maxMinutes=+g('maxMinutes').value||0;rules.skeefo=g('skeefo').value;rules.remindWorkout=g('remindWorkout').value||'';
       openR=null;setCtl(id,{rules}).then(()=>{SFX.link();toast(medal('✓',true),'Restrictions saved','They apply on '+kidName(id)+'’s app right away.');render()});break}
     case'selkid':SEL=t.dataset.id;try{localStorage.setItem('rr-sel',SEL)}catch(err){}SFX.tick();renderHeader();render();break;
@@ -4508,6 +4611,7 @@ async function sbFlush(){
   if(!CLOUD())return;const c=SBX.client,now=new Date().toISOString(),t=todayKey();
   try{
     S.owner=UID;await c.from('user_state').upsert({user_id:UID,data:clone(S),updated_at:now});SBX.cloudAt=now;
+    if(R0()==='me'){try{const f=focusState();await c.from('focus_status').upsert({user_id:UID,token:focusToken(),focus_on:!!f.on,locked:f.on?!f.open:false,left_count:f.on?Math.max(0,f.total-f.done):0,day:todayKey(),tz:Intl.DateTimeFormat().resolvedOptions().timeZone||'UTC',apps:f.cfg.apps||[],updated_at:now})}catch(e){}}
     if(R0()==='me'){
       if(RULES().hideBoard)await c.from('leaderboard').delete().eq('user_id',UID);
       else if(S.xp>0||S.profile.set){const wk=weekStart(t),week=Object.entries(S.history).filter(([k,v])=>v.c&&k>=wk).length;
