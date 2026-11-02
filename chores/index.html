@@ -9,7 +9,7 @@
 <link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="PEPE CHORES">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Figtree:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap">
-<script>window.CH_STANDALONE=true;window.CH_VERSION='a3e0a8cb9e';window.CH_SUPABASE={url:'https://uszalonpjyssvvsikzvg.supabase.co',key:'sb_publishable_w-5rI0R9ht2-HAr5HghM0w_-3HYiAEg'};</script>
+<script>window.CH_STANDALONE=true;window.CH_VERSION='add81f4589';window.CH_SUPABASE={url:'https://uszalonpjyssvvsikzvg.supabase.co',key:'sb_publishable_w-5rI0R9ht2-HAr5HghM0w_-3HYiAEg'};</script>
 <script src="../supabase.js"></script>
 <style>:root{--bg:#0a0a0b;--bg2:#121214;--card:#17171a;--card2:#1e1e22;--line:#2b2b31;--grey:#8d8d96;--grey2:#5c5c64;--text:#f4f2ef;--o:#ff7a00;--o2:#ffad5a;--o3:#ff9a2e;--oglow:rgba(255,122,0,.45);--red:#e3241b;--red2:#ff5a4a;--ok:#ff9a2e;
   --f-d:"Big Shoulders Display","Oswald",Impact,sans-serif;--f-b:"Figtree",system-ui,-apple-system,sans-serif;--f-m:"DM Mono",ui-monospace,Menlo,monospace;
@@ -161,13 +161,14 @@ label.f{display:block;margin:10px 0 0}label.f>span{display:block;margin-bottom:5
 .badge-dot{position:absolute;top:4px;right:calc(50% - 20px);min-width:16px;height:16px;border-radius:9px;background:var(--red);color:#fff;font:700 10px/16px var(--f-b);padding:0 4px}
 /* overlays */
 .ov{position:fixed;inset:0;z-index:80;display:grid;place-items:center;padding:20px;background:rgba(0,0,0,.72);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);animation:fade .25s}
-.ov .box{width:min(440px,100%);max-height:calc(100dvh - 40px);overflow:auto;background:linear-gradient(180deg,#1b1b1f,#131315);border:1px solid #3a2a1e;border-radius:24px;padding:22px;text-align:center;animation:boxIn .5s cubic-bezier(.2,1.5,.4,1);position:relative}
+.ov .box{width:min(440px,100%);max-height:calc(100dvh - 40px);overflow:visible;scrollbar-width:none;-ms-overflow-style:none;overscroll-behavior:contain;background:linear-gradient(180deg,#1b1b1f,#131315);border:1px solid #3a2a1e;border-radius:24px;padding:22px;text-align:center;animation:boxIn .5s cubic-bezier(.2,1.5,.4,1);position:relative}
 .ov .box.left{text-align:left}
 .ov .eyebrow{font:600 11px var(--f-m);letter-spacing:.2em;color:var(--o);text-transform:uppercase}
 .ov h2{margin:6px 0}
 @keyframes fade{from{opacity:0}}
 @keyframes boxIn{from{transform:scale(.6) translateY(30px);opacity:0}}
-.rays{position:absolute;left:50%;top:110px;width:460px;height:460px;margin:-230px;background:repeating-conic-gradient(rgba(255,122,0,.18) 0 10deg,transparent 10deg 24deg);border-radius:50%;animation:embSpin 10s linear infinite;mask:radial-gradient(circle,#000 20%,transparent 65%);-webkit-mask:radial-gradient(circle,#000 20%,transparent 65%);pointer-events:none}
+.rays{position:absolute;inset:0;overflow:hidden;border-radius:24px;pointer-events:none}
+.rays::before{content:"";position:absolute;left:50%;top:110px;width:460px;height:460px;margin:-230px;background:repeating-conic-gradient(rgba(255,122,0,.18) 0 10deg,transparent 10deg 24deg);border-radius:50%;animation:embSpin 10s linear infinite;mask:radial-gradient(circle,#000 20%,transparent 65%);-webkit-mask:radial-gradient(circle,#000 20%,transparent 65%)}
 .ov .big-n{font:900 84px/1 var(--f-d);color:var(--o);text-shadow:0 0 30px var(--oglow);animation:bigN 1s cubic-bezier(.2,1.6,.4,1)}
 @keyframes bigN{0%{transform:scale(0) rotate(-30deg)}60%{transform:scale(1.25)}}
 .toast{position:fixed;left:50%;top:calc(12px + var(--sat));z-index:90;transform:translateX(-50%);display:flex;gap:10px;align-items:center;background:#1c1c20;border:1px solid #5a2a00;border-radius:16px;padding:10px 14px;box-shadow:0 14px 40px -10px #000;width:max-content;max-width:calc(100% - 24px);animation:tIn .5s cubic-bezier(.2,1.5,.4,1)}
@@ -213,6 +214,15 @@ label.f{display:block;margin:10px 0 0}label.f>span{display:block;margin-bottom:5
 .emb.rank-ico{overflow:visible}.emb .spin{transform-origin:32px 32px}
 .legend .spin{animation:embSpin 6s linear infinite}
 .sq{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-1px;margin-right:3px}
+
+.ov .box::-webkit-scrollbar,.app::-webkit-scrollbar{display:none;width:0;height:0}
+
+.bell{position:relative;width:42px;height:42px;border-radius:50%;background:var(--card);border:1px solid var(--line);display:grid;place-items:center;cursor:pointer;flex:none;color:var(--o)}
+.bell .i{width:22px;height:22px}.bell.ring .i{animation:bellR 1.4s ease-in-out infinite;transform-origin:50% 10%}
+@keyframes bellR{0%,60%,100%{transform:rotate(0)}10%{transform:rotate(16deg)}20%{transform:rotate(-14deg)}30%{transform:rotate(10deg)}40%{transform:rotate(-6deg)}}
+.bell .badge-dot{top:-3px;right:-3px}
+
+.ov .box.left,.ov.scroll .box{overflow-x:hidden;overflow-y:auto}
 </style>
 </head>
 <body>
@@ -647,11 +657,17 @@ function sheet(html,onOpen){const o=document.createElement('div');o.className='o
 function sysNotify(title,body,tag){try{if(typeof Notification==='undefined'||Notification.permission!=='granted')return;if(navigator.serviceWorker&&navigator.serviceWorker.controller)navigator.serviceWorker.ready.then(r=>r.showNotification(title,{body,tag,icon:'icon-192.png',badge:'icon-192.png'}));else new Notification(title,{body,tag})}catch(e){}}
 function inQuiet(R){const a=hm(R.quietFrom),b=hm(R.quietTo),n=nowMin();if(a==null||b==null)return false;return a<b?(n>=a&&n<b):(n>=a||n<b)}
 
-/* ================= notes to parents ================= */
-function notifyParents(kind,title,body,data={}){const n={id:uid(),at:Date.now(),kind,title,body,data,from:C.me&&C.me.pid,read:false};
-  C.inbox.unshift(n);C.inbox=C.inbox.slice(0,200);save();try{cloudNote(n)}catch(e){}
-  if(isParent()){SFX.notify();sysNotify(title,body,'ch-'+kind)}}
-
+/* ================= notifications: parents AND kids ================= */
+const NK={level:'⬆️',goal:'🏆',done:'✅',cheat:'⚠️',approve:'⏳',swap:'🔄',report:'📊',task:'✓',badge:'🎖️',approved:'👍',denied:'↩️',bonus:'🎁',rules:'🛡️',newgoal:'🏆',month:'📅',streak:'🔥',late:'⏰',join:'🔑',remind:'⏰',welcome:'🎉'};
+const forMe=n=>{if(!C.me)return false;if(n.from&&n.from===C.me.pid&&n.to!==C.me.pid)return false;return isParent()?(n.to==='parent'||!n.to):(n.to===C.me.pid||n.to==='kids')};
+const myInbox=()=>C.inbox.filter(forMe);
+function notify(to,kind,title,body,data={}){const n={id:uid(),at:Date.now(),kind,title,body,data,to,from:C.me&&C.me.pid,read:false};
+  C.inbox.unshift(n);C.inbox=C.inbox.slice(0,300);save();try{cloudNote(n)}catch(e){}
+  if(forMe(n)){SFX.notify();sysNotify(title,body,'ch-'+kind+n.id)}try{renderBell()}catch(e){}}
+const notifyParents=(kind,title,body,data)=>notify('parent',kind,title,body,data);
+const notifyKid=(pid,kind,title,body,data)=>notify(pid,kind,title,body,data);
+const notifyKids=(kind,title,body,data)=>notify('kids',kind,title,body,data);
+const nameOf=pid=>personOf(pid)?.name||'Your kid';
 /* ================= the chore engine ================= */
 const recent=[];
 function canAct(slot){const R=rulesFor(slot);if(dayOff(slot))return R.paused?'Chores are paused right now.':'Weekends are off. Enjoy!';
@@ -667,7 +683,7 @@ function toggleTask(pid,slot,task,el){
   if(el){el.classList.remove('pop');void el.offsetWidth;el.classList.add('pop','done');sparks(el.querySelector('.cb')||el)}
   if(R.needApproval&&!isParent()){e.ok=false;toast('⏳','Sent for approval',`${task.t} — your parent will check it.`);
     notifyParents('approve',`${personOf(pid)?.name||'Your kid'} finished a chore`,`${task.t}. Tap to approve.`,{pid,k,id:task.id})}
-  else grant(pid,slot,k,task,el);
+  else{grant(pid,slot,k,task,el);if(!isParent())notifyParents('task',`${nameOf(pid)} did a chore`,`${task.t} (+${(d.t[task.id]||{}).g||0} XP)`,{pid,k,id:task.id})}
   if(recent.length>=6&&!isParent()){recent.length=0;cheatFlag(pid,slot)}
   save();setTimeout(render,reduced?0:650)}
 function grant(pid,slot,k,task,el){const p=prog(pid),d=dayLog(pid,k),e=d.t[task.id];if(!e||e.g)return;const R=rulesFor(slot),L0=lvlOf(p.xp);
@@ -680,6 +696,7 @@ function grant(pid,slot,k,task,el){const p=prog(pid),d=dayLog(pid,k),e=d.t[task.
       if(R.streakFreeze&&p.last===prev2&&p.freezeWk!==wk){p.freezeWk=wk;p.streak++;toast('🧊','Streak freeze used','You missed a day but your streak survived!')}else{if(p.streak>0)bump(pid,'comeback');p.streak=1}}else if(!p.last)p.streak=1;
     p.last=k;p.best=Math.max(p.best,p.streak);const hr=new Date().getHours();if(hr<8)bump(pid,'early');if(hr>=21)bump(pid,'late');if(isWeekend(k))bump(pid,'weekend');
     setTimeout(()=>{SFX.allDone();confetti(1.2);overlay(`<div class="rays"></div><div class="eyebrow">All chores done</div><div class="big-n">+${bonus}</div><h2 class="ttl">Crushed it! 🦍</h2><p>Every chore finished today. Streak: <b style="color:var(--o)">${p.streak} day${p.streak===1?'':'s'}</b> 🔥</p>`,{btn:'Let’s go!'})},700);
+    notifyKids('done',`${nameOf(pid)} finished all their chores`,`Can you finish yours too?`,{pid,k});
     if(!isParent())notifyParents('done',`${personOf(pid)?.name||'Your kid'} finished all chores ✅`,`${choreFor(fam(),slot).n} done for today. +${d.x} XP.`,{pid,k})}
   afterXP(pid,slot,L0)}
 function ungrant(pid,slot,d,task){const p=prog(pid),e=d.t[task.id];if(!e)return;if(e.g){p.xp=Math.max(0,p.xp-e.g);d.x=Math.max(0,(d.x||0)-e.g);bump(pid,'tasks',-1);bump(pid,'c_'+task.ch,-1);if(task.monthly)bump(pid,'monthly',-1)}
@@ -687,9 +704,10 @@ function ungrant(pid,slot,d,task){const p=prog(pid),e=d.t[task.id];if(!e)return;
 function prevWorkDay(slot,k){let x=addDays(k,-1);for(let i=0;i<7&&dayOff(slot,x)&&!rulesFor(slot).paused;i++)x=addDays(x,-1);return x}
 const weekId=k=>{const d=fromKey(k);d.setDate(d.getDate()-((d.getDay()+6)%7));return dkey(d)};
 function approveTask(pid,k,id,yes=true){const pr=personOf(pid);if(!pr)return;const slot=pr.slot,task=[...tasksFor(slot,k),monthTask(slot,k)].find(t=>t.id===id);if(!task)return;
+  notifyKid(pid,yes?'approved':'denied',yes?'Chore approved!':'Try that chore again',yes?`${task.t}: XP added.`:`${task.t} wasn’t done right. Give it another go.`,{k,id});
   if(isLocalPid(pid)){const d=dayLog(pid,k);if(!d.t[id])return;if(yes){d.t[id].ok=false;grant(pid,slot,k,task);bump(pid,'approved')}else delete d.t[id];save();return}
   const f=fam();f.approvals=f.approvals||{};const a=f.approvals[pid]||(f.approvals[pid]={});(a[k]||(a[k]={}))[id]=yes?1:-1;save();famPush()}
-function giveBonus(pid,amt,why){const pr=personOf(pid);if(!pr)return;if(isLocalPid(pid)){const p=prog(pid),L0=lvlOf(p.xp);p.xp+=amt;dayLog(pid).x+=amt;bump(pid,'bonusGot');afterXP(pid,pr.slot,L0,true);save();return}
+function giveBonus(pid,amt,why){const pr=personOf(pid);if(!pr)return;notifyKid(pid,'bonus',`+${amt} bonus XP from your parent!`,why||'Great job!',{amt});if(isLocalPid(pid)){const p=prog(pid),L0=lvlOf(p.xp);p.xp+=amt;dayLog(pid).x+=amt;bump(pid,'bonusGot');afterXP(pid,pr.slot,L0,true);save();return}
   const f=fam();f.approvals=f.approvals||{};const a=f.approvals[pid]||(f.approvals[pid]={});(a.bonus||(a.bonus=[])).push({id:uid(),amt,why});save();famPush()}
 /* kid side: apply approvals / bonuses written by a parent in the cloud */
 function applyApprovals(){if(!C.me||isParent())return;const pid=C.me.pid,a=(fam().approvals||{})[pid];if(!a)return;const p=prog(pid),slot=C.me.slot;let ch=false;
@@ -699,8 +717,10 @@ function applyApprovals(){if(!C.me||isParent())return;const pid=C.me.pid,a=(fam(
     setTimeout(()=>{SFX.coin();confetti(.6);overlay(`<div class="eyebrow">Bonus from your parent</div><div class="big-n">+${b.amt}</div><h2>Bonus XP! 🎁</h2><p>${esc(b.why||'Great job!')}</p>`)},300);afterXP(pid,slot,L0,true)}
   if(ch){save();render()}}
 function afterXP(pid,slot,L0,quiet){const p=prog(pid),L=lvlOf(p.xp);
+  if(L>L0&&C.me&&pid!==C.me.pid)notifyKid(pid,'level',`You reached level ${L}!`,`${tierOf(L)[0]} rank · ${fmt(p.xp)} XP`,{L});
   if(L>L0&&C.me&&pid===C.me.pid){setTimeout(()=>{SFX.levelUp();confetti(1.4);const t=tierOf(L),nt=tierOf(L0);
     overlay(`<div class="rays"></div><div class="eyebrow">Level up</div><div class="emb-wrap">${embSVG(L)}</div><h2 class="ttl">Level ${L}!</h2><p>${t!==nt?`New rank: <b style="color:var(--o)">${t[0]}</b>! `:''}Next level needs ${fmt(needFor(L))} XP. It only gets harder. 💀</p>`,{btn:'Keep going'})},900);
+    notifyKids('level',`${nameOf(pid)} reached level ${L}`,`${tierOf(L)[0]} rank. Can you catch up?`,{pid,L});
     if(!isParent())notifyParents('level',`${personOf(pid)?.name} reached level ${L}`,`${tierOf(L)[0]} rank · ${fmt(p.xp)} XP`,{pid,L})}
   // level goals set by parents
   for(const g of (fam().goals||[])){if(g.who!=='all'&&g.who!==slot)continue;if(L>=g.lvl&&!p.goalsHit[g.id]){p.goalsHit[g.id]=Date.now();bump(pid,'goals');const nm=personOf(pid)?.name||'Your kid';
@@ -716,6 +736,7 @@ function cheatFlag(pid,slot){const R=rulesFor(slot);bump(pid,'flags');dayLog(pid
   if(R.cheatAlerts)notifyParents('cheat',`⚠️ ${personOf(pid)?.name} checked chores really fast`,'Might want to check they were actually done.',{pid})}
 let badgeQ=[];
 function checkBadges(pid){const p=prog(pid),s=statsFor(pid);const neu=BADGES.filter(b=>!p.badges[b.id]&&b.test(s));if(!neu.length)return;neu.forEach(b=>p.badges[b.id]=Date.now());save();
+  neu.slice(0,3).forEach(b=>{notifyParents('badge',`${nameOf(pid)} unlocked a badge`,`${b.n}: ${b.d}`,{pid,b:b.id});if(C.me&&pid!==C.me.pid)notifyKid(pid,'badge',`Badge unlocked: ${b.n}`,b.d,{b:b.id})});
   if(C.me&&pid===C.me.pid&&!rulesFor(C.me.slot).hideBadges)neu.slice(0,3).forEach((b,i)=>setTimeout(()=>{SFX.badge();overlay(`<div class="rays"></div><div class="eyebrow">Badge unlocked</div><div class="bdg got" style="border:0;background:none"><span class="bflip" style="display:block;width:120px;margin:0 auto">${badgeSVG(b,true)}</span></div><h2 class="ttl">${esc(b.n)}</h2><p>${esc(b.d)}</p>`,{onOpen:o=>{const s=o.querySelector('svg');s.style.width='120px';s.style.height='120px';s.classList.add('flip');confetti(.5)}})},1400+i*300))}
 
 /* ================= reports ================= */
@@ -726,7 +747,7 @@ function reportText(k=dkey()){const r=reportFor(k),dt=fromKey(k).toLocaleDateStr
   return`PEPE CHORES daily report — ${dt}\n\n`+r.map(x=>`${x.p.name} (${x.ch.n}): ${x.off?'day off':`${x.done}/${x.total} done${x.wait?`, ${x.wait} waiting for approval`:''}`} · +${x.x} XP · level ${x.L} · ${x.streak}-day streak${x.flag?' · ⚠️ checked very fast':''}${!x.off&&x.missing.length?`\n   Not done: ${x.missing.join(', ')}`:''}`).join('\n')+`\n\nSent from PEPE CHORES by Pepe Apps`}
 
 /* ================= views ================= */
-let STEP=C.fam?null:'start',CREATE={mode:'kid',names:['','','',''],slot:0,fam:'',pname:'',cloud:false},TAB=null,LBSEG='fam',RULESLOT=0,REPDAY=dkey();
+let JOINROLE='child',STEP=C.fam?null:'start',CREATE={mode:'kid',names:['','','',''],slot:0,fam:'',pname:'',cloud:false},TAB=null,LBSEG='fam',RULESLOT=0,REPDAY=dkey();
 const KID_TABS=[['chores','🧽','Chores'],['ranks','🏆','Ranks'],['badges','🎖️','Badges']];
 const PAR_TABS=[['family','🏠','Family'],['reports','📊','Reports'],['rules','🛡️','Rules'],['more','⚙️','Settings']];
 function tabsNow(){if(isParent())return PAR_TABS;return KID_TABS.filter(t=>!(t[0]==='badges'&&myRules().hideBadges))}
@@ -737,10 +758,13 @@ function render(dir){const app=$('#app');if(!app)return;
   const tabs=tabsNow();if(!TAB||!tabs.find(t=>t[0]===TAB))TAB=tabs[0][0];
   const me=meP(),pr=me?prog(me.pid):null,lp=pr?lvlProg(pr.xp):null;
   const hdr=`<header class="hdr"><div class="brand" aria-label="PEPE CHORES"><span class="pepe">PEPE</span>${[...'CHORES'].map((c,i)=>`<i style="animation-delay:${i*.15}s">${c}</i>`).join('')}<i class="dot" style="animation-delay:.9s">.</i></div>
-    <button class="me-chip" data-act="me">${avSVG(me?.name,lp?.L)}<div style="min-width:0;text-align:left"><b>${esc(me?.name||'Parent')}</b>${isParent()?`<small>PARENT${C.cloud?.uid?' · ONLINE':''}</small>`:`<small>LV ${lp.L} · ${fmt(pr.xp)} XP</small><div class="xpbar"><i style="width:${lp.pct*100}%"></i></div>`}</div></button></header>`;
+    <button class="bell" data-act="bell" aria-label="Notifications">${ico('bell')}</button><button class="me-chip" data-act="me">${avSVG(me?.name,lp?.L)}<div style="min-width:0;text-align:left"><b>${esc(me?.name||'Parent')}</b>${isParent()?`<small>PARENT${C.cloud?.uid?' · ONLINE':''}</small>`:`<small>LV ${lp.L} · ${fmt(pr.xp)} XP</small><div class="xpbar"><i style="width:${lp.pct*100}%"></i></div>`}</div></button></header>`;
   const V={chores:viewChores,ranks:viewRanks,badges:viewBadges,family:viewFamily,reports:viewReports,rules:viewRules,more:viewMore}[TAB];
   app.className='app';app.innerHTML=hdr+`<main class="view ${dir||''}">${V()}</main>`;
-  renderTabs(tabs);bindView()}
+  renderTabs(tabs);renderBell();bindView()}
+function renderBell(){const b=$('.bell');if(!b)return;const u=myInbox().filter(n=>!n.read).length;b.classList.toggle('ring',u>0);b.querySelector('.badge-dot')?.remove();if(u)b.insertAdjacentHTML('beforeend',`<span class="badge-dot">${u>9?'9+':u}</span>`)}
+function openBell(){const list=myInbox().slice(0,40);const perm=typeof Notification!=='undefined'&&Notification.permission!=='granted';
+  sheet(`<h2>Notifications</h2>${perm?`<div class="banner o" style="display:flex;gap:10px;align-items:center"><span class="grow">Get alerts on your phone too.</span><button class="btn sm p" data-perm>Turn on</button></div>`:''}${list.map(n=>`<div class="inbox-i ${n.read?'':'new'}"><span class="e">${NK[n.kind]||'🔔'}</span><div class="grow"><b>${esc(n.title)}</b><div class="note">${esc(n.body||'')}</div><div class="lbl" style="font-size:10px;margin-top:3px">${new Date(n.at).toLocaleString()}</div></div></div>`).join('')||'<p class="note">Nothing yet. Approvals, bonuses, rewards, level-ups and reminders show up here.</p>'}<div class="btns"><button class="btn p" data-close>Done</button></div>`,(o,close)=>{list.forEach(n=>n.read=true);save();renderBell();const pb=o.querySelector('[data-perm]');if(pb)pb.onclick=async()=>{await Notification.requestPermission();if(Notification.permission==='granted'){SFX.notify();sysNotify('PEPE CHORES notifications are on','You’ll get alerts about everything.','ch-on')}close()}});try{renderTabs(tabsNow())}catch(e){}}
 function renderTabs(tabs){let t=$('#tabs');if(!t){t=document.createElement('nav');t.id='tabs';t.className='tabs';document.body.appendChild(t)}
   const unread=isParent()?C.inbox.filter(n=>!n.read).length:0;
   t.innerHTML=`<span class="ind"></span>`+tabs.map(([k,e,n])=>`<button data-tab="${k}" class="${k===TAB?'on':''}"><span class="ti">${e}</span>${n}${k==='family'&&unread?`<span class="badge-dot">${unread>9?'9+':unread}</span>`:''}</button>`).join('');
@@ -767,8 +791,9 @@ function viewStart(){
         <label class="f"><span class="lbl">Parent PIN (optional, keeps kids out of parent mode)</span><input class="inp" id="c-pin" inputmode="numeric" maxlength="6" placeholder="4 digits"></label>`
        :`<div class="card"><div class="lbl">Which one are you?</div><div class="who">${[0,1,2,3].map(i=>`<button class="pill ${CREATE.slot===i?'on':''}" data-who="${i}">${esc(CREATE.names[i]||'Name '+(i+1))}</button>`).join('')}<button class="pill" data-act="toparent">👑 I’m a Parent</button></div></div>`}
       ${window.supabase&&window.CH_SUPABASE?`<label class="sw" style="border:0"><div class="grow"><b>Put the family online</b><small>Get a family code so everyone can join from their own phone. Needs a free account.</small></div><input type="checkbox" id="c-cloud" ${CREATE.cloud?'checked':''}></label>`:''}
-      <div class="btns"><button class="btn ghost" data-act="back">Back</button><button class="btn p" data-act="create">Create family</button></div></div>`}
-  if(STEP==='join')return`<div class="start view r"><div><div class="lbl">Join a family</div><h1 class="ttl">Got a code?</h1><p class="note">Ask your parent for the 6-letter family code. They’ll let you in and choose if you’re a parent or a kid.</p></div>
+      <div class="btns"><button class="btn ghost" data-act="back">Back</button><button class="btn p" data-act="create">Create family</button></div>
+      ${P?`<div class="card" style="margin-top:6px"><div class="row"><span style="font-size:26px;color:var(--o)">🔑</span><div class="grow"><b>Already have a family?</b><div class="note">Another parent made it. Join with their code.</div></div><button class="btn sm" data-act="joinpar">Join as a parent</button></div></div>`:''}</div>`}
+  if(STEP==='join')return`<div class="start view r"><div><div class="lbl">${JOINROLE==='parent'?'Join as a parent':'I’m a kid'}</div><h1 class="ttl">Join with a code</h1><p class="note">${JOINROLE==='parent'?'Ask the parent who made the family for the 6-letter code. They’ll let you in as a parent.':'Ask your parent for the 6-letter family code. They’ll let you in and give you your chore.'}</p></div>
       ${C.cloud&&C.cloud.uid?`<div class="note">Signed in as ${esc(C.cloud.email)}</div>
       <label class="f"><span class="lbl">Family code</span><input class="inp" id="j-code" maxlength="6" placeholder="ABC123" style="text-transform:uppercase;font:800 24px var(--f-d);letter-spacing:.2em"></label>
       <label class="f"><span class="lbl">Your name</span><input class="inp" id="j-name" maxlength="18" placeholder="Your first name"></label>
@@ -780,7 +805,7 @@ function viewStart(){
   return`<div class="start"><div class="pepe-big">${ico('gorilla')}<span>PEPE</span></div><div class="big" aria-label="PEPE CHORES">${[...'CHORES'].map((c,i)=>`<i style="animation-delay:${i*.08}s,${.8+i*.15}s;color:${i%2?'var(--text)':'var(--o)'}">${c}</i>`).join('')}</div>
     <p class="tagline">Do your chore. Earn XP. Climb the family leaderboard. 🦍</p>
     <button class="choice" data-act="newpar"><span class="ci">👑</span><span><b>I’m a Parent</b><small>Create your family, set rules, approve chores</small></span></button>
-    <button class="choice" data-act="tojoin"><span class="ci">🔑</span><span><b>Join with a code</b><small>Your family already uses PEPE CHORES</small></span></button></div>`}
+    <button class="choice" data-act="tokid"><span class="ci">⭐</span><span><b>I’m a Kid</b><small>Join your family with a code and start earning XP</small></span></button></div>`}
 function authForm(next){if(!window.supabase||!window.CH_SUPABASE)return`<div class="banner o">Joining with a code works on the PEPE CHORES website (where accounts are on). In here, create the family on this device and switch between people.</div><button class="btn ghost" data-act="back">Back</button>`;
   return`<label class="f"><span class="lbl">Email</span><input class="inp" id="a-email" type="email" autocomplete="email"></label>
     <label class="f"><span class="lbl">Password</span><input class="inp" id="a-pass" type="password" autocomplete="current-password" minlength="6"></label>
@@ -791,7 +816,7 @@ function bindStart(){const a=$('#app');
   a.onchange=a.oninput;
   a.onclick=async e=>{const b=e.target.closest('[data-act],[data-who]');if(!b)return;SFX.tap();const act=b.dataset.act;
     if(b.dataset.who!=null){CREATE.slot=+b.dataset.who;$$('.pill[data-who]').forEach(p=>p.classList.toggle('on',+p.dataset.who===CREATE.slot));return}
-    if(act==='newfam'){CREATE.mode='kid';STEP='create'}else if(act==='newpar'||act==='toparent'){CREATE.mode='parent';STEP='create'}else if(act==='tojoin')STEP='join';
+    if(act==='newfam'){CREATE.mode='kid';STEP='create'}else if(act==='newpar'||act==='toparent'){CREATE.mode='parent';STEP='create'}else if(act==='tojoin'||act==='tokid'){JOINROLE='child';STEP='join'}else if(act==='joinpar'){JOINROLE='parent';STEP='join'}
     else if(act==='back'){STEP=C.fam?null:'start'}
     else if(act==='create')return doCreate();
     else if(act==='signin'||act==='signup')return doAuth(act,b.dataset.next);
@@ -816,6 +841,7 @@ function viewChores(){const me=meP(),pid=me.pid,slot=me.slot,f=fam(),ch=choreFor
   let h=`<section class="card hot"><div class="hero"><div class="big-e">${ch.e}</div><div class="grow"><div class="lbl">Your chore for ${MONTHS[new Date().getMonth()]}</div><h2 class="ttl">${ch.n}</h2>
      <div class="note">🔥 ${p.streak} day streak · +${st.x} XP today</div></div>
      <div class="ring"><svg viewBox="0 0 74 74"><defs><linearGradient id="gO"><stop offset="0" stop-color="#e3241b"/><stop offset=".5" stop-color="#ff7a00"/><stop offset="1" stop-color="#ffad5a"/></linearGradient></defs><circle class="t" cx="37" cy="37" r="31"/><circle class="b" cx="37" cy="37" r="31" stroke-dasharray="${C2}" stroke-dashoffset="${C2*(1-pct)}"/></svg><div>${st.ok}/${st.total}</div></div></div></section>`;
+  if(typeof Notification!=='undefined'&&Notification.permission==='default')h+=`<div class="banner o" style="display:flex;gap:10px;align-items:center">${ico('bell')}<span class="grow">Turn on notifications for approvals, bonuses, rewards and reminders.</span><button class="btn sm p" data-act="notifs">Turn on</button></div>`;
   if(lock)h+=`<div class="banner ${R.paused||dayOff(slot)?'o':''}">🔒 ${esc(lock)}</div>`;
   if(R.dueTime&&!lock&&!st.all)h+=`<div class="banner o">⏰ Due by ${esc(R.dueTime)}. Late chores give half XP.</div>`;
   if(R.needApproval)h+=`<div class="note" style="margin:4px 2px">👀 A parent approves each chore before you get the XP.</div>`;
@@ -848,8 +874,8 @@ function viewFamily(){const f=fam(),k=dkey();let h='';
   h+=`<section class="card hot"><div class="lbl">${esc(f.name)}</div><h2 class="ttl">${MONTHS[new Date().getMonth()]} chores</h2>
     ${f.code?`<p class="note" style="margin:6px 0 0">Family code. Share it so others can join:</p><div class="code">${f.code}</div><div class="btns"><button class="btn sm" data-act="sharecode">Share code</button></div>`
       :`<p class="note">This family lives on this device. ${window.CH_SUPABASE&&window.supabase?'Put it online to get a join code.':''}</p>${window.CH_SUPABASE&&window.supabase?'<button class="btn sm" data-act="gocloud">Put family online</button>':''}`}</section>`;
-  const pend=(C.joinReq||[]);if(pend.length)h+=`<div class="sec-h"><h3>Wants to join</h3></div>`+pend.map(m=>`<div class="card"><b>${esc(m.name||'Someone')}</b><div class="row" style="margin-top:8px;flex-wrap:wrap">
-     <select class="inp" style="flex:1;min-width:110px" data-jrole="${m.user_id}"><option value="child">Child</option><option value="parent">Parent</option></select>
+  const pend=(C.joinReq||[]);if(pend.length)h+=`<div class="sec-h"><h3>Wants to join</h3></div>`+pend.map(m=>`<div class="card"><b>${esc(m.name||'Someone')}</b> <span class="tag ${m.role==='parent'?'o':''}">wants to join as a ${m.role==='parent'?'parent':'kid'}</span><div class="row" style="margin-top:8px;flex-wrap:wrap">
+     <select class="inp" style="flex:1;min-width:110px" data-jrole="${m.user_id}"><option value="child">Child</option><option value="parent" ${m.role==='parent'?'selected':''}>Parent</option></select>
      <select class="inp" style="flex:1;min-width:110px" data-jslot="${m.user_id}"><option value="">No slot</option>${f.slots.map((s,i)=>`<option value="${i}" ${(s.name||'').toLowerCase()===(m.name||'').toLowerCase()?'selected':''}>${esc(s.name||'Slot '+(i+1))} · ${choreFor(f,i).n}</option>`).join('')}</select></div>
      <div class="btns"><button class="btn sm red" data-act="jdeny" data-u="${m.user_id}">Deny</button><button class="btn sm p" data-act="jok" data-u="${m.user_id}">Let in</button></div></div>`).join('');
   const waits=[];kids().forEach(p=>{const d=prog(p.pid).days;Object.keys(d).slice(-7).forEach(day=>{for(const id in d[day].t){const e=d[day].t[id];if(!e.ok&&!e.g){const t=[...tasksFor(p.slot,day),monthTask(p.slot,day)].find(x=>x.id===id);if(t&&!((f.approvals||{})[p.pid]||{})[day]?.[id])waits.push({p,day,t})}}})});
@@ -860,9 +886,9 @@ function viewFamily(){const f=fam(),k=dkey();let h='';
     return`<section class="card"><div class="kid">${avSVG(p.name,L)}<div class="grow"><b>${esc(p.name)}</b> <span class="tag o">${c.e} ${c.n}</span>${R.paused?' <span class="tag">paused</span>':''}${(pr.days[k]||{}).flag?' <span class="tag r">⚠️ fast</span>':''}
       <div class="note">LV ${L} · ${fmt(pr.xp)} XP · 🔥 ${pr.streak}${isLocalPid(p.pid)?'':' · own phone'}</div><div class="mini"><i style="width:${s.total?s.ok/s.total*100:0}%"></i></div></div><div style="font:900 22px var(--f-d)">${s.ok}/${s.total}</div></div>
       <div class="btns"><button class="btn sm" data-act="bonus" data-pid="${p.pid}">🎁 Bonus XP</button>${isLocalPid(p.pid)?`<button class="btn sm" data-act="actas" data-pid="${p.pid}">Do chores as ${esc(p.name)}</button>`:''}<button class="btn sm" data-act="kidrules" data-slot="${p.slot}">Rules</button></div></section>`}).join('')||'<div class="note">Add names in Settings.</div>';
-  const inbox=C.inbox.filter(n=>n.kind!=='approve'||waits.length);
-  h+=`<div class="sec-h"><h3>Notifications</h3>${C.inbox.some(n=>!n.read)?'<button class="btn sm ghost" data-act="readall">Mark all read</button>':''}</div>`+
-    (inbox.slice(0,30).map(n=>`<div class="inbox-i ${n.read?'':'new'}"><span class="e">${{level:'⬆️',goal:'🏆',done:'✅',cheat:'⚠️',approve:'⏳',swap:'🔄',report:'📊'}[n.kind]||'🔔'}</span><div class="grow"><b>${esc(n.title)}</b><div class="note">${esc(n.body||'')}</div><div class="lbl" style="font-size:10px;margin-top:3px">${new Date(n.at).toLocaleString()}</div>
+  const inbox=myInbox().filter(n=>n.kind!=='approve'||waits.length);
+  h+=`<div class="sec-h"><h3>Notifications</h3>${myInbox().some(n=>!n.read)?'<button class="btn sm ghost" data-act="readall">Mark all read</button>':''}</div>`+
+    (inbox.slice(0,30).map(n=>`<div class="inbox-i ${n.read?'':'new'}"><span class="e">${NK[n.kind]||'🔔'}</span><div class="grow"><b>${esc(n.title)}</b><div class="note">${esc(n.body||'')}</div><div class="lbl" style="font-size:10px;margin-top:3px">${new Date(n.at).toLocaleString()}</div>
       ${n.kind==='goal'&&n.data&&n.data.reward?`<button class="btn sm" style="margin-top:6px" data-act="given" data-n="${n.id}">${n.data.given?'✓ Reward given':'Mark reward given'}</button>`:''}</div></div>`).join('')||'<div class="note">Nothing yet. You’ll see level-ups, rewards earned, cheat alerts and finished chores here.</div>');
   return h}
 function viewReports(){const f=fam(),days=[...Array(7)].map((_,i)=>addDays(dkey(),-i)),r=reportFor(REPDAY),ct=f.contact||{},txt=reportText(REPDAY);
@@ -922,11 +948,11 @@ function bindView(){const a=$('#app');
     const dy=T.closest('[data-day]');if(dy){REPDAY=dy.dataset.day;SFX.tap();render();return}
     const rs=T.closest('[data-rslot]');if(rs){RULESLOT=+rs.dataset.rslot;SFX.tap();render();return}
     const b=T.closest('[data-act]');if(!b)return;const act=b.dataset.act;if(b.type!=='checkbox')SFX.tap();
-    ({me:openMe,replay:()=>{SFX.pound();const w=$('.emb-wrap');w.animate([{transform:'scale(1)'},{transform:'scale(1.25) rotate(-8deg)'},{transform:'scale(.95) rotate(4deg)'},{transform:'scale(1)'}],{duration:700,easing:'cubic-bezier(.3,1.6,.4,1)'});sparks(w)},
+    ({me:openMe,bell:openBell,replay:()=>{SFX.pound();const w=$('.emb-wrap');w.animate([{transform:'scale(1)'},{transform:'scale(1.25) rotate(-8deg)'},{transform:'scale(.95) rotate(4deg)'},{transform:'scale(1)'}],{duration:700,easing:'cubic-bezier(.3,1.6,.4,1)'});sparks(w)},
       swap:()=>{notifyParents('swap',`${meP().name} wants to swap chores`,`They have ${choreFor(fam(),meP().slot).n} this month.`);toast('🔄','Asked your parent','They’ll decide.')},
       approve:()=>{approveTask(b.dataset.pid,b.dataset.k,b.dataset.id,true);SFX.check(4);confetti(.4);render()},deny:()=>{approveTask(b.dataset.pid,b.dataset.k,b.dataset.id,false);SFX.uncheck();render()},
       bonus:()=>bonusSheet(b.dataset.pid),actas:()=>switchTo(b.dataset.pid),
-      kidrules:()=>{RULESLOT=+b.dataset.slot;goTab('rules')},readall:()=>{C.inbox.forEach(n=>n.read=true);save();render()},
+      kidrules:()=>{RULESLOT=+b.dataset.slot;goTab('rules')},readall:()=>{myInbox().forEach(n=>n.read=true);save();render()},
       given:()=>{const n=C.inbox.find(x=>x.id===b.dataset.n);if(n){n.data.given=!n.data.given;n.read=true;save();render()}},
       sharecode:()=>shareText(`Join our family on PEPE CHORES! Code: ${fam().code}`),gocloud:async()=>{if(!(C.cloud&&C.cloud.uid)){STEP='auth';C.afterAuth='mkcloud';render();return}try{await cloudCreate();render()}catch(e){toast('⚠️','Couldn’t go online',String(e.message||e))}},
       jok:()=>cloudAdmit(b.dataset.u,true),jdeny:()=>cloudAdmit(b.dataset.u,false),
@@ -942,10 +968,14 @@ function bindView(){const a=$('#app');
     else if(T.dataset.fam){f[T.dataset.fam]=T.value.trim();famSave()}
     else if(T.dataset.sname!=null){f.slots[+T.dataset.sname].name=T.value.trim();famSave()}
     else if(T.dataset.ct){f.contact={...(f.contact||{}),[T.dataset.ct]:T.value.trim()};famSave();toast('✅','Saved','Contact info updated.')}
-    else if(T.dataset.goal!=null){const g=f.goals[+T.dataset.goal],k=T.dataset.gk;g[k]=k==='lvl'?Math.max(2,Math.min(99,+T.value||2)):k==='who'?(T.value==='all'?'all':+T.value):T.value.trim();famSave()}
+    else if(T.dataset.goal!=null){const g=f.goals[+T.dataset.goal],k=T.dataset.gk;g[k]=k==='lvl'?Math.max(2,Math.min(99,+T.value||2)):k==='who'?(T.value==='all'?'all':+T.value):T.value.trim();famSave();
+      if(g.reward){const to=g.who==='all'?'kids':((f.slots[g.who]||{}).pid||'s'+g.who);clearTimeout(g._t);notify(to,'newgoal',`New reward: reach level ${g.lvl}`,`Reward: ${g.reward}`,{goal:g.id})}}
   };
   const lb=$('#lbseg');if(lb){const on=lb.querySelector('button.on'),ind=lb.querySelector('.ind');ind.style.left=on.offsetLeft+'px';ind.style.width=on.offsetWidth+'px'}}
-function setRule(slot,k,v){const f=fam();f.rules=f.rules||{};f.rules[slot]={...(f.rules[slot]||{}),[k]:v};famSave()}
+function setRule(slot,k,v){const f=fam();f.rules=f.rules||{};f.rules[slot]={...(f.rules[slot]||{}),[k]:v};famSave();
+  const d=RULE_DEFS.find(x=>x[0]===k),lbl=d?d[1]:({dueTime:'Chores due time',bedtime:'Bedtime lock',remindAt:'Reminder time',quietFrom:'Quiet hours',quietTo:'Quiet hours',maxXP:'Max XP per day',forceSound:'Sounds',extra:'Extra chores'}[k]||k);
+  const pid=(f.slots[slot]||{}).pid||('s'+slot);clearTimeout(setRule._t[slot]);setRule._t[slot]=setTimeout(()=>notifyKid(pid,'rules','Your parent changed your rules',`${lbl}: ${typeof v==='boolean'?(v?'on':'off'):Array.isArray(v)?v.length+' extra chore'+(v.length===1?'':'s'):(v||'off')}`,{k}),1200)}
+setRule._t={};
 function famSave(){save();try{famPush()}catch(e){}}
 function shareText(t){if(navigator.share)navigator.share({text:t}).catch(()=>{});else{try{navigator.clipboard.writeText(t);toast('📋','Copied','Paste it anywhere.')}catch(e){}}}
 function bonusSheet(pid){const p=personOf(pid);sheet(`<div class="eyebrow" style="font:600 11px var(--f-m);letter-spacing:.2em;color:var(--o)">BONUS XP</div><h2>Reward ${esc(p.name)}</h2><div class="who" style="margin:12px 0">${[10,25,50,100].map(n=>`<button class="pill" data-amt="${n}">+${n}</button>`).join('')}</div><input class="inp" id="b-why" maxlength="40" placeholder="Why? (helped without being asked)"><div class="btns"><button class="btn ghost" data-close>Cancel</button></div>`,
@@ -968,10 +998,18 @@ const isLocalPid=pid=>/^s\d$/.test(pid)||/^p/.test(pid);
 function maybeReport(){if(!isParent()||!fam())return;const t=hm(fam().reportTime||'19:00'),k=dkey();if(nowMin()<t||C.reportSeen===k||!kids().length)return;C.reportSeen=k;save();
   const r=reportFor(k),all=r.filter(x=>!x.off&&x.done>=x.total).length;sysNotify('📊 Today’s chore report',r.map(x=>`${x.p.name}: ${x.off?'off':x.done+'/'+x.total}`).join(' · '),'ch-report');SFX.notify();
   C.inbox.unshift({id:uid(),at:Date.now(),kind:'report',title:'Daily report is ready',body:`${all}/${r.filter(x=>!x.off).length} kids finished every chore today.`,read:false});save();
-  overlay(`<div class="eyebrow">Daily report</div><h2 class="ttl">How everyone did today</h2>${r.map(x=>`<div class="lb"><span style="font-size:22px">${x.ch.e}</span><div class="grow" style="text-align:left"><b>${esc(x.p.name)}</b><div class="note">${x.off?'Day off':`${x.done}/${x.total} done · +${x.x} XP`}${x.flag?' · ⚠️ fast':''}</div></div><span class="x">${x.off?'—':x.done>=x.total?'✅':x.done?'🟧':'❌'}</span></div>`).join('')}`,{btn:'See full report',onOpen:o=>o.querySelector('[data-close]').addEventListener('click',()=>{REPDAY=k;goTab('reports')})})}
+  overlay(`<div class="eyebrow">Daily report</div><h2 class="ttl">How everyone did today</h2>${r.map(x=>`<div class="lb"><span style="font-size:22px">${x.ch.e}</span><div class="grow" style="text-align:left"><b>${esc(x.p.name)}</b><div class="note">${x.off?'Day off':`${x.done}/${x.total} done · +${x.x} XP`}${x.flag?' · ⚠️ fast':''}</div></div><span class="x">${x.off?'—':x.done>=x.total?'✅':x.done?'🟧':'❌'}</span></div>`).join('')}`,{btn:'See full report',cls:'scroll',onOpen:o=>o.querySelector('[data-close]').addEventListener('click',()=>{REPDAY=k;goTab('reports')})})}
 function maybeRemind(){if(isParent()||!C.me||!fam())return;const R=myRules(),k=dkey(),st=dayStats(C.me.pid,C.me.slot);if(!R.reminders||dayOff(C.me.slot)||st.ok>=st.total||inQuiet(R))return;if(nowMin()<hm(R.remindAt)||C.remSeen===k+C.me.pid)return;C.remSeen=k+C.me.pid;save();
-  sysNotify('🦍 Chores time!',`${st.total-st.ok} ${choreFor(fam(),C.me.slot).n.toLowerCase()} task${st.total-st.ok===1?'':'s'} left today.`,'ch-remind');toast('⏰','Chore reminder',`${st.total-st.ok} left. You got this!`)}
-setInterval(()=>{maybeReport();maybeRemind()},60000);
+  notifyKid(C.me.pid,'remind','Chore time!',`${st.total-st.ok} ${choreFor(fam(),C.me.slot).n.toLowerCase()} task${st.total-st.ok===1?'':'s'} left today.`);toast('⏰','Chore reminder',`${st.total-st.ok} left. You got this!`)}
+function maybeAlerts(){if(!fam()||!C.me)return;const k=dkey();C.alerted=C.alerted||{};
+  // new month: everyone gets their new chore
+  const mi=monthIdx();if(C.monthSeen!==mi){const first=C.monthSeen==null;C.monthSeen=mi;save();if(!first){if(isParent())notifyParents('month',`New month: ${MONTHS[new Date().getMonth()]}`,kids().map(x=>`${x.name}: ${choreFor(fam(),x.slot).n}`).join(' · '));
+      else{const ch=choreFor(fam(),C.me.slot);notifyKid(C.me.pid,'month',`New month, new chore: ${ch.n}!`,`Your chore for ${MONTHS[new Date().getMonth()]} is ${ch.n}.`);overlay(`<div class="rays"></div><div class="eyebrow">New month</div><div class="big-n">${ch.e}</div><h2 class="ttl">${ch.n}</h2><p>That’s your chore for ${MONTHS[new Date().getMonth()]}.</p>`,{btn:'Let’s go'})}}}
+  if(isParent()){for(const x of kids()){const R=rulesFor(x.slot),s=dayStats(x.pid,x.slot);if(!R.dueTime||dayOff(x.slot)||s.ok>=s.total)continue;const key='late'+k+x.pid;if(nowMin()>hm(R.dueTime)&&!C.alerted[key]){C.alerted[key]=1;save();notifyParents('late',`${x.name} missed the ${R.dueTime} deadline`,`${s.total-s.ok} chore task${s.total-s.ok===1?'':'s'} still not done.`,{pid:x.pid})}}return}
+  const R=myRules(),s=dayStats(C.me.pid,C.me.slot),p=prog(C.me.pid);if(dayOff(C.me.slot)||s.ok>=s.total||inQuiet(R))return;
+  if(R.dueTime){const dl=hm(R.dueTime),key='due'+k+C.me.pid;if(nowMin()>=dl-30&&nowMin()<dl&&!C.alerted[key]){C.alerted[key]=1;save();notifyKid(C.me.pid,'late','30 minutes left!',`Chores are due at ${R.dueTime}. After that you only get half XP.`)}}
+  const key2='streak'+k+C.me.pid;if(p.streak>0&&nowMin()>=19*60+30&&!C.alerted[key2]){C.alerted[key2]=1;save();notifyKid(C.me.pid,'streak',`Your ${p.streak}-day streak is in danger!`,`Finish your chores before midnight to keep it.`)}}
+setInterval(()=>{maybeReport();maybeRemind();maybeAlerts()},60000);
 let lastDay=dkey();setInterval(()=>{if(dkey()!==lastDay){lastDay=dkey();render()}},30000);
 
 /* ================= cloud sync (Supabase) — only on the hosted site ================= */
@@ -987,7 +1025,7 @@ async function doAuth(act,next){const email=$('#a-email').value.trim(),password=
     if(C.afterAuth==='mkcloud'&&fam()){C.afterAuth=null;try{await cloudCreate()}catch(e){toast('⚠️','Couldn’t go online',String(e.message||e))}STEP=null;render();return}
     const had=await cloudPull(true);if(next==='join'&&!had){STEP='join';render();return}if(had)STEP=null;else STEP=fam()?null:'start';render()}catch(e){msg.textContent=String(e.message||e);SFX.warn()}}
 async function doJoin(){const code=$('#j-code').value.trim().toUpperCase(),name=$('#j-name').value.trim();if(code.length<6||!name){SFX.warn();toast('✏️','Add the code and your name','');return}
-  const {data,error}=await SB.rpc('ch_join_family',{join_code:code,my_name:name});if(error){SFX.warn();toast('⚠️','Couldn’t join',error.message);return}
+  const {data,error}=await SB.rpc('ch_join_family',{join_code:code,my_name:name,want_role:JOINROLE});if(error){SFX.warn();toast('⚠️','Couldn’t join',error.message);return}
   C.pending={id:data.id,name:data.name,me:name};save();STEP='pending';SFX.swoosh();render()}
 function migratePid(from,to){if(from===to||!C.prog[from])return;const a=C.prog[from],b=C.prog[to];if(!b||a.xp>=b.xp)C.prog[to]=a;delete C.prog[from]}
 async function cloudCreate(){const f=fam(),me=C.me,P=me.role==='parent';const myName=P?(f.parents[0]||{}).name||'Parent':f.slots[me.slot].name;
@@ -1006,7 +1044,7 @@ let pushT=0;async function cloudPush(now){if(!online()||!fam()||!fam().code)retu
   await SB.from('ch_progress').upsert({user_id:uidv,family_id:f.id,name:nm,slot:myslot>=0?myslot:null,xp:mine.xp,level:lvlOf(mine.xp),data:{me:mine,shared},updated_at:new Date().toISOString()});
   if(myslot>=0){const R=rulesFor(myslot);if(R.hideGlobal)await SB.from('ch_board').delete().eq('user_id',uidv);else await SB.from('ch_board').upsert({user_id:uidv,handle:(nm||'Player').slice(0,14),xp:mine.xp,level:lvlOf(mine.xp),streak:mine.streak,updated_at:new Date().toISOString()})}}
 const isParentAcct=()=>online()&&fam()&&(fam().parents||[]).some(p=>p.pid===C.cloud.uid);
-async function cloudNote(n){if(!famOnline()||isParent())return;await SB.from('ch_notes').insert({family_id:fam().id,kind:n.kind,title:n.title,body:n.body,data:n.data||{}})}
+async function cloudNote(n){if(!famOnline()||n.to===C.me.pid)return;if(n.to==='parent'&&isParent())return;await SB.from('ch_notes').insert({family_id:fam().id,to_role:n.to==='parent'?'parent':'child',kind:n.kind,title:n.title,body:n.body,data:{...(n.data||{}),to:n.to}})}
 let pulling=false;
 async function cloudPull(force){if(!online()||pulling)return false;pulling=true;try{const u=C.cloud.uid;
   const {data:mem}=await SB.from('ch_members').select('*').eq('user_id',u);const act=(mem||[]).find(m=>m.status==='active'),pend=(mem||[]).find(m=>m.status==='pending');
@@ -1018,17 +1056,19 @@ async function cloudPull(force){if(!online()||pulling)return false;pulling=true;
   while(f.slots.length<4)f.slots.push({name:''});
   for(const m of ms||[]){if(m.status!=='active')continue;if(m.role==='parent')f.parents.push({pid:m.user_id,name:m.name||'Parent'});else if(m.slot!=null&&f.slots[m.slot]){f.slots[m.slot].pid=m.user_id;if(!f.slots[m.slot].name)f.slots[m.slot].name=m.name}}
   if(!old&&C.fam&&!C.fam.code&&C.me){/* local family replaced by cloud one: keep local progress for my slot */const lp=C.me.pid;if(act.slot!=null)migratePid('s'+act.slot,u);else if(lp)migratePid(lp,u)}
-  C.fam=f;C.joinReq=(ms||[]).filter(m=>m.status==='pending');
+  const jr=(ms||[]).filter(m=>m.status==='pending');C.joinSeen=C.joinSeen||{};for(const m of jr)if(!C.joinSeen[m.user_id]&&act.role==='parent'){C.joinSeen[m.user_id]=1;C.fam=f;C.me={pid:u,role:'parent',slot:null};setTimeout(()=>notifyParents('join',`${m.name||'Someone'} wants to join`,'Open Family to let them in and pick parent or kid.'),50)}
+  C.fam=f;C.joinReq=jr;
   if(isParent()||act.role==='parent'){}
   C.me={pid:u,role:act.role,slot:act.role==='parent'?null:act.slot};if(C.me.role!=='parent'&&C.me.slot==null){C.me.role='child';C.me.slot=f.slots.findIndex(s=>s.pid===u)}
   if(C.me.role==='child'&&(C.me.slot==null||C.me.slot<0)){C.me.slot=0}
   for(const r of pr||[]){const d=r.data||{};if(r.user_id===u){const mine=C.prog[u];if(!mine||(d.me&&d.me.xp>mine.xp&&force))C.prog[u]=d.me||mine||prog(u)}else if(d.me)C.prog[r.user_id]=d.me;
     if(r.user_id!==u)for(const k in d.shared||{}){const cur=C.prog[k];if(!cur||d.shared[k].xp>=cur.xp)C.prog[k]=d.shared[k]}}
   // parent notifications
-  if(C.me.role==='parent'){const since=C.noteSince||new Date(Date.now()-864e5).toISOString();const {data:ns}=await SB.from('ch_notes').select('*').eq('family_id',f.id).gt('created_at',since).order('created_at',{ascending:true}).limit(50);
-    for(const n of ns||[]){if(C.inbox.find(x=>x.cid===n.id))continue;C.inbox.unshift({id:uid(),cid:n.id,at:Date.parse(n.created_at),kind:n.kind,title:n.title,body:n.body,data:n.data,read:false});if(C.noteSince){SFX.notify();sysNotify(n.title,n.body||'','ch-'+n.kind+n.id)}}
+  {const since=C.noteSince||new Date(Date.now()-864e5).toISOString();const {data:ns}=await SB.from('ch_notes').select('*').eq('family_id',f.id).gt('created_at',since).order('created_at',{ascending:true}).limit(80);const par=C.me.role==='parent';
+    for(const n of ns||[]){if(C.inbox.find(x=>x.cid===n.id)||n.from_user===u)continue;const to=(n.data&&n.data.to)||(n.to_role==='parent'?'parent':'kids');if(par?n.to_role!=='parent':(n.to_role==='parent'||(to!=='kids'&&to!==u&&to!=='s'+C.me.slot)))continue;
+      const item={id:uid(),cid:n.id,at:Date.parse(n.created_at),kind:n.kind,title:n.title,body:n.body,data:n.data,to:par?'parent':(to==='kids'?'kids':u),from:n.from_user,read:false};C.inbox.unshift(item);if(C.noteSince){SFX.notify();sysNotify(n.title,n.body||'','ch-'+n.kind+n.id);toast(NK[n.kind]||'🔔',n.title,n.body||'')}}
     C.noteSince=ns&&ns.length?ns[ns.length-1].created_at:(C.noteSince||new Date(Date.now()-6e5).toISOString())}
-  if(STEP==='pending'){STEP=null;TAB=null;SFX.allDone();confetti(1.2);toast('🎉','You’re in!',`Welcome to ${f.name}`)}
+  if(STEP==='pending'){STEP=null;TAB=null;SFX.allDone();confetti(1.2);toast('🎉','You’re in!',`Welcome to ${f.name}`);setTimeout(()=>{notifyParents('join',`${C.me&&personOf(C.me.pid)?.name||'New member'} joined the family`,'They can start doing chores now.');if(C.me.role==='child'){const ch=choreFor(f,C.me.slot);notifyKid(C.me.pid,'welcome',`Welcome! Your chore is ${ch.n}`,`You’re in ${f.name}. Do your chore to earn XP.`)}},300)}
   save();applyApprovals();unseenGoals();if(!$('.ov')&&!document.activeElement?.matches('input,textarea,select'))render();return true}
   catch(e){console.warn(e);return false}finally{pulling=false}}
 async function cloudAdmit(user,yes){if(!famOnline())return;const f=fam();
