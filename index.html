@@ -15,7 +15,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Routines">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
-<script>window.RR_STANDALONE=true;window.RR_VERSION='8639371982';</script>
+<script>window.RR_STANDALONE=true;window.RR_VERSION='90e59c3260';</script>
 <script>window.RR_SUPABASE={url:'https://uszalonpjyssvvsikzvg.supabase.co',key:'sb_publishable_w-5rI0R9ht2-HAr5HghM0w_-3HYiAEg'};</script>
 <script src="supabase.js"></script>
 </head>
@@ -682,6 +682,7 @@ svg.moose:not(.big){animation:breathe 3.4s ease-in-out infinite}
 @keyframes chkDraw{to{stroke-dashoffset:0}}
 .chk-conf{position:fixed;width:7px;height:7px;border-radius:2px;pointer-events:none;z-index:96}
 @media (prefers-reduced-motion:reduce){.chk.chk-fx,.chk.chk-fx svg path{animation:none!important;stroke-dashoffset:0}}
+.prof-sum .ed-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}.prof-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px}.prof-grid div{padding:10px 12px;border-radius:12px;background:var(--surface-2);min-width:0}.prof-grid span{display:block;font-size:12px;color:var(--muted)}.prof-grid b{display:block;overflow-wrap:anywhere}
 /* looping idle animations: small, satisfying, never distracting */
 @keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
 @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
@@ -2303,9 +2304,10 @@ const TAB_ICO={
 const tabIco=k=>`<svg viewBox="0 0 24 24" aria-hidden="true">${TAB_ICO[k]||(String(k).startsWith('c_')?TAB_ICO.custom:TAB_ICO.me)}</svg>`;
 function tabsFor(){const R=RULES(),me=R0()==='me';let base=TABS[R0()];if(me&&R.allowDiet===false)base=base.filter(x=>x[0]!=='diet');const mine=me&&R.allowTabs===false?[]:(S.tabs||[]).map(t=>[t.id,t.name]);return[...base.slice(0,-1),...mine,base[base.length-1]]}
 function tabList(){return tabsFor().map(x=>x[0])}
-const editing=()=>!!(draft||wDraft);
+let pEdit=false;
+const editing=()=>!!(draft||wDraft||pEdit);
 let navDir=0;
-function goTab(k,dir){
+function goTab(k,dir){if(pEdit&&!editing())pEdit=false;
   if(editing()){toast(medal('✎',false),'Finish editing first','Tap Save or Cancel to leave this page.');return false}
   if(k===tab)return false;const L=tabList();navDir=dir!=null?dir:Math.sign(L.indexOf(k)-L.indexOf(tab))||1;
   SFX.tick();tab=k;draft=null;wDraft=null;render();scrollTo({top:0});return true}
@@ -3944,6 +3946,8 @@ function nameCard(){const n=S.profile.name||'';
     <span class="hint" id="nm-msg"></span></section>`}
 function viewProfile(){
   const p=S.profile;if(RULES().lockProfile)return`<section class="card"><div class="label">Your profile</div><h3 class="h3">${esc(GOALS[p.goal])} · ${p.minutes} min</h3><p class="note">🔒 Your parent set your goal, age and training days (${esc(daysText(p))}). Ask them if you want a change.</p></section>`;
+  if(!pEdit)return`<section class="card prof-sum"><div class="ed-head"><div><div class="label">Your routine</div><h3 class="h3">Tune your daily routine</h3></div><button class="btn primary" data-act="editprof">Edit routine</button></div>
+    <div class="prof-grid"><div><span>Goal</span><b>${esc(GOALS[p.goal]||'')}</b></div><div><span>Age</span><b>${esc(p.age)}</b></div><div><span>Experience</span><b>${esc(LEVELS[p.level]||'')}</b></div><div><span>Equipment</span><b>${esc(EQUIP[p.equip]||'')}</b></div><div><span>Training days</span><b>${esc(daysText(p))}</b></div><div><span>Time per session</span><b>${p.minutes} min</b></div></div></section>`;
   const radios=(name,map)=>`<div class="opts">${Object.entries(map).map(([k,l])=>`<label class="opt"><input type="radio" name="${name}" id="${name}-${k}" value="${k}" ${p[name]===k?'checked':''}><span>${l}</span></label>`).join('')}</div>`;
   return`<section class="card"><form class="form" id="pf">
     <div><div class="label">Your profile</div><h3 class="h3">Tune your daily routine</h3></div>
@@ -3953,7 +3957,7 @@ function viewProfile(){
     <div class="field"><span class="lab">Equipment</span>${radios('equip',EQUIP)}</div>
     <div class="field"><span class="lab">Training days</span><div class="opts">${WDN.map((d,i)=>`<label class="opt"><input type="checkbox" name="pf-day" id="pf-day-${i}" value="${i}" ${trainDays(p).includes(i)?'checked':''}><span>${d}</span></label>`).join('')}</div><span class="hint">Days you don’t pick are rest days. They won’t break your streak.</span></div>
     <div class="field"><label for="pf-min">Time per session</label><div class="range"><input type="range" id="pf-min" min="15" max="${RULES().maxMinutes||60}" step="5" value="${Math.min(p.minutes,RULES().maxMinutes||60)}"><output id="pf-minout" class="num">${p.minutes} min</output></div></div>
-    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><button class="btn primary" type="submit">Save and build my routine</button><span class="hint" id="pf-msg"></span></div>
+    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><button class="btn" type="button" data-act="profcancel">Cancel</button><button class="btn primary" type="submit">Save and build my routine</button><span class="hint" id="pf-msg"></span></div>
   </form></section>`;
 }
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target&&e.target.id==='nm-inp'){e.preventDefault();$('[data-act="savename"]')?.click()}});
@@ -3963,8 +3967,8 @@ function bindProfile(){
     const age=Math.max(13,Math.min(95,parseInt($('#pf-age').value)||28)),g=n=>f.querySelector(`input[name="${n}"]:checked`)?.value;
     const started=S.today.done.length>0;
     const dsel=[...f.querySelectorAll('input[name="pf-day"]:checked')].map(x=>+x.value);S.profile={...S.profile,age,goal:g('goal'),level:g('level'),equip:g('equip'),minutes:+$('#pf-min').value,days:dsel.length?dsel:[0,1,2,3,4,5,6],set:true};
-    save();renderHeader();
-    if(started)$('#pf-msg').textContent='Saved. You already started today, so the new settings start tomorrow.';
+    save();renderHeader();pEdit=false;
+    if(started){render();toast(medal('✓',true),'Routine saved','You already started today, so the new settings start tomorrow.')}
     else{tab='workout';render();scrollTo({top:0,behavior:reduced?'auto':'smooth'});toast(medal('✓',true),'Profile saved','Today’s routine is rebuilt for you.')}
   });
 }
@@ -3990,6 +3994,8 @@ document.addEventListener('click',e=>{
     case'badge':{const b=BADGES.find(x=>x.id===t.dataset.v);if(b)(S.badges[b.id]?achievementShow(b,true):badgeLocked(b));break}
     case'rankreplay':rankReplay(t.dataset.v);break;
     case'sharerank':shareRank(t);break;
+    case'editprof':pEdit=true;render();setTimeout(()=>$('#pf')?.scrollIntoView({block:'start',behavior:reduced?'auto':'smooth'}),60);break;
+    case'profcancel':pEdit=false;render();break;
     case'reprange':repRange=+t.dataset.v||14;SFX.soft();render();break;
     case'editw':if(RULES().allowEditWorkout===false){toast(medal('🔒',false),'Locked by your parent','Only your parent can change your workout.');break}wStartEdit(false);render();scrollTo({top:0});break;
     case'importw':if(RULES().allowEditWorkout===false){toast(medal('🔒',false),'Locked by your parent','Only your parent can change your workout.');break}tab='workout';wStartEdit(true);render();scrollTo({top:0});setTimeout(()=>$('#w-paste')?.focus(),300);break;
