@@ -15,7 +15,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Routines">
 <style>:root{padding-top:0;padding-bottom:0}html{background:#09090A}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
-<script>window.RR_STANDALONE=true;window.RR_VERSION='3feefe830e';</script>
+<script>window.RR_STANDALONE=true;window.RR_VERSION='f9ced1cb5b';</script>
 <script>window.RR_SUPABASE={url:'https://uszalonpjyssvvsikzvg.supabase.co',key:'sb_publishable_w-5rI0R9ht2-HAr5HghM0w_-3HYiAEg'};</script>
 <script src="supabase.js"></script>
 </head>
@@ -1187,6 +1187,119 @@ svg .btn1{animation:iBlink .4s steps(2) infinite}svg .btn2{animation:iBlink .4s 
 .plan-days>div.rest{opacity:.55}
 </style>
 
+<!--PEPE-INTRO--><script>/* ===== Pepe Apps intro: animated logo badge with angry shredded gorilla (orange & black). Plays once per launch, tap to skip ===== */
+(function(){
+  try{if(sessionStorage.getItem('pepe-intro'))return;sessionStorage.setItem('pepe-intro','1')}catch(e){}
+  const rm=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const css=`
+#pepeIntro{position:fixed;inset:0;z-index:2147483000;display:grid;place-items:center;background:radial-gradient(70% 55% at 50% 42%,#2a1400 0%,#0a0603 55%,#000 100%);overflow:hidden;font-family:"Big Shoulders Display","Oswald","Arial Narrow",Impact,sans-serif;transition:opacity .5s,transform .5s}
+#pepeIntro.out{opacity:0;transform:scale(1.06);pointer-events:none}
+#pepeIntro .pp-stage{position:relative;display:grid;justify-items:center;gap:6px}
+#pepeIntro .pp-glow{position:absolute;width:420px;height:420px;left:50%;top:38%;margin:-210px 0 0 -210px;border-radius:50%;background:radial-gradient(circle,rgba(255,122,0,.42),rgba(200,20,20,.12) 45%,rgba(255,122,0,0) 68%);animation:ppPulse 1.2s ease-in-out infinite}
+#pepeIntro .pp-floor{display:none;position:absolute;left:50%;top:252px;width:200px;height:26px;margin-left:-100px;border-radius:50%;background:radial-gradient(closest-side,rgba(255,122,0,.55),transparent);animation:ppShadow .6s ease-in-out infinite alternate}
+#pepeIntro svg.pp-monkey{position:relative;width:min(260px,66vw);height:auto;aspect-ratio:1;overflow:visible;animation:ppIn .8s cubic-bezier(.2,1.4,.4,1) both;filter:drop-shadow(0 0 14px rgba(255,122,0,.45))}
+#pepeIntro .pp-ring{stroke-dasharray:100;stroke-dashoffset:100;animation:ppDraw .9s .15s cubic-bezier(.6,0,.2,1) forwards}
+#pepeIntro .pp-red{opacity:0;transform-origin:120px 140px;animation:ppFade .3s .9s forwards,ppSpin 2.4s 1s linear infinite}
+#pepeIntro .pp-shine{animation:ppSweep 1.6s 1s ease-in-out infinite}
+@keyframes ppDraw{to{stroke-dashoffset:0}}
+@keyframes ppSpin{from{transform:rotate(-90deg)}to{transform:rotate(270deg)}}
+@keyframes ppSweep{0%{transform:skewX(-18deg) translateX(0)}60%,100%{transform:skewX(-18deg) translateX(380px)}}
+#pepeIntro .pp-body{transform-origin:120px 210px;animation:ppSway .6s ease-in-out infinite alternate}
+#pepeIntro .pp-head{transform-origin:120px 100px;animation:ppBob .3s ease-in-out infinite alternate}
+#pepeIntro .pp-armL{transform-origin:60px 96px;animation:ppArmL .6s ease-in-out infinite alternate}
+#pepeIntro .pp-armR{transform-origin:180px 96px;animation:ppArmR .6s ease-in-out infinite alternate}
+#pepeIntro .pp-legL{transform-origin:98px 212px;animation:ppLegL .6s ease-in-out infinite alternate}
+#pepeIntro .pp-legR{transform-origin:142px 212px;animation:ppLegR .6s ease-in-out infinite alternate}
+
+#pepeIntro .pp-anger{transform-origin:162px 50px;animation:ppAnger .3s ease-in-out infinite alternate}@keyframes ppAnger{from{transform:scale(.8);opacity:.6}to{transform:scale(1.15);opacity:1}}
+#pepeIntro .pp-note{position:absolute;font-size:26px;color:#ff8a1f;opacity:0;animation:ppNote 1.8s ease-out infinite}
+#pepeIntro .pp-word{font-weight:900;font-size:clamp(34px,11vw,58px);letter-spacing:.08em;line-height:1;color:#fff;display:flex;gap:2px;text-shadow:0 0 24px rgba(255,122,0,.55)}
+#pepeIntro .pp-word i{font-style:normal;display:inline-block;animation:ppLetter .55s cubic-bezier(.2,1.6,.4,1) both}
+#pepeIntro .pp-word i.o{color:#ff7a00}
+#pepeIntro .pp-sub{font:600 13px/1 ui-monospace,Menlo,monospace;letter-spacing:.5em;color:#ff9a3c;opacity:0;animation:ppFade .5s 1.1s forwards}
+#pepeIntro .pp-skip{position:absolute;bottom:calc(22px + env(safe-area-inset-bottom,0px));left:0;right:0;text-align:center;font:500 12px ui-monospace,Menlo,monospace;letter-spacing:.2em;color:rgba(255,255,255,.35)}
+@keyframes ppIn{from{transform:scale(.3) rotate(-160deg);opacity:0}to{transform:none;opacity:1}}
+@keyframes ppSway{0%{transform:rotate(-5deg) translate(-5px,0)}50%{transform:rotate(0) translate(0,4px)}100%{transform:rotate(5deg) translate(5px,0)}}
+@keyframes ppBob{0%{transform:rotate(-8deg) translateY(2px)}50%{transform:rotate(0) translateY(-6px)}100%{transform:rotate(8deg) translateY(2px)}}
+@keyframes ppArmL{0%{transform:rotate(0)}100%{transform:rotate(-38deg) translate(26px,-14px)}}
+@keyframes ppArmR{0%{transform:rotate(38deg) translate(-26px,-14px)}100%{transform:rotate(0)}}
+@keyframes ppLegL{from{transform:rotate(-14deg)}to{transform:rotate(18deg)}}
+@keyframes ppLegR{from{transform:rotate(-18deg)}to{transform:rotate(14deg)}}
+@keyframes ppTail{from{transform:rotate(-18deg)}to{transform:rotate(22deg)}}
+@keyframes ppBlink{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.1)}}
+@keyframes ppPulse{0%,100%{transform:scale(.92);opacity:.8}50%{transform:scale(1.05);opacity:1}}
+@keyframes ppShadow{from{transform:scaleX(.8)}to{transform:scaleX(1.1)}}
+@keyframes ppNote{0%{transform:translate(0,0) rotate(0);opacity:0}20%{opacity:1}100%{transform:translate(var(--dx),-120px) rotate(var(--r));opacity:0}}
+@keyframes ppLetter{from{transform:translateY(30px) scale(.4) rotate(-12deg);opacity:0}to{transform:none;opacity:1}}
+@keyframes ppFade{to{opacity:1}}`;
+  const st=document.createElement('style');st.textContent=css;document.head.appendChild(st);
+  const fur='url(#ppFur)',skin='url(#ppSkin)',dk='#0e0a09';
+  const monkey=`<svg class="pp-monkey" viewBox="-14 6 268 268" aria-hidden="true"><defs>
+    <clipPath id="ppClip"><circle cx="120" cy="140" r="112"/></clipPath>
+    <radialGradient id="ppDisc" cx="50%" cy="38%" r="65%"><stop offset="0" stop-color="#3a1c04"/><stop offset=".6" stop-color="#120a05"/><stop offset="1" stop-color="#050303"/></radialGradient>
+    <linearGradient id="ppShine" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".35"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+    <radialGradient id="ppFur" cx="50%" cy="25%" r="80%"><stop offset="0" stop-color="#3a2416"/><stop offset=".55" stop-color="#1a100b"/><stop offset="1" stop-color="#050303"/></radialGradient>
+    <linearGradient id="ppRim" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ff7a00"/><stop offset=".25" stop-color="#ff7a00" stop-opacity="0"/><stop offset=".75" stop-color="#ff7a00" stop-opacity="0"/><stop offset="1" stop-color="#ff7a00"/></linearGradient>
+    <radialGradient id="ppSkin" cx="50%" cy="30%" r="75%"><stop offset="0" stop-color="#6a5a54"/><stop offset=".55" stop-color="#3b302c"/><stop offset="1" stop-color="#161110"/></radialGradient>
+    <radialGradient id="ppMus" cx="40%" cy="30%" r="70%"><stop offset="0" stop-color="#7d6b63"/><stop offset=".7" stop-color="#3e322e"/><stop offset="1" stop-color="#1c1513"/></radialGradient>
+    <radialGradient id="ppIris" cx="45%" cy="40%" r="60%"><stop offset="0" stop-color="#ffb000"/><stop offset=".6" stop-color="#e2380a"/><stop offset="1" stop-color="#4a0800"/></radialGradient>
+    <filter id="ppFurTex" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="fractalNoise" baseFrequency="1.6" numOctaves="2" seed="11" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="4.5" xChannelSelector="R" yChannelSelector="G"/></filter>
+    <filter id="ppGrain"><feTurbulence type="fractalNoise" baseFrequency="2.4" numOctaves="2" seed="5"/><feColorMatrix values="0 0 0 0 1  0 0 0 0 .55  0 0 0 0 .1  0 0 0 .10 0"/><feComposite in2="SourceGraphic" operator="in"/></filter></defs>
+    <circle cx="120" cy="140" r="112" fill="#0a0604"/>
+    <g clip-path="url(#ppClip)"><g transform="translate(0 6)">
+    <g class="pp-body">
+      <g class="pp-legL"><path d="M86 196 C74 206 70 226 72 244 L98 246 C100 230 104 214 108 204Z" fill="#0a0604" stroke="#ff7a00" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><path d="M60 252 C64 242 98 240 104 250 C104 258 64 260 60 252Z" fill="#0a0604" stroke="#ff7a00" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/></g>
+      <g class="pp-legR"><path d="M154 196 C166 206 170 226 168 244 L142 246 C140 230 136 214 132 204Z" fill="#0a0604" stroke="#ff7a00" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><path d="M136 250 C142 240 176 242 180 252 C176 260 136 258 136 250Z" fill="#0a0604" stroke="#ff7a00" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/></g>
+      <path d="M44 104 C50 80 86 70 120 74 C154 70 190 80 196 104 C198 124 182 140 166 152 C160 176 150 200 120 208 C90 200 80 176 74 152 C58 140 42 124 44 104Z" fill="#0a0604" stroke="#ff7a00" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
+      
+      <path d="M82 110 C88 94 116 94 119 108 C121 126 100 134 88 128 C80 124 80 118 82 110Z" fill="#0a0604" stroke="#ff7a00" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><path d="M158 110 C152 94 124 94 121 108 C119 126 140 134 152 128 C160 124 160 118 158 110Z" fill="#0a0604" stroke="#ff7a00" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
+      <path d="M102 138 C102 134 118 134 118 138 V149 C118 153 102 153 102 149Z M122 138 C122 134 138 134 138 138 V149 C138 153 122 153 122 149Z M103 156 C103 152 118 152 118 156 V166 C118 170 103 170 103 166Z M122 156 C122 152 137 152 137 156 V166 C137 170 122 170 122 166Z M105 173 C105 170 118 170 118 173 V182 C118 186 105 186 105 182Z M122 173 C122 170 135 170 135 173 V182 C135 186 122 186 122 182Z" fill="#0a0604" stroke="#ff7a00" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
+      <path d="M88 140 l10 5 M90 152 l9 4 M152 140 l-10 5 M150 152 l-9 4" stroke="#ff7a00" stroke-width="2" stroke-linecap="round"/>
+      <g class="pp-armL">
+        <path d="M60 92 C38 96 26 118 28 142 C30 154 40 160 52 156 C64 150 70 130 72 112Z" fill="#0a0604" stroke="#ff7a00" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
+        
+        <path d="M30 148 C22 164 22 186 28 200 L52 200 C58 184 58 166 54 152Z" fill="#0a0604" stroke="#ff7a00" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
+        <path d="M22 200 C22 190 56 190 58 200 C60 214 48 220 40 220 C30 220 20 212 22 200Z" fill="#0a0604" stroke="#ff7a00" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><path d="M27 205 h26 M28 211 h24" stroke="#ff7a00" stroke-width="1.5"/></g>
+      <g class="pp-armR">
+        <path d="M180 92 C202 96 214 118 212 142 C210 154 200 160 188 156 C176 150 170 130 168 112Z" fill="#0a0604" stroke="#ff7a00" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
+        
+        <path d="M210 148 C218 164 218 186 212 200 L188 200 C182 184 182 166 186 152Z" fill="#0a0604" stroke="#ff7a00" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
+        <path d="M182 200 C184 190 218 190 218 200 C220 212 210 220 200 220 C192 220 180 214 182 200Z" fill="#0a0604" stroke="#ff7a00" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><path d="M187 205 h26 M188 211 h24" stroke="#ff7a00" stroke-width="1.5"/></g>
+      <g class="pp-head"><g transform="translate(120 70) scale(.92) translate(-120 -78)">
+        <path d="M120 30 C108 30 98 40 94 50 C84 54 82 70 84 84 C86 104 100 114 120 114 C140 114 154 104 156 84 C158 70 156 54 146 50 C142 40 132 30 120 30Z" fill="#0a0604" stroke="#ff7a00" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
+        
+        <path d="M92 70 C92 58 108 54 120 60 C132 54 148 58 148 70 C152 86 146 108 120 110 C94 108 88 86 92 70Z" fill="#0a0604" stroke="#ff7a00" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
+        <path d="M90 66 C100 58 112 60 119 68 L121 68 C128 60 140 58 150 66 C148 74 138 72 128 76 L112 76 C102 72 92 74 90 66Z" fill="#0a0604" stroke="#ff7a00" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
+        <path d="M98 78 C103 74 109 74 113 79 C109 82 102 82 98 78Z" fill="#0a0604" stroke="#ff7a00" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><path d="M127 79 C131 74 137 74 142 78 C138 82 131 82 127 79Z" fill="#0a0604" stroke="#ff7a00" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
+        <circle cx="106" cy="78.5" r="3" fill="url(#ppIris)"/><circle cx="134" cy="78.5" r="3" fill="url(#ppIris)"/><circle cx="106" cy="78.5" r="1.2" fill="#0a0604"/><circle cx="134" cy="78.5" r="1.2" fill="#0a0604"/>
+        <path d="M96 75 L114 80 M144 75 L126 80" stroke="#ff7a00" stroke-width="3" stroke-linecap="round"/>
+        <path d="M110 84 C106 90 108 96 114 96 C116 98 124 98 126 96 C132 96 134 90 130 84 C126 82 114 82 110 84Z" fill="#0a0604" stroke="#ff7a00" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
+        <ellipse cx="114.5" cy="92" rx="4" ry="2.6" fill="#ff7a00"/><ellipse cx="125.5" cy="92" rx="4" ry="2.6" fill="#ff7a00"/>
+        <path d="M100 98 C108 96 132 96 140 98 C140 112 128 116 120 116 C112 116 100 112 100 98Z" fill="#0a0604" stroke="#ff7a00" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
+        <path d="M103 98 L106 108 L109 98Z M131 98 L134 108 L137 98Z" fill="#0a0604" stroke="#ff7a00" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><path d="M110 98 h20 v3 h-20z" fill="#0a0604" stroke="#ff7a00" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><path d="M106 112 L108 106 L110 112Z M130 112 L132 106 L134 112Z" fill="#0a0604" stroke="#ff7a00" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
+        <path d="M100 98 C108 96 132 96 140 98" fill="none" stroke="#ff7a00" stroke-width="1.6"/>
+        <path d="M94 96 C92 102 94 108 98 112 M146 96 C148 102 146 108 142 112 M112 66 C116 62 124 62 128 66" fill="none" stroke="#ff7a00" stroke-width="1.3"/>
+        </g><g class="pp-anger"><path d="M152 40 l8 -8 M156 46 l11 -3 M149 34 l2 -11" stroke="#e01b1b" stroke-width="3.4" stroke-linecap="round"/></g>
+      </g>
+    </g></g>
+    <rect class="pp-shine" x="-60" y="20" width="60" height="260" fill="url(#ppShine)" transform="skewX(-18)"/></g>
+    <circle class="pp-ring2" cx="120" cy="140" r="118" fill="none" stroke="#3a3a3e" stroke-width="3"/>
+    <circle class="pp-ring" cx="120" cy="140" r="126" fill="none" stroke="#ff7a00" stroke-width="8" stroke-linecap="round" pathLength="100" transform="rotate(-90 120 140)"/>
+    <circle class="pp-red" cx="120" cy="140" r="126" fill="none" stroke="#e01b1b" stroke-width="8" stroke-linecap="round" pathLength="100" stroke-dasharray="6 94" transform="rotate(-90 120 140)"/>
+    </svg>`;
+  const word=t=>[...t].map((c,i)=>c===' '?'<i style="width:14px"> </i>':`<i class="${'PEPE'.includes(c)&&i<4?'o':''}" style="animation-delay:${.35+i*.06}s">${c}</i>`).join('');
+  const el=document.createElement('div');el.id='pepeIntro';el.setAttribute('role','img');el.setAttribute('aria-label','Pepe Apps');
+  el.innerHTML=`<div class="pp-glow"></div><div class="pp-stage"><div class="pp-floor"></div>${monkey}
+    ${[0,1,2,3].map(i=>`<span class="pp-note" style="left:${[30,190,10,210][i]}px;top:${[60,40,130,120][i]}px;--dx:${[-30,30,-20,24][i]}px;--r:${[-30,25,-15,40][i]}deg;animation-delay:${i*.45}s">${['♪','♫','♪','♬'][i]}</span>`).join('')}
+    <div class="pp-word">${word('PEPE APPS')}</div><div class="pp-sub">PRESENTS</div></div><div class="pp-skip">TAP TO SKIP</div>`;
+  const add=()=>{document.body.appendChild(el);try{beat()}catch(e){}};
+  if(document.body)add();else document.addEventListener('DOMContentLoaded',add);
+  function beat(){try{const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;const ac=new AC();if(ac.state==='suspended')return;const g=ac.createGain();g.gain.value=.12;g.connect(ac.destination);
+    [0,.3,.6,.9,1.2,1.5].forEach((t,i)=>{const o=ac.createOscillator(),e=ac.createGain();o.type=i%2?'triangle':'sine';o.frequency.value=i%2?660:110;e.gain.setValueAtTime(0,ac.currentTime+t);e.gain.linearRampToValueAtTime(1,ac.currentTime+t+.01);e.gain.exponentialRampToValueAtTime(.001,ac.currentTime+t+.25);o.connect(e);e.connect(g);o.start(ac.currentTime+t);o.stop(ac.currentTime+t+.3)})}catch(e){}}
+  let done=false;const close=()=>{if(done)return;done=true;el.classList.add('out');setTimeout(()=>el.remove(),520)};
+  el.addEventListener('click',close);setTimeout(close,rm?900:3200);
+})();
+</script><!--/PEPE-INTRO-->
 <header class="board">
   <div class="wrap">
     <div class="brand">
