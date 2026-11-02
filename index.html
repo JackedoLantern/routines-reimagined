@@ -15,7 +15,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Routines">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
-<script>window.RR_STANDALONE=true;window.RR_VERSION='02f99fb42c';</script>
+<script>window.RR_STANDALONE=true;window.RR_VERSION='877007df45';</script>
 <script>window.RR_SUPABASE={url:'https://uszalonpjyssvvsikzvg.supabase.co',key:'sb_publishable_w-5rI0R9ht2-HAr5HghM0w_-3HYiAEg'};</script>
 <script src="supabase.js"></script>
 </head>
@@ -105,7 +105,7 @@ h1,h2,h3{text-wrap:balance;margin:0}
 @keyframes flick{0%,100%{transform:scale(1,1)}50%{transform:scale(.94,1.06)}}
 
 /* ---------- Tabs ---------- */
-.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.tabs{position:fixed;left:0;right:0;bottom:0;top:auto;z-index:40;background:color-mix(in srgb,var(--bg) 90%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px);transition:transform .35s cubic-bezier(.2,.8,.2,1)}
 .tabs .wrap{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding-block:8px}
 .tab{border:0;background:transparent;padding:10px 4px;border-radius:10px;font-weight:600;font-size:14px;color:var(--muted);transition:background .2s,color .2s}
 .tab:hover{color:var(--ink)}
@@ -571,6 +571,84 @@ svg.moose.lb-ico{display:inline-block;width:16px;height:16px;vertical-align:-3px
 .rep-dots{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}.rep-dots i{width:22px;height:22px;border-radius:7px;background:var(--surface-2);border:1px solid var(--line)}.rep-dots i.on{background:var(--gold);border-color:var(--gold);box-shadow:0 0 8px var(--gold-glow)}.rep-dots i.today{outline:2px solid var(--lvl);outline-offset:1px}
 .rep-ex{display:grid;gap:6px;margin-top:8px}.rep-ex div{display:flex;justify-content:space-between;padding:8px 10px;border-radius:10px;background:var(--surface-2)}.rep-ex b{color:var(--gold)}
 .fg-b .xpv{font-size:11px;margin-left:4px}
+.tabs .wrap{padding-block:6px!important}
+.tab{display:flex!important;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-width:64px!important;padding:6px 8px!important;font-size:11px!important;border-radius:14px!important}
+.tab svg{width:23px;height:23px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;transition:transform .25s cubic-bezier(.2,1.4,.4,1)}
+.tab[aria-selected="true"]{color:var(--ink)!important;background:var(--surface-2)!important}.tab[aria-selected="true"] svg{transform:translateY(-1px) scale(1.08);stroke:var(--lvl)}
+.tab.add svg{stroke:var(--muted)}
+body{padding-bottom:calc(78px + env(safe-area-inset-bottom,0px))}
+body.editing{padding-bottom:20px}
+body.editing .tabs{transform:translateY(110%)}
+.composer{bottom:calc(86px + env(safe-area-inset-bottom,0px))!important}
+.toast{bottom:calc(92px + env(safe-area-inset-bottom,0px))!important}
+body.editing .toast{bottom:calc(20px + env(safe-area-inset-bottom,0px))!important}
+#view{touch-action:pan-y;will-change:auto}
+.share-card{display:flex;align-items:center;gap:14px}.share-card>div:nth-child(2){flex:1}.share-ico{width:52px;height:52px;flex:none}.share-ico svg{width:100%;height:100%}
+@media(max-width:420px){.share-card{flex-wrap:wrap}.share-card .btn{width:100%}}
+.ob{position:fixed;inset:0;z-index:120;background:radial-gradient(600px 400px at 50% 0%,var(--lvl-soft),transparent 70%),var(--bg);display:grid;place-items:center;padding:20px 16px calc(20px + env(safe-area-inset-bottom,0px));overflow-y:auto;animation:obIn .35s ease-out}
+.ob.out{opacity:0;transform:scale(1.02);transition:opacity .3s,transform .3s}
+@keyframes obIn{from{opacity:0}to{opacity:1}}
+.ob-card{width:min(460px,100%);display:grid;gap:12px;animation:obCard .4s cubic-bezier(.16,1,.3,1)}
+@keyframes obCard{from{opacity:0;transform:translate3d(24px,0,0)}to{opacity:1;transform:none}}
+.ob-prog{height:6px;border-radius:6px;background:var(--surface-2);overflow:hidden}.ob-prog i{display:block;height:100%;background:linear-gradient(90deg,var(--lvl),var(--gold));transition:width .4s}
+.ob-step{font:12px var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--lvl)}
+.ob-opts{display:grid;gap:8px;margin-top:6px}
+.ob-opt{text-align:left;padding:15px 16px;border-radius:14px;border:1px solid var(--line-2);background:var(--surface);color:var(--ink);font:600 16px var(--f-body);cursor:pointer;transition:background .15s,border-color .15s,transform .1s}
+.ob-opt:hover{border-color:var(--lvl)}.ob-opt:active{transform:scale(.98)}.ob-opt.on{background:var(--lvl-soft);border-color:var(--lvl);color:var(--ink)}
+.ob-num{display:flex;gap:8px;margin-top:6px}.ob-num .inp{flex:1;font-size:20px;padding:14px}
+.ob-nav{display:flex;justify-content:flex-start;min-height:40px;align-items:center}
+.ob-top{display:flex;justify-content:center}
+.ob-sum{list-style:none;margin:4px 0;padding:0;display:grid;gap:6px}.ob-sum li{display:flex;justify-content:space-between;gap:10px;padding:10px 12px;border-radius:12px;background:var(--surface)}.ob-sum span{color:var(--muted)}
+.ob-go{padding:15px;font-size:16px}
+.badges .badge{cursor:pointer;transition:transform .15s}.badges .badge:active{transform:scale(.93)}
+svg.bdg{width:56px;height:56px;display:block;margin:0 auto;filter:drop-shadow(0 4px 8px rgba(0,0,0,.5))}svg.bdg.off{filter:grayscale(1);opacity:.7}
+.badge:not(.off) svg.bdg{animation:breathe 2.8s ease-in-out infinite,bdgShine 4s ease-in-out infinite}@keyframes bdgShine{0%,85%,100%{filter:drop-shadow(0 4px 8px rgba(0,0,0,.5))}92%{filter:drop-shadow(0 0 10px rgba(255,230,150,.7))}}
+svg.bdg.toast-bdg{width:40px;height:40px}
+.ach .ach-ov{text-align:center}
+.ach-stage{position:relative;width:200px;height:200px;margin:8px auto 6px;display:grid;place-items:center}
+.ach-stage .rays{z-index:0}
+svg.bdg.ach-badge{position:relative;z-index:2;width:150px;height:150px;animation:achIn 1s cubic-bezier(.2,1.5,.35,1) both;filter:drop-shadow(0 0 30px rgba(255,210,120,.45))}
+@keyframes achIn{0%{transform:perspective(600px) rotateY(-540deg) scale(.2);opacity:0}60%{opacity:1}100%{transform:perspective(600px) rotateY(0) scale(1)}}
+.ach-ring{position:absolute;inset:18px;border-radius:50%;border:3px solid var(--gold);opacity:0;animation:achRing 1.2s .5s ease-out both;z-index:1}
+@keyframes achRing{0%{transform:scale(.4);opacity:.9}100%{transform:scale(1.5);opacity:0}}
+.ach-spark{position:absolute;left:50%;top:50%;width:8px;height:8px;margin:-4px;border-radius:50%;background:var(--gold);box-shadow:0 0 10px var(--gold-glow);z-index:3;opacity:0;animation:achSpark .9s calc(.55s + var(--d)) cubic-bezier(.2,.8,.2,1) both}
+@keyframes achSpark{0%{transform:rotate(var(--a)) translateY(0) scale(.4);opacity:1}100%{transform:rotate(var(--a)) translateY(-118px) scale(1);opacity:0}}
+.ach-tier{display:inline-block;margin:4px auto 0;padding:3px 12px;border-radius:999px;font:700 11px var(--f-mono);letter-spacing:.14em;text-transform:uppercase;background:var(--surface-2)}
+.tier-bronze{color:#F0A868}.tier-silver{color:#E3E7EE}.tier-gold{color:#FFD24D}.tier-diamond{color:#7FD8FF}.tier-legend{color:#FF5CA8}
+.rk-wrap.locked svg{filter:grayscale(1) brightness(.45)}
+.lvl[data-act]{cursor:pointer}.lvl:active .lvl-ico svg{transform:scale(.9)}
+.ladder .rung{cursor:pointer;transition:transform .15s}.ladder .rung:active{transform:scale(.95)}
+@media (prefers-reduced-motion:reduce){svg.bdg.ach-badge,.ach-ring,.ach-spark,.badge:not(.off) svg.bdg{animation:none;opacity:1}}
+.cheat-pop{position:fixed;left:50%;top:calc(14px + env(safe-area-inset-top,0px));z-index:95;width:min(440px,calc(100vw - 24px));display:grid;grid-template-columns:auto 1fr;gap:10px 12px;padding:14px;border-radius:18px;background:linear-gradient(180deg,#2a1c10,#1a1410);border:1px solid #6b4a12;box-shadow:0 18px 50px rgba(0,0,0,.6);transform:translate(-50%,-150%);transition:transform .5s cubic-bezier(.2,1.3,.3,1)}
+.cheat-pop.in{transform:translate(-50%,0)}.cheat-pop .cp-txt b{color:var(--gold);font-size:16px}.cheat-pop .cp-txt p{margin:4px 0 0;font-size:14px;line-height:1.45;color:var(--ink)}.cheat-pop small{display:block;margin-top:6px;color:var(--muted)}
+.cheat-pop .btn{grid-column:1/-1;justify-self:end}
+.upd-ico{display:flex;justify-content:center;margin:6px 0}.upd-list{text-align:left;margin:8px 0 12px;padding-left:20px;display:grid;gap:6px;font-size:14.5px;line-height:1.45;max-height:46vh;overflow:auto}
+.upd-ov .ov{max-width:440px}
+/* looping idle animations: small, satisfying, never distracting */
+@keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+@keyframes wiggle{0%,86%,100%{transform:rotate(0)}89%{transform:rotate(-7deg)}93%{transform:rotate(6deg)}96%{transform:rotate(-3deg)}}
+@keyframes glowPulse{0%,100%{box-shadow:0 0 0 0 var(--rk,var(--lvl-glow))}50%{box-shadow:0 0 18px 2px var(--rk,var(--lvl-glow))}}
+@keyframes shimmerTxt{0%,100%{filter:brightness(1)}50%{filter:brightness(1.25)}}
+@keyframes flicker{0%,100%{transform:scale(1) rotate(0)}25%{transform:scale(1.06,.96) rotate(-2deg)}50%{transform:scale(.97,1.05) rotate(1deg)}75%{transform:scale(1.04,.98) rotate(2deg)}}
+.lvl-ico svg{animation:rankPop .6s cubic-bezier(.2,1.4,.4,1) both,breathe 3s 1s ease-in-out infinite!important}
+.badges .badge:nth-child(3n+2) svg.bdg{animation-delay:.6s,1.2s}.badges .badge:nth-child(3n) svg.bdg{animation-delay:1.2s,2.4s}
+.ladder .rung.me{animation:glowPulse 2.6s ease-in-out infinite}.ladder .rung.me svg{animation:breathe 2.6s ease-in-out infinite}
+.ladder .rung svg.rung-ico{transition:transform .2s}.ladder .rung:hover svg.rung-ico{transform:scale(1.12) rotate(-4deg)}
+.share-ico svg,.rep-rank svg{animation:breathe 3s ease-in-out infinite}
+.streak:not(.cold) .fl{animation:flicker 1.6s ease-in-out infinite;transform-origin:50% 90%}
+#lvlRank{animation:shimmerTxt 3s ease-in-out infinite}
+.ring.full{animation:breathe 2.4s ease-in-out infinite}
+.ex.done .chk,.task.done .chk{animation:breathe 2.8s ease-in-out infinite}
+.task.done:nth-child(2n) .chk,.ex.done:nth-child(2n) .chk{animation-delay:.7s}
+.fg-b.on{animation:breathe 3.2s ease-in-out infinite}
+.chip.sk,.tag{animation:shimmerTxt 3.4s ease-in-out infinite}
+.sk-av svg,.ob-top svg,.upd-ico svg{animation:bob 2.6s ease-in-out infinite}
+.tab[aria-selected="true"] svg{animation:bob 2.4s ease-in-out infinite}
+.lnk-chip{animation:wiggle 5s ease-in-out infinite}
+.xpv.dose{display:inline-block;animation:breathe 2.6s ease-in-out infinite}
+.dsb.today:not(.on){animation:glowPulse 3s ease-in-out infinite;--rk:var(--lvl-glow)}
+@media (prefers-reduced-motion:reduce){.lvl-ico svg,.badges svg.bdg,.ladder .rung.me,.ladder .rung.me svg,.share-ico svg,.rep-rank svg,.streak .fl,#lvlRank,.ring.full,.ex.done .chk,.task.done .chk,.fg-b.on,.chip.sk,.tag,.sk-av svg,.ob-top svg,.upd-ico svg,.tab svg,.lnk-chip,.xpv.dose,.dsb.today{animation:none!important}}
 .lnk-chip{display:inline-flex;align-items:center;gap:2px;margin-left:6px;padding:2px 8px;border-radius:999px;border:1px solid var(--lvl-soft);background:var(--lvl-soft);color:var(--lvl);font:600 11px/1.5 var(--f-body);cursor:pointer;vertical-align:middle;white-space:nowrap}
 .lnk-chip:active{transform:scale(.95)}
 .lnk-row{grid-column:1/-1;display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);margin:-2px 0 6px}
@@ -1011,7 +1089,7 @@ svg .btn1{animation:iBlink .4s steps(2) infinite}svg .btn2{animation:iBlink .4s 
       <div class="hdr-r"><div class="date" id="dateLbl"></div><button class="snd" id="sndBtn" data-act="sound" aria-label="Sound effects" aria-pressed="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="spk" d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path class="w" d="M15.5 9a4.2 4.2 0 0 1 0 6M18 6.5a8 8 0 0 1 0 11"/><path class="x" d="M16 9.5l5 5M21 9.5l-5 5"/></svg></button></div>
     </div>
     <div class="score">
-      <div class="lvl" id="lvlBox">
+      <div class="lvl" id="lvlBox" data-act="rankreplay" role="button" tabindex="0" title="Tap to replay your rank">
         <svg viewBox="0 0 82 82"><circle class="trk" cx="41" cy="41" r="38"/><circle class="bar" id="lvlArc" cx="41" cy="41" r="38" stroke-dasharray="238.8" stroke-dashoffset="238.8"/></svg>
         <span class="lvl-ico" id="lvlIco"></span><small id="lvlRank">Wood</small><span id="lvlNum" hidden>1</span>
       </div>
@@ -1111,18 +1189,76 @@ const EQUIP={none:'No equipment',db:'Dumbbells',gym:'Full gym'};
 const TITLES=[[1,'Wood'],[2,'Bronze'],[3,'Silver'],[4,'Gold'],[5,'Platinum'],[6,'Diamond'],[7,'Vibranium']],LEGEND_XP=2500;
 const RANKCOL={Wood:'#B07A4A',Bronze:'#CD7F32',Silver:'#C9CED6',Gold:'#FFC53D',Platinum:'#9FE3E0',Diamond:'#6FD3FF',Vibranium:'#A98BFF',Legend:'#FF5CA8'};
 const MISS_XP=5,MISS_CAP=50;
+/* ================= Achievements: tiers, unlock animation, replays ================= */
+const TIER={bronze:['#F0A868','#A8622B','#3D200A'],silver:['#F4F6FA','#A9B0BC','#3B4048'],gold:['#FFE27A','#E9A21C','#5A3800'],diamond:['#D9F6FF','#4CC3F5','#0B3F66'],legend:['#FFC1E0','#FF5CA8','#4A0D2B']};
+const stat=k=>(S.stats&&S.stats[k])||0;
+function bumpStat(k,n){S.stats=S.stats||{};S.stats[k]=Math.max(0,(S.stats[k]||0)+(n==null?1:n))}
+const kmTotal=()=>Object.values(S.distLog||{}).reduce((a,b)=>a+b,0);
+const movesTotal=()=>Object.values(S.exLog||{}).reduce((a,b)=>a+b,0);
 const BADGES=[
- {id:'first',n:'First rep',d:'Finish a full routine',g:'1',ok:s=>s.total>=1},
- {id:'s3',n:'Warm streak',d:'3-day streak',g:'3',ok:s=>s.best>=3},
- {id:'s7',n:'On fire',d:'7-day streak',g:'7',ok:s=>s.best>=7},
- {id:'s30',n:'Unbreakable',d:'30-day streak',g:'30',ok:s=>s.best>=30},
- {id:'w10',n:'Ten down',d:'10 routines done',g:'10',ok:s=>s.total>=10},
- {id:'w50',n:'Half century',d:'50 routines done',g:'50',ok:s=>s.total>=50},
- {id:'l5',n:'Grinder',d:'Reach level 5',g:'L5',ok:s=>lvl(s.xp)>=5},
- {id:'l10',n:'Double digits',d:'Reach level 10',g:'L10',ok:s=>lvl(s.xp)>=10},
- {id:'early',n:'Early bird',d:'Finish before 8 am',g:'AM',ok:s=>!!s.flags.early},
- {id:'comeback',n:'Comeback',d:'Train after a level drop',g:'↑',ok:s=>!!s.flags.comeback},
+ {id:'first',n:'First rep',d:'Finish your first workout',g:'1',t:'bronze',sh:'hex',ok:s=>s.total>=1},
+ {id:'w10',n:'Ten down',d:'Finish 10 workouts',g:'10',t:'silver',sh:'hex',ok:s=>s.total>=10},
+ {id:'w25',n:'Quarter pounder',d:'Finish 25 workouts',g:'25',t:'gold',sh:'hex',ok:s=>s.total>=25},
+ {id:'w50',n:'Half century',d:'Finish 50 workouts',g:'50',t:'diamond',sh:'hex',ok:s=>s.total>=50},
+ {id:'w100',n:'Centurion',d:'Finish 100 workouts',g:'100',t:'legend',sh:'hex',ok:s=>s.total>=100},
+ {id:'s3',n:'Warm streak',d:'Reach a 3-day streak',g:'3',t:'bronze',sh:'flame',ok:s=>s.best>=3},
+ {id:'s7',n:'On fire',d:'Reach a 7-day streak',g:'7',t:'silver',sh:'flame',ok:s=>s.best>=7},
+ {id:'s14',n:'Two weeks strong',d:'Reach a 14-day streak',g:'14',t:'gold',sh:'flame',ok:s=>s.best>=14},
+ {id:'s30',n:'Unbreakable',d:'Reach a 30-day streak',g:'30',t:'diamond',sh:'flame',ok:s=>s.best>=30},
+ {id:'s100',n:'Living legend',d:'Reach a 100-day streak',g:'100',t:'legend',sh:'flame',ok:s=>s.best>=100},
+ {id:'r_bronze',n:'Bronze rank',d:'Reach Bronze (level 2)',g:'B',t:'bronze',sh:'shield',ok:s=>lvl(s.xp)>=2},
+ {id:'r_silver',n:'Silver rank',d:'Reach Silver (level 3)',g:'S',t:'silver',sh:'shield',ok:s=>lvl(s.xp)>=3},
+ {id:'r_gold',n:'Gold rank',d:'Reach Gold (level 4)',g:'G',t:'gold',sh:'shield',ok:s=>lvl(s.xp)>=4},
+ {id:'l5',n:'Platinum rank',d:'Reach Platinum (level 5)',g:'P',t:'gold',sh:'shield',ok:s=>lvl(s.xp)>=5},
+ {id:'r_diamond',n:'Diamond rank',d:'Reach Diamond (level 6)',g:'D',t:'diamond',sh:'shield',ok:s=>lvl(s.xp)>=6},
+ {id:'r_vib',n:'Vibranium rank',d:'Reach Vibranium (level 7)',g:'V',t:'diamond',sh:'shield',ok:s=>lvl(s.xp)>=7},
+ {id:'r_legend',n:'Legend',d:`Reach ${LEGEND_XP.toLocaleString()} XP`,g:'★',t:'legend',sh:'star',ok:s=>(s.xp||0)>=LEGEND_XP},
+ {id:'l10',n:'Double digits',d:'Reach level 10',g:'L10',t:'legend',sh:'star',ok:s=>lvl(s.xp)>=10},
+ {id:'t10',n:'Getting it done',d:'Check off 10 schedule tasks',g:'✓',t:'bronze',sh:'circle',ok:()=>stat('tasks')>=10},
+ {id:'t50',n:'Task master',d:'Check off 50 schedule tasks',g:'✓✓',t:'silver',sh:'circle',ok:()=>stat('tasks')>=50},
+ {id:'t200',n:'Machine',d:'Check off 200 schedule tasks',g:'200',t:'gold',sh:'circle',ok:()=>stat('tasks')>=200},
+ {id:'perfect',n:'Perfect day',d:'Finish every task and the workout in one day',g:'☀',t:'gold',sh:'star',ok:()=>stat('perfect')>=1},
+ {id:'perfect7',n:'Perfect week',d:'Have 7 perfect days',g:'7☀',t:'diamond',sh:'star',ok:()=>stat('perfect')>=7},
+ {id:'water1',n:'Hydrated',d:'Drink 8 glasses in one day',g:'💧',t:'bronze',sh:'drop',ok:()=>stat('waterDays')>=1},
+ {id:'water7',n:'Water week',d:'Hit your water goal on 7 days',g:'7💧',t:'silver',sh:'drop',ok:()=>stat('waterDays')>=7},
+ {id:'water30',n:'Fish mode',d:'Hit your water goal on 30 days',g:'30💧',t:'gold',sh:'drop',ok:()=>stat('waterDays')>=30},
+ {id:'plate1',n:'Balanced plate',d:'Eat every food group in one day',g:'🥗',t:'bronze',sh:'circle',ok:()=>stat('plates')>=1},
+ {id:'plate10',n:'Clean eater',d:'Eat every food group on 10 days',g:'10🥗',t:'gold',sh:'circle',ok:()=>stat('plates')>=10},
+ {id:'km5',n:'First 5K',d:'Run or walk 5 km in total',g:'5K',t:'bronze',sh:'hex',ok:()=>kmTotal()>=5},
+ {id:'km25',n:'Road runner',d:'Cover 25 km in total',g:'25K',t:'silver',sh:'hex',ok:()=>kmTotal()>=25},
+ {id:'km100',n:'Ultra',d:'Cover 100 km in total',g:'100K',t:'gold',sh:'hex',ok:()=>kmTotal()>=100},
+ {id:'m100',n:'Hundred moves',d:'Finish 100 exercises',g:'💪',t:'bronze',sh:'shield',ok:()=>movesTotal()>=100},
+ {id:'m500',n:'Iron will',d:'Finish 500 exercises',g:'500',t:'gold',sh:'shield',ok:()=>movesTotal()>=500},
+ {id:'early',n:'Early bird',d:'Finish a workout before 8 am',g:'AM',t:'silver',sh:'circle',ok:s=>!!s.flags.early},
+ {id:'night',n:'Night owl',d:'Finish a workout after 9 pm',g:'PM',t:'silver',sh:'circle',ok:s=>!!s.flags.night},
+ {id:'weekend',n:'Weekend warrior',d:'Work out on a Saturday and the Sunday after',g:'S+S',t:'silver',sh:'hex',ok:s=>!!s.flags.weekend},
+ {id:'comeback',n:'Comeback',d:'Train again after a level drop',g:'↑',t:'gold',sh:'flame',ok:s=>!!s.flags.comeback},
+ {id:'tabmaker',n:'Builder',d:'Make your own tab',g:'+',t:'bronze',sh:'circle',ok:s=>(s.tabs||[]).length>=1},
+ {id:'chat20',n:'Skeefo’s friend',d:'Send Skeefo 20 messages',g:'💬',t:'bronze',sh:'circle',ok:()=>stat('chats')>=20},
+ {id:'program',n:'Program finisher',d:'Finish a multi-week plan',g:'🏁',t:'diamond',sh:'star',ok:s=>!!s.flags.program},
 ];
+function badgeShape(sh){return sh==='shield'?'M32 4 L56 12 V32 C56 47 45 56 32 61 C19 56 8 47 8 32 V12 Z':sh==='star'?'M32 3 l8.6 17.5 19.3 2.8-14 13.6 3.3 19.2L32 47l-17.2 9.1 3.3-19.2-14-13.6 19.3-2.8z':sh==='circle'?'M32 4a28 28 0 1 0 .1 0z':sh==='drop'?'M32 4 C42 18 54 30 54 41 a22 22 0 0 1-44 0 C10 30 22 18 32 4z':sh==='flame'?'M32 3 C36 14 52 20 52 38 a20 20 0 0 1-40 0 c0-8 5-13 8-16 0 6 3 9 6 9-3-9 0-18 6-28z':'M32 3 L57 17.5 V46.5 L32 61 L7 46.5 V17.5 Z'}
+let bdgN=0;
+function badgeSVG(b,on,cls){const [hi,mid,lo]=TIER[b.t||'bronze'],p='bd'+(++bdgN),d=badgeShape(b.sh),gl=String(b.g),fs=gl.length>3?13:gl.length>2?16:gl.length>1?20:24;
+  return`<svg class="bdg ${on?'':'off'} ${cls||''}" viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="${p}g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${on?hi:'#3a3a40'}"/><stop offset=".55" stop-color="${on?mid:'#26262b'}"/><stop offset="1" stop-color="${on?lo:'#141417'}"/></linearGradient></defs>
+    <path d="${d}" fill="url(#${p}g)" stroke="${on?lo:'#2e2e33'}" stroke-width="1.5"/><path d="${d}" fill="none" stroke="#fff" stroke-opacity="${on?.35:.05}" stroke-width="1" transform="translate(32 32) scale(.82) translate(-32 -32)"/>
+    <text x="32" y="${b.sh==='drop'||b.sh==='flame'?42:38}" text-anchor="middle" font-family="Big Shoulders Display,Oswald,Impact,sans-serif" font-weight="900" font-size="${fs}" fill="${on?'#fff':'#55555c'}" ${on?`stroke="${lo}" stroke-width=".6"`:''}>${esc(gl)}</text>${on?'<path d="M14 14 L22 10 L18 20Z" fill="#fff" opacity=".35"/>':''}</svg>`}
+/* big celebratory unlock animation (queued so several play one after another) */
+let achQ=Promise.resolve();
+function achievementShow(b,replay){achQ=achQ.then(()=>new Promise(res=>{
+  const o=document.createElement('div');o.className='overlay ach';const tierName={bronze:'Bronze',silver:'Silver',gold:'Gold',diamond:'Diamond',legend:'Legendary'}[b.t]||'';
+  o.innerHTML=`<div class="ov ach-ov"><div class="eyebrow">${replay?'Replay':'Achievement unlocked!'}</div><div class="ach-stage"><span class="rays"></span><span class="ach-ring"></span>${badgeSVG(b,true,'ach-badge')}${Array.from({length:14},(_,i)=>`<i class="ach-spark" style="--a:${i*360/14}deg;--d:${.15+(i%5)*.06}s"></i>`).join('')}</div>
+    <div class="ach-tier tier-${b.t}">${tierName} badge</div><h2>${esc(b.n)}</h2><p>${esc(b.d)}</p>${S.badges[b.id]&&!replay?'':S.badges[b.id]?`<p class="note">Earned ${new Date(S.badges[b.id]).toLocaleDateString()}</p>`:''}<button class="btn primary">Nice!</button></div>`;
+  document.body.appendChild(o);o.animate([{opacity:0},{opacity:1}],{duration:220});SFX.badge();setTimeout(()=>{try{SFX.bonus()}catch(e){}},420);buzz([20,40,20,40,90]);if(!reduced)confetti(b.t==='legend'?1.6:b.t==='diamond'?1.2:.8);
+  const close=()=>{const a=o.animate([{opacity:1},{opacity:0}],{duration:180});a.onfinish=()=>{o.remove();res()}};
+  o.querySelector('button').onclick=close;o.querySelector('button').focus();o.addEventListener('click',e=>{if(e.target===o)close()});setTimeout(()=>o.isConnected&&!replay&&close(),7000)}))}
+function badgeLocked(b){toast(badgeSVG(b,false,'toast-bdg'),b.n+' · locked',b.d)}
+/* replay a rank reveal */
+function rankReplay(rk){const L=lvl(S.xp),mine=titleFor(L,S.xp),order=['Wood','Bronze','Silver','Gold','Platinum','Diamond','Vibranium','Legend'],got=order.indexOf(rk)<=order.indexOf(mine);
+  if(rk==='Legend'&&got)return legendUp();
+  overlay('lvlup',`<div class="eyebrow">${got?(rk===mine?'Your rank':'Rank you’ve passed'):'Locked rank'}</div><div class="moose-wrap rk-wrap ${got?'':'locked'}"><span class="rays"></span>${rankSVG(rk,'big')}</div><h2 style="color:${got?RANKCOL[rk]:'var(--muted)'}">${esc(rk)}</h2><p>${got?(rk===mine?`${S.xp.toLocaleString()} XP · level ${L}`:'You’ve already beaten this rank.'):rk==='Legend'?`Reach ${LEGEND_XP.toLocaleString()} XP to unlock.`:`Reach level ${order.indexOf(rk)+1} to unlock.`}</p>`);
+  if(got){SFX.levelUp();if(!reduced)confetti(.7)}else SFX.soft()}
+
 const XP_MAIN=3, XP_SIDE=1, BONUS=60;
 const HOW={
 pushup:['Start in a high plank: hands just wider than your shoulders, body straight from head to heels.','Bend your elbows at about 45° to your body and lower your chest until it is just above the floor.','Push the floor away to straighten your arms. Breathe in on the way down, out on the way up.','Too hard? Put your knees on the floor and keep your hips in line.'],
@@ -1229,7 +1365,7 @@ function defaultSchedule(){return{example:true,locked:false,by:'me',sections:[
   {id:'s1',name:'Morning',tasks:[{id:'t1',title:'Make your bed',time:'',min:5},{id:'t2',title:'Breakfast',time:'',min:20},{id:'t3',title:'Brush teeth and get ready',time:'',min:15}]},
   {id:'s2',name:'After school',tasks:[{id:'t4',title:'Homework',time:'',min:45},{id:'t5',title:'Drink a full bottle of water',time:'',min:2}]},
   {id:'s3',name:'Evening',tasks:[{id:'workout',kind:'workout',title:'Daily workout',time:'',min:30},{id:'t6',title:'Read',time:'',min:20},{id:'t7',title:'Screens off, lights out',time:'',min:5}]}]}}
-function fresh(){return{v:2,saved:0,profile:{name:'',age:28,goal:'muscle',level:'beginner',equip:'none',minutes:30,set:false},
+function fresh(){return{v:2,saved:0,joined:todayKey(),profile:{name:'',age:28,goal:'muscle',level:'beginner',equip:'none',minutes:30,set:false},
   xp:0,streak:0,best:0,last:null,total:0,history:{},today:null,decay:{applied:0},badges:{},flags:{},
   schedule:defaultSchedule(),dayLog:{},chat:[],aiPlan:null}}
 let S=fresh();
@@ -1314,7 +1450,7 @@ function schedInterviewFinish(a){
 /* ================= Family groups, restrictions, cheat alerts, reminders ================= */
 let GROUP=undefined,KIDS={},CTLS={},MYCTL=undefined,SEL=null,openR=null;
 try{SEL=localStorage.getItem('rr-sel')}catch(e){}
-const DEF_RULES={lockSchedule:false,maxMinutes:0,noHard:false,noImpact:false,skeefo:'full',hideBoard:false,cheatAlerts:true,remindWorkout:''};
+const DEF_RULES={lockSchedule:false,maxMinutes:0,noHard:false,noImpact:false,skeefo:'full',hideBoard:false,cheatAlerts:true,remindWorkout:'',allowDiet:true,allowTabs:true,allowEditWorkout:true,allowShare:true,lockName:false,lockProfile:false,notif:'kid'};
 const inFamily=()=>!!(MYCTL&&MYCTL.member);
 const RULES=()=>R0()==='parent'?{...DEF_RULES,...((CTLS[SEL]||{}).rules||{})}:(inFamily()?{...DEF_RULES,...(MYCTL.rules||{})}:DEF_RULES);
 const members=()=>GROUP&&Array.isArray(GROUP.kids)?GROUP.kids:[];
@@ -1333,14 +1469,30 @@ async function setGroup(g){if(CLOUD())return sbSetGroup(g);GROUP=g;try{await DB.
 function safeRender(tabs){if(draft)return;const a=document.activeElement;if(a&&/INPUT|TEXTAREA|SELECT/.test(a.tagName)&&a.value)return;if(!tabs||tabs.includes(tab))render()}
 
 /* cheat detection */
+const CHEAT_MSG={
+  rapid:['Whoa, speedy fingers! ⚡','That was a LOT of check marks in a few seconds. Only check things off once you’ve really done them. That’s how you actually get stronger.'],
+  bulk:['Hold up! 🤔','Lots of tasks got checked off at once. Doing them for real is what makes the XP mean something. You’ve got this!'],
+  fast_workout:['That was a super quick workout 👀','If you skipped some moves, go back and give them a real try. Even an easier version counts, and you’ll feel the difference.'],
+  fast_task:['That was fast!','Take your time on each task. Doing it properly is the whole point.'],
+  water:['Lots of water at once 💧','Log your glasses as you drink them through the day. Sipping steadily is better for you anyway!'],
+  meals:['Easy there 🍽️','Log meals when you actually eat them so your Diet tab stays honest.']};
+const CHEAT_CHEER=['Real reps build real strength.','Honest progress is the only kind that sticks.','Legends don’t take shortcuts. 🫎','Your future self is counting on the real thing.','Slow and real beats fast and fake.'];
 function flag(type,msg){
-  if(R0()!=='me'||!inFamily()||RULES().cheatAlerts===false)return;
+  if(R0()!=='me')return;
   ensureToday();const f=S.today.flags||(S.today.flags=[]);if(f.some(x=>x.type===type&&x.msg===msg))return;
-  f.push({type,msg,at:Date.now()});
-  setTimeout(()=>toast(medal('!',false),'Whoa, that was fast','Your parent gets a note when things are checked off super quickly.'),700);
+  const tellParent=inFamily()&&RULES().cheatAlerts!==false;
+  if(tellParent)f.push({type,msg,at:Date.now()});
+  bumpStat('flags');S.lastFlag={type,at:Date.now()};
+  const [h,b]=CHEAT_MSG[type]||['Hmm, that seemed too quick','Make sure you really did it. Honest progress is what counts.'];
+  setTimeout(()=>cheatNotice(h,b+' '+CHEAT_CHEER[Math.floor(Math.random()*CHEAT_CHEER.length)],tellParent),700);
+}
+function cheatNotice(h,b,par){if(document.querySelector('.cheat-pop'))return;try{SFX.notify()}catch(e){}const el=document.createElement('div');el.className='cheat-pop';el.setAttribute('role','alert');
+  el.innerHTML=`<div class="cp-ico">${skeefoMark(40)}</div><div class="cp-txt"><b>${esc(h)}</b><p>${esc(b)}</p>${par?'<small>Your parent gets a note about this.</small>':''}</div><button class="btn sm primary">I’ll do better 💪</button>`;
+  document.body.appendChild(el);requestAnimationFrame(()=>el.classList.add('in'));try{SFX.soft()}catch(e){}buzz([60,40,60]);
+  const close=()=>{el.classList.remove('in');setTimeout(()=>el.remove(),350)};el.querySelector('button').onclick=close;setTimeout(close,12000)
 }
 function noteCheck(){ensureToday();const c=S.today.checks||(S.today.checks=[]),now=Date.now();c.push(now);while(c.length>10)c.shift();
-  const recent=c.filter(t=>now-t<20000);if(recent.length>=6)flag('rapid',`Checked off ${recent.length} things in under 20 seconds`)}
+  const recent=c.filter(t=>now-t<15000);if(recent.length>=8)flag('rapid',`Checked off ${recent.length} things in under 20 seconds`)}
 
 /* reminders */
 function checkReminders(){
@@ -1351,7 +1503,7 @@ function checkReminders(){
   for(const k of sched().sections.flatMap(s=>s.tasks)){
     const at=k.kind==='workout'&&rw?rw:k.time;if(!at)continue;const ts=hmToday(at);
     if(now>=ts&&(k.kind==='workout'||now<ts+3*3600000)&&!taskState(k,log).d&&!S.rem.ids[k.id]){
-      S.rem.ids[k.id]=1;save();SFX.badge();
+      S.rem.ids[k.id]=1;save();SFX.notify();
       toast(skeefoMark(40),'Reminder: '+k.title,`It’s ${hm(at)}. ${k.kind==='workout'?'Time to train!':'You’ve got this.'}`);
       const b=$('#remBar');if(b){b.hidden=false;b.querySelector('b').textContent='Reminder: '+k.title;b.querySelector('span').textContent='Planned for '+hm(at)}
       break;
@@ -1373,7 +1525,14 @@ function ruleEditor(id){
     ${sw('noHard','No advanced moves','Removes hard exercises like pull-ups, pike push-ups and burpees.')}
     ${sw('noImpact','No high-impact moves','Removes jumping moves like jump squats and skater hops.')}
     ${sw('hideBoard','Hide leaderboard','They won’t see the leaderboard or show up on it.')}
-    ${sw('cheatAlerts','Shortcut alerts','Tell you when check-offs happen too fast to be real.')}
+    ${sw('cheatAlerts','Cheat alerts','Tell you when check-offs happen too fast to be real.')}
+    ${sw('allowDiet','Diet tab','Let them use the Diet tab.')}
+    ${sw('allowTabs','Their own tabs','Let them make and use their own tabs.')}
+    ${sw('allowEditWorkout','Edit their workout','Let them change, import or replace their workout.')}
+    ${sw('allowShare','Share rank','Let them share their rank picture with others.')}
+    ${sw('lockName','Lock their name','Stop them changing the name shown on the leaderboard.')}
+    ${sw('lockProfile','Lock goals and training days','Only you can change their goal, age, days and workout length.')}
+    <div class="field"><label for="r-notif">Notifications and reminders</label><select class="inp" id="r-notif"><option value="kid" ${R.notif==='kid'?'selected':''}>Let them choose</option><option value="on" ${R.notif==='on'?'selected':''}>Always on (they can’t turn them off)</option><option value="off" ${R.notif==='off'?'selected':''}>Off (no notifications)</option></select></div>
     <div class="field"><label for="r-maxMinutes">Longest workout per day</label><select class="inp" id="r-maxMinutes">${[0,15,20,30,45,60].map(v=>`<option value="${v}" ${+R.maxMinutes===v?'selected':''}>${v?v+' minutes':'No limit'}</option>`).join('')}</select></div>
     <div class="field"><label for="r-skeefo">Skeefo</label><select class="inp" id="r-skeefo"><option value="full" ${R.skeefo==='full'?'selected':''}>Full (can use Claude if linked)</option><option value="offline" ${R.skeefo==='offline'?'selected':''}>Offline brain only</option><option value="off" ${R.skeefo==='off'?'selected':''}>Turned off</option></select></div>
     <div class="field"><label for="r-remindWorkout">Workout reminder</label><input class="inp" type="time" id="r-remindWorkout" value="${esc(R.remindWorkout||'')}"><span class="hint">Leave blank for no reminder. Reminders pop up with a sound while the app is open.</span></div>
@@ -1430,13 +1589,14 @@ function dietDay(){ensureToday();const t=todayKey();S.diet=S.diet||{};for(const 
 function giveXP(n,el){if(!n)return;const L0=lvl(S.xp),h=S.history[todayKey()]||(S.history[todayKey()]={x:0,c:0});
   S.xp=Math.max(0,S.xp+n);h.x=Math.max(0,h.x+n);if(n>0&&el){floatXP(el,'+'+n+' XP');sparks(el)}afterXP(L0,300,checkBadges());setTimeout(()=>{try{renderHeader(true)}catch(e){}},0)}
 const DIET={
-  water(delta,el){const d=dietDay(),before=d.w;d.w=Math.max(0,Math.min(16,d.w+delta));const ch=d.w-before;if(!ch)return'';
+  water(delta,el){const d=dietDay(),before=d.w;if(delta>0){const now=Date.now();d.wt=(d.wt||[]).filter(x=>now-x<60000);d.wt.push(now);if(d.wt.length>=6)flag('water',`Logged ${d.wt.length} glasses of water within one minute`)}d.w=Math.max(0,Math.min(16,d.w+delta));const ch=d.w-before;if(!ch)return'';
     const xp=(Math.min(d.w,WATER_GOAL)-Math.min(before,WATER_GOAL))*XP_WATER;giveXP(xp,el);
-    if(ch>0){SFX.check(Math.min(d.w,10));if(d.w===WATER_GOAL){setTimeout(()=>{SFX.bonus();confetti(.5);toast(medal('8',true),'Water goal hit','8 glasses today. Your muscles say thanks.')},300)}}else SFX.uncheck();
+    if(ch>0){SFX.check(Math.min(d.w,10));if(d.w===WATER_GOAL&&!d.wg){d.wg=1;bumpStat('waterDays');setTimeout(()=>afterXP(lvl(S.xp),900,checkBadges()),0)}if(d.w===WATER_GOAL){setTimeout(()=>{SFX.bonus();confetti(.5);toast(medal('8',true),'Water goal hit','8 glasses today. Your muscles say thanks.')},300)}}else SFX.uncheck();
     save();return`Water: **${d.w}/${WATER_GOAL}** glasses${d.w>=WATER_GOAL?' — goal hit!':'.'}`},
   meal(k,el){const d=dietDay();const on=!d.m[k];d.m[k]=on?Date.now():0;giveXP(on?XP_MEAL:-XP_MEAL,el);on?(SFX.check(Object.values(d.m).filter(Boolean).length),setTimeout(SFX.coin,90)):SFX.uncheck();save();
     const n=(MEALS.find(x=>x[0]===k)||[])[1]||'Meal';return on?`Logged **${n}**. +${XP_MEAL} XP.`:`Unchecked ${n}.`},
   group(k,el){const d=dietDay();const on=!d.g[k];d.g[k]=on?1:0;giveXP(on?XP_GROUP:-XP_GROUP,el);on?SFX.check(Object.values(d.g).filter(Boolean).length+3):SFX.uncheck();save();
+    if(on&&GROUPS.every(([g])=>d.g[g])&&!d.pl){d.pl=1;bumpStat('plates');setTimeout(()=>afterXP(lvl(S.xp),900,checkBadges()),0)}
     if(on&&GROUPS.every(([g])=>d.g[g])){setTimeout(()=>{SFX.bonus();confetti(.5);toast(medal('4',true),'Balanced plate','You hit every food group today.')},300)}return''},
 };
 function viewDiet(){
@@ -1478,10 +1638,10 @@ function syncLinked(){
   const h=S.history[t]||(S.history[t]={x:0,c:0});let ch=false;const L0=lvl(S.xp);
   for(const sec of sc.sections)for(const k of sec.tasks){if(!gatedLink(k))continue;const e=log[k.id]||(log[k.id]={});
     const ok=!!linkAutoDone({...k});
-    if(ok&&!e.d){const g=Math.min(TASK_XP,Math.max(0,TASK_CAP-log._x));e.d=Date.now();e.viaLink=1;if(g){e.g=g;log._x+=g;S.xp+=g;h.x+=g}ch=true}
-    else if(!ok&&e.d){if(e.g){S.xp=Math.max(0,S.xp-e.g);h.x=Math.max(0,h.x-e.g);log._x-=e.g;e.g=0}delete e.d;delete e.viaLink;ch=true}}
+    if(ok&&!e.d){const g=Math.min(TASK_XP,Math.max(0,TASK_CAP-log._x));e.d=Date.now();e.viaLink=1;bumpStat('tasks');if(g){e.g=g;log._x+=g;S.xp+=g;h.x+=g}ch=true}
+    else if(!ok&&e.d){bumpStat('tasks',-1);if(e.g){S.xp=Math.max(0,S.xp-e.g);h.x=Math.max(0,h.x-e.g);log._x-=e.g;e.g=0}delete e.d;delete e.viaLink;ch=true}}
   if(ch){for(const sec of sc.sections){if(!log._sec[sec.id]&&sec.tasks.length&&sec.tasks.every(k=>k.kind==='workout'?S.today.complete:log[k.id]&&log[k.id].d)){log._sec[sec.id]=1;S.xp+=SEC_XP;h.x+=SEC_XP}}
-    save();setTimeout(()=>{renderHeader();if(lvl(S.xp)>L0)afterXP(L0,300,checkBadges())},0)}
+    save();setTimeout(()=>{renderHeader();checkPerfect();afterXP(L0,300,checkBadges())},0)}
   return ch}
 function resolveLink(q){q=nrm(q).replace(/^(the|my|your)\s+/,'').replace(/\s+(tab|page|section)$/,'').trim();
   const syn={workouts:'workout','work out':'workout','working out':'workout',exercise:'workout',training:'workout',gym:'workout',food:'diet',meals:'diet','meal plan':'diet','diet plan':'diet',eating:'diet',nutrition:'diet',leaderboard:'ranks',rank:'ranks',rankings:'ranks',ranking:'ranks',profile:'me',settings:'me',account:'me',coach:'skeefo',ai:'skeefo',chat:'skeefo',group:'family'};
@@ -1667,7 +1827,7 @@ function applyDecay(){
 let saveTimer=null,saving=false,again=false;
 const DEV_ID=(()=>{try{let d=localStorage.getItem('rr-dev');if(!d){d=Math.random().toString(36).slice(2,10);localStorage.setItem('rr-dev',d)}return d}catch(e){return'x'}})();
 const actScore=x=>x?Object.keys(x.history||{}).length*5+(x.total||0)*10+(x.xp||0)+Object.keys(x.dayLog||{}).length*3:0;
-function save(){S.saved=Date.now();S.dev=DEV_ID;try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}clearTimeout(saveTimer);saveTimer=setTimeout(()=>{flush();try{NOTIF.sync()}catch(e){}},800)}
+function save(){S.saved=Date.now();S.dev=DEV_ID;try{if(R0()==='me'&&inFamily()){const NR=RULES().notif;if(NR==='off')S.notif=false;else if(NR==='on'&&typeof Notification!=='undefined'&&Notification.permission==='granted')S.notif=true}}catch(e){}try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}clearTimeout(saveTimer);saveTimer=setTimeout(()=>{flush();try{NOTIF.sync()}catch(e){}},800)}
 function buildReport(){
   const t=todayKey(),sc=sched(),log=S.dayLog[t]||{},R=routine(),items=allItems(R);
   const tasks=[];sc.sections.forEach(sec=>sec.tasks.forEach(k=>{if(k.kind==='workout')return;const e=log[k.id]||{};tasks.push({sec:sec.name,title:k.title,time:k.time||'',min:k.min||0,s:e.s||0,d:e.d||0})}));
@@ -1736,7 +1896,7 @@ function renderHeader(bump){updateSnd();
   const xp=src.xp||0,L=lvl(xp),lo=xpFor(L),hi=xpFor(L+1),pct=(xp-lo)/(hi-lo);
   $('#lvlNum').textContent=L;{const rt=titleFor(L,xp),el=$('#lvlTitle'),rk=$('#lvlRank'),ic=$('#lvlIco');el.innerHTML=`${xp.toLocaleString()} <span>XP</span>`;
     rk.textContent=rt;rk.style.setProperty('--rk',RANKCOL[rt]||'var(--lvl)');rk.classList.toggle('legend',rt==='Legend');
-    if(ic.dataset.r!==rt){ic.dataset.r=rt;ic.innerHTML=rankSVG(rt,'hdr');$('#lvlBox').style.setProperty('--rk',RANKCOL[rt]||'var(--lvl)');$('#lvlBox').setAttribute('aria-label',`${rt} rank, level ${L}, ${xp} XP`)}}
+    if(ic.dataset.r!==rt){ic.dataset.r=rt;ic.innerHTML=rankSVG(rt,'hdr');$('#lvlBox').dataset.v=rt;$('#lvlBox').style.setProperty('--rk',RANKCOL[rt]||'var(--lvl)');$('#lvlBox').setAttribute('aria-label',`${rt} rank, level ${L}, ${xp} XP`)}}
   $('#lvlArc').style.strokeDashoffset=238.8*(1-pct);
   $('#xpFill').style.width=(pct*100).toFixed(1)+'%';
   tweenXP(xp,hi,parent&&curKid()?(curKid().name||'Your kid'):'');
@@ -1754,10 +1914,11 @@ function tweenXP(to,hi,who){
   requestAnimationFrame(step);
 }
 function renderTabs(){
-  const base=TABS[R0()],list=[...base.slice(0,-1),...(S.tabs||[]).map(t=>[t.id,t.name]),base[base.length-1]];
-  if(!tab||!(tab==='newtab'||list.some(([k])=>k===tab)))tab=list[0][0];
-  $('#tabbar').innerHTML=list.map(([k,l])=>`<button class="tab ${String(k).startsWith('c_')?'mine':''}" role="tab" data-tab="${k}" aria-selected="${k===tab}">${esc(l)}</button>`).join('')+`<button class="tab add" role="tab" data-tab="newtab" aria-selected="${tab==='newtab'}" aria-label="Make a new tab" title="Make a new tab">+</button>`;
-  const sel=document.querySelector('#tabbar .tab[aria-selected="true"]');if(sel&&sel.scrollIntoView)try{sel.scrollIntoView({inline:'nearest',block:'nearest'})}catch(e){}
+  const list=tabsFor(),noNew=R0()==='me'&&RULES().allowTabs===false;
+  if(!tab||!((tab==='newtab'&&!noNew)||list.some(([k])=>k===tab)))tab=list[0][0];
+  $('#tabbar').innerHTML=list.map(([k,l])=>`<button class="tab ${String(k).startsWith('c_')?'mine':''}" role="tab" data-tab="${k}" aria-selected="${k===tab}">${tabIco(k)}<span>${esc(l)}</span></button>`).join('')+(noNew?'':`<button class="tab add" role="tab" data-tab="newtab" aria-selected="${tab==='newtab'}" aria-label="Make a new tab" title="Make a new tab">${tabIco('newtab')}<span>New</span></button>`);
+  document.body.classList.toggle('editing',editing());
+  const sel=document.querySelector('#tabbar .tab[aria-selected="true"]'),bar=$('#tabbar');if(sel&&bar){const l=sel.offsetLeft-bar.clientWidth/2+sel.offsetWidth/2;try{bar.scrollTo({left:l,behavior:reduced?'auto':'smooth'})}catch(e){bar.scrollLeft=l}}
 }
 
 /* ================= Views ================= */
@@ -1772,7 +1933,8 @@ function render(){
   if(tab==='me'&&R0()==='me')bindProfile();
   if(tab==='skeefo')scrollChat(true);
   tick();
-  if(changed&&!reduced&&v.animate){[...v.children].slice(0,7).forEach((c,i)=>c.animate([{opacity:0,transform:'translate3d(0,14px,0)'},{opacity:1,transform:'none'}],{duration:340,delay:i*45,easing:'cubic-bezier(.16,1,.3,1)',fill:'backwards'}))}
+  if(changed&&!reduced&&v.animate){const d=navDir||0;v.animate(d?[{opacity:0,transform:`translate3d(${d*36}px,0,0)`},{opacity:1,transform:'none'}]:[{opacity:0,transform:'translate3d(0,10px,0)'},{opacity:1,transform:'none'}],{duration:d?300:340,easing:'cubic-bezier(.16,1,.3,1)'});[...v.children].slice(0,6).forEach((c,i)=>c.animate([{opacity:0},{opacity:1}],{duration:260,delay:40+i*35,easing:'ease-out',fill:'backwards'}))}
+  navDir=0;
 }
 function banner(kind,title,body,act){return`<div class="banner ${kind}"><span class="dot"></span><div><b>${title}</b>${body||''}</div>${act||''}</div>`}
 function statusBanner(){
@@ -1802,7 +1964,7 @@ function viewToday(){
     </div>
     <div class="ring ${pct===1?'full':''}"><svg viewBox="0 0 84 84"><circle class="trk" cx="42" cy="42" r="36"/><circle class="bar" cx="42" cy="42" r="36" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-pct)}"/></svg><div><div><b class="num">${dn}/${items.length}</b><span>done</span></div></div></div></div>
     <div class="dayfoot"><span class="note">${esc(LEVELS[p.level])} · ${esc(EQUIP[p.equip])} · age ${esc(p.age)}${+p.age>=55?' · low-impact':''}${S.today.start&&!locked?` · started ${clock(S.today.start)}`:''}</span>
-    <div class="row-act" style="flex-wrap:wrap">${R.restDay?'':`<button class="btn" data-act="editw">Edit workout</button>`}<button class="btn" data-act="shuffle" ${done.length?'disabled title="Shuffle is only available before you start"':''}>${R.fromAI||R.mine?'Swap for a random routine':'Shuffle routine'}</button></div></div></section>`;
+    <div class="row-act" style="flex-wrap:wrap">${R.restDay||RULES().allowEditWorkout===false?'':`<button class="btn" data-act="editw">Edit workout</button>`}<button class="btn" data-act="shuffle" ${done.length?'disabled title="Shuffle is only available before you start"':''}>${R.fromAI||R.mine?'Swap for a random routine':'Shuffle routine'}</button></div></div></section>`;
   if(locked)h+=`<section class="card done-card"><div class="label" style="color:var(--gold)">Routine complete</div><h2>Day ${S.streak} in the books</h2><div class="big num">+${S.today.bonus} XP bonus</div><p>${S.today.start&&S.today.end?`Took ${dur(S.today.end-S.today.start)}. `:''}Streak multiplier ×${(1+Math.min(S.streak,10)*.1).toFixed(1)}. A fresh routine unlocks tomorrow.</p></section>`;
   else h+=`<section class="guide ${guideOpen?'open':''}"><button class="guide-h" data-act="guide" aria-expanded="${guideOpen}"><span><span class="label">Start here</span><b>How to do today’s workout</b></span><svg class="chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
     <div class="fold"><div><ol class="steps">
@@ -1915,7 +2077,7 @@ function myDays(w){return w&&w.days&&w.days.length?w.days:w?[{title:w.title,item
 function myDayIdx(w,date){const D=myDays(w);if(D.length<=1)return 0;const t=date||todayKey(),p=effProfile();let n=0,d=w.start||t,guard=0;
   while(d<t&&guard++<800){if(isTrainDay(d,p))n++;d=addDays(d,1)}return n%D.length}
 const myTodayDay=w=>myDays(w)[myDayIdx(w)];
-function setMyWorkoutDays(days,name,src){days=days.filter(d=>d.items.length);
+function setMyWorkoutDays(days,name,src){if(R0()==='me'&&RULES().allowEditWorkout===false)throw new Error('Your parent locked your workout, so I can’t change it.');days=days.filter(d=>d.items.length);
   if(!days.length)throw new Error('I couldn’t find any exercises in that. Put one exercise per line, like “Push-ups 3x10” or “Plank 45s”.');
   if(days.length===1)return setMyWorkout(days[0].items,days[0].title||name,src);
   S.myWorkout={title:(name||'My plan').slice(0,30),days:days.map(d=>({title:(d.title||'Workout').slice(0,30),items:d.items})),start:todayKey(),src:src||'list',made:Date.now()};
@@ -1959,7 +2121,7 @@ async function importWorkoutFile(f,where){
   if(!doc.days.length)throw new Error(`I opened **${esc(f.name)}** but couldn’t find any exercises in it. If it’s a scanned picture, I can’t read the words. Try typing the list instead.`);
   const w=setMyWorkoutDays(doc.days,doc.name,'file');const D=myDays(w);
   return`I read **${esc(f.name)}** and made ${D.length>1?`a **${D.length}-day plan**`:'your workout'} from it:\n\n${planSummary(w)}\n\n${D.length>1?`Your training days take turns: ${D.map(d=>esc(d.title)).join(' → ')}, then back to the start. `:''}It’s on your **Workout** tab. Tap **Edit workout** to fix anything I got wrong.`}
-function setMyWorkout(items,title,src,di){
+function setMyWorkout(items,title,src,di){if(R0()==='me'&&RULES().allowEditWorkout===false)throw new Error('Your parent locked your workout, so I can’t change it.');
   if(!items.length)throw new Error('I couldn’t find any exercises in that list. Put one exercise per line, like “Push-ups 3x10” or “Plank 45s”.');
   const w0=S.myWorkout,multi=w0&&w0.days&&w0.days.length>1;
   if(multi&&di!=null){w0.days[di]={title:(title||w0.days[di].title||'Day '+(di+1)).slice(0,30),items};}
@@ -2064,6 +2226,148 @@ function logExercise(it,on){
   const key=String(it.n||'Exercise').slice(0,40);S.exLog[key]=Math.max(0,(S.exLog[key]||0)+(on?1:-1));if(!S.exLog[key])delete S.exLog[key];
   if(it.km!=null){S.distLog[d]=Math.max(0,Math.round(((S.distLog[d]||0)+(on?it.km:-it.km))*100)/100);if(!S.distLog[d])delete S.distLog[d]}
 }
+
+/* ================= Bottom tab bar, swipe between tabs, smooth transitions ================= */
+const TAB_ICO={
+  workout:'<path d="M6.5 6.5v11M17.5 6.5v11M3.5 9v6M20.5 9v6M6.5 12h11"/>',
+  day:'<rect x="4" y="5" width="16" height="15" rx="3"/><path d="M8 3v4M16 3v4M4 10h16M9 15l2 2 4-4"/>',
+  diet:'<path d="M12 7c-1.5-2.5-6-2.5-7 1.5-.8 3.5 1.5 9.5 4.5 11 1.2.6 1.8 0 2.5 0s1.3.6 2.5 0c3-1.5 5.3-7.5 4.5-11C18 4.5 13.5 4.5 12 7z"/><path d="M12 7c0-2 1-3.5 3-4"/>',
+  skeefo:'<path d="M5 5h14a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-7l-4 3.5V17H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z"/><path d="M9 11h.01M15 11h.01"/>',
+  ranks:'<path d="M8 4h8v5a4 4 0 0 1-8 0V4zM8 6H5a3 3 0 0 0 3 4M16 6h3a3 3 0 0 1-3 4M12 13v4M8.5 20h7M10 17h4"/>',
+  progress:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
+  report:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
+  schedule:'<rect x="4" y="5" width="16" height="15" rx="3"/><path d="M8 3v4M16 3v4M4 10h16"/>',
+  family:'<circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.4"/><path d="M3.5 19c.6-3.3 2.8-5 5.5-5s4.9 1.7 5.5 5M14.5 14.6c2.6-.4 5 1 5.6 4.4"/>',
+  me:'<circle cx="12" cy="8" r="3.6"/><path d="M5 20c.8-3.6 3.6-5.6 7-5.6s6.2 2 7 5.6"/>',
+  newtab:'<path d="M12 5v14M5 12h14"/>',
+  custom:'<path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"/>'
+};
+const tabIco=k=>`<svg viewBox="0 0 24 24" aria-hidden="true">${TAB_ICO[k]||(String(k).startsWith('c_')?TAB_ICO.custom:TAB_ICO.me)}</svg>`;
+function tabsFor(){const R=RULES(),me=R0()==='me';let base=TABS[R0()];if(me&&R.allowDiet===false)base=base.filter(x=>x[0]!=='diet');const mine=me&&R.allowTabs===false?[]:(S.tabs||[]).map(t=>[t.id,t.name]);return[...base.slice(0,-1),...mine,base[base.length-1]]}
+function tabList(){return tabsFor().map(x=>x[0])}
+const editing=()=>!!(draft||wDraft);
+let navDir=0;
+function goTab(k,dir){
+  if(editing()){toast(medal('✎',false),'Finish editing first','Tap Save or Cancel to leave this page.');return false}
+  if(k===tab)return false;const L=tabList();navDir=dir!=null?dir:Math.sign(L.indexOf(k)-L.indexOf(tab))||1;
+  SFX.tick();tab=k;draft=null;wDraft=null;render();scrollTo({top:0});return true}
+/* swipe left/right on the page to move between tabs (finger-following, with spring back) */
+(function(){
+  let sx=0,sy=0,st=0,axis=null,el=null,active=false;
+  const blocked=t=>!!t.closest('input,textarea,select,.tabs,.daystrip,.chips,.w-days,.seg,.ladder,.ed,.wl,.rep-chart,.fg,.kid-bar,.lvl,.overlay,.composer,[data-grip],.drag-ghost,.chat pre');
+  document.addEventListener('touchstart',e=>{if(e.touches.length!==1||editing()||DRAG||document.querySelector('.overlay'))return;const t=e.target;if(!t.closest('#view')||blocked(t))return;
+    sx=e.touches[0].clientX;sy=e.touches[0].clientY;st=Date.now();axis=null;el=$('#view');active=true},{passive:true});
+  document.addEventListener('touchmove',e=>{if(!active)return;const dx=e.touches[0].clientX-sx,dy=e.touches[0].clientY-sy;
+    if(!axis){if(Math.abs(dx)<10&&Math.abs(dy)<10)return;axis=Math.abs(dx)>Math.abs(dy)*1.3?'x':'y';if(axis==='y'){active=false;return}el.style.transition='none';el.style.willChange='transform'}
+    const L=tabList(),i=L.indexOf(tab),edge=(dx>0&&i<=0)||(dx<0&&i>=L.length-1);const m=edge?dx*.18:dx*.55;
+    el.style.transform=`translate3d(${m}px,0,0)`;el.style.opacity=String(1-Math.min(.35,Math.abs(m)/innerWidth))},{passive:true});
+  document.addEventListener('touchend',e=>{if(!active)return;active=false;if(axis!=='x'){return}
+    const dx=(e.changedTouches[0]||{}).clientX-sx,v=Math.abs(dx)/Math.max(1,Date.now()-st),L=tabList(),i=L.indexOf(tab);
+    const go=(Math.abs(dx)>innerWidth*.22||(v>.45&&Math.abs(dx)>40))?(dx<0?1:-1):0,ni=i+go;
+    if(go&&ni>=0&&ni<L.length){el.style.transition='transform .16s cubic-bezier(.4,0,1,1),opacity .16s';el.style.transform=`translate3d(${-go*innerWidth*.45}px,0,0)`;el.style.opacity='0';
+      setTimeout(()=>{el.style.transition='none';el.style.transform='';el.style.opacity='';el.style.willChange='';goTab(L[ni],go)},150)}
+    else{el.style.transition='transform .32s cubic-bezier(.2,1.3,.4,1),opacity .2s';el.style.transform='';el.style.opacity='';setTimeout(()=>{el.style.transition='';el.style.willChange=''},340)}},{passive:true});
+  document.addEventListener('touchcancel',()=>{if(!active||!el)return;active=false;el.style.transition='';el.style.transform='';el.style.opacity=''},{passive:true});
+})();
+
+/* ================= Share Rank ================= */
+function memberDays(){
+  if(!S.joined){const ks=[...Object.keys(S.history||{}),...Object.keys(S.dayLog||{}),...Object.keys(S.diet||{})].filter(k=>/^\d{4}-\d\d-\d\d$/.test(k)).sort();S.joined=ks[0]||todayKey();save()}
+  return Math.max(1,dayDiff(S.joined,todayKey())+1)}
+function svgToImg(svg,size){return new Promise((res,rej)=>{const src=svg.replace('<svg ',`<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" `);const img=new Image();img.onload=()=>res(img);img.onerror=rej;img.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(src)})}
+async function rankCardBlob(){
+  const W=1080,H=1350,c=document.createElement('canvas');c.width=W;c.height=H;const g=c.getContext('2d');
+  try{await document.fonts.ready}catch(e){}
+  const L=lvl(S.xp),rk=titleFor(L,S.xp),col=RANKCOL[rk]||'#A98BFF',disp='"Big Shoulders Display","Oswald","Arial Narrow",Impact,sans-serif',body='"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif';
+  const bg=g.createLinearGradient(0,0,0,H);bg.addColorStop(0,'#141018');bg.addColorStop(1,'#060607');g.fillStyle=bg;g.fillRect(0,0,W,H);
+  const glow=g.createRadialGradient(W/2,520,40,W/2,520,560);glow.addColorStop(0,col+'55');glow.addColorStop(1,'transparent');g.fillStyle=glow;g.fillRect(0,0,W,H);
+  g.strokeStyle=col+'66';g.lineWidth=6;g.beginPath();g.roundRect?g.roundRect(30,30,W-60,H-60,48):g.rect(30,30,W-60,H-60);g.stroke();
+  g.textAlign='center';g.fillStyle='#F1F1F3';g.font=`800 54px ${disp}`;g.fillText('ROUTINES REIMAGINED',W/2,130);
+  g.fillStyle='#8B8B93';g.font=`500 34px ${body}`;g.fillText(S.profile.name?S.profile.name:'My rank',W/2,185);
+  try{const img=await svgToImg(rankSVG(rk,'share'),440);g.drawImage(img,W/2-220,250,440,440)}catch(e){}
+  g.fillStyle=col;g.font=`900 140px ${disp}`;g.fillText(rk.toUpperCase(),W/2,830);
+  g.fillStyle='#F1F1F3';g.font=`600 40px ${body}`;g.fillText('Level '+L,W/2,890);
+  const stats=[[S.xp.toLocaleString(),'XP','#FFC53D'],[String(S.streak||0),'DAY STREAK','#FF6B2C'],[String(memberDays()),'DAYS AS A MEMBER','#A98BFF']];
+  stats.forEach(([v,l,cc],i)=>{const x=W/2+(i-1)*320,y=1010;g.fillStyle='#1A1A1D';g.beginPath();g.roundRect?g.roundRect(x-145,y-75,290,210,32):g.rect(x-145,y-75,290,210);g.fill();
+    g.fillStyle=cc;g.font=`900 96px ${disp}`;g.fillText(v,x,y+50);g.fillStyle='#8B8B93';g.font=`600 24px ${body}`;g.fillText(l,x,y+100)});
+  g.fillStyle='#5C5C64';g.font=`500 30px ${body}`;g.fillText('Check out my rank on Routines Reimagined!',W/2,1255);
+  return await new Promise(r=>c.toBlob(r,'image/png'));
+}
+async function shareRank(btn){
+  const msg='Check out my rank on Routines Reimagined!';if(btn)btn.disabled=true;
+  try{const blob=await rankCardBlob(),file=new File([blob],'my-rr-rank.png',{type:'image/png'});
+    const data={title:'My Routines Reimagined rank',text:msg,files:[file]};if(window.RR_STANDALONE)data.url=location.origin+location.pathname;
+    if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share(data);SFX.bonus();return}
+    if(navigator.share){try{await navigator.share({title:data.title,text:msg+(data.url?' '+data.url:'')})}catch(e){if(e&&e.name==='AbortError')return;throw e}}
+    const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='my-rr-rank.png';document.body.appendChild(a);a.click();a.remove();
+    try{await navigator.clipboard.writeText(msg)}catch(e){}
+    toast(medal('✓',true),'Rank image saved','The message is copied too. Paste it with the picture in any chat.');
+  }catch(e){if(!(e&&e.name==='AbortError'))toast(medal('!',false),'Couldn’t open sharing','Try again from the installed app or your phone’s browser.')}
+  finally{if(btn)btn.disabled=false}
+}
+function shareRankCard(){if(R0()!=='me'||RULES().allowShare===false)return'';const L=lvl(S.xp),rk=titleFor(L,S.xp);
+  return`<section class="card share-card"><div class="share-ico">${rankSVG(rk,'share-mini')}</div><div style="min-width:0"><div class="label">Your rank</div><b style="color:${RANKCOL[rk]}">${esc(rk)} · ${S.xp.toLocaleString()} XP</b><div class="note" style="margin:0">${S.streak||0}-day streak · member for ${memberDays()} days</div></div><button class="btn primary" data-act="sharerank">Share rank</button></section>`}
+
+/* ================= “App updated” notice for every user ================= */
+const APP_VER='2026.11.01';
+const CHANGELOG=['Tabs moved to the bottom, and you can swipe left or right to switch tabs','Share your rank with friends from the Ranks tab','40 badges in Bronze, Silver, Gold, Diamond and Legendary, with big unlock animations','Tap a badge or rank to replay its animation','A Reports tab with charts of all your progress','Skeefo knows way more and answers in different ways','A friendly cheat detector, and more controls for parents','Your progress saves to your account and follows you to any device','A custom notification sound'];
+function updateNotice(){
+  if(!S.seenVer&&!Object.keys(S.history||{}).length&&!S.profile.set){S.seenVer=APP_VER;save();return}
+  if(S.seenVer===APP_VER||!S.onboarded&&!S.profile.set)return;S.seenVer=APP_VER;save();
+  setTimeout(()=>{if(document.querySelector('.overlay')||$('#obQuiz'))return;try{SFX.notify()}catch(e){}
+    overlay('lvlup upd-ov',`<div class="eyebrow">Update</div><div class="upd-ico">${skeefoMark(64)}</div><h2>Routines Reimagined just got better!</h2><ul class="upd-list">${CHANGELOG.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`);
+    try{if(typeof Notification!=='undefined'&&Notification.permission==='granted'&&S.notif&&navigator.serviceWorker)navigator.serviceWorker.ready.then(r=>r.showNotification('Routines Reimagined updated',{body:CHANGELOG.slice(0,3).join(' · '),icon:'icon-192.png',badge:'icon-192.png',tag:'rr-update'}))}catch(e){}},1400)}
+/* ================= Mandatory start quiz for new members ================= */
+const OBQ=[
+  {k:'goal',q:'What’s your main goal?',sub:'Pick the one that matters most right now.',opts:Object.entries(GOALS)},
+  {k:'age',q:'How old are you?',sub:'This keeps your workouts safe for your age.',num:{min:13,max:95,ph:'Your age'}},
+  {k:'level',q:'How much have you worked out before?',opts:[['beginner','Beginner · new or coming back'],['intermediate','Intermediate · I train sometimes'],['advanced','Advanced · I train a lot']]},
+  {k:'equip',q:'What equipment do you have?',opts:[['none','No equipment'],['db','Dumbbells at home'],['gym','A full gym']]},
+  {k:'days',q:'How many days a week do you want to work out?',opts:[[3,'3 days'],[4,'4 days'],[5,'5 days'],[6,'6 days'],[7,'Every day']]},
+  {k:'minutes',q:'How long should each workout be?',opts:[[15,'15 min'],[20,'20 min'],[30,'30 min'],[45,'45 min'],[60,'60 min']]},
+  {k:'plan',q:'How long do you want your plan to be?',sub:'Your workouts get harder week by week, with an easier week every 4th week.',opts:[[2,'2 weeks'],[4,'4 weeks'],[8,'8 weeks'],[12,'12 weeks'],['forever','Forever']]},
+];
+let OB=null;
+const needsQuiz=()=>R0()==='me'&&!S.onboarded&&!S.profile.set;
+function quizCheck(){
+  if(S.profile.set&&!S.onboarded){S.onboarded=true;save();return}
+  if(!needsQuiz()||$('#obQuiz'))return;const g=$('#authGate');if(g&&!g.hidden)return;
+  OB={i:0,a:{}};const el=document.createElement('div');el.id='obQuiz';el.className='ob';el.setAttribute('role','dialog');el.setAttribute('aria-modal','true');el.setAttribute('aria-label','Set up your plan');document.body.appendChild(el);document.body.classList.add('gated');quizRender();
+}
+function quizRender(){
+  const el=$('#obQuiz');if(!el||!OB)return;const n=OBQ.length;
+  if(OB.i>=n){const a=OB.a;
+    el.innerHTML=`<div class="ob-card"><div class="ob-top">${skeefoMark(56)}</div><h2 class="h2">You’re all set${S.profile.name?', '+esc(S.profile.name):''}! 🎉</h2>
+      <ul class="ob-sum"><li><span>Goal</span><b>${esc(GOALS[a.goal])}</b></li><li><span>Age</span><b>${a.age}</b></li><li><span>Experience</span><b>${esc(LEVELS[a.level])}</b></li><li><span>Equipment</span><b>${esc(EQUIP[a.equip])}</b></li><li><span>Workouts</span><b>${a.days===7?'Every day':a.days+' days a week'} · ${a.minutes} min</b></li><li><span>Plan</span><b>${a.plan==='forever'?'Forever (it keeps adapting)':a.plan+' weeks'}</b></li></ul>
+      <button class="btn primary ob-go" data-ob="done">Let’s go!</button></div>`;
+    setTimeout(()=>el.querySelector('.ob-go')?.focus(),50);return}
+  const s=OBQ[OB.i],cur=OB.a[s.k];
+  el.innerHTML=`<div class="ob-card"><div class="ob-prog" aria-hidden="true"><i style="width:${(OB.i/n)*100}%"></i></div>
+    <div class="ob-step">Question ${OB.i+1} of ${n}</div><h2 class="h2">${esc(s.q)}</h2>${s.sub?`<p class="note">${esc(s.sub)}</p>`:''}
+    ${s.num?`<div class="ob-num"><input class="inp" id="ob-num" type="number" inputmode="numeric" min="${s.num.min}" max="${s.num.max}" placeholder="${s.num.ph}" value="${cur||''}"><button class="btn primary" data-ob="next">Next</button></div><p class="hint" id="ob-msg"></p>`
+      :`<div class="ob-opts">${s.opts.map(([v,l])=>`<button class="ob-opt ${String(cur)===String(v)?'on':''}" data-ob="pick" data-v="${v}">${esc(l)}</button>`).join('')}</div>`}
+    <div class="ob-nav">${OB.i?'<button class="btn ghost" data-ob="back">Back</button>':'<span class="note" style="margin:0">Takes about 30 seconds. You can change answers later in Me.</span>'}</div></div>`;
+  setTimeout(()=>(el.querySelector('#ob-num')||el.querySelector('.ob-opt'))?.focus(),60);
+}
+function quizFinish(){
+  const a=OB.a,days=SPREAD[a.days]||SPREAD[7];
+  S.profile={...S.profile,goal:a.goal,age:a.age,level:a.level,equip:a.equip,minutes:a.minutes,days,set:true};
+  S.ivDone={...(S.ivDone||{}),goal:a.goal,age:a.age,level:a.level,equip:a.equip,minutes:a.minutes};
+  if(a.plan==='forever'){S.aiPlan=null;S.planForever=true}
+  else{const pl=offlinePlan();S.aiPlan={days:pl.days,made:Date.now(),weeks:+a.plan,start:weekStart(todayKey())};S.planForever=false}
+  S.onboarded=true;if(!S.today.done.length)S.today.variant=0;save();
+  const el=$('#obQuiz');OB=null;if(el){el.classList.add('out');setTimeout(()=>el.remove(),300)}document.body.classList.remove('gated');
+  renderHeader();tab='workout';render();SFX.bonus();confetti(.8);
+}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-ob]');if(!b||!OB&&b.dataset.ob!=='done')return;const act=b.dataset.ob;
+  if(act==='done'){quizFinish();return}
+  const s=OBQ[OB.i];
+  if(act==='back'){OB.i=Math.max(0,OB.i-1);SFX.soft();quizRender();return}
+  if(act==='pick'){const v=b.dataset.v;OB.a[s.k]=/^\d+$/.test(v)?+v:v;SFX.tick();b.classList.add('on');setTimeout(()=>{OB.i++;quizRender()},180);return}
+  if(act==='next'){const inp=$('#ob-num'),v=parseInt(inp&&inp.value);if(!(v>=s.num.min&&v<=s.num.max)){const m=$('#ob-msg');if(m)m.textContent=`Enter an age from ${s.num.min} to ${s.num.max}.`;inp&&inp.focus();return}
+    OB.a[s.k]=v;SFX.tick();OB.i++;quizRender()}
+});
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target&&e.target.id==='ob-num'){e.preventDefault();$('[data-ob="next"]')?.click()}});
 
 /* ---------- My schedule ---------- */
 function taskState(k,log){
@@ -2191,7 +2495,7 @@ function dragEnd(cancel){
   else{const {si,ti}=D.to;if(si===D.si&&ti===D.ti)return;const [m]=draft.sections[D.si].tasks.splice(D.ti,1);draft.sections[si].tasks.splice(ti,0,m)}
   SFX.link();render();
 }
-function dragScroll(){const D=DRAG;if(!D)return;const y=D.lastY,h=innerHeight,top=Math.min(170,(document.querySelector('#tabbar')?.getBoundingClientRect().bottom||0)+90),bot=90;
+function dragScroll(){const D=DRAG;if(!D)return;const y=D.lastY,h=innerHeight,top=110,bot=editing()?90:170;
   const v=y<top?-Math.min(18,(top-y)/4+2):y>h-bot?Math.min(18,(y-(h-bot))/4+2):0;if(v){scrollBy(0,v);dragMove(0,y)}D.raf=requestAnimationFrame(dragScroll)}
 document.addEventListener('pointerdown',e=>{
   if(!draft||e.button>0)return;const grip=e.target.closest('[data-grip]');
@@ -2551,7 +2855,7 @@ function offlineAnswer(text){
 function setAns(a,r){if(r&&typeof r==='object'){a.t=r.t;if(r.sched)a.sched=r.sched;if(r.plan)a.plan=r.plan}else a.t=r}
 function offlineChat(text){
   text=(text||'').trim();if(!text)return;
-  SFX.send();busy=true;S.chat.push({r:'u',t:text});const a={r:'a',t:'',pending:1,off:1};S.chat.push(a);render();scrollChat();
+  bumpStat('chats');SFX.send();busy=true;S.chat.push({r:'u',t:text});const a={r:'a',t:'',pending:1,off:1};S.chat.push(a);render();scrollChat();
   setTimeout(()=>{setAns(a,offlineAnswer(text));a.pending=0;busy=false;SFX.reply();if(S.chat.length>40)S.chat=S.chat.slice(-40);save();if(tab==='skeefo')render()},reduced?150:550+Math.random()*450);
 }
 function offlinePlan(){
@@ -2669,6 +2973,7 @@ const ACT={
   },
   profile(ch){
     if(R0()==='parent')throw new Error('Workout settings belong to your kid’s own app.');
+    if(RULES().lockProfile)throw new Error('Your parent locked your goals and training days.');
     const p={...S.profile},said=[];
     if(ch.goal&&GOALS[ch.goal]){p.goal=ch.goal;said.push('goal: **'+GOALS[ch.goal]+'**')}
     if(ch.age){const a=parseInt(ch.age);if(a>=13&&a<=95){p.age=a;said.push('age: **'+a+'**')}}
@@ -2968,6 +3273,108 @@ const TOPICS=[
  {id:'howapp',k:['how do i use','how does the app work','how do i add a task','how do i add a section','how do i make a tab','what can i say','commands'],a:'Things you can tell me:\n- **“add stretching to my evening at 8pm”**\n- **“move homework to 4:30”** or **“move reading to morning”**\n- **“I finished homework”** / **“uncheck breakfast”**\n- **“rename read to read 20 pages”**\n- **“make a tab called Practice”**\n- **“change Tuesday dinner to tacos”** / **“I don’t like fish”**\n- **“I drank 2 glasses of water”**\n- **“what’s on my schedule?”**\n- **“I want to work out 4 days a week”**\n- **“make me a 4 week workout plan”**\n- **“interview me for my diet”** / **“…for my day”** / **“…for my Practice tab”**'},
  {id:'yeti',k:['animation','animations','yeti','the cup','spilling'],a:'Every time you check something off on **My schedule**, the thing you used for it animates right beside the task: a cup of water spills, a toothbrush scrubs, a book flips its pages, and more. I pick the object from what your task means. Say **“show animation for walk the dog”** to preview one, or turn them off on the My schedule tab.'},
 ];
+/* ---- Skeefo knowledge v3: many more topics, each with several answer variants ---- */
+const TOPICS2=[
+ {id:'sleep2',k:['sleep','how much sleep','cant sleep','can t sleep','insomnia','stay up late','bedtime','nap'],a:[
+  'Teens need about **8–10 hours** of sleep. Sleep is when muscles repair and your brain files away what you learned. Try the same bedtime every night and screens off an hour before.',
+  'Can’t sleep? Try this:\n- Dim lights and no phone 1 hour before bed\n- Keep your room cool and dark\n- No caffeine after lunch\n- Breathe in for 4, hold 4, out for 6\n\nAim for **8–10 hours**.',
+  'Sleep is a cheat code for gains. 😴 **8–10 hours** helps you get stronger, focus better and stay in a better mood. Naps of 20 minutes are fine; long naps can wreck your night’s sleep.']},
+ {id:'water2',k:['how much water','drink water','dehydrated','hydrate','thirsty','water a day'],a:[
+  'A good goal is about **8 glasses a day**, more on hot days and training days. Pale yellow pee means you’re doing great. Log glasses on the Diet tab for XP! 💧',
+  'Drink a glass when you wake up, one with each meal, and sip during workouts. That gets you most of the way to **8 glasses** without thinking about it.',
+  'Feeling tired or getting headaches? You might just be thirsty. Grab a glass of water, then say **“I drank a glass of water”** and I’ll log it.']},
+ {id:'sore2',k:['sore','soreness','muscles hurt','my legs hurt','doms','stiff'],a:[
+  'Soreness 1–2 days after a new workout is normal (it’s called **DOMS**). Light movement, stretching, water and sleep help. It gets less every time you repeat a workout.',
+  'Sore? Do an easy walk or the cool-down stretches. Moving gently actually helps more than lying still. Sharp pain or swelling is different: rest and tell an adult.',
+  'Being sore means your muscles are adapting. 💪 Train a different body part today, or do a light day, and you’ll bounce back fast.']},
+ {id:'injury',k:['hurt my','injured','injury','sprain','twisted','pain in my','knee hurts','back hurts','shoulder hurts','wrist hurts','ankle'],a:[
+  'Sharp pain, swelling or pain that doesn’t go away is a signal to **stop and rest**. Tell a parent, and see a doctor if it’s bad. Skip moves that hurt until it feels normal again.',
+  'Ouch, sorry! Ice it for 15 minutes, rest it, and avoid moves that hurt. If it’s swollen, you can’t put weight on it, or it still hurts in a few days, see a doctor.']},
+ {id:'warmup2',k:['warm up','warmup','why warm up','do i need to warm up'],a:[
+  'A **warm-up** gets blood to your muscles and makes joints move smoothly, so you’re stronger and less likely to get hurt. 3–5 minutes is enough.',
+  'Never skip the warm-up! It’s quick, gives XP, and makes the main set feel easier. Think of it like starting a car on a cold day.']},
+ {id:'stretch2',k:['stretch','stretching','flexible','flexibility','splits','touch my toes'],a:[
+  'Stretch **after** workouts or at night, holding each stretch 20–30 seconds with slow breathing. No bouncing. Do it most days and you’ll notice a difference in 2–3 weeks.',
+  'Want to touch your toes? Do hamstring stretches, the world’s greatest stretch and child’s pose every day. Flexibility improves fast with consistency.']},
+ {id:'abs',k:['abs','six pack','sixpack','belly fat','flat stomach','core workout'],a:[
+  'Abs are built with core work (plank, dead bug, bicycle crunches) and **shown** by overall fitness, good food and sleep. You can’t spot-burn belly fat, but full-body training plus cardio helps a lot.',
+  'Best core moves: plank, side plank, dead bug, bird dog, mountain climbers and leg raises. Do them 3 times a week. Consistency beats 1,000 crunches.']},
+ {id:'arms',k:['bigger arms','biceps','triceps','arm workout','arm day'],a:[
+  'For bigger arms: push-ups, dips and pike push-ups (triceps), plus rows, pull-ups and curls (biceps). Train them 2–3 times a week and eat enough protein.',
+  'Arm day ideas: diamond push-ups, chair dips, curls (with dumbbells or backpacks), and slow negatives. Finish with a plank to keep your core strong.']},
+ {id:'legs',k:['leg day','bigger legs','leg workout','thighs','glutes','booty'],a:[
+  'Leg day essentials: squats, lunges, glute bridges, step-ups and calf raises. Strong legs make you faster and better at almost every sport. Never skip leg day! 🦵',
+  'Try this: 3 rounds of 15 squats, 10 lunges each leg, 15 glute bridges and 20 calf raises. Rest 60 seconds between rounds.']},
+ {id:'chest',k:['chest','pecs','chest workout','bench'],a:[
+  'Chest builders: push-ups (normal, wide, incline, decline), dips and dumbbell presses. Slow, controlled reps work better than fast sloppy ones.',
+  'No gym? Push-up variations are all you need. Make them harder by raising your feet or slowing down to 3 seconds on the way down.']},
+ {id:'back',k:['back workout','back muscles','lats','rows'],a:[
+  'Back moves: rows (with dumbbells, a table or bands), superman pulls, pull-ups and reverse snow angels. A strong back helps posture and balances out push-ups.',
+  'Pull more than you push! For every push-up set, do a back move like rows or supermans. Your shoulders will thank you.']},
+ {id:'cardio2',k:['cardio','running tips','how to run','run faster','start running','jogging'],a:[
+  'Starting to run? Try **run 1 minute, walk 2 minutes**, repeated 8 times. Each week, run a bit longer. Keep it easy enough that you could talk.',
+  'Running tips: land softly under your hips, keep shoulders relaxed, and breathe steadily. Most runs should be easy; save hard efforts for one or two days a week.',
+  'Cardio doesn’t have to be running! Biking, swimming, jump rope, dancing and sports all count. Pick the one you enjoy and you’ll stick with it.']},
+ {id:'hiit2',k:['hiit','intervals','tabata','burn fat fast'],a:[
+  'HIIT = short hard bursts with rest. Try **30 seconds hard, 30 seconds easy** for 8 rounds: jumping jacks, mountain climbers, squats, high knees. Done in 8 minutes!',
+  'Tabata is 20 seconds all-out, 10 seconds rest, 8 times. It’s tough, so do it 1–2 times a week max and always warm up first.']},
+ {id:'rest2',k:['rest day','day off','overtraining','train every day','too much exercise'],a:[
+  'Rest days are when muscles actually grow back stronger. 1–2 rest days a week is smart. Your streak in this app counts rest days you set, so you don’t lose it.',
+  'Signs you need rest: always sore, tired, cranky, or getting weaker. Take a day off or do light stretching. Coming back fresh beats grinding through.']},
+ {id:'food2',k:['what should i eat','healthy food','eat healthy','diet tips','nutrition tips','good food'],a:[
+  'Easy plate rule: **half veggies and fruit, a quarter protein, a quarter whole grains**, plus water. Eat regular meals and snacks; skipping meals backfires.',
+  'Eat the rainbow 🌈: different coloured fruits and veggies give different vitamins. Add protein to every meal and keep sugary drinks rare.',
+  'Want a full week planned out? Say **“make me a diet plan”** and I’ll build one with breakfast, lunch, dinner and snacks.']},
+ {id:'preworkout',k:['before a workout','before working out','eat before','pre workout meal','before training eat'],a:[
+  'Eat a light snack **1–2 hours before** training: a banana, toast with peanut butter, or yogurt. Avoid big heavy meals right before, or you might get cramps.',
+  'Before a workout: carbs for energy plus a little protein. Example: apple and cheese, or oatmeal. And drink a glass of water!']},
+ {id:'postworkout',k:['after a workout','after working out','eat after','post workout meal','recovery food'],a:[
+  'After training, have a meal or snack with **protein and carbs** within a couple of hours: chocolate milk, a sandwich, eggs and toast, or rice and chicken.',
+  'Recovery = protein + carbs + water + sleep. A normal dinner after an afternoon workout is perfect. No shakes needed.']},
+ {id:'cheatday',k:['cheat day','cheat meal','treat day','birthday cake'],a:[
+  'Enjoying treats is part of a normal life! Have them, enjoy them, and get back to your usual meals next time. One meal never ruins progress.',
+  'No food is “cheating.” Some foods are everyday foods, some are sometimes foods. Balance is the goal, not perfection. 🍰']},
+ {id:'school',k:['school','exams','test tomorrow','homework','studying','grades'],a:[
+  'Big test coming up? Exercise actually helps your brain: a 10-minute walk or some jumping jacks before studying boosts focus. Sleep well the night before!',
+  'Balance school and training: short workouts (15–20 min) still count. Put homework on My schedule so you earn XP for that too. 📚']},
+ {id:'sports',k:['soccer','basketball','football','hockey','baseball','volleyball','tennis','swimming','track','sport'],a:[
+  'Training for a sport? Mix strength (squats, lunges, push-ups), speed (sprints, jumps) and mobility. Do strength 2–3 days a week, not right before games.',
+  'Athletes need: strong legs, a strong core, quick feet and good recovery. Ask me to **“make me a 4 week workout plan”** with your sport in mind.',
+  'Game day tip: eat a carb-rich meal 2–3 hours before, drink water, and warm up properly. After, refuel with protein and carbs.']},
+ {id:'gym',k:['first time at the gym','gym anxiety','scared of the gym','gym tips','join a gym'],a:[
+  'First time at the gym? Go with a friend or parent, have a plan (use your Workout tab), start light, and ask staff to show you machines. Everyone was new once!',
+  'Gym etiquette: wipe equipment, re-rack weights, don’t hog machines, and use headphones. Focus on your own workout; nobody is judging you.']},
+ {id:'home',k:['home workout','no equipment','at home','no gym','bodyweight'],a:[
+  'You can get really fit at home with **no equipment**: push-ups, squats, lunges, planks, burpees, glute bridges and step-ups. Your Workout tab already builds these for you.',
+  'Home gym hacks: backpack full of books = weight, stairs = step-ups, a sturdy table = rows and incline push-ups, a towel = sliders. 🏠']},
+ {id:'warmweather',k:['hot outside','heat','summer workout','too hot'],a:['When it’s hot: work out early or late, drink extra water, wear light clothes and slow down. Dizzy or headachy? Stop, cool off and drink water.']},
+ {id:'cold',k:['cold outside','winter workout','snow','too cold'],a:['Cold out? Layer up, warm up indoors first, and protect hands and ears. Or do an indoor workout. As a yeti, I personally love the snow. ❄️']},
+ {id:'music',k:['workout music','playlist','song for workout','music'],a:[
+  'Upbeat music can make workouts feel easier! Pick songs around 120–140 beats per minute for cardio. Just keep one ear free if you’re running outside.',
+  'Make a “workout only” playlist so hearing it gets you in the zone. Your brain starts linking those songs with training. 🎧']},
+ {id:'friends',k:['work out with friends','workout buddy','with my friend','partner workout'],a:[
+  'Workout buddies make it way more fun and help you show up. Challenge each other, take turns picking exercises, and share your rank from the Ranks tab! 🤝',
+  'Partner ideas: high-five push-ups, wall-sit contests, sprint races, and plank-off challenges. Loser does 10 extra squats. 😄']},
+ {id:'lazy',k:['lazy','dont want to','don t want to','cant be bothered','no motivation','skip today'],a:[
+  'Make a deal with yourself: just do the **warm-up**. If you still want to stop after, you can. Most of the time you’ll keep going. 💪',
+  'Motivation comes **after** you start, not before. Put on your shoes, do one exercise, and let momentum take over.',
+  'You don’t have to feel like it. You just have to do a little. Even 5 minutes keeps your streak and your habit alive.']},
+ {id:'compliment',k:['thank you','thanks','ty','you re awesome','youre awesome','love you','you rock','good job skeefo'],a:['You’re welcome! 😄 Now go crush it.','Anytime! That’s what yeti coaches are for. ❄️','Thanks! You’re doing the hard part though. 💪','Happy to help! Keep that streak going. 🔥']},
+ {id:'hello',k:['hi','hello','hey','yo','sup','good morning','good afternoon','good evening'],a:()=>{const h=new Date().getHours(),n=S.profile.name?' '+S.profile.name:'';return[`Hey${n}! 👋 Ready to earn some XP today?`,`${h<12?'Good morning':h<18?'Good afternoon':'Good evening'}${n}! What are we working on?`,`Yo${n}! ❄️ Ask me anything, or say **“what’s on my schedule?”**`][Math.floor(Math.random()*3)]}},
+ {id:'bye',k:['bye','see you','see ya','later','gotta go','cya'],a:['See you later! Don’t forget your tasks today. 👋','Bye! Your future self says thanks for showing up. 💪','Later! I’ll be here when you need me. ❄️']},
+ {id:'fact',k:['fun fact','tell me a fact','did you know','random fact','interesting fact'],a:()=>['Your heart beats about **100,000 times a day**. Cardio makes it stronger so it works less hard.','Muscles can’t push, only **pull**. Every movement is muscles pulling on bones.','The **glutes** are the biggest muscle in your body.','Laughing works your abs a little! 😂','Your bones are about **5 times stronger than steel** of the same weight.','Drinking water can help you focus: even mild dehydration makes you more tired.','Yetis are excellent at wall sits. Probably.'][Math.floor(Math.random()*7)]},
+ {id:'xpmore',k:['how do i get xp','earn xp','more xp','get xp fast','level up faster'],a:()=>`Ways to earn XP:\n- **${XP_MAIN} XP** per workout move, **${XP_SIDE} XP** per warm-up or cool-down move\n- A **${BONUS} XP bonus** for finishing your workout (bigger with a streak)\n- **${TASK_XP} XP** per schedule task, **${SEC_XP}** per finished section\n- Water, meals and food groups on Diet\n\nDon’t leave tasks undone: each one costs XP the next day!`},
+ {id:'badges2',k:['badge','badges','achievement','achievements','unlock'],a:()=>`You’ve earned **${BADGES.filter(b=>S.badges[b.id]).length} of ${BADGES.length}** badges! They come in Bronze, Silver, Gold, Diamond and Legendary. Check them on the **Ranks** tab and tap any badge to replay its animation. 🏅`},
+ {id:'streak2',k:['my streak','lost my streak','keep my streak','streak broke'],a:()=>S.streak?`You’re on a **${S.streak}-day streak** 🔥 (best: ${S.best}). Finish today’s workout to make it ${S.streak+1}!`:'No streak right now, but that just means today is **day 1**. Finish your workout and it starts! 🔥'},
+ {id:'share2',k:['share my rank','share rank','show my friends'],a:'Go to the **Ranks** tab and tap **Share rank**. It makes a picture with your rank, XP, streak and how long you’ve been a member, ready to send to friends! 📲'},
+ {id:'reports2',k:['my progress','report','reports','stats','how am i doing','my stats'],a:()=>`You’re **${titleFor(lvl(S.xp),S.xp)}** with **${S.xp.toLocaleString()} XP**, a **${S.streak}-day streak** and **${S.total} workouts** done. See charts on the **Reports** tab! 📈`},
+ {id:'meditate',k:['meditate','meditation','calm down','relax','mindfulness'],a:['Try box breathing: in for 4, hold 4, out for 4, hold 4. Repeat 5 times. It calms your body fast. 🧘','A 3-minute calm-down: sit, close your eyes, notice 5 things you hear, then take 5 slow breaths. Add “Breathe” to your evening schedule for XP!']},
+ {id:'age',k:['too young to lift','too old to start','what age','kids lifting','am i too young'],a:['Kids and teens can safely do bodyweight training and light weights with good form and supervision. It’s never too early or too late to start moving!','You’re never too old to start. Begin with easier versions, focus on form, and build up. Your plan already adjusts to your age.']},
+ {id:'shoes',k:['shoes','sneakers','what to wear','workout clothes','gear'],a:['You don’t need fancy gear! Comfy clothes and supportive sneakers are enough. For running, shoes that fit well and feel good matter most.']},
+ {id:'yogurt',k:['is milk good','eggs healthy','are bananas good','peanut butter','is rice healthy','is bread bad'],a:['Short answer: most normal foods are fine! Milk, eggs, bananas, peanut butter, rice and bread can all be part of a healthy diet. Balance and portions matter more than any single food.']},
+];
+
+TOPICS.push(...TOPICS2);
 const GLOSS={rep:'A **rep** (repetition) is doing an exercise once, like one push-up.',set:'A **set** is a group of reps in a row. “3 × 10” means 3 sets of 10 reps, with rest between sets.',
   cardio:'**Cardio** is exercise that gets your heart pumping for a while, like running, biking or jumping jacks. It builds endurance.',hiit:'**HIIT** (high-intensity interval training) mixes short, hard bursts with rest. For example, 30 seconds of sprinting, then 60 seconds of walking.',
   core:'Your **core** is the muscles around your stomach, back and hips. A strong core helps with posture, balance and every sport.',glutes:'Your **glutes** are your butt muscles, the strongest muscles in your body. Squats, lunges and glute bridges train them.',
@@ -2998,8 +3405,10 @@ function smartAnswer(text){
 }
 function scoredAnswer(t){
   const pool=[...KB.slice(3).map((k,i)=>({id:'kb'+i,k:k.re,a:k.a})),...TOPICS];let best=null,bs=0;
-  for(const tp of pool){const sc=topicScore(t,tp.k);if(sc>bs){bs=sc;best=tp}}
-  if(!best||bs<3)return null;S.lastTopic=best.id;const a=typeof best.a==='function'?best.a():best.a;return a;
+  for(const tp of pool){const sc=topicScore(t,tp.k)+(TOPICS2.includes(tp)?.5:0);if(sc>bs){bs=sc;best=tp}}
+  if(!best||bs<3)return null;S.lastTopic=best.id;let a=typeof best.a==='function'?best.a():best.a;
+  if(Array.isArray(a)){S.lastAns=S.lastAns||{};let i=Math.floor(Math.random()*a.length);if(a.length>1&&i===S.lastAns[best.id])i=(i+1)%a.length;S.lastAns[best.id]=i;a=a[i]}
+  return a;
 }
 
 /* ================= Skeefo offline brain v2: more things he can do ================= */
@@ -3314,9 +3723,9 @@ const TOOLS=()=>[
 
 async function sendChat(text){
   text=(text||'').trim();if(busy||!text)return;
-  if(!S.iv){const cmd=tryCommand(text);if(cmd!=null){SFX.send();S.chat.push({r:'u',t:text});{const am={r:'a',act:1};setAns(am,cmd);S.chat.push(am)}SFX.reply();if(S.chat.length>40)S.chat=S.chat.slice(-40);save();renderHeader();render();scrollChat();return}}
+  if(!S.iv){const cmd=tryCommand(text);if(cmd!=null){bumpStat('chats');SFX.send();S.chat.push({r:'u',t:text});{const am={r:'a',act:1};setAns(am,cmd);S.chat.push(am)}SFX.reply();if(S.chat.length>40)S.chat=S.chat.slice(-40);save();renderHeader();render();scrollChat();return}}
   if(S.iv||!useClaude())return offlineChat(text);
-  SFX.send();busy=true;S.chat.push({r:'u',t:text});const a={r:'a',t:'',pending:1};S.chat.push(a);render();scrollChat();
+  bumpStat('chats');SFX.send();busy=true;S.chat.push({r:'u',t:text});const a={r:'a',t:'',pending:1};S.chat.push(a);render();scrollChat();
   try{
     const msgs=[{role:'user',content:persona()+'\n\nReply "Ready." to confirm.'},{role:'assistant',content:'Ready.'},...chatHistory()];
     if(msgs[msgs.length-1].role!=='user')msgs.push({role:'user',content:text});
@@ -3395,9 +3804,9 @@ function viewKidFamily(){
   return kidFamilyCard()+`<section class="card"><div class="label">Are you a parent?</div><h3 class="h3">Switch to parent view</h3><p class="note">Parents create the family group, add kids, set schedules and restrictions, and see live reports.</p><button class="btn" data-act="role" data-v="parent">I’m a parent</button></section>`;
 }
 function viewRanks(){
-  if(window.RR_STANDALONE&&!SBON())return`<section class="card"><div class="label">Leaderboard</div><h3 class="h3">Compete with friends</h3><p class="note">The live leaderboard needs accounts so scores can be shared between phones, so it lives in the full Routines Reimagined app on Claude. Your own stats are below.</p></section>`+viewProgress();
+  if(window.RR_STANDALONE&&!SBON())return shareRankCard()+`<section class="card"><div class="label">Leaderboard</div><h3 class="h3">Compete with friends</h3><p class="note">The live leaderboard needs accounts so scores can be shared between phones, so it lives in the full Routines Reimagined app on Claude. Your own stats are below.</p></section>`+viewProgress();
   if(R0()==='me'&&RULES().hideBoard&&rankView==='board')rankView='stats';
-  return`<div class="seg wide" role="group" aria-label="Ranks view">${R0()==='me'&&RULES().hideBoard?'':`<button data-act="rank" data-v="board" aria-pressed="${rankView==='board'}">Leaderboard</button>`}<button data-act="rank" data-v="stats" aria-pressed="${rankView==='stats'}">${R0()==='parent'?'Badges & rules':'My stats'}</button></div>`+(rankView==='board'?viewLeaders():viewProgress());
+  return shareRankCard()+`<div class="seg wide" role="group" aria-label="Ranks view">${R0()==='me'&&RULES().hideBoard?'':`<button data-act="rank" data-v="board" aria-pressed="${rankView==='board'}">Leaderboard</button>`}<button data-act="rank" data-v="stats" aria-pressed="${rankView==='stats'}">${R0()==='parent'?'Badges & rules':'My stats'}</button></div>`+(rankView==='board'?viewLeaders():viewProgress());
 }
 function medal(g,on){
   return`<svg viewBox="0 0 56 62" aria-hidden="true"><path d="M28 2l23 13v32L28 60 5 47V15z" fill="${on?'var(--gold)':'var(--line-2)'}"/><path d="M28 8l18 10v26L28 54 10 44V18z" fill="${on?'var(--gold-soft)':'var(--surface-2)'}"/><text x="28" y="${g.length>2?37:39}" text-anchor="middle" font-family="Big Shoulders Display,Impact,sans-serif" font-weight="900" font-size="${g.length>2?15:g.length>1?19:22}" fill="${on?'var(--gold)':'var(--muted)'}">${esc(g)}</text></svg>`;
@@ -3409,7 +3818,7 @@ function viewProgress(){
     cells+=`<div class="h ${l} ${k===t?'today':''}" title="${k}${h?` · ${h.x} XP${h.c?' · complete':''}`:''}"></div>`}
   const L=lvl(S.xp),earned=BADGES.filter(b=>S.badges[b.id]).length;
   const myR=titleFor(L,S.xp);
-  const ladder=[...TITLES.map(([m,n])=>[`Lv ${m}`,n]),[`${LEGEND_XP.toLocaleString()} XP`,'Legend']].map(([a,n])=>`<div class="rung ${myR===n&&R0()==='me'?'me':''}" style="--rk:${RANKCOL[n]}">${rankSVG(n,'rung-ico')}<span class="label">${a}</span><b>${n}</b></div>`).join('');
+  const ladder=[...TITLES.map(([m,n])=>[`Lv ${m}`,n]),[`${LEGEND_XP.toLocaleString()} XP`,'Legend']].map(([a,n])=>`<div class="rung ${myR===n&&R0()==='me'?'me':''}" style="--rk:${RANKCOL[n]}" role="button" tabindex="0" data-act="rankreplay" data-v="${n}">${rankSVG(n,'rung-ico')}<span class="label">${a}</span><b>${n}</b></div>`).join('');
   return(R0()==='me'?`<div class="stats">
     <div class="stat"><span class="label">Routines</span><b class="num">${S.total}</b></div>
     <div class="stat"><span class="label">Best streak</span><b class="num">${S.best}</b></div>
@@ -3417,7 +3826,7 @@ function viewProgress(){
     <div class="stat"><span class="label">Badges</span><b class="num">${earned}/${BADGES.length}</b></div></div>
   <section class="card"><div class="label">Last 5 weeks</div><div class="heat">${cells}</div>
     <div class="legend">less <i style="background:var(--heat0)"></i><i style="background:var(--heat1)"></i><i style="background:var(--heat2)"></i><i style="background:var(--heat3)"></i> more XP</div></section>
-  <section class="card"><div class="label">Badges</div><div class="badges">${BADGES.map(b=>`<div class="badge ${S.badges[b.id]?'':'off'}">${medal(b.g,!!S.badges[b.id])}<div class="bn">${esc(b.n)}</div><div class="bd">${esc(b.d)}</div></div>`).join('')}</div></section>`:'')+
+  <section class="card"><div class="rep-h"><span class="label">Badges</span><b class="num" style="color:var(--gold)">${earned}/${BADGES.length}</b></div><p class="note" style="margin:0 0 8px">Tap a badge to replay its animation.</p><div class="badges">${BADGES.map(b=>`<div class="badge ${S.badges[b.id]?'':'off'}" role="button" tabindex="0" data-act="badge" data-v="${b.id}" aria-label="${esc(b.n)}${S.badges[b.id]?' (tap to replay)':' (locked)'}">${badgeSVG(b,!!S.badges[b.id])}<div class="bn">${esc(b.n)}</div><div class="bd">${esc(b.d)}</div></div>`).join('')}</div></section>`:'')+
   `<section class="card"><div class="label">Rank ladder</div><div class="ladder">${ladder}</div>
     <ul class="rules">
       <li><span>1</span><div>Every exercise earns XP. Finishing the whole routine earns a ${BONUS} XP bonus, multiplied by the streak (up to ×2.0 at 10 days).</div></li>
@@ -3469,14 +3878,14 @@ function viewMe(){
   return h;
 }
 function cleanName(v){return String(v||'').replace(/[<>{}\[\]\\]/g,'').replace(/\s+/g,' ').trim().slice(0,24)}
-function setName(v){const n=cleanName(v);if(n.length<2)throw new Error('Your name needs at least 2 letters.');const old=S.profile.name||'';S.profile={...S.profile,name:n};save();renderHeader();return{n,old}}
+function setName(v){if(R0()==='me'&&RULES().lockName)throw new Error('Your parent locked your name.');const n=cleanName(v);if(n.length<2)throw new Error('Your name needs at least 2 letters.');const old=S.profile.name||'';S.profile={...S.profile,name:n};save();renderHeader();return{n,old}}
 function nameCard(){const n=S.profile.name||'';
   return`<section class="card namecard"><div class="label">Your name</div><h3 class="h3">${n?esc(n):'Pick a name'}</h3>
     <p class="note">This is your username on the leaderboard${R0()==='parent'?'':' and in your parent’s report'}. You can change it any time.</p>
-    <div class="name-row"><input class="inp" id="nm-inp" maxlength="24" autocomplete="nickname" placeholder="Type a new name" value="${esc(n)}" aria-label="Your name"><button class="btn primary" data-act="savename">Save name</button></div>
+    ${R0()==='me'&&RULES().lockName?'<p class="note">🔒 Your parent locked your name.</p>':`<div class="name-row"><input class="inp" id="nm-inp" maxlength="24" autocomplete="nickname" placeholder="Type a new name" value="${esc(n)}" aria-label="Your name"><button class="btn primary" data-act="savename">Save name</button></div>`}
     <span class="hint" id="nm-msg"></span></section>`}
 function viewProfile(){
-  const p=S.profile;
+  const p=S.profile;if(RULES().lockProfile)return`<section class="card"><div class="label">Your profile</div><h3 class="h3">${esc(GOALS[p.goal])} · ${p.minutes} min</h3><p class="note">🔒 Your parent set your goal, age and training days (${esc(daysText(p))}). Ask them if you want a change.</p></section>`;
   const radios=(name,map)=>`<div class="opts">${Object.entries(map).map(([k,l])=>`<label class="opt"><input type="radio" name="${name}" id="${name}-${k}" value="${k}" ${p[name]===k?'checked':''}><span>${l}</span></label>`).join('')}</div>`;
   return`<section class="card"><form class="form" id="pf">
     <div><div class="label">Your profile</div><h3 class="h3">Tune your daily routine</h3></div>
@@ -3512,7 +3921,7 @@ let notesT=null;document.addEventListener('input',e=>{const nid=e.target.dataset
 document.addEventListener('input',e=>{if(e.target.id==='sk-in'){e.target.style.height='auto';e.target.style.height=Math.min(140,e.target.scrollHeight)+'px'}});
 document.addEventListener('click',e=>{
   const t=e.target.closest('[data-tab],[data-go],[data-act],[data-metric]');if(!t||t.disabled)return;
-  if(t.dataset.tab||t.dataset.go){SFX.tick();tab=t.dataset.tab||t.dataset.go;draft=null;wDraft=null;render();if(t.dataset.go)scrollTo({top:0});return}
+  if(t.dataset.tab||t.dataset.go){goTab(t.dataset.tab||t.dataset.go);return}
   if(t.dataset.metric){SFX.tick();lbMetric=t.dataset.metric;render();return}
   const a=t.dataset.act,si=+t.dataset.si,ti=+t.dataset.ti;
   switch(a){
@@ -3520,9 +3929,12 @@ document.addEventListener('click',e=>{
     case'toggle':toggle(t.dataset.id,t);break;
     case'how':{SFX.soft();const id=t.dataset.id,row=t.closest('.ex');if(openHow.has(id))openHow.delete(id);else openHow.add(id);const o=openHow.has(id);row.classList.toggle('open',o);t.setAttribute('aria-expanded',o);break}
     case'guide':{SFX.soft();guideOpen=!guideOpen;const g=t.closest('.guide');g.classList.toggle('open',guideOpen);t.setAttribute('aria-expanded',guideOpen);break}
+    case'badge':{const b=BADGES.find(x=>x.id===t.dataset.v);if(b)(S.badges[b.id]?achievementShow(b,true):badgeLocked(b));break}
+    case'rankreplay':rankReplay(t.dataset.v);break;
+    case'sharerank':shareRank(t);break;
     case'reprange':repRange=+t.dataset.v||14;SFX.soft();render();break;
-    case'editw':wStartEdit(false);render();scrollTo({top:0});break;
-    case'importw':tab='workout';wStartEdit(true);render();scrollTo({top:0});setTimeout(()=>$('#w-paste')?.focus(),300);break;
+    case'editw':if(RULES().allowEditWorkout===false){toast(medal('🔒',false),'Locked by your parent','Only your parent can change your workout.');break}wStartEdit(false);render();scrollTo({top:0});break;
+    case'importw':if(RULES().allowEditWorkout===false){toast(medal('🔒',false),'Locked by your parent','Only your parent can change your workout.');break}tab='workout';wStartEdit(true);render();scrollTo({top:0});setTimeout(()=>$('#w-paste')?.focus(),300);break;
     case'wup':case'wdown':{const i=+t.dataset.i,j=i+(a==='wup'?-1:1);const L=wDraft.items;if(j<0||j>=L.length)break;[L[i],L[j]]=[L[j],L[i]];SFX.soft();render();break}
     case'wdel':wDraft.items.splice(+t.dataset.i,1);render();break;
     case'wadd':wDraft.items.push({id:'cw_'+rid(),n:'',ref:'',cue:'',sets:3,dose:'10 reps'});render();document.querySelectorAll('.w-n')[wDraft.items.length-1]?.focus();break;
@@ -3582,8 +3994,8 @@ document.addEventListener('click',e=>{
     case'ropen':openR=t.dataset.id;SFX.soft();render();break;
     case'rclose':openR=null;render();break;
     case'rsave':{const id=t.dataset.id,g=k=>$('#r-'+k);const rules={...DEF_RULES,...((CTLS[id]||{}).rules||{})};
-      ['lockSchedule','noHard','noImpact','hideBoard','cheatAlerts'].forEach(k=>rules[k]=!!g(k).checked);
-      rules.maxMinutes=+g('maxMinutes').value||0;rules.skeefo=g('skeefo').value;rules.remindWorkout=g('remindWorkout').value||'';
+      ['lockSchedule','noHard','noImpact','hideBoard','cheatAlerts','allowDiet','allowTabs','allowEditWorkout','allowShare','lockName','lockProfile'].forEach(k=>rules[k]=!!g(k).checked);
+      rules.notif=g('notif').value||'kid';rules.maxMinutes=+g('maxMinutes').value||0;rules.skeefo=g('skeefo').value;rules.remindWorkout=g('remindWorkout').value||'';
       openR=null;setCtl(id,{rules}).then(()=>{SFX.link();toast(medal('✓',true),'Restrictions saved','They apply on '+kidName(id)+'’s app right away.');render()});break}
     case'selkid':SEL=t.dataset.id;try{localStorage.setItem('rr-sel',SEL)}catch(err){}SFX.tick();renderHeader();render();break;
     case'kidreport':case'kidsched':SEL=t.dataset.id;try{localStorage.setItem('rr-sel',SEL)}catch(err){}tab=a==='kidreport'?'report':'schedule';SFX.tick();renderHeader();render();scrollTo({top:0});break;
@@ -3628,11 +4040,13 @@ document.addEventListener('click',e=>{
     case'role':role=t.dataset.v;try{localStorage.setItem('rb-role',role)}catch(err){}tab=role==='me'?'workout':'family';draft=null;renderTabs();renderHeader();render();if(role==='me')flush();break;
   }
 });
+function checkPerfect(){const t=todayKey();if(S.flags.perfectDay===t)return;const sc=sched(),log=S.dayLog[t]||{},ts=sc.sections.flatMap(x=>x.tasks);if(!ts.length)return;
+  const wkOk=!ts.some(k=>k.kind==='workout')||S.today.complete;if(wkOk&&ts.every(k=>k.kind==='workout'||(log[k.id]&&log[k.id].d))){S.flags.perfectDay=t;bumpStat('perfect');setTimeout(()=>{SFX.bonus();toast(medal('☀',true),'Perfect day!','Every task and your workout are done. Legendary.')},700)}}
 function afterXP(L0,delay,newBadges){
   const L1=lvl(S.xp);
   if(L1>L0){setTimeout(()=>levelUp(L1),delay);delay+=2600}
   if(S.xp>=LEGEND_XP&&!S.flags.legend){S.flags.legend=true;setTimeout(legendUp,delay);delay+=3200}
-  newBadges.forEach((b,i)=>setTimeout(()=>{SFX.badge();toast(medal(b.g,true),'Badge unlocked: '+b.n,b.d)},delay+i*2600));
+  newBadges.forEach(b=>setTimeout(()=>achievementShow(b),delay));
 }
 const checkBadges=()=>{const nb=BADGES.filter(b=>!S.badges[b.id]&&b.ok(S));nb.forEach(b=>S.badges[b.id]=Date.now());return nb};
 function toggle(id,btn){
@@ -3648,11 +4062,11 @@ function toggle(id,btn){
     const bonus=Math.round(BONUS*(1+Math.min(S.streak,10)*.1));
     S.xp+=bonus;h.x+=bonus;h.c=1;S.total++;S.last=d;S.today.end=Date.now();h.wm=Math.max(1,Math.round((S.today.end-S.today.start)/60000));
     if(S.flags.demoted){S.flags.comeback=true;S.flags.demoted=false}
-    S.decay.applied=0;if(new Date().getHours()<8)S.flags.early=true;
+    S.decay.applied=0;{const hr=new Date().getHours();if(hr<8)S.flags.early=true;if(hr>=21)S.flags.night=true}if(wdOf(d)===6&&S.history[addDays(d,-1)]&&S.history[addDays(d,-1)].c)S.flags.weekend=true;{const pi=programInfo(d);if(pi&&pi.done)S.flags.program=true}
     S.today.complete=true;S.today.bonus=bonus;
     {const exp=effProfile().minutes*60000,took=S.today.end-S.today.start;if(took<Math.max(180000,exp*.35))flag('fast_workout',`Finished the ${R.title} workout in ${dur(took)} (planned about ${effProfile().minutes} min)`)}
   }
-  const nb=checkBadges();save();
+  if(finished)checkPerfect();const nb=checkBadges();save();
   if(finished){render();renderHeader(true);confetti(1);setTimeout(SFX.complete,180);if(!reduced)setTimeout(()=>scrollTo({top:0,behavior:'smooth'}),200)}
   else{patchToday(btn.closest('.ex'),idx<0);renderHeader()}
   afterXP(L0,finished?900:150,nb);
@@ -3663,15 +4077,15 @@ function taskToggle(id,btn){
   const t=todayKey(),log=S.dayLog[t]||(S.dayLog[t]={_x:0,_sec:{}});log._sec=log._sec||{};log._x=log._x||0;
   const e=log[id]||(log[id]={}),h=S.history[t]||(S.history[t]={x:0,c:0}),L0=lvl(S.xp),rect=btn.getBoundingClientRect();
   let bonus=0;
-  if(e.d){SFX.uncheck();delete e.d;delete e.fast;if(e.g){S.xp=Math.max(0,S.xp-e.g);h.x=Math.max(0,h.x-e.g);log._x-=e.g;e.g=0}}
+  if(e.d){SFX.uncheck();delete e.d;delete e.fast;bumpStat('tasks',-1);if(e.g){S.xp=Math.max(0,S.xp-e.g);h.x=Math.max(0,h.x-e.g);log._x-=e.g;e.g=0}}
   else{e.d=Date.now();{const yk=sched().sections.flatMap(x=>x.tasks).find(x=>x.id===id);if(yk&&yk.kind!=='workout')setTimeout(()=>yetiInline(yk.id,yk.title),40)}SFX.check(Object.keys(log).filter(x=>x[0]!=='_'&&log[x].d).length-1);setTimeout(SFX.coin,90);const g=Math.min(TASK_XP,Math.max(0,TASK_CAP-log._x));
-    if(g){e.g=g;log._x+=g;S.xp+=g;h.x+=g;floatXP(rect,'+'+g+' XP')}sparks(rect);noteCheck();
+    if(g){e.g=g;log._x+=g;S.xp+=g;h.x+=g;floatXP(rect,'+'+g+' XP')}bumpStat('tasks');sparks(rect);noteCheck();
     {const k=sched().sections.flatMap(x=>x.tasks).find(x=>x.id===id);if(k&&k.min>=10&&e.s&&e.d-e.s<k.min*60000*.25)flag('fast_task',`“${k.title}” took ${dur(e.d-e.s)} (planned ${k.min} min)`);
      const quick=Object.keys(log).filter(x=>x[0]!=='_'&&log[x].d&&e.d-log[x].d<60000).length;if(quick>=4)flag('bulk',`Checked off ${quick} tasks within one minute`)}
     const sec=sched().sections.find(s=>s.tasks.some(k=>k.id===id));
     if(sec&&!log._sec[sec.id]&&sec.tasks.every(k=>k.kind==='workout'?S.today.complete:log[k.id]&&log[k.id].d)){log._sec[sec.id]=1;bonus=SEC_XP;S.xp+=bonus;h.x+=bonus}
   }
-  const nb=checkBadges();save();render();renderHeader();
+  if(e.d)checkPerfect();const nb=checkBadges();save();render();renderHeader();
   const row=document.querySelector(`.task[data-id="${id}"]`);if(row&&e.d){row.classList.add('pop')}
   if(bonus)setTimeout(()=>{SFX.bonus();floatXP(rect,`+${bonus} section bonus`);confetti(.5)},400);
   afterXP(L0,bonus?1200:300,nb);
@@ -3755,6 +4169,7 @@ const SFX=(()=>{
       tone(98,.95,1.6,{type:'triangle',vol:.3});
       for(let i=0;i<10;i++)tone(note(4+i%7)*1,1.05+i*.07,.3,{vol:.05})},
     levelDown(){[392,370,349.2,293.7].forEach((f,i)=>tone(f,i*.32,i===3?.9:.3,{type:'sawtooth',vol:.07,to:i===3?220:null}));tone(98,1,.9,{type:'triangle',vol:.22,to:73})},
+    notify(){[[1046.5,0],[1318.5,.11],[1568,.22],[2093,.36]].forEach(([f,t])=>{tone(f,t,.55,{vol:.16,type:'triangle'});tone(f*2,t,.25,{vol:.035})});noise(.36,.35,{vol:.05,from:5000,to:9000,q:.8,type:'highpass'})},
     badge(){[1318.5,1568,2093].forEach((f,i)=>{tone(f,i*.08,.9,{vol:.14});tone(f*2.76,i*.08,.4,{vol:.03})})},
     yeti(act){const up=act==='sleep'?[392,330,262]:[587.33,784,988];up.forEach((f,i)=>tone(f,.05+i*.09,.18,{type:'triangle',vol:.14,to:f*1.06}));tone(196,0,.12,{type:'sine',vol:.2,to:260,wet:false})},
     link(){[523.25,783.99,1046.5,1568].forEach((f,i)=>tone(f,i*.08,.6,{type:'triangle',vol:.16}))},
@@ -3793,7 +4208,7 @@ function confetti(power){if(reduced)return;const cols=[css('--gold'),css('--gold
       parts.push({x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,g:.22,drag:.985,s:(7+Math.random()*6)*sz,c:cols[i%6],rot:Math.random()*6,vr:(Math.random()-.5)*.3,flip:Math.random()*6,vf:.12+Math.random()*.2,life:110+Math.random()*60,shape:1})}}
   buzz(power>=1?[20,40,20,40,60]:[15,30,15]);kick()}
 function floatXP(el,text){const r=rectOf(el);if(!r||!r.width)return;const f=document.createElement('div');f.className='float';f.textContent=text;
-  f.style.left=(r.left+r.width/2)+'px';{const nav=document.querySelector('.tabs'),nb=nav?nav.getBoundingClientRect().bottom:0;f.style.top=Math.max(nb+40,r.top+Math.min(r.height/2,30))+'px'}document.body.appendChild(f);
+  f.style.left=(r.left+r.width/2)+'px';f.style.top=Math.max(70,r.top+Math.min(r.height/2,30))+'px';document.body.appendChild(f);
   const a=f.animate([{transform:'translate3d(-50%,8px,0) scale(.5)',opacity:0},{transform:'translate3d(-50%,-26px,0) scale(1.25)',opacity:1,offset:.22},{transform:'translate3d(-50%,-40px,0) scale(1)',opacity:1,offset:.5},{transform:'translate3d(-50%,-84px,0) scale(.95)',opacity:0}],{duration:reduced?300:1300,easing:'cubic-bezier(.16,1,.3,1)'});
   a.onfinish=()=>f.remove()}
 function overlay(cls,html,ms){const o=document.createElement('div');o.className='overlay '+cls;o.innerHTML=`<div class="ov">${html}<button class="btn primary" style="margin-top:8px">Continue</button></div>`;
@@ -3892,6 +4307,7 @@ const NOTIF={
 };
 function remindersCard(){
   if(!window.RR_STANDALONE)return'';
+  const NR=RULES().notif||'kid';if(NR==='off')return`<section class="card"><div class="label">Reminders</div><h3 class="h3">Reminders are off</h3><p class="note">🔒 Your parent turned notifications off.</p></section>`;
   if(!INSTALLED())return`<section class="card fam-hero"><div class="label">Reminders</div><h3 class="h3">Install the app for reminders</h3>
     <p class="note">Notifications and the icon badge only work in the installed app.</p>
     <ul class="rules"><li><span>1</span><div><b>iPhone:</b> open this page in Safari, tap Share, then <b>Add to Home Screen</b>. Open it from your home screen.</div></li><li><span>2</span><div><b>Android:</b> open it in Chrome, tap ⋮, then <b>Install app</b>.</div></li></ul></section>`;
@@ -3901,7 +4317,7 @@ function remindersCard(){
   return`<section class="card ${on?'':'fam-hero'}"><div class="label">Reminders</div><h3 class="h3">${on?'Reminders are on':'Turn on reminders'}</h3>
     <p class="note">${on?'You’ll get a notification when a timed task or your workout is due, and the app icon shows how many things are left today.':st==='denied'?'Notifications are blocked. Turn them on for this app in your phone’s Settings, then come back.':'Get a notification when tasks with a time and your workout are due. Only tasks that have a time can remind you.'}</p>
     <p class="note" style="font-size:12px">Reminders are most reliable when the app is still open in the background. Android can also check in now and then while it’s closed.</p>
-    ${on?`<button class="btn sm ghost" data-act="notifoff">Turn off reminders</button>`:st==='denied'?'':`<button class="btn primary" data-act="notifon">Turn on reminders</button>`}</section>`;
+    ${on?(NR==='on'?'<p class="note">🔒 Your parent keeps reminders on.</p>':`<button class="btn sm ghost" data-act="notifoff">Turn off reminders</button>`):st==='denied'?'':`<button class="btn primary" data-act="notifon">Turn on reminders</button>`}</section>`;
 }
 /* ================= Website accounts and shared data (Supabase) ================= */
 const SBX={client:null,user:null,timer:null,kidFam:null,busy:false,msg:''};
@@ -4014,7 +4430,7 @@ function gateHTML(){
     <button class="linkbtn gate-skip" data-act="gateskip">Continue without an account</button></div>`;
 }
 function gateShow(mode){if(mode)gateMode=mode;SBX.msg='';let g=$('#authGate');if(!g){g=document.createElement('div');g.id='authGate';g.className='gate';document.body.appendChild(g)}g.innerHTML=gateHTML();g.hidden=false;document.body.classList.add('gated')}
-function gateHide(){const g=$('#authGate');if(g){g.classList.add('out');setTimeout(()=>{g.hidden=true;g.classList.remove('out')},280)}document.body.classList.remove('gated')}
+function gateHide(){const g=$('#authGate');if(g){g.classList.add('out');setTimeout(()=>{g.hidden=true;g.classList.remove('out');quizCheck()},280)}else setTimeout(quizCheck,300);document.body.classList.remove('gated')}
 function gateCheck(){if(!SBON()||!SBX.ready)return;if(CLOUD()){gateHide();return}if(!S.guest)gateShow()}
 async function sbAuth(mode){
   const email=(($('#gate-email')||{}).value||'').trim(),password=($('#gate-pass')||{}).value||'',msg=t=>{SBX.msg=t;const m=$('.gate-msg');if(m)m.textContent=t};
@@ -4031,8 +4447,6 @@ function cloudJoinCard(asRole){
   return`<div class="ed-row" style="margin-top:12px"><input class="inp" id="fam-code" maxlength="6" placeholder="Family code" style="text-transform:uppercase;letter-spacing:.2em"><button class="btn primary" data-act="sbjoin" data-v="${asRole}">Join</button></div>`;
 }
 /* ================= Boot ================= */
-function xpResetUnused(){if(S.xpReset===XP_RESET)return false;S.xpReset=XP_RESET;S.xp=0;Object.values(S.history||{}).forEach(h=>{if(h)h.x=0});
-  S.decay={applied:0};S.flags=S.flags||{};S.flags.legend=false;S.flags.demoted=false;S.missChk=addDays(todayKey(),-1);S.lbHidden=false;shownXP=0;return true}
 function boot(withDecay=true,quiet=false){
   ensureToday();
   if(!busy&&(S.chat||[]).length){archiveChat();save()}
@@ -4041,6 +4455,9 @@ function boot(withDecay=true,quiet=false){
   if(d||mp)save();
   {const h=location.hash.slice(1);if(h&&(TABS.me.some(([k])=>k===h)||h==='newtab'))tab=h}
   renderTabs();render();renderHeader();try{NOTIF.sync()}catch(e){}
+  try{updateNotice()}catch(e){}
+  if(S.badgeV!==2){S.badges=S.badges||{};BADGES.filter(b=>!S.badges[b.id]&&b.ok(S)).forEach(b=>S.badges[b.id]=Date.now());S.badgeV=2;save()}
+  setTimeout(()=>{try{quizCheck()}catch(e){}},700);
   if(mp)setTimeout(()=>{SFX.levelDown();toast(medal('−',false),`−${mp.lost} XP`,`${mp.undone} task${mp.undone>1?'s':''} ${mp.days>1?`over ${mp.days} days were`:mp.undone>1?'were':'was'} left undone.${mp.to<mp.from?` You dropped to level ${mp.to}.`:''}${mp.rankTo!==mp.rankFrom?` Rank: ${mp.rankTo}.`:''}`)},d&&d.to?3200:600);
   if(d&&d.to)setTimeout(()=>levelDown(d),400);
   else if(d&&d.broke&&!quiet)toast(medal('0',false),'Streak reset','You missed two days in a row.');
