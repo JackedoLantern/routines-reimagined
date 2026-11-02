@@ -9,7 +9,7 @@
 <link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="PEPE CHORES">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Figtree:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap">
-<script>window.CH_STANDALONE=true;window.CH_VERSION='f6a756712a';window.CH_SUPABASE={url:'https://uszalonpjyssvvsikzvg.supabase.co',key:'sb_publishable_w-5rI0R9ht2-HAr5HghM0w_-3HYiAEg'};</script>
+<script>window.CH_STANDALONE=true;window.CH_VERSION='f7b10f85bc';window.CH_SUPABASE={url:'https://uszalonpjyssvvsikzvg.supabase.co',key:'sb_publishable_w-5rI0R9ht2-HAr5HghM0w_-3HYiAEg'};</script>
 <script src="../supabase.js"></script>
 <style>:root{--bg:#0a0a0b;--bg2:#121214;--card:#17171a;--card2:#1e1e22;--line:#2b2b31;--grey:#8d8d96;--grey2:#5c5c64;--text:#f4f2ef;--o:#ff7a00;--o2:#ffad5a;--o3:#ff9a2e;--oglow:rgba(255,122,0,.45);--red:#e3241b;--red2:#ff5a4a;--ok:#ff9a2e;
   --f-d:"Big Shoulders Display","Oswald",Impact,sans-serif;--f-b:"Figtree",system-ui,-apple-system,sans-serif;--f-m:"DM Mono",ui-monospace,Menlo,monospace;
@@ -620,6 +620,11 @@ function tasksFor(slot,day=dkey()){const f=fam();if(!f)return[];const d=fromKey(
     if(fromKey(day).getDay()===2){A('garbage','Change the garbages',{sub:'Every Tuesday'});A('road','Bring the garbage to the road',{sub:'Every Tuesday'})}
     A('eggs','Collect the eggs',{sub:'At 3:00 PM',at:'15:00'});
     A('pm-chickens','Check on the chickens',{sub:'Evening'});A('pm-cats','Check on the cats',{sub:'Evening'});A('pm-murph','Check on Murph',{sub:'Evening'});A('pm-bath','Check on the bathrooms',{sub:'Evening'})}
+  else if(ch.k==='floors'){const g=fromKey(day).getDay(),F=(id,t,x={})=>list.push({id:'floors-'+id,t,ch:'floors',xp:TASK_XP,...x});list=[];
+    F('b','Sweep after breakfast');F('l','Sweep after lunch');
+    if(g===2||g===4)F('mud','Clean the mudroom',{sub:'After lunch · Tuesdays and Thursdays'});
+    if(g===1||g===3||g===5)F('vac','Vacuum the carpets',{sub:'After lunch · Mon, Wed, Fri'});
+    F('d','Sweep after dinner')}
   else list=ch.tasks.map((t,i)=>({id:ch.k+'-'+i,t,ch:ch.k,xp:TASK_XP}));
   (R.extra||[]).filter(Boolean).forEach((t,i)=>list.push({id:'x-'+i+'-'+t.slice(0,12),t,ch:'extra',xp:TASK_XP}));
   return list}
