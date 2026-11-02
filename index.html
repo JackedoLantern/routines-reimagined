@@ -15,7 +15,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Routines">
 <style>:root{padding-top:0;padding-bottom:0}html{background:#09090A}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
-<script>window.RR_STANDALONE=true;window.RR_VERSION='f9ced1cb5b';</script>
+<script>window.RR_STANDALONE=true;window.RR_VERSION='12ca3ed808';</script>
 <script>window.RR_SUPABASE={url:'https://uszalonpjyssvvsikzvg.supabase.co',key:'sb_publishable_w-5rI0R9ht2-HAr5HghM0w_-3HYiAEg'};</script>
 <script src="supabase.js"></script>
 </head>
@@ -1231,7 +1231,8 @@ svg .btn1{animation:iBlink .4s steps(2) infinite}svg .btn2{animation:iBlink .4s 
 @keyframes ppShadow{from{transform:scaleX(.8)}to{transform:scaleX(1.1)}}
 @keyframes ppNote{0%{transform:translate(0,0) rotate(0);opacity:0}20%{opacity:1}100%{transform:translate(var(--dx),-120px) rotate(var(--r));opacity:0}}
 @keyframes ppLetter{from{transform:translateY(30px) scale(.4) rotate(-12deg);opacity:0}to{transform:none;opacity:1}}
-@keyframes ppFade{to{opacity:1}}`;
+@keyframes ppFade{to{opacity:1}}
+#pepeIntro .pp-skip .s2,#pepeIntro.snd .pp-skip .s1{display:none}#pepeIntro.snd .pp-skip .s2{display:inline}`;
   const st=document.createElement('style');st.textContent=css;document.head.appendChild(st);
   const fur='url(#ppFur)',skin='url(#ppSkin)',dk='#0e0a09';
   const monkey=`<svg class="pp-monkey" viewBox="-14 6 268 268" aria-hidden="true"><defs>
@@ -1291,13 +1292,41 @@ svg .btn1{animation:iBlink .4s steps(2) infinite}svg .btn2{animation:iBlink .4s 
   const el=document.createElement('div');el.id='pepeIntro';el.setAttribute('role','img');el.setAttribute('aria-label','Pepe Apps');
   el.innerHTML=`<div class="pp-glow"></div><div class="pp-stage"><div class="pp-floor"></div>${monkey}
     ${[0,1,2,3].map(i=>`<span class="pp-note" style="left:${[30,190,10,210][i]}px;top:${[60,40,130,120][i]}px;--dx:${[-30,30,-20,24][i]}px;--r:${[-30,25,-15,40][i]}deg;animation-delay:${i*.45}s">${['♪','♫','♪','♬'][i]}</span>`).join('')}
-    <div class="pp-word">${word('PEPE APPS')}</div><div class="pp-sub">PRESENTS</div></div><div class="pp-skip">TAP TO SKIP</div>`;
-  const add=()=>{document.body.appendChild(el);try{beat()}catch(e){}};
+    <div class="pp-word">${word('PEPE APPS')}</div><div class="pp-sub">PRESENTS</div></div><div class="pp-skip"><span class="s1">🔊 TAP FOR SOUND</span><span class="s2">TAP TO SKIP</span></div>`;
+  let ac=null,played=false;
+  const add=()=>{document.body.appendChild(el);tryPlay()};
   if(document.body)add();else document.addEventListener('DOMContentLoaded',add);
-  function beat(){try{const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;const ac=new AC();if(ac.state==='suspended')return;const g=ac.createGain();g.gain.value=.12;g.connect(ac.destination);
-    [0,.3,.6,.9,1.2,1.5].forEach((t,i)=>{const o=ac.createOscillator(),e=ac.createGain();o.type=i%2?'triangle':'sine';o.frequency.value=i%2?660:110;e.gain.setValueAtTime(0,ac.currentTime+t);e.gain.linearRampToValueAtTime(1,ac.currentTime+t+.01);e.gain.exponentialRampToValueAtTime(.001,ac.currentTime+t+.25);o.connect(e);e.connect(g);o.start(ac.currentTime+t);o.stop(ac.currentTime+t+.3)})}catch(e){}}
-  let done=false;const close=()=>{if(done)return;done=true;el.classList.add('out');setTimeout(()=>el.remove(),520)};
-  el.addEventListener('click',close);setTimeout(close,rm?900:3200);
+  /* ---- logo sounds: whoosh, ring riser, chest-pound thumps, roar, letter pops, shine chime ---- */
+  function ppSound(ac,dst,t0){
+    const out=ac.createGain();out.gain.value=.9;const comp=ac.createDynamicsCompressor();comp.threshold.value=-10;comp.ratio.value=6;out.connect(comp);comp.connect(dst);
+    const nb=(d)=>{const n=Math.max(1,Math.floor(ac.sampleRate*d)),b=ac.createBuffer(1,n,ac.sampleRate),x=b.getChannelData(0);for(let i=0;i<n;i++)x[i]=Math.random()*2-1;return b};
+    function noise(t,d,{vol=.3,from=400,to=4000,q=1,type='bandpass',att=.3}={}){const s=ac.createBufferSource();s.buffer=nb(d);const f=ac.createBiquadFilter();f.type=type;f.Q.value=q;f.frequency.setValueAtTime(from,t);f.frequency.exponentialRampToValueAtTime(to,t+d);const g=ac.createGain();g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vol,t+d*att);g.gain.exponentialRampToValueAtTime(.0001,t+d);s.connect(f);f.connect(g);g.connect(out);s.start(t);s.stop(t+d+.02)}
+    function tone(f0,t,d,{type='sine',vol=.3,to=null,att=.005}={}){const o=ac.createOscillator(),g=ac.createGain();o.type=type;o.frequency.setValueAtTime(f0,t);if(to)o.frequency.exponentialRampToValueAtTime(to,t+d*.9);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vol,t+att);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(out);o.start(t);o.stop(t+d+.05)}
+    const T=t0;
+    noise(T,.75,{vol:.35,from:300,to:5000,q:.8,att:.7});                       // spin-in whoosh
+    tone(180,T+.15,.9,{type:'sawtooth',vol:.05,to:720,att:.6});                 // ring riser
+    tone(120,T+.75,.5,{type:'sine',vol:.6,to:50});noise(T+.75,.25,{vol:.25,from:2000,to:300,type:'lowpass'}); // landing boom
+    for(let i=0;i<5;i++){const t=T+.8+i*.6;tone(95,t,.28,{vol:.7,to:48});tone(190,t,.08,{type:'triangle',vol:.18,to:90});noise(t,.12,{vol:.18,from:900,to:200,type:'lowpass'});
+      tone(95,t+.15,.24,{vol:.5,to:50})}                                          // chest pounds (double hit)
+    // roar: growl saw through a moving lowpass + breathy noise
+    {const t=T+1.0,d=1.15,o=ac.createOscillator(),o2=ac.createOscillator(),lfo=ac.createOscillator(),lg=ac.createGain(),f=ac.createBiquadFilter(),g=ac.createGain();
+     o.type='sawtooth';o2.type='square';o.frequency.setValueAtTime(70,t);o.frequency.linearRampToValueAtTime(110,t+.35);o.frequency.linearRampToValueAtTime(60,t+d);o2.frequency.setValueAtTime(73,t);o2.frequency.linearRampToValueAtTime(52,t+d);
+     lfo.frequency.value=28;lg.gain.value=18;lfo.connect(lg);lg.connect(o.frequency);lg.connect(o2.frequency);
+     f.type='lowpass';f.Q.value=6;f.frequency.setValueAtTime(300,t);f.frequency.linearRampToValueAtTime(1500,t+.3);f.frequency.linearRampToValueAtTime(400,t+d);
+     g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.32,t+.12);g.gain.setValueAtTime(.32,t+.6);g.gain.exponentialRampToValueAtTime(.0001,t+d);
+     o.connect(f);o2.connect(f);f.connect(g);g.connect(out);[o,o2,lfo].forEach(x=>{x.start(t);x.stop(t+d+.05)});
+     noise(t,d,{vol:.22,from:700,to:350,q:2.5,att:.15})}
+    [0,1,2,3,5,6,7,8].forEach((k,i)=>tone(660+i*70,T+.35+k*.06,.09,{type:'square',vol:.05,to:990+i*70})); // letter pops
+    [1318.5,1760,2637].forEach((f,i)=>tone(f,T+1.05+i*.07,.7,{type:'triangle',vol:.09}));noise(T+1.05,.6,{vol:.06,from:6000,to:10000,type:'highpass'}); // shine chime
+    tone(65.4,T+2.2,1.3,{type:'triangle',vol:.35});[261.6,329.6,392,523.3].forEach(f=>tone(f,T+2.2,1.3,{type:'triangle',vol:.06})); // final hit
+  }
+  window.PEPE_SOUND=ppSound;
+  function tryPlay(force){if(played)return true;try{const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return false;ac=ac||new AC();
+    if(ac.state==='suspended'){if(!force)return false;ac.resume()}
+    played=true;ppSound(ac,ac.destination,ac.currentTime+.02);el.classList.add('snd');return true}catch(e){return false}}
+  let done=false,timer;const close=()=>{if(done)return;done=true;el.classList.add('out');setTimeout(()=>el.remove(),520)};
+  el.addEventListener('click',()=>{if(!played&&tryPlay(true)){clearTimeout(timer);timer=setTimeout(close,3400);return}close()});
+  timer=setTimeout(close,rm?900:3400);
 })();
 </script><!--/PEPE-INTRO-->
 <header class="board">
