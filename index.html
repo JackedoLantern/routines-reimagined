@@ -15,7 +15,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Routines">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
-<script>window.RR_STANDALONE=true;window.RR_VERSION='877007df45';</script>
+<script>window.RR_STANDALONE=true;window.RR_VERSION='8639371982';</script>
 <script>window.RR_SUPABASE={url:'https://uszalonpjyssvvsikzvg.supabase.co',key:'sb_publishable_w-5rI0R9ht2-HAr5HghM0w_-3HYiAEg'};</script>
 <script src="supabase.js"></script>
 </head>
@@ -624,6 +624,64 @@ svg.bdg.ach-badge{position:relative;z-index:2;width:150px;height:150px;animation
 .cheat-pop .btn{grid-column:1/-1;justify-self:end}
 .upd-ico{display:flex;justify-content:center;margin:6px 0}.upd-list{text-align:left;margin:8px 0 12px;padding-left:20px;display:grid;gap:6px;font-size:14.5px;line-height:1.45;max-height:46vh;overflow:auto}
 .upd-ov .ov{max-width:440px}
+
+/* ===== little satisfying animations everywhere ===== */
+@keyframes logoLoop{0%,78%,100%{transform:rotate(0) scale(1)}84%{transform:rotate(-14deg) scale(1.12)}90%{transform:rotate(8deg) scale(.96)}95%{transform:rotate(-3deg) scale(1.03)}}
+.brand h1 .bt{font:inherit;display:inline-block}
+.brand h1 .bt i{font-style:normal;display:inline-block;animation:ltrIn .55s calc(.25s + var(--i)*.035s) cubic-bezier(.2,1.5,.4,1) both,ltrWave 7s calc(2.5s + var(--i)*.06s) ease-in-out infinite}
+@keyframes ltrIn{from{transform:translateY(12px) scale(.6);opacity:0}to{transform:none;opacity:1}}
+@keyframes ltrWave{0%,88%,100%{transform:translateY(0)}92%{transform:translateY(-4px)}96%{transform:translateY(1px)}}
+.brand h1 .bt1 i{background:linear-gradient(100deg,var(--ink) 0 40%,#fff 48%,var(--gold) 52%,var(--ink) 60% 100%);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:ltrIn .55s calc(.25s + var(--i)*.035s) cubic-bezier(.2,1.5,.4,1) both,ltrWave 7s calc(2.5s + var(--i)*.06s) ease-in-out infinite,txtSweep 7s 2.5s linear infinite}
+@keyframes txtSweep{0%{background-position:100% 0}35%,100%{background-position:0 0}}
+.rab{animation:rabPulse 4s 1.5s ease-in-out infinite;background-size:200% 100%!important}
+@keyframes rabPulse{0%,100%{transform:scale(1);background-position:0 0}50%{transform:scale(1.08);background-position:100% 0}}
+.snd{transition:transform .2s cubic-bezier(.2,1.5,.4,1)}.snd:active{transform:scale(.85) rotate(-8deg)}.snd:not(.off) .w{animation:sndWave 1.8s ease-in-out infinite;transform-origin:15px 12px}
+@keyframes sndWave{0%,100%{opacity:.5}50%{opacity:1}}
+.xpbar{animation:barGlow 3s ease-in-out infinite}@keyframes barGlow{0%,100%{box-shadow:inset 0 0 0 1px var(--line)}50%{box-shadow:inset 0 0 0 1px var(--line),0 0 12px rgba(255,197,61,.18)}}
+.btn{transition:transform .18s cubic-bezier(.2,1.5,.4,1),background .2s,box-shadow .2s,filter .2s}
+.btn:hover{filter:brightness(1.08)}.btn:active{transform:scale(.94)}
+.btn.primary{position:relative;overflow:hidden}.btn.primary::after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.45) 50%,transparent 70%);transform:translateX(-120%);animation:btnSheen 4.5s 1s ease-in-out infinite;pointer-events:none}
+@keyframes btnSheen{0%,70%{transform:translateX(-120%)}90%,100%{transform:translateX(120%)}}
+.icon-btn,.chip-btn,.dsb,.ob-opt,.attach,.bp-x{transition:transform .16s cubic-bezier(.2,1.5,.4,1),background .2s,border-color .2s}.icon-btn:active,.chip-btn:active,.attach:active{transform:scale(.88)}
+.chk{transition:transform .22s cubic-bezier(.2,1.6,.4,1),background .2s,border-color .2s}.chk:active{transform:scale(.8)}.chk svg path{transition:stroke-dashoffset .3s}
+.chk:not([aria-pressed="true"]):hover{transform:scale(1.06)}
+.card,.block .ex,.stat{transition:transform .22s cubic-bezier(.2,1.2,.4,1),box-shadow .25s}
+.card:active{transform:scale(.995)}.ex:active{transform:scale(.985)}
+.stat{animation:floatIn .5s cubic-bezier(.2,1.2,.4,1) both}.stat:nth-child(2){animation-delay:.06s}.stat:nth-child(3){animation-delay:.12s}.stat:nth-child(4){animation-delay:.18s}
+@keyframes floatIn{from{transform:translateY(10px) scale(.96);opacity:0}to{transform:none;opacity:1}}
+.stat b{display:inline-block;animation:numPop .6s .2s cubic-bezier(.2,1.6,.4,1) both}@keyframes numPop{from{transform:scale(.5)}to{transform:scale(1)}}
+.ring svg .bar{transition:stroke-dashoffset 1s cubic-bezier(.2,.8,.2,1)}.ring{transition:transform .3s}.ring:hover{transform:rotate(-6deg) scale(1.04)}
+.ring:not(.full) svg .bar{animation:ringGlow 3s ease-in-out infinite}@keyframes ringGlow{0%,100%{filter:none}50%{filter:drop-shadow(0 0 6px var(--gold-glow))}}
+.banner .dot{animation:dotPulse 1.8s ease-in-out infinite}@keyframes dotPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.5);opacity:.6}}
+.chip,.pill{transition:transform .2s}.chip:hover,.pill:hover{transform:translateY(-1px)}
+.inp{transition:border-color .2s,box-shadow .25s}.inp:focus{box-shadow:0 0 0 3px var(--lvl-soft),0 0 18px var(--lvl-glow)}
+.switch span{transition:background .25s}.switch span::after{transition:transform .3s cubic-bezier(.2,1.5,.4,1)!important}
+.heat .h{transition:transform .2s}.heat .h:hover{transform:scale(1.18)}.heat .h.today{animation:breathe 2.4s ease-in-out infinite}
+.rep-chart rect{transform-box:fill-box;transform-origin:bottom;animation:barUp .7s cubic-bezier(.2,1.3,.4,1) both}
+.rep-chart g:nth-child(odd) rect{animation-delay:.05s}.rep-chart g:nth-child(3n) rect{animation-delay:.1s}
+@keyframes barUp{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+.rep-dots i{transition:transform .2s}.rep-dots i.on{animation:breathe 2.6s ease-in-out infinite}.rep-dots i:nth-child(2n).on{animation-delay:.5s}
+.kid-today .pill,.meta .chip{animation:floatIn .4s both}.meta .chip:nth-child(2){animation-delay:.05s}.meta .chip:nth-child(3){animation-delay:.1s}
+.water-b,.wb,.glass{transition:transform .2s cubic-bezier(.2,1.5,.4,1)}
+.send{transition:transform .2s cubic-bezier(.2,1.5,.4,1)}.send:active{transform:scale(.85) translateX(3px)}.send svg{animation:sendNudge 3s ease-in-out infinite}@keyframes sendNudge{0%,85%,100%{transform:none}92%{transform:translateX(3px)}}
+.grip{transition:color .2s,transform .2s}.grip:hover{transform:scale(1.15)}
+.dsb.custom::after{animation:dotPulse 2s ease-in-out infinite}
+.lvl small{animation:floatIn .5s .3s both}
+.streak b{display:inline-block;transition:transform .3s}.streak:not(.cold) b{animation:breathe 2.4s ease-in-out infinite}
+.howlink .chev,.guide-h .chev{transition:transform .3s cubic-bezier(.2,1.4,.4,1)}
+.lk-line i{animation:lkFlow 1.6s linear infinite}@keyframes lkFlow{from{background-position:0 0}to{background-position:40px 0}}
+.wd i,.week .wd i{display:inline-block;transition:transform .2s}.wd.on i{animation:breathe 2.6s ease-in-out infinite}
+.empty{animation:floatIn .5s both}
+svg.moose:not(.big){animation:breathe 3.4s ease-in-out infinite}
+@media (prefers-reduced-motion:reduce){.brand h1 .bt i,.brand h1 .logo,.rab,.snd .w,.xpbar,.btn.primary::after,.stat,.stat b,.ring svg .bar,.banner .dot,.heat .h.today,.rep-chart rect,.rep-dots i,.kid-today .pill,.meta .chip,.send svg,.dsb.custom::after,.lvl small,.streak b,.lk-line i,.wd i,.empty,svg.moose{animation:none!important}}
+
+/* check-off: pop out, dip down, pause, spring up while the check draws itself, with confetti */
+.chk.chk-fx{animation:chkPop .75s cubic-bezier(.3,.7,.3,1) both!important;z-index:2;position:relative}
+@keyframes chkPop{0%{transform:scale(1)}18%{transform:scale(1.32)}34%{transform:translateY(5px) scale(.86,.8)}60%{transform:translateY(5px) scale(.86,.8)}76%{transform:translateY(-7px) scale(1.12,1.16)}88%{transform:translateY(1px) scale(.98)}100%{transform:none}}
+.chk.chk-fx svg path{stroke-dasharray:26;stroke-dashoffset:26;animation:chkDraw .42s .42s cubic-bezier(.6,0,.3,1) forwards}
+@keyframes chkDraw{to{stroke-dashoffset:0}}
+.chk-conf{position:fixed;width:7px;height:7px;border-radius:2px;pointer-events:none;z-index:96}
+@media (prefers-reduced-motion:reduce){.chk.chk-fx,.chk.chk-fx svg path{animation:none!important;stroke-dashoffset:0}}
 /* looping idle animations: small, satisfying, never distracting */
 @keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
 @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
@@ -671,7 +729,7 @@ svg.bdg.ach-badge{position:relative;z-index:2;width:150px;height:150px;animation
 .switch.rule b{display:block;font-size:14px}
 .switch.rule small{display:block;color:var(--muted);font-size:12px}
 select.inp{appearance:auto}
-.brand h1 .logo{width:34px;height:34px;flex:none;margin-right:-2px;animation:logoIn .9s cubic-bezier(.2,1.3,.4,1) both}
+.brand h1 .logo{width:34px;height:34px;flex:none;margin-right:-2px;animation:logoIn .9s cubic-bezier(.2,1.3,.4,1) both,logoLoop 5s 1.2s ease-in-out infinite}
 @keyframes logoIn{from{transform:rotate(-120deg) scale(.4);opacity:0}to{transform:none;opacity:1}}
 .tabs .wrap{display:flex;overflow-x:auto;scrollbar-width:none;gap:4px}
 .tabs .wrap::-webkit-scrollbar{display:none}
@@ -1085,7 +1143,7 @@ svg .btn1{animation:iBlink .4s steps(2) infinite}svg .btn2{animation:iBlink .4s 
     <path d="M19.5 33.5 L28.5 42.5 L49.8 17.6" fill="none" stroke="url(#hlchk)" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/>
     <path d="M57 9.5 L54.6 22.4 L44 13.4 Z" fill="#FFC53D" stroke="#FFC53D" stroke-width="1.5" stroke-linejoin="round"/>
   </g>
-</svg>Routines <span>Reimagined</span><abbr class="rab" title="Routines Reimagined">RR</abbr></h1>
+</svg><b class="bt bt1">Routines</b> <span class="bt bt2">Reimagined</span><abbr class="rab" title="Routines Reimagined">RR</abbr></h1>
       <div class="hdr-r"><div class="date" id="dateLbl"></div><button class="snd" id="sndBtn" data-act="sound" aria-label="Sound effects" aria-pressed="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="spk" d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path class="w" d="M15.5 9a4.2 4.2 0 0 1 0 6M18 6.5a8 8 0 0 1 0 11"/><path class="x" d="M16 9.5l5 5M21 9.5l-5 5"/></svg></button></div>
     </div>
     <div class="score">
@@ -4462,6 +4520,17 @@ function boot(withDecay=true,quiet=false){
   if(d&&d.to)setTimeout(()=>levelDown(d),400);
   else if(d&&d.broke&&!quiet)toast(medal('0',false),'Streak reset','You missed two days in a row.');
 }
+document.querySelectorAll('.brand h1 .bt').forEach((el,k)=>{const off=k?9:0;el.innerHTML=[...el.textContent].map((c,i)=>c===' '?' ':`<i style="--i:${i+off}">${esc(c)}</i>`).join('')});
+/* check-off celebration: runs after any check box becomes checked */
+const CHK_COLORS=['#FFC53D','#FF8A1F','#A98BFF','#6FD3FF','#FF5CA8','#7CC35A','#ffffff'];
+function chkConfetti(r){if(reduced||!r)return;const cx=r.left+r.width/2,cy=r.top+r.height/2;
+  for(let i=0;i<16;i++){const d=document.createElement('i');d.className='chk-conf';d.style.left=cx+'px';d.style.top=cy+'px';d.style.background=CHK_COLORS[i%CHK_COLORS.length];if(i%3===0)d.style.borderRadius='50%';document.body.appendChild(d);
+    const a=Math.random()*Math.PI*2,v=40+Math.random()*60,dx=Math.cos(a)*v,dy=Math.sin(a)*v-30;
+    d.animate([{transform:'translate(-50%,-50%) scale(.4) rotate(0)',opacity:1},{transform:`translate(calc(-50% + ${dx}px),calc(-50% + ${dy}px)) scale(1) rotate(${Math.random()*360}deg)`,opacity:1,offset:.55},{transform:`translate(calc(-50% + ${dx*1.15}px),calc(-50% + ${dy+60}px)) scale(.7) rotate(${Math.random()*720}deg)`,opacity:0}],{duration:900+Math.random()*300,delay:420,easing:'cubic-bezier(.2,.7,.4,1)',fill:'backwards'}).onfinish=()=>d.remove()}}
+document.addEventListener('click',e=>{const b=e.target.closest('.chk[data-act]');if(!b||b.getAttribute('aria-pressed')==='true'||b.classList.contains('locked'))return;
+  const act=b.dataset.act,id=b.dataset.id,v=b.dataset.v,r=b.getBoundingClientRect();
+  setTimeout(()=>{const sel=`.chk[data-act="${act}"]`+(id?`[data-id="${id}"]`:'')+(v?`[data-v="${v}"]`:''),nb=document.querySelector(sel)||b;
+    if(nb.getAttribute('aria-pressed')!=='true'&&!nb.closest('.done'))return;nb.classList.remove('chk-fx');void nb.offsetWidth;nb.classList.add('chk-fx');setTimeout(()=>nb.classList.remove('chk-fx'),900);chkConfetti(nb.isConnected?nb.getBoundingClientRect():r)},0)},true);
 byokInit();
 boot();
 sbInit();
