@@ -9,7 +9,7 @@
 <link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="PEPE CHORES">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Figtree:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap">
-<script>window.CH_STANDALONE=true;window.CH_VERSION='2461238746';window.CH_SUPABASE={url:'https://uszalonpjyssvvsikzvg.supabase.co',key:'sb_publishable_w-5rI0R9ht2-HAr5HghM0w_-3HYiAEg'};</script>
+<script>window.CH_STANDALONE=true;window.CH_VERSION='4eac4e4b1a';window.CH_SUPABASE={url:'https://uszalonpjyssvvsikzvg.supabase.co',key:'sb_publishable_w-5rI0R9ht2-HAr5HghM0w_-3HYiAEg'};</script>
 <script src="../supabase.js"></script>
 <style>:root{--bg:#0a0a0b;--bg2:#121214;--card:#17171a;--card2:#1e1e22;--line:#2b2b31;--grey:#8d8d96;--grey2:#5c5c64;--text:#f4f2ef;--o:#ff7a00;--o2:#ffad5a;--o3:#ff9a2e;--oglow:rgba(255,122,0,.45);--red:#e3241b;--red2:#ff5a4a;--ok:#ff9a2e;
   --f-d:"Big Shoulders Display","Oswald",Impact,sans-serif;--f-b:"Figtree",system-ui,-apple-system,sans-serif;--f-m:"DM Mono",ui-monospace,Menlo,monospace;
@@ -475,11 +475,11 @@ const choreFor=(fam,slot,mi=monthIdx())=>CHORES[(((slot+(mi-(fam.startMonth??mi)
 
 /* ---------- XP + levels (insanely hard) ---------- */
 const TASK_XP=10,ALL_DONE_XP=25,MONTH_XP=60;
-const needFor=L=>Math.round(150*Math.pow(1.3,L-1));       // XP to go from L to L+1
+const needFor=L=>Math.round(200*Math.pow(1.45,L-1));       // XP to go from L to L+1
 const LV_CUM=[0,0];for(let L=1;L<120;L++)LV_CUM[L+1]=LV_CUM[L]+needFor(L);
 const lvlOf=xp=>{let L=1;while(L<119&&xp>=LV_CUM[L+1])L++;return L};
 const lvlProg=xp=>{const L=lvlOf(xp),a=LV_CUM[L],b=LV_CUM[L+1];return{L,into:xp-a,need:b-a,pct:Math.min(1,(xp-a)/(b-a))}};
-const TIERS=[ // [name, minLevel, color] — extremely hard: every level costs 30% more XP than the last
+const TIERS=[ // [name, minLevel, color] — brutally hard: every level costs 45% more XP than the last
   ['Wood',1,'#B07A4A'],['Bronze',4,'#CD7F32'],['Silver',7,'#C9CED6'],['Gold',10,'#FFC53D'],['Platinum',13,'#9FE3E0'],['Diamond',16,'#6FD3FF'],['Vibranium',20,'#A98BFF'],['Legend',25,'#FF7A00']];
 const tierOf=L=>{let t=TIERS[0];for(const x of TIERS)if(L>=x[1])t=x;return t};
 const RANKMETAL={
@@ -673,7 +673,7 @@ function sysNotify(title,body,tag){try{if(typeof Notification==='undefined'||Not
 function inQuiet(R){const a=hm(R.quietFrom),b=hm(R.quietTo),n=nowMin();if(a==null||b==null)return false;return a<b?(n>=a&&n<b):(n>=a||n<b)}
 
 /* ================= notifications: parents AND kids ================= */
-const NK={level:'⬆️',goal:'🏆',done:'✅',cheat:'⚠️',approve:'⏳',swap:'🔄',report:'📊',task:'✓',badge:'🎖️',approved:'👍',denied:'↩️',bonus:'🎁',rules:'🛡️',newgoal:'🏆',month:'📅',streak:'🔥',late:'⏰',join:'🔑',remind:'⏰',welcome:'🎉'};
+const NK={level:'⬆️',goal:'🏆',done:'✅',cheat:'⚠️',approve:'⏳',swap:'🔄',report:'📊',task:'✓',badge:'🎖️',approved:'👍',denied:'↩️',bonus:'🎁',rules:'🛡️',newgoal:'🏆',month:'📅',streak:'🔥',late:'⏰',join:'🔑',remind:'⏰',welcome:'🎉',code:'🔒'};
 const forMe=n=>{if(!C.me)return false;if(n.from&&n.from===C.me.pid&&n.to!==C.me.pid)return false;return isParent()?(n.to==='parent'||!n.to):(n.to===C.me.pid||n.to==='kids')};
 const myInbox=()=>C.inbox.filter(forMe);
 function notify(to,kind,title,body,data={}){const n={id:uid(),at:Date.now(),kind,title,body,data,to,from:C.me&&C.me.pid,read:false};
@@ -797,10 +797,10 @@ function goTab(k){const tabs=tabsNow(),a=tabs.findIndex(t=>t[0]===TAB),b=tabs.fi
 function viewStart(){
   if(STEP==='create'){const f={startMonth:monthIdx()},P=CREATE.mode==='parent';
     return`<div class="start view r"><div><div class="lbl">${P?'I’m a parent':'Create a family'}</div><h1 class="ttl">Create a Family</h1>
-      <p class="note">Put up to four names. Each person gets one chore for the month, and the chores rotate every month so nobody gets stuck.</p></div>
+      <p class="note">Room for 4 kids. Type their names now, or leave them empty and kids fill them in when they join with their own names. Each kid gets one chore a month, and the chores rotate.</p></div>
       <label class="f"><span class="lbl">Family name</span><input class="inp" id="c-fam" maxlength="30" placeholder="The Smiths" value="${esc(CREATE.fam)}"></label>
       <div class="card"><div class="lbl">This month (${MONTHS[new Date().getMonth()]})</div>
-        ${[0,1,2,3].map(i=>{const ch=choreFor(f,i);return`<div class="slot"><span class="num">${i+1}</span><input class="inp" data-slot="${i}" maxlength="18" placeholder="Name ${i+1}" value="${esc(CREATE.names[i])}"><span class="chore-chip"><span class="e" style="animation-delay:${i*.3}s">${ch.e}</span>${ch.n}</span></div>`}).join('')}
+        ${[0,1,2,3].map(i=>{const ch=choreFor(f,i);return`<div class="slot"><span class="num">${i+1}</span><input class="inp" data-slot="${i}" maxlength="18" placeholder="Kid ${i+1} (optional)" value="${esc(CREATE.names[i])}"><span class="chore-chip"><span class="e" style="animation-delay:${i*.3}s">${ch.e}</span>${ch.n}</span></div>`}).join('')}
         <p class="note" style="margin:8px 0 0">Next month everyone moves to the next chore: Dishes → Floors → Animals → Laundry.</p></div>
       ${P?`<label class="f"><span class="lbl">Your name (parent)</span><input class="inp" id="c-pname" maxlength="18" placeholder="Mom, Dad, Alex…" value="${esc(CREATE.pname)}"></label>
         <label class="f"><span class="lbl">Parent PIN (optional, keeps kids out of parent mode)</span><input class="inp" id="c-pin" inputmode="numeric" maxlength="6" placeholder="4 digits"></label>`
@@ -808,6 +808,19 @@ function viewStart(){
       ${window.supabase&&window.CH_SUPABASE?`<label class="sw" style="border:0"><div class="grow"><b>Put the family online</b><small>Get a family code so everyone can join from their own phone. Needs a free account.</small></div><input type="checkbox" id="c-cloud" ${CREATE.cloud?'checked':''}></label>`:''}
       <div class="btns"><button class="btn ghost" data-act="back">Back</button><button class="btn p" data-act="create">Create family</button></div>
       ${P?`<div class="card" style="margin-top:6px"><div class="row"><span style="font-size:26px;color:var(--o)">🔑</span><div class="grow"><b>Already have a family?</b><div class="note">Another parent made it. Join with their code.</div></div><button class="btn sm" data-act="joinpar">Join as a parent</button></div></div>`:''}</div>`}
+  if(STEP==='join'&&JOINROLE==='child')return`<div class="start view r"><div><div class="lbl">I’m a kid</div><h1 class="ttl">Join your family</h1><p class="note">Ask your parent for the 6-letter family code. Every family has room for 4 kids.</p></div>
+      ${window.supabase&&window.CH_SUPABASE?`<label class="f"><span class="lbl">Family code</span><input class="inp" id="j-code" maxlength="6" placeholder="ABC123" autocomplete="off" style="text-transform:uppercase;font:800 24px var(--f-d);letter-spacing:.2em"></label>
+      <label class="f"><span class="lbl">Your name</span><input class="inp" id="j-name" maxlength="18" placeholder="Your first name" autocomplete="off"></label>
+      <label class="f"><span class="lbl">Create a login code (4–6 numbers)</span><input class="inp" id="j-pin" inputmode="numeric" maxlength="6" placeholder="••••" autocomplete="new-password" style="font:800 24px var(--f-d);letter-spacing:.4em"></label>
+      <label class="f"><span class="lbl">Type it again</span><input class="inp" id="j-pin2" inputmode="numeric" maxlength="6" placeholder="••••" autocomplete="new-password" style="font:800 24px var(--f-d);letter-spacing:.4em"></label>
+      <div class="btns"><button class="btn ghost" data-act="back">Back</button><button class="btn p" data-act="kidjoin">Join</button></div>
+      <div class="card" style="margin-top:6px"><div class="row"><span style="font-size:24px;color:var(--o)">🔑</span><div class="grow"><b>Already joined?</b><div class="note">Log in with your name and login code.</div></div><button class="btn sm" data-act="tokidlogin">Log in</button></div></div>`:authForm('join')}</div>`;
+  if(STEP==='kidlogin')return`<div class="start view r"><div><div class="lbl">I’m a kid</div><h1 class="ttl">Log in</h1><p class="note">Use the family code, your name and the login code you made.</p></div>
+      <label class="f"><span class="lbl">Family code</span><input class="inp" id="l-code" maxlength="6" placeholder="ABC123" autocomplete="off" style="text-transform:uppercase;font:800 24px var(--f-d);letter-spacing:.2em"></label>
+      <label class="f"><span class="lbl">Your name</span><input class="inp" id="l-name" maxlength="18" autocomplete="off"></label>
+      <label class="f"><span class="lbl">Login code</span><input class="inp" id="l-pin" inputmode="numeric" maxlength="6" placeholder="••••" autocomplete="current-password" style="font:800 24px var(--f-d);letter-spacing:.4em"></label>
+      <p class="note">Forgot it? Your parent has a copy in their notifications.</p>
+      <div class="btns"><button class="btn ghost" data-act="tokid">Back</button><button class="btn p" data-act="kidlogin">Log in</button></div></div>`;
   if(STEP==='join')return`<div class="start view r"><div><div class="lbl">${JOINROLE==='parent'?'Join as a parent':'I’m a kid'}</div><h1 class="ttl">Join with a code</h1><p class="note">${JOINROLE==='parent'?'Ask the parent who made the family for the 6-letter code. They’ll let you in as a parent.':'Ask your parent for the 6-letter family code. They’ll let you in and give you your chore.'}</p></div>
       ${C.cloud&&C.cloud.uid?`<div class="note">Signed in as ${esc(C.cloud.email)}</div>
       <label class="f"><span class="lbl">Family code</span><input class="inp" id="j-code" maxlength="6" placeholder="ABC123" style="text-transform:uppercase;font:800 24px var(--f-d);letter-spacing:.2em"></label>
@@ -835,9 +848,9 @@ function bindStart(){const a=$('#app');
     else if(act==='back'){STEP=C.fam?null:'start'}
     else if(act==='create')return doCreate();
     else if(act==='signin'||act==='signup')return doAuth(act,b.dataset.next);
-    else if(act==='join')return doJoin();else if(act==='recheck')return cloudPull(true);
+    else if(act==='join')return doJoin();else if(act==='kidjoin')return doKidJoin();else if(act==='kidlogin')return doKidLogin();else if(act==='tokidlogin')STEP='kidlogin';else if(act==='recheck')return cloudPull(true);
     render()}}
-async function doCreate(){const names=CREATE.names.map(s=>s.trim());if(!names.some(Boolean)){SFX.warn();toast('✏️','Add a name','Put at least one name in a slot.');return}
+async function doCreate(){const names=CREATE.names.map(s=>s.trim());if(!names.some(Boolean)&&!CREATE.cloud){SFX.warn();toast('✏️','Add a name','Put a kid’s name in a slot, or turn on “Put the family online” so kids can join with their own names.');return}
   const P=CREATE.mode==='parent';if(!P&&!names[CREATE.slot]){SFX.warn();toast('👆','Pick yourself','Tap the slot that is you (it needs a name).');return}
   const pin=($('#c-pin')||{}).value||'';
   const f={id:uid(),name:CREATE.fam.trim()||'Our family',startMonth:monthIdx(),slots:names.map(n=>({name:n})),parents:[],rules:{},goals:[{id:uid(),lvl:5,reward:'',who:'all'},{id:uid(),lvl:10,reward:'',who:'all'}],contact:{},reportTime:'19:00',pin,approvals:{}};
@@ -892,7 +905,7 @@ function viewRanks(){const me=meP(),p=prog(me.pid),lp=lvlProg(p.xp),t=tierOf(lp.
     h+=`<div class="sec-h"><h3 class="ttl">Leaderboard</h3><span class="lbl">by total XP</span></div>${world?`<div class="seg" id="lbseg"><span class="ind"></span><button data-seg="fam" class="${LBSEG==='fam'?'on':''}">Family</button><button data-seg="world" class="${LBSEG==='world'?'on':''}">World</button></div>`:''}
       ${rows.map((r,i)=>`<div class="lb ${i<3?'p'+(i+1):''} ${r.mine?'mine':''}" style="animation-delay:${i*.06}s"><span class="pos">${i===0?'👑':i+1}</span>${embSVG(r.L,'sm')}<div class="grow"><b>${esc(r.name)}${r.mine?' (you)':''}</b><div class="note">LV ${r.L} · 🔥 ${r.streak||0}</div></div><span class="x">${fmt(r.xp)}</span></div>`).join('')||'<div class="note">Nobody here yet.</div>'}`}
   h+=`<div class="sec-h"><h3>All ranks</h3><span class="lbl">extremely hard</span></div><div class="tiers">${TIERS.map(x=>`<div class="tier ${lp.L>=x[1]?'':'lock'}" data-tier="${x[1]}">${embSVG(x[1])}<div>${x[0]}</div><div class="note" style="font-size:10px">LV ${x[1]}</div></div>`).join('')}</div>
-    <p class="note" style="text-align:center;margin-top:12px">Level ${lp.L+1} needs ${fmt(needFor(lp.L))} XP. Every level costs 30% more than the last.</p>`;
+    <p class="note" style="text-align:center;margin-top:12px">Level ${lp.L+1} needs ${fmt(needFor(lp.L))} XP. Every level costs 45% more than the last.</p>`;
   return h}
 /* ---------- KID: badges ---------- */
 function viewBadges(){const p=prog(meP().pid),got=BADGES.filter(b=>p.badges[b.id]).length;
@@ -906,7 +919,7 @@ function viewFamily(){const f=fam(),k=dkey();let h='';
       :`<p class="note">This family lives on this device. ${window.CH_SUPABASE&&window.supabase?'Put it online to get a join code.':''}</p>${window.CH_SUPABASE&&window.supabase?'<button class="btn sm" data-act="gocloud">Put family online</button>':''}`}</section>`;
   const pend=(C.joinReq||[]);if(pend.length)h+=`<div class="sec-h"><h3>Wants to join</h3></div>`+pend.map(m=>`<div class="card"><b>${esc(m.name||'Someone')}</b> <span class="tag ${m.role==='parent'?'o':''}">wants to join as a ${m.role==='parent'?'parent':'kid'}</span><div class="row" style="margin-top:8px;flex-wrap:wrap">
      <select class="inp" style="flex:1;min-width:110px" data-jrole="${m.user_id}"><option value="child">Child</option><option value="parent" ${m.role==='parent'?'selected':''}>Parent</option></select>
-     <select class="inp" style="flex:1;min-width:110px" data-jslot="${m.user_id}"><option value="">No slot</option>${f.slots.map((s,i)=>`<option value="${i}" ${(s.name||'').toLowerCase()===(m.name||'').toLowerCase()?'selected':''}>${esc(s.name||'Slot '+(i+1))} · ${choreFor(f,i).n}</option>`).join('')}</select></div>
+     <select class="inp" style="flex:1;min-width:110px" data-jslot="${m.user_id}"><option value="">No slot</option>${f.slots.map((s,i)=>`<option value="${i}" ${m.slot===i||(m.slot==null&&(s.name||'').toLowerCase()===(m.name||'').toLowerCase())?'selected':''}>${esc(s.name||'Slot '+(i+1))} · ${choreFor(f,i).n}</option>`).join('')}</select></div>
      <div class="btns"><button class="btn sm red" data-act="jdeny" data-u="${m.user_id}">Deny</button><button class="btn sm p" data-act="jok" data-u="${m.user_id}">Let in</button></div></div>`).join('');
   const waits=[];kids().forEach(p=>{const d=prog(p.pid).days;Object.keys(d).slice(-7).forEach(day=>{for(const id in d[day].t){const e=d[day].t[id];if(!e.ok&&!e.g){const t=[...tasksFor(p.slot,day),monthTask(p.slot,day)].find(x=>x.id===id);if(t&&!((f.approvals||{})[p.pid]||{})[day]?.[id])waits.push({p,day,t})}}})});
   if(waits.length)h+=`<div class="sec-h"><h3>Needs approval</h3><span class="lbl">${waits.length}</span></div>`+waits.map(w=>`<div class="task"><span style="font-size:22px">${choreFor(f,w.p.slot).e}</span><div class="grow"><div class="tt">${esc(w.t.t)}</div><small>${esc(w.p.name)} · ${w.day===k?'today':w.day}</small></div>
@@ -914,7 +927,7 @@ function viewFamily(){const f=fam(),k=dkey();let h='';
   h+=`<div class="sec-h"><h3>Today</h3><span class="lbl">${new Date().toLocaleDateString(undefined,{weekday:'long'})}</span></div>`;
   h+=kids().map(p=>{const s=dayStats(p.pid,p.slot),pr=prog(p.pid),c=choreFor(f,p.slot),L=lvlOf(pr.xp),R=rulesFor(p.slot);
     return`<section class="card"><div class="kid">${avSVG(p.name,L)}<div class="grow"><b>${esc(p.name)}</b> <span class="tag o">${c.e} ${c.n}</span>${R.paused?' <span class="tag">paused</span>':''}${(pr.days[k]||{}).flag?' <span class="tag r">⚠️ fast</span>':''}
-      <div class="note">LV ${L} · ${fmt(pr.xp)} XP · 🔥 ${pr.streak}${isLocalPid(p.pid)?'':' · own phone'}</div><div class="mini"><i style="width:${s.total?s.ok/s.total*100:0}%"></i></div></div><div style="font:900 22px var(--f-d)">${s.ok}/${s.total}</div></div>
+      <div class="note">LV ${L} · ${fmt(pr.xp)} XP · 🔥 ${pr.streak}${isLocalPid(p.pid)?'':' · own phone'}</div>${kidCode(p)?`<div class="note" style="margin-top:2px">Login code: <b class="kcode" data-act="showcode" data-c="${esc(kidCode(p))}" style="color:var(--o);cursor:pointer">•••• tap to show</b></div>`:''}<div class="mini"><i style="width:${s.total?s.ok/s.total*100:0}%"></i></div></div><div style="font:900 22px var(--f-d)">${s.ok}/${s.total}</div></div>
       <div class="btns"><button class="btn sm" data-act="bonus" data-pid="${p.pid}">🎁 Bonus XP</button>${isLocalPid(p.pid)?`<button class="btn sm" data-act="actas" data-pid="${p.pid}">Do chores as ${esc(p.name)}</button>`:''}<button class="btn sm" data-act="kidrules" data-slot="${p.slot}">Rules</button></div></section>`}).join('')||'<div class="note">Add names in Settings.</div>';
   const inbox=myInbox().filter(n=>n.kind!=='approve'||waits.length);
   h+=`<div class="sec-h"><h3>Notifications</h3>${myInbox().some(n=>!n.read)?'<button class="btn sm ghost" data-act="readall">Mark all read</button>':''}</div>`+
@@ -978,7 +991,7 @@ function bindView(){const a=$('#app');
     const dy=T.closest('[data-day]');if(dy){REPDAY=dy.dataset.day;SFX.tap();render();return}
     const rs=T.closest('[data-rslot]');if(rs){RULESLOT=+rs.dataset.rslot;SFX.tap();render();return}
     const b=T.closest('[data-act]');if(!b)return;const act=b.dataset.act;if(b.type!=='checkbox')SFX.tap();
-    ({me:openMe,bell:openBell,redish:()=>askDishes(true),replay:()=>{SFX.pound();const w=$('.emb-wrap');w.animate([{transform:'scale(1)'},{transform:'scale(1.25) rotate(-8deg)'},{transform:'scale(.95) rotate(4deg)'},{transform:'scale(1)'}],{duration:700,easing:'cubic-bezier(.3,1.6,.4,1)'});sparks(w)},
+    ({showcode:()=>{b.textContent=b.dataset.c;SFX.tap()},me:openMe,bell:openBell,redish:()=>askDishes(true),replay:()=>{SFX.pound();const w=$('.emb-wrap');w.animate([{transform:'scale(1)'},{transform:'scale(1.25) rotate(-8deg)'},{transform:'scale(.95) rotate(4deg)'},{transform:'scale(1)'}],{duration:700,easing:'cubic-bezier(.3,1.6,.4,1)'});sparks(w)},
       swap:()=>{notifyParents('swap',`${meP().name} wants to swap chores`,`They have ${choreFor(fam(),meP().slot).n} this month.`);toast('🔄','Asked your parent','They’ll decide.')},
       approve:()=>{approveTask(b.dataset.pid,b.dataset.k,b.dataset.id,true);SFX.check(4);confetti(.4);render()},deny:()=>{approveTask(b.dataset.pid,b.dataset.k,b.dataset.id,false);SFX.uncheck();render()},
       bonus:()=>bonusSheet(b.dataset.pid),actas:()=>switchTo(b.dataset.pid),
@@ -1010,16 +1023,26 @@ function famSave(){save();try{famPush()}catch(e){}}
 function shareText(t){if(navigator.share)navigator.share({text:t}).catch(()=>{});else{try{navigator.clipboard.writeText(t);toast('📋','Copied','Paste it anywhere.')}catch(e){}}}
 function bonusSheet(pid){const p=personOf(pid);sheet(`<div class="eyebrow" style="font:600 11px var(--f-m);letter-spacing:.2em;color:var(--o)">BONUS XP</div><h2>Reward ${esc(p.name)}</h2><div class="who" style="margin:12px 0">${[10,25,50,100].map(n=>`<button class="pill" data-amt="${n}">+${n}</button>`).join('')}</div><input class="inp" id="b-why" maxlength="40" placeholder="Why? (helped without being asked)"><div class="btns"><button class="btn ghost" data-close>Cancel</button></div>`,
   (o,close)=>o.addEventListener('click',e=>{const x=e.target.closest('[data-amt]');if(!x)return;giveBonus(pid,+x.dataset.amt,o.querySelector('#b-why').value.trim());close();SFX.coin();confetti(.6);toast('🎁','Bonus sent',`+${x.dataset.amt} XP to ${p.name}`);render()}))}
-function openMe(){const me=meP(),R=myRules(),f=fam();
-  if(!isParent()&&R.lockSettings){const close=sheet(`<h2>${esc(me.name)}</h2><p class="note">Your parent locked settings.</p><div class="btns"><button class="btn" data-act="toPar">👑 Parent mode</button><button class="btn p" data-close>OK</button></div>`,(o,c)=>o.querySelector('[data-act=toPar]').onclick=()=>{c();switchTo(f.parents[0]?.pid)});return}
-  sheet(`<h2>${esc(me?.name||'')}</h2>${!isParent()&&!R.lockName&&isLocalPid(me.pid)||(!isParent()&&!R.lockName&&!isLocalPid(me.pid))?`<label class="f"><span class="lbl">Change your name</span><input class="inp" id="m-name" maxlength="18" value="${esc(me.name)}"></label>`:''}
-    <div class="lbl" style="margin-top:14px">Switch person</div>${people().filter(p=>(p.role==='parent'||(f.slots[p.slot].name||'').trim())&&(isLocalPid(p.pid)||p.role==='parent'&&(!C.cloud||!C.cloud.uid)||p.pid===C.me.pid)).map(p=>`<button class="choice" style="margin-top:8px;padding:10px" data-sw="${p.pid}">${avSVG(p.name,lvlOf(prog(p.pid).xp))}<span><b style="font-size:17px">${esc(p.name)}${p.pid===C.me.pid?' (now)':''}</b><small>${p.role==='parent'?'Parent':choreFor(f,p.slot).n}</small></span></button>`).join('')}
-    <label class="sw"><div class="grow"><b>Sounds</b></div><input type="checkbox" id="m-snd" ${C.sound!==false?'checked':''} ${R.forceSound&&!isParent()?'disabled':''}></label>
+function kidCode(p){if(!p)return'';const f=fam();if(p.slot!=null&&f.slots[p.slot]&&f.slots[p.slot].code)return f.slots[p.slot].code;return(C.kidCodes||{})[(p.name||'').toLowerCase()]||''}
+function openMe(){const me=meP(),R=myRules(),f=fam(),kid=!isParent();
+  const canName=false; // kids keep the name they joined with (it's part of their login); parents rename in Settings
+  // kids can't hop into other accounts: only Parent mode (needs the parent PIN) on a shared device, or log out on their own phone
+  const sharedDevice=isLocalPid(me.pid);
+  const list=kid?(sharedDevice?people().filter(p=>p.role==='parent'):[]):people().filter(p=>(p.role==='parent'||(f.slots[p.slot].name||'').trim())&&(isLocalPid(p.pid)||p.pid===C.me.pid||(p.role==='parent'&&!(C.cloud&&C.cloud.uid))));
+  sheet(`<h2>${esc(me?.name||'')}</h2>${canName&&!R.lockSettings?`<label class="f"><span class="lbl">Change your name</span><input class="inp" id="m-name" maxlength="18" value="${esc(me.name)}"></label>`:''}
+    ${kid&&R.lockSettings?'<p class="note">Your parent locked settings.</p>':''}
+    ${list.length?`<div class="lbl" style="margin-top:14px">${kid?'Parent mode':'Switch person'}</div>`+list.map(p=>`<button class="choice" style="margin-top:8px;padding:10px" data-sw="${p.pid}">${avSVG(p.name,lvlOf(prog(p.pid).xp))}<span><b style="font-size:17px">${esc(p.name)}${p.pid===C.me.pid?' (now)':''}</b><small>${p.role==='parent'?(kid?'Needs the parent PIN':'Parent'):choreFor(f,p.slot).n+(kidCode(p)?' · needs their login code':'')}</small></span></button>`).join(''):''}
+    ${!(kid&&R.lockSettings)?`<label class="sw"><div class="grow"><b>Sounds</b></div><input type="checkbox" id="m-snd" ${C.sound!==false?'checked':''} ${R.forceSound&&kid?'disabled':''}></label>`:''}
+    ${kid&&!sharedDevice?`<div class="sw"><div class="grow"><b>Log out</b><small>You’ll need your name and login code to get back in.</small></div><button class="btn sm" data-lo>Log out</button></div>`:''}
     <div class="btns"><button class="btn p" data-close>Done</button></div>`,(o,close)=>{
-      o.addEventListener('click',e=>{const s=e.target.closest('[data-sw]');if(s){close();switchTo(s.dataset.sw)}});
+      o.addEventListener('click',e=>{const s=e.target.closest('[data-sw]');if(s){close();switchTo(s.dataset.sw)}if(e.target.closest('[data-lo]')){close();cloudSignOut(true)}});
       const n=o.querySelector('#m-name');if(n)n.onchange=()=>{const v=n.value.trim();if(!v)return;if(me.slot!=null){f.slots[me.slot].name=v;famSave();cloudRename(v)}render()};
-      o.querySelector('#m-snd').onchange=e=>{C.sound=e.target.checked;save()}})}
-function switchTo(pid){const p=personOf(pid);if(!p)return;const go=()=>{C.me={pid,role:p.role,slot:p.slot};TAB=null;save();SFX.swoosh();render();if(p.role==='parent')maybeReport();else{unseenGoals();checkBadges(pid)}};
+      const sd=o.querySelector('#m-snd');if(sd)sd.onchange=e=>{C.sound=e.target.checked;save()}})}
+function codeSheet(title,sub,onOk){sheet(`<h2>${title}</h2><p class="note">${sub}</p><input class="inp" id="pin" inputmode="numeric" maxlength="6" autocomplete="off" style="font:800 28px var(--f-d);letter-spacing:.4em;text-align:center"><div class="btns"><button class="btn ghost" data-close>Cancel</button><button class="btn p" id="pinok">OK</button></div>`,(o,close)=>{const ok=()=>{const v=o.querySelector('#pin').value.trim();if(onOk(v)===false){SFX.warn();o.querySelector('.box').animate([{transform:'translateX(-8px)'},{transform:'translateX(8px)'},{transform:'none'}],{duration:250})}else close()};o.querySelector('#pinok').onclick=ok;o.querySelector('#pin').onkeydown=e=>{if(e.key==='Enter')ok()};setTimeout(()=>o.querySelector('#pin').focus(),50)})}
+function switchTo(pid,ok){const p=personOf(pid);if(!p)return;
+  if(p.role==='child'&&isLocalPid(pid)&&!ok&&!(C.me&&C.me.pid===pid)){const f=fam(),sl=f.slots[p.slot];
+    if(!sl.code){codeSheet(`Hi ${esc(p.name)}! Make a login code`,'Pick 4 to 6 numbers. Memorize it or write it down. Your parent gets a copy.',v=>{if(!/^\d{4,6}$/.test(v))return false;sl.code=v;famSave();setTimeout(()=>{switchTo(pid,true);notifyParents('code',`${p.name}'s login code`,`Login code: ${v}. Keep it safe in case they forget it.`,{name:p.name,code:v});overlay(`<div class="rays"></div><div class="eyebrow">Your login code</div><div class="code" style="letter-spacing:.35em">${esc(v)}</div><h2 class="ttl">Memorize it or write it down!</h2><p>You need it every time you switch to your profile.</p>`,{btn:'Got it'})},50)});return}
+    if(!isParent()||true){codeSheet(`${esc(p.name)}’s login code`,'Type your login code.',v=>{if(v!==sl.code)return false;setTimeout(()=>switchTo(pid,true),50)});return}}const go=()=>{C.me={pid,role:p.role,slot:p.slot};TAB=null;save();SFX.swoosh();render();if(p.role==='parent')maybeReport();else{unseenGoals();checkBadges(pid)}};
   if(p.role==='parent'&&fam().pin&&!isParent()){sheet(`<h2>Parent PIN</h2><input class="inp" id="pin" inputmode="numeric" maxlength="6" autofocus style="font:800 28px var(--f-d);letter-spacing:.4em;text-align:center"><div class="btns"><button class="btn ghost" data-close>Cancel</button><button class="btn p" id="pinok">Unlock</button></div>`,(o,close)=>{const ok=()=>{if(o.querySelector('#pin').value===fam().pin){close();go()}else{SFX.warn();o.querySelector('.box').animate([{transform:'translateX(-8px)'},{transform:'translateX(8px)'},{transform:'none'}],{duration:250})}};o.querySelector('#pinok').onclick=ok;setTimeout(()=>o.querySelector('#pin').focus(),50)});return}
   go()}
 const isLocalPid=pid=>/^s\d$/.test(pid)||/^p/.test(pid);
@@ -1044,6 +1067,21 @@ let lastDay=dkey();setInterval(()=>{if(dkey()!==lastDay){lastDay=dkey();render()
 
 /* ================= cloud sync (Supabase) — only on the hosted site ================= */
 let SB=null;
+const kidEmail=(code,name)=>`k.${code.toLowerCase()}.${(name.toLowerCase().normalize('NFKD').replace(/[^a-z0-9]/g,'')||'kid')}@kids.pepechores.app`;
+const kidPass=(pin,code)=>`Pepe-${pin}-${code.toUpperCase()}`;
+async function doKidJoin(){const code=$('#j-code').value.trim().toUpperCase(),name=$('#j-name').value.trim(),pin=$('#j-pin').value.trim(),pin2=$('#j-pin2').value.trim();
+  if(code.length<6){SFX.warn();toast('✏️','Family code','Type the 6-letter family code.');return}if(!name){SFX.warn();toast('✏️','Your name','Type your first name.');return}
+  if(!/^\d{4,6}$/.test(pin)){SFX.warn();toast('🔒','Login code','Make a code with 4 to 6 numbers.');return}if(pin!==pin2){SFX.warn();toast('🔒','Codes don’t match','Type the same code twice.');return}
+  try{let r=await SB.auth.signUp({email:kidEmail(code,name),password:kidPass(pin,code)});
+    if(r.error&&/registered|exists/i.test(r.error.message)){SFX.warn();toast('⚠️','That name is taken','Someone in this family already joined with that name. Log in instead.');return}if(r.error)throw r.error;
+    const s=r.data.session;if(!s)throw new Error('Could not sign in. Try again.');C.cloud={uid:s.user.id,email:s.user.email,kid:1};save();
+    const {data,error}=await SB.rpc('ch_join_family',{join_code:code,my_name:name,want_role:'child',kid_code:pin});if(error){await SB.auth.signOut();C.cloud=null;save();throw error}
+    C.pending={id:data.id,name:data.name,me:name};STEP='pending';save();render();SFX.allDone();
+    overlay(`<div class="rays"></div><div class="eyebrow">Your login code</div><div class="code" style="letter-spacing:.35em">${esc(pin)}</div><h2 class="ttl">Memorize it or write it down!</h2><p>You’ll need your name <b>${esc(name)}</b> and this code to log in again. Your parent got a copy too.</p>`,{btn:'I wrote it down'})}
+  catch(e){SFX.warn();toast('⚠️','Couldn’t join',String(e.message||e))}}
+async function doKidLogin(){const code=$('#l-code').value.trim().toUpperCase(),name=$('#l-name').value.trim(),pin=$('#l-pin').value.trim();if(code.length<6||!name||!pin){SFX.warn();toast('✏️','Fill everything in','Family code, name and login code.');return}
+  const r=await SB.auth.signInWithPassword({email:kidEmail(code,name),password:kidPass(pin,code)});if(r.error){SFX.warn();toast('🔒','Wrong name or code','Check them, or ask your parent for your login code.');return}
+  C.cloud={uid:r.data.session.user.id,email:r.data.session.user.email,kid:1};save();const had=await cloudPull(true);if(!had&&STEP!=='pending')STEP='start';else if(had)STEP=null;SFX.allDone();render()}
 function sbInit(){if(!window.CH_SUPABASE||!window.supabase||!window.supabase.createClient)return;try{SB=window.supabase.createClient(CH_SUPABASE.url,CH_SUPABASE.key,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false,storageKey:'chores-auth'}})}catch(e){SB=null;return}
   SB.auth.getSession().then(({data})=>{const s=data&&data.session;if(s){C.cloud={uid:s.user.id,email:s.user.email};save();cloudPull()}else if(C.cloud){C.cloud=null;save()}});
   setInterval(()=>{if(document.visibilityState==='visible')cloudPull()},20000);document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')cloudPull();else cloudPush(true)})}
@@ -1096,6 +1134,7 @@ async function cloudPull(force){if(!online()||pulling)return false;pulling=true;
   // parent notifications
   {const since=C.noteSince||new Date(Date.now()-864e5).toISOString();const {data:ns}=await SB.from('ch_notes').select('*').eq('family_id',f.id).gt('created_at',since).order('created_at',{ascending:true}).limit(80);const par=C.me.role==='parent';
     for(const n of ns||[]){if(C.inbox.find(x=>x.cid===n.id)||n.from_user===u)continue;const to=(n.data&&n.data.to)||(n.to_role==='parent'?'parent':'kids');if(par?n.to_role!=='parent':(n.to_role==='parent'||(to!=='kids'&&to!==u&&to!=='s'+C.me.slot)))continue;
+      if(n.kind==='code'&&n.data){C.kidCodes=C.kidCodes||{};C.kidCodes[(n.data.name||'').toLowerCase()]=n.data.code}
       const item={id:uid(),cid:n.id,at:Date.parse(n.created_at),kind:n.kind,title:n.title,body:n.body,data:n.data,to:par?'parent':(to==='kids'?'kids':u),from:n.from_user,read:false};C.inbox.unshift(item);if(C.noteSince){SFX.notify();sysNotify(n.title,n.body||'','ch-'+n.kind+n.id);toast(NK[n.kind]||'🔔',n.title,n.body||'')}}
     C.noteSince=ns&&ns.length?ns[ns.length-1].created_at:(C.noteSince||new Date(Date.now()-6e5).toISOString())}
   if(STEP==='pending'){STEP=null;TAB=null;SFX.allDone();confetti(1.2);toast('🎉','You’re in!',`Welcome to ${f.name}`);setTimeout(()=>{notifyParents('join',`${C.me&&personOf(C.me.pid)?.name||'New member'} joined the family`,'They can start doing chores now.');if(C.me.role==='child'){const ch=choreFor(f,C.me.slot);notifyKid(C.me.pid,'welcome',`Welcome! Your chore is ${ch.n}`,`You’re in ${f.name}. Do your chore to earn XP.`)}},300)}
@@ -1109,7 +1148,7 @@ async function cloudAdmit(user,yes){if(!famOnline())return;const f=fam();
   await cloudPull(true)}
 async function cloudWorld(){if(!online())return;const {data}=await SB.from('ch_board').select('*').order('xp',{ascending:false}).limit(50);C.world=data||[];render()}
 async function cloudRename(v){if(!famOnline())return;await SB.from('ch_members').update({name:v}).eq('family_id',fam().id).eq('user_id',C.cloud.uid).then(()=>{},()=>{});cloudPush(true)}
-async function cloudSignOut(){try{await cloudPush(true);await SB.auth.signOut()}catch(e){}C.cloud=null;save();toast('👋','Signed out','Your family stays on this device.');render()}
+async function cloudSignOut(kid){try{await cloudPush(true);await SB.auth.signOut()}catch(e){}const wasKid=kid||(C.cloud&&C.cloud.kid);C.cloud=null;if(wasKid){C.fam=null;C.me=null;STEP='start'}save();toast('👋','Logged out',wasKid?'Log back in with your name and login code.':'Your family stays on this device.');render()}
 
 /* ================= boot ================= */
 fxInit();sbInit();
