@@ -15,7 +15,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Routines">
 <style>:root{padding-top:0;padding-bottom:0}html{background:#09090A}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
-<script>window.RR_STANDALONE=true;window.RR_VERSION='10ec42bd64';</script>
+<script>window.RR_STANDALONE=true;window.RR_VERSION='3feefe830e';</script>
 <script>window.RR_SUPABASE={url:'https://uszalonpjyssvvsikzvg.supabase.co',key:'sb_publishable_w-5rI0R9ht2-HAr5HghM0w_-3HYiAEg'};</script>
 <script src="supabase.js"></script>
 </head>
@@ -2563,6 +2563,13 @@ function viewFocusEdit(cfg){
   <section class="card"><h3 class="h3">Which tasks must be done first?</h3>
     <div class="focus-pick"><button class="chip-btn ${all?'on':''}" data-act="freq" data-v="__all">All of today’s tasks</button>${ts.map(k=>{const v=k.kind==='workout'?'__workout':nrm(k.title);return`<button class="chip-btn ${!all&&req.includes(v)?'on':''}" data-act="freq" data-v="${esc(v)}">${esc(k.title)}</button>`}).join('')}</div></section>
   <section class="card"><div class="dayfoot" style="margin-top:0;border:0;padding:0"><button class="btn" data-act="focusdone">Done</button></div></section>`}
+function focusWarn(){if(focusCfg().byParent)return;try{SFX.notify()}catch(e){}
+  overlay('lvlup focus-warn',`<div class="eyebrow">Focus is on 🔒</div><div class="focus-lock">${lockSVG(false)}</div><h2>Before you start</h2>
+    <ul class="upd-list"><li><b>Routines Reimagined can’t close other apps by itself.</b> Phones only let their own settings do that.</li>
+    <li>To really block apps, set up the <b>Shortcuts</b> automation (iPhone) or <b>Focus mode</b> (Android) below on this tab.</li>
+    <li>Someone can still delete the automation in the Shortcuts app.</li>
+    <li>With no internet, the check can’t run, so locked apps will just open.</li>
+    <li>Until it’s set up, Focus works on the honour system. You’ve got this! 💪</li></ul>`)}
 function focusSet(patch){S.focus={...FOCUS_DEF,...(S.focus||{}),...patch};save()}
 function focusReport(){const f=focusState();return f.on?{on:true,apps:f.cfg.apps,done:f.done,total:f.total,open:f.open,byParent:f.cfg.byParent,at:S.focusDay&&S.focusDay.unlocked===todayKey()?S.focusDay.at:0}:{on:false}}
 /* parent: focus controls inside the restrictions editor */
@@ -3873,7 +3880,7 @@ function tryCommand(raw,inner){
   if(/^(?:please\s+)?(?:add|put)\s+(?:my\s+|the\s+)?(?:daily\s+)?workout\s+back(?:\s+on(?:\s+my\s+schedule)?)?$|^(?:please\s+)?add\s+(?:my\s+|the\s+)?daily workout(?:\s+to\s+my\s+schedule)?$/i.test(text))return run(()=>mutSched(sc=>{if(sc.sections.some(s=>s.tasks.some(k=>k.kind==='workout')))return'Your daily workout is already on your schedule.';const s=sc.sections.find(x=>/after school|afternoon|evening/i.test(x.name))||sc.sections.at(-1)||(sc.sections.push({id:rid(),name:'Workout',tasks:[]}),sc.sections[0]);s.tasks.push({id:'workout',kind:'workout',title:'Daily workout',time:'',min:S.profile.minutes||30});return`Added your **daily workout** back to ${esc(s.name)}. 💪`}));
   if(R0()==='me'&&/\b(focus|block my apps|lock my apps|block social media|lock social media)\b/i.test(text)&&!/\b(how|tips|help me focus|cant focus|can t focus)\b/i.test(t)){
     const f=focusState();
-    if(/\b(turn on|start|enable|block|lock)\b/i.test(text)){if(f.cfg.byParent)return'Your parent controls Focus mode, and it’s already set up for you.';focusSet({on:true});setTimeout(()=>{render();renderHeader()},50);const g=focusState();return`🔒 **Focus is on!** ${esc(g.cfg.apps.join(', '))} ${g.cfg.apps.length>1?'are':'is'} locked until you finish ${g.total} task${g.total===1?'':'s'}. See the **Focus** tab.`}
+    if(/\b(turn on|start|enable|block|lock)\b/i.test(text)){if(f.cfg.byParent)return'Your parent controls Focus mode, and it’s already set up for you.';focusSet({on:true});setTimeout(()=>{render();renderHeader();focusWarn()},400);const g=focusState();return`🔒 **Focus is on!** ${esc(g.cfg.apps.join(', '))} ${g.cfg.apps.length>1?'are':'is'} locked until you finish ${g.total} task${g.total===1?'':'s'}. See the **Focus** tab.`}
     if(/\b(turn off|stop|disable|unlock)\b/i.test(text)){if(!f.on)return'Focus is already off.';if(f.cfg.byParent)return'Your parent controls Focus mode, so only they can turn it off.';if(!f.open)return`Not yet! Finish **${f.total-f.done}** more task${f.total-f.done===1?'':'s'} and your apps unlock. 💪`;focusSet({on:false});return'Focus is off. Nice work finishing everything!'}
     if(/\b(status|how many|left|unlocked|locked)\b/i.test(text)||/^ focus $/.test(t))return f.on?(f.open?'🔓 You’re **unlocked**! Everything’s done.':`🔒 **Locked**: ${f.done}/${f.total} tasks done. ${f.total-f.done} to go!`):'Focus mode is off. Say **“turn on focus”** to lock your distracting apps until your tasks are done.'}
   // link a task to a tab
@@ -4148,7 +4155,7 @@ document.addEventListener('click',e=>{
     case'sharerank':shareRank(t);break;
     case'editprof':pEdit=true;render();setTimeout(()=>$('#pf')?.scrollIntoView({block:'start',behavior:reduced?'auto':'smooth'}),60);break;
     case'profcancel':pEdit=false;render();break;
-    case'focuson':{const c=focusCfg();if(!c.apps.length){focusEdit=true;render();toast(medal('🔒',false),'Pick some apps first','Choose which apps Focus should lock.');break}focusSet({on:true});SFX.link();render();toast(medal('🔒',true),'Focus is on','Finish your tasks to unlock your apps.');break}
+    case'focuson':{const c=focusCfg();if(!c.apps.length){focusEdit=true;render();toast(medal('🔒',false),'Pick some apps first','Choose which apps Focus should lock.');break}focusSet({on:true});SFX.link();render();focusWarn();break}
     case'focusoff':{const f=focusState();if(f.cfg.byParent)break;if(!f.open){toast(medal('🔒',false),'Finish your tasks first',`${f.total-f.done} left before you can turn Focus off.`);SFX.soft();break}focusSet({on:false});render();break}
     case'sccopy':{const v=t.dataset.v,txt=v==='url'?focusCheckURL():v==='key'?((window.RR_SUPABASE||{}).key||''):location.origin+location.pathname+'#focus';
       (navigator.clipboard?navigator.clipboard.writeText(txt):Promise.reject()).then(()=>{SFX.tick();toast(medal('✓',true),'Copied','Now paste it into Shortcuts.')}).catch(()=>{prompt('Copy this:',txt)});break}
