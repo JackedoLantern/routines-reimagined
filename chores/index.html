@@ -1,0 +1,913 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>CHORES</title>
+<meta name="description" content="Family chores that rotate every month. Earn XP, climb the leaderboard, unlock 55 badges.">
+<meta name="theme-color" content="#0a0a0b"><meta name="color-scheme" content="dark">
+<link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="CHORES">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Figtree:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap">
+<script>window.CH_STANDALONE=true;window.CH_VERSION='fb9adcc899';window.CH_SUPABASE={url:'https://uszalonpjyssvvsikzvg.supabase.co',key:'sb_publishable_w-5rI0R9ht2-HAr5HghM0w_-3HYiAEg'};</script>
+<script src="../supabase.js"></script>
+<style>:root{--bg:#0a0a0b;--bg2:#121214;--card:#17171a;--card2:#1e1e22;--line:#2b2b31;--grey:#8d8d96;--grey2:#5c5c64;--text:#f4f2ef;--o:#ff7a00;--o2:#ffad5a;--o3:#ff9a2e;--oglow:rgba(255,122,0,.45);--red:#e3241b;--red2:#ff5a4a;--ok:#ff9a2e;
+  --f-d:"Big Shoulders Display","Oswald",Impact,sans-serif;--f-b:"Figtree",system-ui,-apple-system,sans-serif;--f-m:"DM Mono",ui-monospace,Menlo,monospace;
+  --sat:env(safe-area-inset-top,0px);--sab:env(safe-area-inset-bottom,0px);--r:18px}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--text);font:15px/1.45 var(--f-b);min-height:100%;overscroll-behavior:none}
+body{min-height:100dvh;background:radial-gradient(120% 60% at 50% -10%,#2a1400 0%,rgba(10,10,11,0) 55%),var(--bg);background-attachment:fixed}
+button,input,select,textarea{font:inherit;color:inherit}
+[hidden]{display:none!important}
+.app{max-width:560px;margin:0 auto;min-height:100dvh;display:flex;flex-direction:column;padding:0 14px calc(92px + var(--sab))}
+.app.noTabs{padding-bottom:calc(30px + var(--sab))}
+/* header */
+.hdr{position:sticky;top:0;z-index:30;margin:0 -14px;padding:calc(10px + var(--sat)) 16px 10px;display:flex;align-items:center;gap:10px;background:linear-gradient(#0a0a0bf2,#0a0a0bd9 70%,#0a0a0b00);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.brand{font:900 30px/1 var(--f-d);letter-spacing:.06em;display:flex;gap:1px;flex:1;min-width:0}
+.brand i{font-style:normal;display:inline-block;animation:bWave 3.2s ease-in-out infinite;color:var(--text)}
+.brand i:nth-child(odd){color:var(--o)}
+.brand i.dot{color:var(--red)}
+@keyframes bWave{0%,70%,100%{transform:none}80%{transform:translateY(-4px) scale(1.08)}90%{transform:translateY(1px)}}
+.me-chip{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:4px 12px 4px 4px;cursor:pointer;min-width:0;max-width:60%}
+.me-chip .av{width:34px;height:34px;flex:none}
+.me-chip b{font:800 15px/1 var(--f-d);letter-spacing:.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
+.me-chip small{font:500 10px/1.2 var(--f-m);color:var(--grey);display:block;white-space:nowrap}
+.xpbar{height:6px;border-radius:9px;background:#26262b;overflow:hidden;margin-top:3px;width:84px}
+.xpbar i{display:block;height:100%;background:linear-gradient(90deg,var(--o),var(--o2));border-radius:9px;box-shadow:0 0 10px var(--oglow);transition:width .8s cubic-bezier(.2,1,.3,1)}
+/* views */
+.view{animation:vIn .38s cubic-bezier(.2,1,.3,1)}
+.view.l{animation-name:vInL}.view.r{animation-name:vInR}
+@keyframes vIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes vInL{from{opacity:0;transform:translateX(-34px)}to{opacity:1;transform:none}}
+@keyframes vInR{from{opacity:0;transform:translateX(34px)}to{opacity:1;transform:none}}
+h1,h2,h3{font-family:var(--f-d);letter-spacing:.03em;margin:0;line-height:1.05}
+h1{font-size:40px;font-weight:900}h2{font-size:28px;font-weight:900}h3{font-size:20px;font-weight:800}
+.ttl{display:inline-block;animation:ttl 4s ease-in-out infinite}
+@keyframes ttl{0%,100%{transform:scale(1);text-shadow:0 0 0 transparent}50%{transform:scale(1.03);text-shadow:0 0 18px var(--oglow)}}
+.ico{display:inline-block;animation:icoB 3s ease-in-out infinite}
+@keyframes icoB{0%,100%{transform:scale(1) rotate(0)}50%{transform:scale(1.12) rotate(-4deg)}}
+.lbl{font:600 11px/1.2 var(--f-m);letter-spacing:.16em;text-transform:uppercase;color:var(--grey)}
+.note{color:var(--grey);font-size:13px}
+.card{background:linear-gradient(180deg,var(--card),#141416);border:1px solid var(--line);border-radius:var(--r);padding:16px;margin:12px 0;position:relative;overflow:hidden}
+.card.hot{border-color:#5a2a00;background:linear-gradient(160deg,#2a1300,#151516 60%)}
+.card.hot::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,.06) 50%,transparent 60%);transform:translateX(-100%);animation:shine 5s ease-in-out infinite;pointer-events:none}
+@keyframes shine{0%,70%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+.row{display:flex;align-items:center;gap:10px}.grow{flex:1;min-width:0}
+.btn{appearance:none;border:1px solid var(--line);background:var(--card2);border-radius:14px;padding:12px 16px;font-weight:700;cursor:pointer;transition:transform .12s,background .2s,border-color .2s;display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px}
+.btn:active{transform:scale(.95)}
+.btn.p{background:linear-gradient(180deg,var(--o3),var(--o));border-color:#ff9a3c;color:#140800;box-shadow:0 6px 22px -6px var(--oglow);animation:btnGlow 2.8s ease-in-out infinite}
+@keyframes btnGlow{0%,100%{box-shadow:0 6px 22px -8px var(--oglow)}50%{box-shadow:0 6px 30px -4px var(--oglow)}}
+.btn.red{background:#2a0d0b;border-color:#5a1612;color:var(--red2)}
+.btn.ghost{background:transparent}
+.btn.sm{min-height:36px;padding:7px 12px;font-size:13px;border-radius:11px}
+.btn.wide{width:100%}
+.btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.btns .btn{flex:1}
+.inp,select.inp,textarea.inp{width:100%;background:#0f0f11;border:1px solid var(--line);border-radius:12px;padding:12px 13px;outline:none;transition:border-color .2s,box-shadow .2s;min-height:46px}
+.inp:focus{border-color:var(--o);box-shadow:0 0 0 3px rgba(255,122,0,.18)}
+label.f{display:block;margin:10px 0 0}label.f>span{display:block;margin-bottom:5px}
+/* start screens */
+.start{min-height:calc(100dvh - 40px);display:flex;flex-direction:column;justify-content:center;gap:12px;padding:calc(20px + var(--sat)) 0 20px}
+.start .big{font:900 clamp(52px,18vw,110px)/.9 var(--f-d);letter-spacing:.04em;text-align:center;white-space:nowrap}
+.start .big i{font-style:normal;display:inline-block;animation:bigIn .7s cubic-bezier(.2,1.6,.4,1) both,bWave 3.2s ease-in-out infinite}
+.start .tagline{text-align:center;color:var(--grey);margin-bottom:12px}
+.choice{display:flex;align-items:center;gap:14px;text-align:left;padding:16px;border-radius:18px;background:var(--card);border:1px solid var(--line);cursor:pointer;width:100%;transition:transform .15s,border-color .2s}
+.choice:active{transform:scale(.97)}.choice:hover{border-color:#5a2a00}
+.choice .ci{font-size:30px;width:52px;height:52px;border-radius:15px;display:grid;place-items:center;background:#231204;flex:none;animation:icoB 3s ease-in-out infinite}
+.choice b{font:800 20px/1.1 var(--f-d);letter-spacing:.03em;display:block}.choice small{color:var(--grey)}
+@keyframes bigIn{from{transform:translateY(40px) scale(.3) rotate(-14deg);opacity:0}}
+.slot{display:flex;gap:8px;align-items:center;margin:8px 0}
+.slot .num{font:900 22px var(--f-d);color:var(--o);width:22px;text-align:center}
+.slot .inp{flex:1}
+.chore-chip{display:inline-flex;align-items:center;gap:6px;padding:8px 10px;border-radius:12px;background:#1f1206;border:1px solid #4a2300;font-weight:700;font-size:13px;white-space:nowrap;flex:none;min-width:104px}
+.chore-chip .e{font-size:18px;display:inline-block;animation:icoB 2.6s ease-in-out infinite}
+.who{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.pill{padding:9px 13px;border-radius:999px;border:1px solid var(--line);background:var(--card2);cursor:pointer;font-weight:600;font-size:14px;transition:all .2s}
+.pill.on{background:var(--o);border-color:var(--o);color:#140800;transform:scale(1.04)}
+/* chores */
+.hero{display:flex;gap:14px;align-items:center}
+.hero .big-e{font-size:46px;width:76px;height:76px;border-radius:22px;display:grid;place-items:center;background:radial-gradient(circle at 40% 30%,#4a2300,#1a0d02);border:1px solid #5a2a00;flex:none;animation:heroE 2.4s ease-in-out infinite}
+@keyframes heroE{0%,100%{transform:scale(1) rotate(0)}30%{transform:scale(1.1) rotate(-6deg)}60%{transform:scale(1.04) rotate(4deg)}}
+.ring{width:74px;height:74px;position:relative;flex:none}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring .t{fill:none;stroke:#28282d;stroke-width:8}.ring .b{fill:none;stroke:url(#gO);stroke-width:8;stroke-linecap:round;transition:stroke-dashoffset 1s cubic-bezier(.2,1,.3,1)}
+.ring div{position:absolute;inset:0;display:grid;place-items:center;font:900 20px var(--f-d)}
+.task{display:flex;align-items:center;gap:12px;padding:14px;border-radius:16px;background:var(--card);border:1px solid var(--line);margin:8px 0;cursor:pointer;user-select:none;transition:background .25s,border-color .25s,transform .12s;position:relative}
+.task:active{transform:scale(.98)}
+.task .cb{width:34px;height:34px;border-radius:11px;border:2px solid var(--grey2);flex:none;display:grid;place-items:center;transition:all .25s;background:#0f0f11}
+.task .cb svg{width:22px;height:22px;stroke:#140800;stroke-width:3.4;fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:30;stroke-dashoffset:30}
+.task.done{background:linear-gradient(90deg,#2a1300,#17171a);border-color:#5a2a00}
+.task.done .cb{background:var(--o);border-color:var(--o);box-shadow:0 0 16px var(--oglow)}
+.task.done .cb svg{stroke-dashoffset:0;transition:stroke-dashoffset .35s .18s ease-out}
+.task.done .tt{color:var(--o2)}
+.task.wait .cb{border-color:var(--o);border-style:dashed;animation:waitSpin 3s linear infinite}
+@keyframes waitSpin{to{transform:rotate(360deg)}}
+.task .tt{font-weight:700}.task small{display:block;color:var(--grey);font-size:12px;font-weight:500}
+.task .xp{font:800 15px var(--f-d);color:var(--o);letter-spacing:.04em}
+.task.locked{opacity:.55}
+.task.pop{animation:tPop .62s cubic-bezier(.3,1.6,.4,1)}
+@keyframes tPop{0%{transform:scale(1)}18%{transform:scale(1.06)}38%{transform:scale(.95) translateY(3px)}58%{transform:scale(.97) translateY(3px)}82%{transform:scale(1.03) translateY(-3px)}100%{transform:none}}
+.banner{padding:12px 14px;border-radius:14px;background:#2a0d0b;border:1px solid #5a1612;color:#ffc9c2;font-size:14px;margin:10px 0}
+.banner.o{background:#241204;border-color:#5a2a00;color:#ffd3a6}
+.sec-h{display:flex;align-items:baseline;justify-content:space-between;margin:18px 2px 4px}
+/* ranks */
+.emb{width:120px;height:120px;display:block;margin:0 auto}
+.emb.sm{width:36px;height:36px;margin:0}
+.emb .spin{transform-origin:50px 50px;animation:embSpin 9s linear infinite}
+@keyframes embSpin{to{transform:rotate(360deg)}}
+.emb-wrap{position:relative;display:grid;place-items:center;padding:8px 0}
+.emb-wrap::before{content:"";position:absolute;width:190px;height:190px;border-radius:50%;background:repeating-conic-gradient(from 0deg,rgba(255,122,0,.16) 0 8deg,transparent 8deg 22deg);animation:embSpin 14s linear infinite;mask:radial-gradient(circle,#000 30%,transparent 70%);-webkit-mask:radial-gradient(circle,#000 30%,transparent 70%)}
+.emb-wrap .emb{animation:embPulse 2.6s ease-in-out infinite;position:relative}
+@keyframes embPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
+.bigxp{text-align:center;font:900 46px/1 var(--f-d);letter-spacing:.03em;margin-top:6px}
+.bigxp span{color:var(--o)}
+.lvlbar{height:14px;border-radius:9px;background:#222226;overflow:hidden;margin:10px 0 4px;border:1px solid var(--line)}
+.lvlbar i{display:block;height:100%;background:linear-gradient(90deg,var(--red),var(--o) 40%,var(--o2));box-shadow:0 0 16px var(--oglow);position:relative;transition:width 1s cubic-bezier(.2,1,.3,1)}
+.lvlbar i::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.35),transparent);animation:shine 2.6s ease-in-out infinite}
+.seg{display:flex;background:#111113;border:1px solid var(--line);border-radius:13px;padding:3px;position:relative;margin:10px 0}
+.seg button{flex:1;border:0;background:none;padding:9px;border-radius:10px;font-weight:700;cursor:pointer;color:var(--grey);position:relative;z-index:1;transition:color .25s}
+.seg button.on{color:#140800}
+.seg .ind{position:absolute;top:3px;bottom:3px;border-radius:10px;background:var(--o);transition:left .35s cubic-bezier(.3,1.3,.5,1),width .35s}
+.lb{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:14px;background:var(--card);border:1px solid var(--line);margin:6px 0;animation:lbIn .45s cubic-bezier(.2,1.3,.4,1) both}
+@keyframes lbIn{from{opacity:0;transform:translateX(-18px)}}
+.lb .pos{font:900 22px var(--f-d);width:30px;text-align:center;color:var(--grey)}
+.lb.p1 .pos{color:var(--o)}.lb.p2 .pos{color:#c9c9cf}.lb.p3 .pos{color:#c96f2e}
+.lb.p1{border-color:#6a3200;background:linear-gradient(90deg,#2a1300,#17171a)}
+.lb.mine{box-shadow:inset 0 0 0 2px var(--o)}
+.lb b{font-weight:700}.lb .x{font:800 17px var(--f-d);color:var(--o);letter-spacing:.03em}
+.tiers{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.tier{text-align:center;padding:8px 2px;border-radius:12px;background:#121214;border:1px solid var(--line);font-size:11px;cursor:pointer}
+.tier.lock{opacity:.35;filter:grayscale(1)}
+.tier .emb{width:44px;height:44px}
+/* badges */
+.bgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:10px}
+.bdg{text-align:center;padding:10px 4px;border-radius:16px;background:var(--card);border:1px solid var(--line);cursor:pointer;perspective:500px;transition:transform .15s}
+.bdg:active{transform:scale(.94)}
+.bdg svg{width:62px;height:62px;display:block;margin:0 auto 4px;transform-style:preserve-3d}
+.bdg.got svg{animation:bFloat 3.4s ease-in-out infinite}
+.bdg:nth-child(3n) svg{animation-delay:-1.2s}.bdg:nth-child(3n+1) svg{animation-delay:-2.3s}
+@keyframes bFloat{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-3px) scale(1.05)}}
+.bdg.lock{opacity:.5}.bdg.lock svg{filter:grayscale(1) brightness(.55)}
+.bdg b{display:block;font-size:12px;line-height:1.15}.bdg small{font-size:10px;color:var(--grey);display:block;line-height:1.2;margin-top:2px}
+.bdg svg.flip{animation:coin 1.1s cubic-bezier(.3,.7,.4,1)!important}
+@keyframes coin{0%{transform:translateY(0) rotateY(0)}45%{transform:translateY(-70px) rotateY(900deg) scale(1.2)}75%{transform:translateY(0) rotateY(1440deg) scale(.95)}88%{transform:translateY(-8px) rotateY(1440deg)}100%{transform:translateY(0) rotateY(1440deg)}}
+/* tabs */
+.tabs{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(10px + var(--sab));z-index:40;width:min(540px,calc(100% - 20px));display:flex;background:rgba(20,20,22,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--line);border-radius:22px;padding:6px;box-shadow:0 12px 40px -10px #000}
+.tabs button{flex:1;border:0;background:none;padding:8px 2px 7px;border-radius:16px;cursor:pointer;color:var(--grey);font:700 11px/1.1 var(--f-b);display:flex;flex-direction:column;align-items:center;gap:3px;position:relative;z-index:1;transition:color .3s}
+.tabs button .ti{font-size:22px;transition:transform .35s cubic-bezier(.3,1.6,.4,1)}
+.tabs button.on{color:#140800}.tabs button.on .ti{transform:scale(1.15) translateY(-1px)}
+.tabs .ind{position:absolute;top:6px;bottom:6px;border-radius:16px;background:linear-gradient(180deg,var(--o3),var(--o));box-shadow:0 0 22px -2px var(--oglow);transition:left .45s cubic-bezier(.3,1.25,.5,1),width .45s;overflow:hidden}
+.tabs .ind::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 30%,rgba(255,255,255,.55) 50%,transparent 70%);transform:translateX(-120%);animation:indShine 4.5s ease-in-out infinite}
+@keyframes indShine{0%,75%{transform:translateX(-120%)}100%{transform:translateX(120%)}}
+.badge-dot{position:absolute;top:4px;right:calc(50% - 20px);min-width:16px;height:16px;border-radius:9px;background:var(--red);color:#fff;font:700 10px/16px var(--f-b);padding:0 4px}
+/* overlays */
+.ov{position:fixed;inset:0;z-index:80;display:grid;place-items:center;padding:20px;background:rgba(0,0,0,.72);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);animation:fade .25s}
+.ov .box{width:min(440px,100%);max-height:calc(100dvh - 40px);overflow:auto;background:linear-gradient(180deg,#1b1b1f,#131315);border:1px solid #3a2a1e;border-radius:24px;padding:22px;text-align:center;animation:boxIn .5s cubic-bezier(.2,1.5,.4,1);position:relative}
+.ov .box.left{text-align:left}
+.ov .eyebrow{font:600 11px var(--f-m);letter-spacing:.2em;color:var(--o);text-transform:uppercase}
+.ov h2{margin:6px 0}
+@keyframes fade{from{opacity:0}}
+@keyframes boxIn{from{transform:scale(.6) translateY(30px);opacity:0}}
+.rays{position:absolute;left:50%;top:110px;width:460px;height:460px;margin:-230px;background:repeating-conic-gradient(rgba(255,122,0,.18) 0 10deg,transparent 10deg 24deg);border-radius:50%;animation:embSpin 10s linear infinite;mask:radial-gradient(circle,#000 20%,transparent 65%);-webkit-mask:radial-gradient(circle,#000 20%,transparent 65%);pointer-events:none}
+.ov .big-n{font:900 84px/1 var(--f-d);color:var(--o);text-shadow:0 0 30px var(--oglow);animation:bigN 1s cubic-bezier(.2,1.6,.4,1)}
+@keyframes bigN{0%{transform:scale(0) rotate(-30deg)}60%{transform:scale(1.25)}}
+.toast{position:fixed;left:50%;top:calc(12px + var(--sat));z-index:90;transform:translateX(-50%);display:flex;gap:10px;align-items:center;background:#1c1c20;border:1px solid #5a2a00;border-radius:16px;padding:10px 14px;box-shadow:0 14px 40px -10px #000;width:max-content;max-width:calc(100% - 24px);animation:tIn .5s cubic-bezier(.2,1.5,.4,1)}
+.toast .e{font-size:26px}.toast b{display:block}.toast span{font-size:12px;color:var(--grey)}
+@keyframes tIn{from{transform:translate(-50%,-80px)}}
+.float{position:fixed;z-index:85;pointer-events:none;font:900 26px var(--f-d);color:var(--o);text-shadow:0 0 16px var(--oglow),0 2px 0 #000;white-space:nowrap}
+#fx{position:fixed;inset:0;pointer-events:none;z-index:84;width:100%;height:100%}
+/* parent */
+.kid{display:flex;gap:12px;align-items:center}
+.kid .av{width:46px;height:46px;flex:none}
+.mini{height:8px;border-radius:9px;background:#26262b;overflow:hidden;margin-top:6px}.mini i{display:block;height:100%;background:var(--o);border-radius:9px}
+.sw{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #222226;cursor:pointer}
+.sw:last-child{border-bottom:0}
+.sw .grow b{display:block;font-weight:700}.sw .grow small{color:var(--grey);font-size:12px;display:block}
+.sw input[type=checkbox]{appearance:none;width:50px;height:30px;border-radius:99px;background:#2a2a30;position:relative;flex:none;cursor:pointer;transition:background .25s}
+.sw input[type=checkbox]::after{content:"";position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;transition:transform .3s cubic-bezier(.3,1.5,.5,1)}
+.sw input[type=checkbox]:checked{background:var(--o)}.sw input[type=checkbox]:checked::after{transform:translateX(20px)}
+.sw .inp{width:auto;min-width:96px;min-height:38px;padding:7px 10px}
+.code{font:900 42px/1 var(--f-d);letter-spacing:.22em;color:var(--o);text-align:center;padding:10px;border:2px dashed #5a2a00;border-radius:16px;margin:8px 0;animation:ttl 3s ease-in-out infinite}
+.inbox-i{display:flex;gap:10px;padding:12px;border-radius:14px;background:#141416;border:1px solid var(--line);margin:6px 0}
+.inbox-i.new{border-color:#6a3200;background:#1f1105}
+.inbox-i .e{font-size:22px}
+.rep{width:100%;border-collapse:collapse;font-size:14px}.rep td,.rep th{padding:8px 6px;border-bottom:1px solid #232327;text-align:left}.rep th{font:600 11px var(--f-m);color:var(--grey);letter-spacing:.1em;text-transform:uppercase}
+.tag{display:inline-block;padding:3px 8px;border-radius:8px;font-size:11px;font-weight:700;background:#26262b;color:var(--grey)}
+.tag.o{background:#3a1c02;color:var(--o2)}.tag.r{background:#3a0f0c;color:var(--red2)}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<!--PEPE-INTRO--><script>/* ===== Pepe Apps intro: animated logo badge with angry shredded gorilla (orange & black). Plays once per launch, tap to skip ===== */
+(function(){
+  try{if(sessionStorage.getItem('pepe-intro'))return;sessionStorage.setItem('pepe-intro','1')}catch(e){}
+  const rm=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const css=`
+#pepeIntro{position:fixed;inset:0;z-index:2147483000;display:grid;place-items:center;background:radial-gradient(70% 55% at 50% 42%,#2a1400 0%,#0a0603 55%,#000 100%);overflow:hidden;font-family:"Big Shoulders Display","Oswald","Arial Narrow",Impact,sans-serif;transition:opacity .5s,transform .5s}
+#pepeIntro.out{opacity:0;transform:scale(1.06);pointer-events:none}
+#pepeIntro .pp-stage{position:relative;display:grid;justify-items:center;gap:6px}
+#pepeIntro .pp-glow{position:absolute;width:420px;height:420px;left:50%;top:38%;margin:-210px 0 0 -210px;border-radius:50%;background:radial-gradient(circle,rgba(255,122,0,.42),rgba(200,20,20,.12) 45%,rgba(255,122,0,0) 68%);animation:ppPulse 1.2s ease-in-out infinite}
+#pepeIntro .pp-floor{display:none;position:absolute;left:50%;top:252px;width:200px;height:26px;margin-left:-100px;border-radius:50%;background:radial-gradient(closest-side,rgba(255,122,0,.55),transparent);animation:ppShadow .6s ease-in-out infinite alternate}
+#pepeIntro svg.pp-monkey{position:relative;width:min(260px,66vw);height:auto;aspect-ratio:1;overflow:visible;animation:ppIn .8s cubic-bezier(.2,1.4,.4,1) both;filter:drop-shadow(0 0 14px rgba(255,122,0,.45))}
+#pepeIntro .pp-ring{stroke-dasharray:100;stroke-dashoffset:100;animation:ppDraw .9s .15s cubic-bezier(.6,0,.2,1) forwards}
+#pepeIntro .pp-red{opacity:0;transform-origin:120px 140px;animation:ppFade .3s .9s forwards,ppSpin 2.4s 1s linear infinite}
+#pepeIntro .pp-shine{animation:ppSweep 1.6s 1s ease-in-out infinite}
+@keyframes ppDraw{to{stroke-dashoffset:0}}
+@keyframes ppSpin{from{transform:rotate(-90deg)}to{transform:rotate(270deg)}}
+@keyframes ppSweep{0%{transform:skewX(-18deg) translateX(0)}60%,100%{transform:skewX(-18deg) translateX(380px)}}
+#pepeIntro .pp-body{transform-origin:120px 210px;animation:ppSway .6s ease-in-out infinite alternate}
+#pepeIntro .pp-head{transform-origin:120px 100px;animation:ppBob .3s ease-in-out infinite alternate}
+#pepeIntro .pp-armL{transform-origin:60px 96px;animation:ppArmL .6s ease-in-out infinite alternate}
+#pepeIntro .pp-armR{transform-origin:180px 96px;animation:ppArmR .6s ease-in-out infinite alternate}
+#pepeIntro .pp-legL{transform-origin:98px 212px;animation:ppLegL .6s ease-in-out infinite alternate}
+#pepeIntro .pp-legR{transform-origin:142px 212px;animation:ppLegR .6s ease-in-out infinite alternate}
+
+#pepeIntro .pp-anger{transform-origin:162px 50px;animation:ppAnger .3s ease-in-out infinite alternate}@keyframes ppAnger{from{transform:scale(.8);opacity:.6}to{transform:scale(1.15);opacity:1}}
+#pepeIntro .pp-note{position:absolute;font-size:26px;color:#ff8a1f;opacity:0;animation:ppNote 1.8s ease-out infinite}
+#pepeIntro .pp-word{font-weight:900;font-size:clamp(34px,11vw,58px);letter-spacing:.08em;line-height:1;color:#fff;display:flex;gap:2px;text-shadow:0 0 24px rgba(255,122,0,.55)}
+#pepeIntro .pp-word i{font-style:normal;display:inline-block;animation:ppLetter .55s cubic-bezier(.2,1.6,.4,1) both}
+#pepeIntro .pp-word i.o{color:#ff7a00}
+#pepeIntro .pp-sub{font:600 13px/1 ui-monospace,Menlo,monospace;letter-spacing:.5em;color:#ff9a3c;opacity:0;animation:ppFade .5s 1.1s forwards}
+#pepeIntro .pp-skip{position:absolute;bottom:calc(22px + env(safe-area-inset-bottom,0px));left:0;right:0;text-align:center;font:500 12px ui-monospace,Menlo,monospace;letter-spacing:.2em;color:rgba(255,255,255,.35)}
+@keyframes ppIn{from{transform:scale(.3) rotate(-160deg);opacity:0}to{transform:none;opacity:1}}
+@keyframes ppSway{0%{transform:rotate(-5deg) translate(-5px,0)}50%{transform:rotate(0) translate(0,4px)}100%{transform:rotate(5deg) translate(5px,0)}}
+@keyframes ppBob{0%{transform:rotate(-8deg) translateY(2px)}50%{transform:rotate(0) translateY(-6px)}100%{transform:rotate(8deg) translateY(2px)}}
+@keyframes ppArmL{0%{transform:rotate(0)}100%{transform:rotate(-38deg) translate(26px,-14px)}}
+@keyframes ppArmR{0%{transform:rotate(38deg) translate(-26px,-14px)}100%{transform:rotate(0)}}
+@keyframes ppLegL{from{transform:rotate(-14deg)}to{transform:rotate(18deg)}}
+@keyframes ppLegR{from{transform:rotate(-18deg)}to{transform:rotate(14deg)}}
+@keyframes ppTail{from{transform:rotate(-18deg)}to{transform:rotate(22deg)}}
+@keyframes ppBlink{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.1)}}
+@keyframes ppPulse{0%,100%{transform:scale(.92);opacity:.8}50%{transform:scale(1.05);opacity:1}}
+@keyframes ppShadow{from{transform:scaleX(.8)}to{transform:scaleX(1.1)}}
+@keyframes ppNote{0%{transform:translate(0,0) rotate(0);opacity:0}20%{opacity:1}100%{transform:translate(var(--dx),-120px) rotate(var(--r));opacity:0}}
+@keyframes ppLetter{from{transform:translateY(30px) scale(.4) rotate(-12deg);opacity:0}to{transform:none;opacity:1}}
+@keyframes ppFade{to{opacity:1}}
+#pepeIntro .pp-skip .s2,#pepeIntro.snd .pp-skip .s1{display:none}#pepeIntro.snd .pp-skip .s2{display:inline}`;
+  const st=document.createElement('style');st.textContent=css;document.head.appendChild(st);
+  const fur='url(#ppFur)',skin='url(#ppSkin)',dk='#0e0a09';
+  const monkey=`<svg class="pp-monkey" viewBox="-14 6 268 268" aria-hidden="true"><defs>
+    <clipPath id="ppClip"><circle cx="120" cy="140" r="112"/></clipPath>
+    <radialGradient id="ppDisc" cx="50%" cy="38%" r="65%"><stop offset="0" stop-color="#3a1c04"/><stop offset=".6" stop-color="#120a05"/><stop offset="1" stop-color="#050303"/></radialGradient>
+    <linearGradient id="ppShine" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".35"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+    <radialGradient id="ppFur" cx="50%" cy="25%" r="80%"><stop offset="0" stop-color="#3a2416"/><stop offset=".55" stop-color="#1a100b"/><stop offset="1" stop-color="#050303"/></radialGradient>
+    <linearGradient id="ppRim" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ff7a00"/><stop offset=".25" stop-color="#ff7a00" stop-opacity="0"/><stop offset=".75" stop-color="#ff7a00" stop-opacity="0"/><stop offset="1" stop-color="#ff7a00"/></linearGradient>
+    <radialGradient id="ppSkin" cx="50%" cy="30%" r="75%"><stop offset="0" stop-color="#6a5a54"/><stop offset=".55" stop-color="#3b302c"/><stop offset="1" stop-color="#161110"/></radialGradient>
+    <radialGradient id="ppMus" cx="40%" cy="30%" r="70%"><stop offset="0" stop-color="#7d6b63"/><stop offset=".7" stop-color="#3e322e"/><stop offset="1" stop-color="#1c1513"/></radialGradient>
+    <radialGradient id="ppIris" cx="45%" cy="40%" r="60%"><stop offset="0" stop-color="#ffb000"/><stop offset=".6" stop-color="#e2380a"/><stop offset="1" stop-color="#4a0800"/></radialGradient>
+    <filter id="ppFurTex" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="fractalNoise" baseFrequency="1.6" numOctaves="2" seed="11" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="4.5" xChannelSelector="R" yChannelSelector="G"/></filter>
+    <filter id="ppGrain"><feTurbulence type="fractalNoise" baseFrequency="2.4" numOctaves="2" seed="5"/><feColorMatrix values="0 0 0 0 1  0 0 0 0 .55  0 0 0 0 .1  0 0 0 .10 0"/><feComposite in2="SourceGraphic" operator="in"/></filter></defs>
+    <circle cx="120" cy="140" r="112" fill="#0a0604"/>
+    <g clip-path="url(#ppClip)"><g transform="translate(0 6)">
+    <g class="pp-body">
+      <g class="pp-legL"><path d="M86 196 C74 206 70 226 72 244 L98 246 C100 230 104 214 108 204Z" fill="#0a0604" stroke="#ff7a00" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><path d="M60 252 C64 242 98 240 104 250 C104 258 64 260 60 252Z" fill="#0a0604" stroke="#ff7a00" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/></g>
+      <g class="pp-legR"><path d="M154 196 C166 206 170 226 168 244 L142 246 C140 230 136 214 132 204Z" fill="#0a0604" stroke="#ff7a00" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><path d="M136 250 C142 240 176 242 180 252 C176 260 136 258 136 250Z" fill="#0a0604" stroke="#ff7a00" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/></g>
+      <path d="M44 104 C50 80 86 70 120 74 C154 70 190 80 196 104 C198 124 182 140 166 152 C160 176 150 200 120 208 C90 200 80 176 74 152 C58 140 42 124 44 104Z" fill="#0a0604" stroke="#ff7a00" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
+      
+      <path d="M82 110 C88 94 116 94 119 108 C121 126 100 134 88 128 C80 124 80 118 82 110Z" fill="#0a0604" stroke="#ff7a00" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><path d="M158 110 C152 94 124 94 121 108 C119 126 140 134 152 128 C160 124 160 118 158 110Z" fill="#0a0604" stroke="#ff7a00" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
+      <path d="M102 138 C102 134 118 134 118 138 V149 C118 153 102 153 102 149Z M122 138 C122 134 138 134 138 138 V149 C138 153 122 153 122 149Z M103 156 C103 152 118 152 118 156 V166 C118 170 103 170 103 166Z M122 156 C122 152 137 152 137 156 V166 C137 170 122 170 122 166Z M105 173 C105 170 118 170 118 173 V182 C118 186 105 186 105 182Z M122 173 C122 170 135 170 135 173 V182 C135 186 122 186 122 182Z" fill="#0a0604" stroke="#ff7a00" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
+      <path d="M88 140 l10 5 M90 152 l9 4 M152 140 l-10 5 M150 152 l-9 4" stroke="#ff7a00" stroke-width="2" stroke-linecap="round"/>
+      <g class="pp-armL">
+        <path d="M60 92 C38 96 26 118 28 142 C30 154 40 160 52 156 C64 150 70 130 72 112Z" fill="#0a0604" stroke="#ff7a00" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
+        
+        <path d="M30 148 C22 164 22 186 28 200 L52 200 C58 184 58 166 54 152Z" fill="#0a0604" stroke="#ff7a00" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
+        <path d="M22 200 C22 190 56 190 58 200 C60 214 48 220 40 220 C30 220 20 212 22 200Z" fill="#0a0604" stroke="#ff7a00" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><path d="M27 205 h26 M28 211 h24" stroke="#ff7a00" stroke-width="1.5"/></g>
+      <g class="pp-armR">
+        <path d="M180 92 C202 96 214 118 212 142 C210 154 200 160 188 156 C176 150 170 130 168 112Z" fill="#0a0604" stroke="#ff7a00" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
+        
+        <path d="M210 148 C218 164 218 186 212 200 L188 200 C182 184 182 166 186 152Z" fill="#0a0604" stroke="#ff7a00" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
+        <path d="M182 200 C184 190 218 190 218 200 C220 212 210 220 200 220 C192 220 180 214 182 200Z" fill="#0a0604" stroke="#ff7a00" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><path d="M187 205 h26 M188 211 h24" stroke="#ff7a00" stroke-width="1.5"/></g>
+      <g class="pp-head"><g transform="translate(120 70) scale(.92) translate(-120 -78)">
+        <path d="M120 30 C108 30 98 40 94 50 C84 54 82 70 84 84 C86 104 100 114 120 114 C140 114 154 104 156 84 C158 70 156 54 146 50 C142 40 132 30 120 30Z" fill="#0a0604" stroke="#ff7a00" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
+        
+        <path d="M92 70 C92 58 108 54 120 60 C132 54 148 58 148 70 C152 86 146 108 120 110 C94 108 88 86 92 70Z" fill="#0a0604" stroke="#ff7a00" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
+        <path d="M90 66 C100 58 112 60 119 68 L121 68 C128 60 140 58 150 66 C148 74 138 72 128 76 L112 76 C102 72 92 74 90 66Z" fill="#0a0604" stroke="#ff7a00" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
+        <path d="M98 78 C103 74 109 74 113 79 C109 82 102 82 98 78Z" fill="#0a0604" stroke="#ff7a00" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><path d="M127 79 C131 74 137 74 142 78 C138 82 131 82 127 79Z" fill="#0a0604" stroke="#ff7a00" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
+        <circle cx="106" cy="78.5" r="3" fill="url(#ppIris)"/><circle cx="134" cy="78.5" r="3" fill="url(#ppIris)"/><circle cx="106" cy="78.5" r="1.2" fill="#0a0604"/><circle cx="134" cy="78.5" r="1.2" fill="#0a0604"/>
+        <path d="M96 75 L114 80 M144 75 L126 80" stroke="#ff7a00" stroke-width="3" stroke-linecap="round"/>
+        <path d="M110 84 C106 90 108 96 114 96 C116 98 124 98 126 96 C132 96 134 90 130 84 C126 82 114 82 110 84Z" fill="#0a0604" stroke="#ff7a00" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
+        <ellipse cx="114.5" cy="92" rx="4" ry="2.6" fill="#ff7a00"/><ellipse cx="125.5" cy="92" rx="4" ry="2.6" fill="#ff7a00"/>
+        <path d="M100 98 C108 96 132 96 140 98 C140 112 128 116 120 116 C112 116 100 112 100 98Z" fill="#0a0604" stroke="#ff7a00" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
+        <path d="M103 98 L106 108 L109 98Z M131 98 L134 108 L137 98Z" fill="#0a0604" stroke="#ff7a00" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><path d="M110 98 h20 v3 h-20z" fill="#0a0604" stroke="#ff7a00" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><path d="M106 112 L108 106 L110 112Z M130 112 L132 106 L134 112Z" fill="#0a0604" stroke="#ff7a00" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
+        <path d="M100 98 C108 96 132 96 140 98" fill="none" stroke="#ff7a00" stroke-width="1.6"/>
+        <path d="M94 96 C92 102 94 108 98 112 M146 96 C148 102 146 108 142 112 M112 66 C116 62 124 62 128 66" fill="none" stroke="#ff7a00" stroke-width="1.3"/>
+        </g><g class="pp-anger"><path d="M152 40 l8 -8 M156 46 l11 -3 M149 34 l2 -11" stroke="#e01b1b" stroke-width="3.4" stroke-linecap="round"/></g>
+      </g>
+    </g></g>
+    <rect class="pp-shine" x="-60" y="20" width="60" height="260" fill="url(#ppShine)" transform="skewX(-18)"/></g>
+    <circle class="pp-ring2" cx="120" cy="140" r="118" fill="none" stroke="#3a3a3e" stroke-width="3"/>
+    <circle class="pp-ring" cx="120" cy="140" r="126" fill="none" stroke="#ff7a00" stroke-width="8" stroke-linecap="round" pathLength="100" transform="rotate(-90 120 140)"/>
+    <circle class="pp-red" cx="120" cy="140" r="126" fill="none" stroke="#e01b1b" stroke-width="8" stroke-linecap="round" pathLength="100" stroke-dasharray="6 94" transform="rotate(-90 120 140)"/>
+    </svg>`;
+  const word=t=>[...t].map((c,i)=>c===' '?'<i style="width:14px"> </i>':`<i class="${'PEPE'.includes(c)&&i<4?'o':''}" style="animation-delay:${.35+i*.06}s">${c}</i>`).join('');
+  const el=document.createElement('div');el.id='pepeIntro';el.setAttribute('role','img');el.setAttribute('aria-label','Pepe Apps');
+  el.innerHTML=`<div class="pp-glow"></div><div class="pp-stage"><div class="pp-floor"></div>${monkey}
+    ${[0,1,2,3].map(i=>`<span class="pp-note" style="left:${[30,190,10,210][i]}px;top:${[60,40,130,120][i]}px;--dx:${[-30,30,-20,24][i]}px;--r:${[-30,25,-15,40][i]}deg;animation-delay:${i*.45}s">${['♪','♫','♪','♬'][i]}</span>`).join('')}
+    <div class="pp-word">${word('PEPE APPS')}</div><div class="pp-sub">PRESENTS</div></div><div class="pp-skip"><span class="s1">🔊 TAP FOR SOUND</span><span class="s2">TAP TO SKIP</span></div>`;
+  let ac=null,played=false;
+  const add=()=>{document.body.appendChild(el);tryPlay()};
+  if(document.body)add();else document.addEventListener('DOMContentLoaded',add);
+  /* ---- logo sounds: whoosh, ring riser, chest-pound thumps, roar, letter pops, shine chime ---- */
+  function ppSound(ac,dst,t0){
+    const out=ac.createGain();out.gain.value=.9;const comp=ac.createDynamicsCompressor();comp.threshold.value=-10;comp.ratio.value=6;out.connect(comp);comp.connect(dst);
+    const nb=(d)=>{const n=Math.max(1,Math.floor(ac.sampleRate*d)),b=ac.createBuffer(1,n,ac.sampleRate),x=b.getChannelData(0);for(let i=0;i<n;i++)x[i]=Math.random()*2-1;return b};
+    function noise(t,d,{vol=.3,from=400,to=4000,q=1,type='bandpass',att=.3}={}){const s=ac.createBufferSource();s.buffer=nb(d);const f=ac.createBiquadFilter();f.type=type;f.Q.value=q;f.frequency.setValueAtTime(from,t);f.frequency.exponentialRampToValueAtTime(to,t+d);const g=ac.createGain();g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vol,t+d*att);g.gain.exponentialRampToValueAtTime(.0001,t+d);s.connect(f);f.connect(g);g.connect(out);s.start(t);s.stop(t+d+.02)}
+    function tone(f0,t,d,{type='sine',vol=.3,to=null,att=.005}={}){const o=ac.createOscillator(),g=ac.createGain();o.type=type;o.frequency.setValueAtTime(f0,t);if(to)o.frequency.exponentialRampToValueAtTime(to,t+d*.9);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vol,t+att);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(out);o.start(t);o.stop(t+d+.05)}
+    const T=t0;
+    noise(T,.75,{vol:.35,from:300,to:5000,q:.8,att:.7});                       // spin-in whoosh
+    tone(180,T+.15,.9,{type:'sawtooth',vol:.05,to:720,att:.6});                 // ring riser
+    tone(120,T+.75,.5,{type:'sine',vol:.6,to:50});noise(T+.75,.25,{vol:.25,from:2000,to:300,type:'lowpass'}); // landing boom
+    for(let i=0;i<5;i++){const t=T+.8+i*.6;tone(95,t,.28,{vol:.7,to:48});tone(190,t,.08,{type:'triangle',vol:.18,to:90});noise(t,.12,{vol:.18,from:900,to:200,type:'lowpass'});
+      tone(95,t+.15,.24,{vol:.5,to:50})}                                          // chest pounds (double hit)
+    // roar: growl saw through a moving lowpass + breathy noise
+    {const t=T+1.0,d=1.15,o=ac.createOscillator(),o2=ac.createOscillator(),lfo=ac.createOscillator(),lg=ac.createGain(),f=ac.createBiquadFilter(),g=ac.createGain();
+     o.type='sawtooth';o2.type='square';o.frequency.setValueAtTime(70,t);o.frequency.linearRampToValueAtTime(110,t+.35);o.frequency.linearRampToValueAtTime(60,t+d);o2.frequency.setValueAtTime(73,t);o2.frequency.linearRampToValueAtTime(52,t+d);
+     lfo.frequency.value=28;lg.gain.value=18;lfo.connect(lg);lg.connect(o.frequency);lg.connect(o2.frequency);
+     f.type='lowpass';f.Q.value=6;f.frequency.setValueAtTime(300,t);f.frequency.linearRampToValueAtTime(1500,t+.3);f.frequency.linearRampToValueAtTime(400,t+d);
+     g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.32,t+.12);g.gain.setValueAtTime(.32,t+.6);g.gain.exponentialRampToValueAtTime(.0001,t+d);
+     o.connect(f);o2.connect(f);f.connect(g);g.connect(out);[o,o2,lfo].forEach(x=>{x.start(t);x.stop(t+d+.05)});
+     noise(t,d,{vol:.22,from:700,to:350,q:2.5,att:.15})}
+    [0,1,2,3,5,6,7,8].forEach((k,i)=>tone(660+i*70,T+.35+k*.06,.09,{type:'square',vol:.05,to:990+i*70})); // letter pops
+    [1318.5,1760,2637].forEach((f,i)=>tone(f,T+1.05+i*.07,.7,{type:'triangle',vol:.09}));noise(T+1.05,.6,{vol:.06,from:6000,to:10000,type:'highpass'}); // shine chime
+    tone(65.4,T+2.2,1.3,{type:'triangle',vol:.35});[261.6,329.6,392,523.3].forEach(f=>tone(f,T+2.2,1.3,{type:'triangle',vol:.06})); // final hit
+  }
+  window.PEPE_SOUND=ppSound;
+  function tryPlay(force){if(played)return true;try{const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return false;ac=ac||new AC();
+    if(ac.state==='suspended'){if(!force)return false;ac.resume()}
+    played=true;ppSound(ac,ac.destination,ac.currentTime+.02);el.classList.add('snd');return true}catch(e){return false}}
+  let done=false,timer;const close=()=>{if(done)return;done=true;el.classList.add('out');setTimeout(()=>el.remove(),520)};
+  el.addEventListener('click',()=>{if(!played&&tryPlay(true)){clearTimeout(timer);timer=setTimeout(close,3400);return}close()});
+  timer=setTimeout(close,rm?900:3400);
+})();
+</script><!--/PEPE-INTRO-->
+<div id="app" class="app"></div>
+<script>/* ================= CHORES by Pepe Apps — core ================= */
+const $=(q,r=document)=>r.querySelector(q),$$=(q,r=document)=>[...r.querySelectorAll(q)];
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const pad=n=>String(n).padStart(2,'0');
+const dkey=(d=new Date())=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const fromKey=k=>{const [y,m,d]=k.split('-').map(Number);return new Date(y,m-1,d)};
+const addDays=(k,n)=>{const d=fromKey(k);d.setDate(d.getDate()+n);return dkey(d)};
+const monthIdx=(d=new Date())=>d.getFullYear()*12+d.getMonth();
+const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const hm=s=>{if(!s)return null;const [h,m]=s.split(':').map(Number);return h*60+(m||0)};
+const nowMin=()=>{const d=new Date();return d.getHours()*60+d.getMinutes()};
+const uid=()=>Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(-4);
+const fmt=n=>Math.round(n).toLocaleString();
+
+/* ---------- chores ---------- */
+const CHORES=[
+  {k:'dishes',n:'Dishes',e:'🍽️',tasks:['Clear the table after dinner','Wash or load the dishes','Dry and put dishes away','Wipe the counters and table'],
+    month:['Deep-clean the microwave','Clean out the fridge shelves','Scrub the sink until it shines','Organize the plastic container drawer']},
+  {k:'laundry',n:'Laundry',e:'🧺',tasks:['Gather dirty laundry','Run a load (wash and dry)','Fold everything neatly','Put clothes away'],
+    month:['Wash all the bed sheets','Match every lost sock','Clean out the lint trap and dryer','Sort old clothes to donate']},
+  {k:'animals',n:'Animals',e:'🐾',tasks:['Feed the animals','Give fresh water','Clean up (litter, cage or yard)','Play, walk or brush them'],
+    month:['Give the pet a bath or full brush','Wash pet bowls and bedding','Organize pet food and toys','Clean the cage or tank top to bottom']},
+  {k:'floors',n:'Floors',e:'🧹',tasks:['Pick up clutter off the floor','Sweep or vacuum','Empty the trash bins','Shake out the door mats'],
+    month:['Mop every hard floor','Vacuum under the couch and beds','Wipe all the baseboards','Clean the stairs or entryway']}
+];
+const choreFor=(fam,slot,mi=monthIdx())=>CHORES[(((slot+(mi-(fam.startMonth??mi)))%4)+4)%4];
+
+/* ---------- XP + levels (insanely hard) ---------- */
+const TASK_XP=10,ALL_DONE_XP=25,MONTH_XP=60;
+const needFor=L=>Math.round(150*Math.pow(1.3,L-1));       // XP to go from L to L+1
+const LV_CUM=[0,0];for(let L=1;L<120;L++)LV_CUM[L+1]=LV_CUM[L]+needFor(L);
+const lvlOf=xp=>{let L=1;while(L<119&&xp>=LV_CUM[L+1])L++;return L};
+const lvlProg=xp=>{const L=lvlOf(xp),a=LV_CUM[L],b=LV_CUM[L+1];return{L,into:xp-a,need:b-a,pct:Math.min(1,(xp-a)/(b-a))}};
+const TIERS=[ // [name, minLevel, colorA, colorB]
+  ['Rookie',1,'#6b6b73','#3a3a40'],['Helper',3,'#9a9aa3','#55555c'],['Hustler',5,'#c96f2e','#6b3412'],['Grinder',7,'#ff8a1f','#8a3c00'],
+  ['Pro',10,'#ffb15c','#c25600'],['Elite',13,'#ff5a4a','#7a0f0a'],['Master',16,'#ff7a00','#2a0d00'],['Champion',20,'#ffd08a','#ff7a00'],
+  ['Titan',25,'#e3241b','#140404'],['Mythic',30,'#ffffff','#ff7a00'],['Legendary',40,'#ff7a00','#e3241b'],['Gorilla King',50,'#ffb000','#000000']];
+const tierOf=L=>{let t=TIERS[0];for(const x of TIERS)if(L>=x[1])t=x;return t};
+function embSVG(L,cls=''){const t=tierOf(L),i=TIERS.indexOf(t),id='e'+i+Math.random().toString(36).slice(2,6);
+  const spikes=Math.min(12,4+i),pts=[];for(let k=0;k<spikes*2;k++){const a=k/(spikes*2)*Math.PI*2-Math.PI/2,r=k%2?40:47;pts.push((50+Math.cos(a)*r).toFixed(1)+','+(50+Math.sin(a)*r).toFixed(1))}
+  return`<svg class="emb ${cls}" viewBox="0 0 100 100" aria-hidden="true"><defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${t[2]}"/><stop offset="1" stop-color="${t[3]}"/></linearGradient></defs>
+  ${i>=3?`<polygon class="spin" points="${pts.join(' ')}" fill="${t[3]}" stroke="${t[2]}" stroke-width="1.5" opacity=".9"/>`:''}
+  <path d="M50 8 L84 22 V50 C84 72 68 86 50 94 C32 86 16 72 16 50 V22Z" fill="url(#${id})" stroke="#0a0a0b" stroke-width="3"/>
+  <path d="M50 16 L77 27 V50 C77 67 65 79 50 86 C35 79 23 67 23 50 V27Z" fill="#0a0a0b" opacity=".55"/>
+  ${i>=8?`<path d="M30 30 L38 22 L44 30 L50 18 L56 30 L62 22 L70 30 L66 38 H34Z" fill="${t[2]}"/>`:''}
+  <text x="50" y="${i>=8?64:60}" text-anchor="middle" font-family="Big Shoulders Display,Impact,sans-serif" font-weight="900" font-size="${L>99?22:28}" fill="${i===11?'#ffb000':'#fff'}">${L}</text></svg>`}
+function avSVG(name,L){const t=tierOf(L||1);const c=(name||'?').trim().charAt(0).toUpperCase()||'?';
+  return`<svg class="av" viewBox="0 0 40 40"><circle cx="20" cy="20" r="19" fill="#1d1d21" stroke="${t[2]}" stroke-width="2.5"/><text x="20" y="26.5" text-anchor="middle" font-family="Big Shoulders Display,Impact,sans-serif" font-weight="900" font-size="19" fill="${t[2]==='#6b6b73'?'#ff7a00':t[2]}">${esc(c)}</text></svg>`}
+
+/* ---------- 55 badges ---------- */
+const BADGES=[];(()=>{const B=(id,n,d,e,tier,test)=>BADGES.push({id,n,d,e,tier,test});
+  [[1,'First Chore'],[10,'Getting Going'],[25,'Busy Bee'],[50,'Half Century'],[100,'Century Club'],[250,'Chore Machine'],[500,'Unstoppable'],[1000,'Thousand Tasks'],[2500,'Chore Legend'],[5000,'Pepe Approved']]
+    .forEach(([v,n],i)=>B('t'+v,n,`Finish ${v} chore task${v>1?'s':''}`,['✅','🔥','🐝','⭐','💯','⚙️','🚀','🏆','👑','🦍'][i],Math.min(4,Math.floor(i/2)),s=>s.tasks>=v));
+  [[3,'Warm Streak'],[7,'One Week Wonder'],[14,'Two Weeks Strong'],[30,'Month of Fire'],[60,'Iron Will'],[100,'Triple Digits'],[200,'No Days Off'],[365,'Year of Chores']]
+    .forEach(([v,n],i)=>B('s'+v,n,`${v}-day streak`,['🔥','📅','💪','🌋','🛡️','💥','⚡','🌍'][i],Math.min(4,Math.floor(i/1.7)),s=>s.best>=v));
+  [2,3,5,7,10,15,20,25,30,40,50].forEach((v,i)=>B('l'+v,`Level ${v}`,`Reach level ${v}`,['🥉','🥈','🥇','🎖️','🏅','💎','🔱','⚜️','☄️','🌟','🦍'][i],Math.min(4,Math.floor(i/2.4)),s=>s.level>=v));
+  CHORES.forEach(c=>{B(c.k+'25',`${c.n} Rookie`,`Do 25 ${c.n.toLowerCase()} tasks`,c.e,1,s=>(s['c_'+c.k]||0)>=25);B(c.k+'100',`${c.n} Master`,`Do 100 ${c.n.toLowerCase()} tasks`,c.e,3,s=>(s['c_'+c.k]||0)>=100)});
+  [[1,'Perfect Day'],[10,'Perfect Ten'],[50,'Flawless'],[100,'Perfection']].forEach(([v,n],i)=>B('p'+v,n,`Finish every chore ${v} day${v>1?'s':''}`,['✨','🌈','💠','🪐'][i],i+1,s=>s.perfect>=v));
+  [[1,'Month One'],[3,'Season Done'],[6,'Half a Year'],[12,'Full Year']].forEach(([v,n],i)=>B('m'+v,n,`Finish ${v} monthly challenge${v>1?'s':''}`,['🗓️','🍂','🌗','🎆'][i],i+1,s=>s.monthly>=v));
+  B('early','Early Bird','Finish all chores before 8 AM','🌅',2,s=>s.early>=1);
+  B('night','Clutch Finish','Finish all chores after 9 PM','🌙',1,s=>s.late>=1);
+  B('weekend','Weekend Warrior','Finish chores on a Saturday and Sunday','🛹',2,s=>s.weekend>=2);
+  B('ap10','Parent Approved','Get 10 chores approved','👍',1,s=>s.approved>=10);
+  B('ap100','Trusted Helper','Get 100 chores approved','🤝',3,s=>s.approved>=100);
+  B('bonus','Bonus Round','Get bonus XP from a parent','🎁',1,s=>s.bonusGot>=1);
+  B('comeback','Comeback Kid','Come back after missing a day','🔁',1,s=>s.comeback>=1);
+  B('top','Top of the Family','Be #1 on the family leaderboard','🥇',3,s=>s.top>=1);
+  B('goal','Reward Earned','Reach a level goal your parent set','🏆',2,s=>s.goals>=1);
+  B('allfour','Jack of All Chores','Do every chore type','🃏',3,s=>CHORES.every(c=>(s['c_'+c.k]||0)>0));
+})();
+const TIERC=[['#9a9aa3','#3a3a40'],['#c96f2e','#4a2208'],['#ff8a1f','#6b2a00'],['#ffb15c','#c25600'],['#ff5a4a','#5a0a06']];
+function badgeSVG(b,got){const [a,c]=TIERC[b.tier],id='b'+b.id;
+  return`<svg viewBox="0 0 64 64" aria-hidden="true"><defs><radialGradient id="${id}" cx="40%" cy="30%" r="75%"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${c}"/></radialGradient></defs>
+  <circle cx="32" cy="32" r="29" fill="url(#${id})" stroke="#0a0a0b" stroke-width="2"/><circle cx="32" cy="32" r="23" fill="#0f0f11" opacity=".75"/>
+  <circle cx="32" cy="32" r="26" fill="none" stroke="${a}" stroke-width="1" stroke-dasharray="2 3" opacity=".8"/>
+  <text x="32" y="40" text-anchor="middle" font-size="22">${got?b.e:'🔒'}</text></svg>`}
+
+/* ---------- state ---------- */
+const KEY='chores-v1';
+let C;
+function blank(){return{v:1,sound:true,fam:null,me:null,prog:{},inbox:[],reportSeen:'',seenGoals:{},lastTab:{}}}
+function load(){try{C=JSON.parse(localStorage.getItem(KEY))||blank()}catch(e){C=blank()}C={...blank(),...C}}
+let saveT=0;function save(){try{localStorage.setItem(KEY,JSON.stringify(C))}catch(e){}clearTimeout(saveT);saveT=setTimeout(()=>{try{cloudPush()}catch(e){}},600)}
+load();
+
+/* family / people */
+const fam=()=>C.fam;
+function people(){const f=fam();if(!f)return[];
+  const list=f.slots.map((s,i)=>({pid:s.pid||('s'+i),name:s.name||`Person ${i+1}`,slot:i,role:'child'}));
+  (f.parents||[]).forEach(p=>list.push({pid:p.pid,name:p.name,slot:null,role:'parent'}));return list}
+const kids=()=>people().filter(p=>p.slot!=null&&(fam().slots[p.slot].name||'').trim());
+const personOf=pid=>people().find(p=>p.pid===pid);
+const isParent=()=>C.me&&C.me.role==='parent';
+const meP=()=>C.me&&personOf(C.me.pid);
+const DEF_RULES={needApproval:false,noUncheck:false,lockName:false,lockSettings:false,hideBoard:false,hideGlobal:true,hideOthers:false,hideBadges:false,
+  forceSound:'',maxXP:0,dueTime:'',bedtime:'',weekendsOff:false,paused:false,cheatAlerts:true,streakFreeze:true,allowSwap:false,reminders:true,remindAt:'16:00',quietFrom:'21:00',quietTo:'07:00',doubleXP:false,extra:[]};
+function rulesFor(slot){const f=fam();return{...DEF_RULES,...((f&&f.rules&&f.rules[slot])||{})}}
+const myRules=()=>(C.me&&C.me.slot!=null)?rulesFor(C.me.slot):DEF_RULES;
+
+/* progress */
+function prog(pid){return C.prog[pid]||(C.prog[pid]={xp:0,days:{},stats:{},badges:{},streak:0,best:0,last:'',freezeWk:'',goalsHit:{},bonusIds:{}})}
+function tasksFor(slot,day=dkey()){const f=fam();if(!f)return[];const d=fromKey(day),ch=choreFor(f,slot,monthIdx(d)),R=rulesFor(slot);
+  const list=ch.tasks.map((t,i)=>({id:ch.k+'-'+i,t,ch:ch.k,xp:TASK_XP}));
+  (R.extra||[]).filter(Boolean).forEach((t,i)=>list.push({id:'x-'+i+'-'+t.slice(0,12),t,ch:'extra',xp:TASK_XP}));
+  return list}
+function monthTask(slot,day=dkey()){const f=fam(),mi=monthIdx(fromKey(day)),ch=choreFor(f,slot,mi);return{id:'m-'+mi,t:ch.month[mi%ch.month.length],ch:ch.k,xp:MONTH_XP,monthly:true}}
+const isWeekend=k=>{const g=fromKey(k).getDay();return g===0||g===6};
+function dayOff(slot,k=dkey()){const R=rulesFor(slot);return R.paused||(R.weekendsOff&&isWeekend(k))}
+function dayLog(pid,k=dkey()){const p=prog(pid);return p.days[k]||(p.days[k]={t:{},x:0})}
+function taskState(pid,id,k=dkey()){const d=(prog(pid).days[k]||{t:{}}).t[id];return d||null}
+function dayStats(pid,slot,k=dkey()){const ts=tasksFor(slot,k),d=prog(pid).days[k]||{t:{}};const done=ts.filter(t=>d.t[t.id]).length;const ok=ts.filter(t=>d.t[t.id]&&d.t[t.id].ok).length;return{total:ts.length,done,ok,all:ts.length&&done>=ts.length,x:d.x||0}}
+function bump(pid,k,n=1){const s=prog(pid).stats;s[k]=(s[k]||0)+n}
+function statsFor(pid){const p=prog(pid);return{...p.stats,tasks:p.stats.tasks||0,best:p.best||0,level:lvlOf(p.xp),perfect:p.stats.perfect||0,monthly:p.stats.monthly||0}}
+
+/* ================= sounds ================= */
+const SFX=(()=>{let ac=null,master=null,verb=null;
+  const on=()=>{const R=myRules();if(R.forceSound==='off')return false;if(R.forceSound==='on')return true;return C.sound!==false};
+  function ctx(){if(!on())return null;try{if(!ac){const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return null;ac=new AC();master=ac.createGain();master.gain.value=.34;
+      const comp=ac.createDynamicsCompressor();comp.threshold.value=-14;comp.ratio.value=4;master.connect(comp);comp.connect(ac.destination);
+      verb=ac.createDelay();verb.delayTime.value=.11;const fb=ac.createGain();fb.gain.value=.28;const wet=ac.createGain();wet.gain.value=.2;const lp=ac.createBiquadFilter();lp.frequency.value=3800;verb.connect(lp);lp.connect(fb);fb.connect(verb);lp.connect(wet);wet.connect(master)}
+    if(ac.state==='suspended')ac.resume();return ac}catch(e){return null}}
+  function tone(f,t0,dur,{type='sine',vol=.5,to=null,attack=.004,wet=true,detune=0}={}){const c=ctx();if(!c)return;const t=c.currentTime+t0,o=c.createOscillator(),g=c.createGain();o.type=type;o.frequency.setValueAtTime(f,t);o.detune.value=detune;if(to)o.frequency.exponentialRampToValueAtTime(to,t+dur*.9);
+    g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vol,t+attack);g.gain.exponentialRampToValueAtTime(.0001,t+dur);o.connect(g);g.connect(master);if(wet)g.connect(verb);o.start(t);o.stop(t+dur+.05)}
+  function noise(t0,dur,{vol=.25,from=800,to=4000,q=1.2,type='bandpass'}={}){const c=ctx();if(!c)return;const t=c.currentTime+t0,len=Math.max(1,Math.floor(c.sampleRate*dur)),buf=c.createBuffer(1,len,c.sampleRate),d=buf.getChannelData(0);for(let i=0;i<len;i++)d[i]=Math.random()*2-1;
+    const s=c.createBufferSource();s.buffer=buf;const f=c.createBiquadFilter();f.type=type;f.Q.value=q;f.frequency.setValueAtTime(from,t);f.frequency.exponentialRampToValueAtTime(to,t+dur);const g=c.createGain();g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vol,t+dur*.25);g.gain.exponentialRampToValueAtTime(.0001,t+dur);s.connect(f);f.connect(g);g.connect(master);s.start(t);s.stop(t+dur+.02)}
+  const SC=[392,440,523.25,587.33,659.25,783.99,880,1046.5,1174.66,1318.51,1567.98];const note=i=>SC[Math.max(0,Math.min(SC.length-1,i))];
+  return{unlock(){ctx()},
+    check(step=0){const f=note(step+2);tone(f*.5,0,.09,{type:'triangle',vol:.35,to:f*.75,wet:false});tone(f,.025,.34,{vol:.42});tone(f*2,.025,.18,{vol:.1});tone(f*1.5,.07,.38,{vol:.16});noise(0,.06,{vol:.1,from:3000,to:6000,type:'highpass'})},
+    uncheck(){tone(330,0,.12,{type:'triangle',vol:.28,to:220,wet:false})},
+    tap(){tone(900,0,.05,{vol:.08,to:1200,wet:false})},
+    swoosh(){noise(0,.22,{vol:.12,from:500,to:3500})},
+    coin(){tone(1318.5,0,.08,{type:'square',vol:.07,wet:false});tone(1975.5,.06,.24,{type:'square',vol:.07})},
+    flip(){noise(0,.5,{vol:.16,from:300,to:6000});[0,1,2,3,4].forEach(i=>tone(note(i*2),.06+i*.08,.1,{type:'triangle',vol:.1}));tone(1975,.9,.3,{type:'square',vol:.06})},
+    allDone(){const ch=[523.25,659.25,783.99,1046.5];ch.forEach((f,i)=>tone(f,i*.09,.5,{type:'triangle',vol:.24}));ch.forEach(f=>{tone(f,.42,1.4,{vol:.15});tone(f,.42,1.4,{vol:.07,detune:8})});tone(130.8,.42,1.2,{type:'triangle',vol:.3});for(let i=0;i<8;i++)tone(note(5+i%5),.55+i*.06,.25,{vol:.06});noise(.4,.9,{vol:.06,from:6000,to:9000,type:'highpass'})},
+    levelUp(){noise(0,.7,{vol:.16,from:200,to:6000});tone(220,0,.7,{type:'sawtooth',vol:.06,to:880,wet:false});[523.25,659.25,783.99].forEach((f,i)=>tone(f,.62+i*.1,.2,{type:'square',vol:.07}));[392,493.88,587.33,783.99].forEach(f=>{tone(f*1.335,.95,1.8,{type:'triangle',vol:.16});tone(f*1.335,.95,1.8,{vol:.1,detune:-7})});tone(98,.95,1.6,{type:'triangle',vol:.32});tone(65,.95,.5,{vol:.5,to:40})},
+    badge(){[0,2,4,7].forEach((n,i)=>tone(note(n+2),i*.08,.4,{type:'triangle',vol:.2}));tone(note(10),.36,.8,{vol:.14});noise(.3,.6,{vol:.05,from:6000,to:10000,type:'highpass'})},
+    warn(){tone(220,0,.18,{type:'sawtooth',vol:.08,to:180});tone(196,.2,.3,{type:'sawtooth',vol:.08,to:150})},
+    notify(){[[1046.5,0],[1318.5,.11],[1568,.22],[2093,.36]].forEach(([f,t])=>{tone(f,t,.55,{vol:.16,type:'triangle'});tone(f*2,t,.25,{vol:.035})});noise(.36,.35,{vol:.05,from:5000,to:9000,q:.8,type:'highpass'})},
+    pound(){[0,.16].forEach(t=>{tone(95,t,.28,{vol:.7,to:48,wet:false});noise(t,.1,{vol:.16,from:900,to:200,type:'lowpass'})})}}})();
+const buzz=p=>{try{navigator.vibrate&&navigator.vibrate(p)}catch(e){}};
+
+/* ================= fx: particles, floats, toasts, overlays ================= */
+let FX=null,parts=[],fxRun=false;
+function fxInit(){FX=document.createElement('canvas');FX.id='fx';document.body.appendChild(FX);const rs=()=>{const d=Math.min(2,devicePixelRatio||1);FX.width=innerWidth*d;FX.height=innerHeight*d;FX.getContext('2d').setTransform(d,0,0,d,0,0)};rs();addEventListener('resize',rs)}
+function fxKick(){if(fxRun)return;fxRun=true;const cx=FX.getContext('2d');const step=()=>{cx.clearRect(0,0,innerWidth,innerHeight);parts=parts.filter(p=>p.life-->0);
+  for(const p of parts){p.vx*=p.drag;p.vy=p.vy*p.drag+p.g;p.x+=p.vx;p.y+=p.vy;p.rot+=p.vr;p.flip+=p.vf;cx.save();cx.globalAlpha=Math.min(1,p.life/20);cx.translate(p.x,p.y);cx.rotate(p.rot);cx.fillStyle=p.c;
+    if(p.shape){cx.scale(1,Math.cos(p.flip));cx.fillRect(-p.s/2,-p.s/4,p.s,p.s/2)}else{cx.beginPath();cx.arc(0,0,p.s/2,0,7);cx.fill()}cx.restore()}
+  if(parts.length)requestAnimationFrame(step);else{fxRun=false;cx.clearRect(0,0,innerWidth,innerHeight)}};requestAnimationFrame(step)}
+const COLS=['#ff7a00','#ffad5a','#ff9a2e','#ffffff','#8d8d96','#e3241b'];
+function sparks(el){if(reduced||!el)return;const r=el.getBoundingClientRect(),x=r.left+Math.min(40,r.width/2),y=r.top+r.height/2;for(let i=0;i<20;i++){const a=i/20*Math.PI*2,sp=2.5+Math.random()*3.4;parts.push({x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,g:.1,drag:.93,s:4+Math.random()*3,c:COLS[i%(i%7===0?6:4)],rot:0,vr:0,flip:0,vf:0,life:32+Math.random()*12})}fxKick()}
+function confetti(power=1){if(reduced)return;const W=innerWidth,H=innerHeight,n=Math.round(70*power);for(let k=0;k<2;k++){const x=k?W*.92:W*.08,y=H*.85;for(let i=0;i<n;i++){const a=-Math.PI/2+(k?-1:1)*(.12+Math.random()*.5),sp=10+Math.random()*9;
+  parts.push({x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,g:.22,drag:.985,s:7+Math.random()*6,c:COLS[i%6],rot:Math.random()*6,vr:(Math.random()-.5)*.3,flip:Math.random()*6,vf:.12+Math.random()*.2,life:110+Math.random()*60,shape:1})}}buzz([15,30,15]);fxKick()}
+function floatXP(el,txt){if(!el)return;const r=el.getBoundingClientRect(),f=document.createElement('div');f.className='float';f.textContent=txt;f.style.left=(r.right-50)+'px';f.style.top=(r.top+8)+'px';document.body.appendChild(f);
+  const a=f.animate([{transform:'translate(-50%,8px) scale(.5)',opacity:0},{transform:'translate(-50%,-26px) scale(1.3)',opacity:1,offset:.22},{transform:'translate(-50%,-40px) scale(1)',opacity:1,offset:.5},{transform:'translate(-50%,-86px)',opacity:0}],{duration:reduced?300:1300,easing:'cubic-bezier(.16,1,.3,1)'});a.onfinish=()=>f.remove()}
+let toastQ=Promise.resolve();
+function toast(e,title,sub=''){toastQ=toastQ.then(()=>new Promise(res=>{const t=document.createElement('div');t.className='toast';t.innerHTML=`<span class="e">${e}</span><div><b>${esc(title)}</b><span>${esc(sub)}</span></div>`;document.body.appendChild(t);
+  setTimeout(()=>{const a=t.animate([{opacity:1},{opacity:0,transform:'translate(-50%,-40px)'}],{duration:250});a.onfinish=()=>{t.remove();res()}},2400)}))}
+let ovQ=Promise.resolve();
+function overlay(html,{cls='',btn='Continue',left=false,onOpen=null,noBtn=false}={}){return ovQ=ovQ.then(()=>new Promise(res=>{const o=document.createElement('div');o.className='ov '+cls;
+  o.innerHTML=`<div class="box ${left?'left':''}">${html}${noBtn?'':`<div class="btns"><button class="btn p wide" data-close>${esc(btn)}</button></div>`}</div>`;document.body.appendChild(o);
+  const close=()=>{const a=o.animate([{opacity:1},{opacity:0}],{duration:200});a.onfinish=()=>{o.remove();res()}};o.addEventListener('click',e=>{if(e.target.closest('[data-close]')||e.target===o)close()});o._close=close;onOpen&&onOpen(o)}))}
+function sheet(html,onOpen){const o=document.createElement('div');o.className='ov';o.innerHTML=`<div class="box left">${html}</div>`;document.body.appendChild(o);const close=()=>{o.remove()};o.addEventListener('click',e=>{if(e.target===o||e.target.closest('[data-close]'))close()});onOpen&&onOpen(o,close);return close}
+function sysNotify(title,body,tag){try{if(typeof Notification==='undefined'||Notification.permission!=='granted')return;if(navigator.serviceWorker&&navigator.serviceWorker.controller)navigator.serviceWorker.ready.then(r=>r.showNotification(title,{body,tag,icon:'icon-192.png',badge:'icon-192.png'}));else new Notification(title,{body,tag})}catch(e){}}
+function inQuiet(R){const a=hm(R.quietFrom),b=hm(R.quietTo),n=nowMin();if(a==null||b==null)return false;return a<b?(n>=a&&n<b):(n>=a||n<b)}
+
+/* ================= notes to parents ================= */
+function notifyParents(kind,title,body,data={}){const n={id:uid(),at:Date.now(),kind,title,body,data,from:C.me&&C.me.pid,read:false};
+  C.inbox.unshift(n);C.inbox=C.inbox.slice(0,200);save();try{cloudNote(n)}catch(e){}
+  if(isParent()){SFX.notify();sysNotify(title,body,'ch-'+kind)}}
+
+/* ================= the chore engine ================= */
+const recent=[];
+function canAct(slot){const R=rulesFor(slot);if(dayOff(slot))return R.paused?'Chores are paused right now.':'Weekends are off. Enjoy!';
+  if(R.bedtime&&!isParent()&&nowMin()>=hm(R.bedtime))return`Chores lock at ${R.bedtime} (bedtime).`;return''}
+function toggleTask(pid,slot,task,el){
+  const why=canAct(slot);if(why&&!isParent()){SFX.warn();toast('🔒','Locked',why);return}
+  const R=rulesFor(slot),k=dkey(),d=dayLog(pid,k),cur=d.t[task.id];
+  if(cur){if(R.noUncheck&&!isParent()){SFX.warn();toast('🔒','Can’t uncheck','Your parent turned off unchecking.');return}
+    ungrant(pid,slot,d,task);delete d.t[task.id];SFX.uncheck();save();render();return}
+  const e={at:Date.now()};d.t[task.id]=e;
+  recent.push(Date.now());while(recent.length&&Date.now()-recent[0]>12000)recent.shift();
+  const st=dayStats(pid,slot,k);SFX.check(st.done);buzz(12);
+  if(el){el.classList.remove('pop');void el.offsetWidth;el.classList.add('pop','done');sparks(el.querySelector('.cb')||el)}
+  if(R.needApproval&&!isParent()){e.ok=false;toast('⏳','Sent for approval',`${task.t} — your parent will check it.`);
+    notifyParents('approve',`${personOf(pid)?.name||'Your kid'} finished a chore`,`${task.t}. Tap to approve.`,{pid,k,id:task.id})}
+  else grant(pid,slot,k,task,el);
+  if(recent.length>=6&&!isParent()){recent.length=0;cheatFlag(pid,slot)}
+  save();setTimeout(render,reduced?0:650)}
+function grant(pid,slot,k,task,el){const p=prog(pid),d=dayLog(pid,k),e=d.t[task.id];if(!e||e.g)return;const R=rulesFor(slot),L0=lvlOf(p.xp);
+  let g=task.xp*(R.doubleXP?2:1);if(R.dueTime&&e.at&&new Date(e.at).getHours()*60+new Date(e.at).getMinutes()>hm(R.dueTime))g=Math.round(g/2);
+  if(R.maxXP>0)g=Math.max(0,Math.min(g,R.maxXP-(d.x||0)));e.ok=true;e.g=g;p.xp+=g;d.x=(d.x||0)+g;bump(pid,'tasks');bump(pid,'c_'+task.ch);if(task.monthly)bump(pid,'monthly');
+  if(g&&el)floatXP(el,'+'+g+' XP');
+  const st=dayStats(pid,slot,k);if(st.total&&st.ok>=st.total&&!d.all&&!task.monthly){d.all=1;d.sk={streak:p.streak,last:p.last,best:p.best};
+    let bonus=ALL_DONE_XP;if(R.maxXP>0)bonus=Math.max(0,Math.min(bonus,R.maxXP-d.x));d.bx=bonus;p.xp+=bonus;d.x+=bonus;bump(pid,'perfect');
+    const prev=prevWorkDay(slot,k);if(p.last===prev)p.streak++;else if(p.last&&p.last!==k){const prev2=prevWorkDay(slot,prev);const wk=weekId(k);
+      if(R.streakFreeze&&p.last===prev2&&p.freezeWk!==wk){p.freezeWk=wk;p.streak++;toast('🧊','Streak freeze used','You missed a day but your streak survived!')}else{if(p.streak>0)bump(pid,'comeback');p.streak=1}}else if(!p.last)p.streak=1;
+    p.last=k;p.best=Math.max(p.best,p.streak);const hr=new Date().getHours();if(hr<8)bump(pid,'early');if(hr>=21)bump(pid,'late');if(isWeekend(k))bump(pid,'weekend');
+    setTimeout(()=>{SFX.allDone();confetti(1.2);overlay(`<div class="rays"></div><div class="eyebrow">All chores done</div><div class="big-n">+${bonus}</div><h2 class="ttl">Crushed it! 🦍</h2><p>Every chore finished today. Streak: <b style="color:var(--o)">${p.streak} day${p.streak===1?'':'s'}</b> 🔥</p>`,{btn:'Let’s go!'})},700);
+    if(!isParent())notifyParents('done',`${personOf(pid)?.name||'Your kid'} finished all chores ✅`,`${choreFor(fam(),slot).n} done for today. +${d.x} XP.`,{pid,k})}
+  afterXP(pid,slot,L0)}
+function ungrant(pid,slot,d,task){const p=prog(pid),e=d.t[task.id];if(!e)return;if(e.g){p.xp=Math.max(0,p.xp-e.g);d.x=Math.max(0,(d.x||0)-e.g);bump(pid,'tasks',-1);bump(pid,'c_'+task.ch,-1);if(task.monthly)bump(pid,'monthly',-1)}
+  if(d.all&&!task.monthly){p.xp=Math.max(0,p.xp-(d.bx||0));d.x=Math.max(0,d.x-(d.bx||0));bump(pid,'perfect',-1);if(d.sk){p.streak=d.sk.streak;p.last=d.sk.last;p.best=d.sk.best}d.all=0;d.bx=0;d.sk=null}}
+function prevWorkDay(slot,k){let x=addDays(k,-1);for(let i=0;i<7&&dayOff(slot,x)&&!rulesFor(slot).paused;i++)x=addDays(x,-1);return x}
+const weekId=k=>{const d=fromKey(k);d.setDate(d.getDate()-((d.getDay()+6)%7));return dkey(d)};
+function approveTask(pid,k,id,yes=true){const pr=personOf(pid);if(!pr)return;const slot=pr.slot,task=[...tasksFor(slot,k),monthTask(slot,k)].find(t=>t.id===id);if(!task)return;
+  if(isLocalPid(pid)){const d=dayLog(pid,k);if(!d.t[id])return;if(yes){d.t[id].ok=false;grant(pid,slot,k,task);bump(pid,'approved')}else delete d.t[id];save();return}
+  const f=fam();f.approvals=f.approvals||{};const a=f.approvals[pid]||(f.approvals[pid]={});(a[k]||(a[k]={}))[id]=yes?1:-1;save();famPush()}
+function giveBonus(pid,amt,why){const pr=personOf(pid);if(!pr)return;if(isLocalPid(pid)){const p=prog(pid),L0=lvlOf(p.xp);p.xp+=amt;dayLog(pid).x+=amt;bump(pid,'bonusGot');afterXP(pid,pr.slot,L0,true);save();return}
+  const f=fam();f.approvals=f.approvals||{};const a=f.approvals[pid]||(f.approvals[pid]={});(a.bonus||(a.bonus=[])).push({id:uid(),amt,why});save();famPush()}
+/* kid side: apply approvals / bonuses written by a parent in the cloud */
+function applyApprovals(){if(!C.me||isParent())return;const pid=C.me.pid,a=(fam().approvals||{})[pid];if(!a)return;const p=prog(pid),slot=C.me.slot;let ch=false;
+  for(const k in a){if(k==='bonus')continue;const d=p.days[k];if(!d)continue;for(const id in a[k]){const e=d.t[id];if(!e||e.ok||e.g)continue;const task=[...tasksFor(slot,k),monthTask(slot,k)].find(t=>t.id===id);if(!task)continue;
+    if(a[k][id]===1){grant(pid,slot,k,task);bump(pid,'approved');ch=true;toast('👍','Chore approved!',task.t)}else if(a[k][id]===-1&&!e.rej){e.rej=1;delete d.t[id];ch=true;toast('↩️','Try that one again',task.t)}}}
+  for(const b of a.bonus||[]){if(p.bonusIds[b.id])continue;p.bonusIds[b.id]=1;const L0=lvlOf(p.xp);p.xp+=b.amt;dayLog(pid).x+=b.amt;bump(pid,'bonusGot');ch=true;
+    setTimeout(()=>{SFX.coin();confetti(.6);overlay(`<div class="eyebrow">Bonus from your parent</div><div class="big-n">+${b.amt}</div><h2>Bonus XP! 🎁</h2><p>${esc(b.why||'Great job!')}</p>`)},300);afterXP(pid,slot,L0,true)}
+  if(ch){save();render()}}
+function afterXP(pid,slot,L0,quiet){const p=prog(pid),L=lvlOf(p.xp);
+  if(L>L0&&C.me&&pid===C.me.pid){setTimeout(()=>{SFX.levelUp();confetti(1.4);const t=tierOf(L),nt=tierOf(L0);
+    overlay(`<div class="rays"></div><div class="eyebrow">Level up</div><div class="emb-wrap">${embSVG(L)}</div><h2 class="ttl">Level ${L}!</h2><p>${t!==nt?`New rank: <b style="color:var(--o)">${t[0]}</b>! `:''}Next level needs ${fmt(needFor(L))} XP. It only gets harder. 💀</p>`,{btn:'Keep going'})},900);
+    if(!isParent())notifyParents('level',`${personOf(pid)?.name} reached level ${L}`,`${tierOf(L)[0]} rank · ${fmt(p.xp)} XP`,{pid,L})}
+  // level goals set by parents
+  for(const g of (fam().goals||[])){if(g.who!=='all'&&g.who!==slot)continue;if(L>=g.lvl&&!p.goalsHit[g.id]){p.goalsHit[g.id]=Date.now();bump(pid,'goals');const nm=personOf(pid)?.name||'Your kid';
+    notifyParents('goal',`🏆 ${nm} reached level ${g.lvl}!`,g.reward?`They earned their reward: ${g.reward}`:`They hit the level goal you set.`,{pid,goal:g.id,reward:g.reward});
+    if(C.me&&pid===C.me.pid){p.goalSeen=p.goalSeen||{};p.goalSeen[g.id]=1;setTimeout(()=>goalOverlay(g),1800)}}}
+  checkBadges(pid)}
+function unseenGoals(){if(!C.me||isParent()||!fam())return;const p=prog(C.me.pid);p.goalSeen=p.goalSeen||{};for(const g of fam().goals||[]){if(p.goalsHit[g.id]&&!p.goalSeen[g.id]){p.goalSeen[g.id]=1;save();setTimeout(()=>goalOverlay(g),600)}}}
+function goalOverlay(g){const ct=fam().contact||{},msg=`I reached level ${g.lvl} in CHORES!${g.reward?' My reward: '+g.reward+' 🏆':''}`;
+  SFX.badge();confetti(1.5);overlay(`<div class="rays"></div><div class="eyebrow">Level goal reached</div><div class="big-n">🏆</div><h2 class="ttl">Level ${g.lvl}!</h2>${g.reward?`<p>Your reward:</p><h3 style="color:var(--o)">${esc(g.reward)}</h3>`:'<p>You hit the goal your parent set!</p>'}<p class="note">Your parent has been told.</p>
+    <div class="btns">${ct.phone?`<a class="btn" href="sms:${esc(ct.phone)}?&body=${encodeURIComponent(msg)}">💬 Text ${esc(ct.name||'parent')}</a>`:''}${ct.email?`<a class="btn" href="mailto:${esc(ct.email)}?subject=${encodeURIComponent('CHORES: level '+g.lvl+'!')}&body=${encodeURIComponent(msg)}">✉️ Email</a>`:''}</div>`,{btn:'Awesome!'})}
+function cheatFlag(pid,slot){const R=rulesFor(slot);bump(pid,'flags');dayLog(pid).flag=(dayLog(pid).flag||0)+1;SFX.warn();
+  overlay(`<div class="eyebrow">Whoa, speedy!</div><div class="big-n">🦍</div><h2>Did you really do all that?</h2><p>That was super fast. Chores only count when they’re actually done. Take your time and do them right. You’ve got this! 💪</p>${R.cheatAlerts?'<p class="note">Your parent got a heads-up.</p>':''}`,{btn:'I’ll do them for real'});
+  if(R.cheatAlerts)notifyParents('cheat',`⚠️ ${personOf(pid)?.name} checked chores really fast`,'Might want to check they were actually done.',{pid})}
+let badgeQ=[];
+function checkBadges(pid){const p=prog(pid),s=statsFor(pid);const neu=BADGES.filter(b=>!p.badges[b.id]&&b.test(s));if(!neu.length)return;neu.forEach(b=>p.badges[b.id]=Date.now());save();
+  if(C.me&&pid===C.me.pid&&!rulesFor(C.me.slot).hideBadges)neu.slice(0,3).forEach((b,i)=>setTimeout(()=>{SFX.badge();overlay(`<div class="rays"></div><div class="eyebrow">Badge unlocked</div><div class="bdg got" style="border:0;background:none"><span class="bflip" style="display:block;width:120px;margin:0 auto">${badgeSVG(b,true)}</span></div><h2 class="ttl">${esc(b.n)}</h2><p>${esc(b.d)}</p>`,{onOpen:o=>{const s=o.querySelector('svg');s.style.width='120px';s.style.height='120px';s.classList.add('flip');confetti(.5)}})},1400+i*300))}
+
+/* ================= reports ================= */
+function reportFor(k=dkey()){return kids().map(p=>{const pr=prog(p.pid),d=pr.days[k]||{t:{}},ts=tasksFor(p.slot,k),ch=choreFor(fam(),p.slot,monthIdx(fromKey(k)));
+  const done=ts.filter(t=>d.t[t.id]&&d.t[t.id].ok).length,wait=ts.filter(t=>d.t[t.id]&&!d.t[t.id].ok).length;
+  return{p,ch,done,wait,total:ts.length,x:d.x||0,streak:pr.streak,L:lvlOf(pr.xp),xp:pr.xp,off:dayOff(p.slot,k),flag:d.flag||0,missing:ts.filter(t=>!d.t[t.id]).map(t=>t.t),month:!!d.t[monthTask(p.slot,k).id]}})}
+function reportText(k=dkey()){const r=reportFor(k),dt=fromKey(k).toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'});
+  return`CHORES daily report — ${dt}\n\n`+r.map(x=>`${x.p.name} (${x.ch.n}): ${x.off?'day off':`${x.done}/${x.total} done${x.wait?`, ${x.wait} waiting for approval`:''}`} · +${x.x} XP · level ${x.L} · ${x.streak}-day streak${x.flag?' · ⚠️ checked very fast':''}${!x.off&&x.missing.length?`\n   Not done: ${x.missing.join(', ')}`:''}`).join('\n')+`\n\nSent from CHORES by Pepe Apps`}
+
+/* ================= views ================= */
+let STEP=C.fam?null:'start',CREATE={mode:'kid',names:['','','',''],slot:0,fam:'',pname:'',cloud:false},TAB=null,LBSEG='fam',RULESLOT=0,REPDAY=dkey();
+const KID_TABS=[['chores','🧽','Chores'],['ranks','🏆','Ranks'],['badges','🎖️','Badges']];
+const PAR_TABS=[['family','🏠','Family'],['reports','📊','Reports'],['rules','🛡️','Rules'],['more','⚙️','Settings']];
+function tabsNow(){if(isParent())return PAR_TABS;return KID_TABS.filter(t=>!(t[0]==='badges'&&myRules().hideBadges))}
+const wordmark=t=>[...t].map((c,i)=>`<i style="animation-delay:${i*.12}s${STEP?`,${i*.12}s`:''}">${c}</i>`).join('');
+let lastTabIdx=0;
+function render(dir){const app=$('#app');if(!app)return;
+  if(!C.fam||STEP){app.className='app noTabs';app.innerHTML=viewStart();$('#tabs')?.remove();bindStart();return}
+  const tabs=tabsNow();if(!TAB||!tabs.find(t=>t[0]===TAB))TAB=tabs[0][0];
+  const me=meP(),pr=me?prog(me.pid):null,lp=pr?lvlProg(pr.xp):null;
+  const hdr=`<header class="hdr"><div class="brand" aria-label="CHORES">${[...'CHORES'].map((c,i)=>`<i style="animation-delay:${i*.15}s">${c}</i>`).join('')}<i class="dot" style="animation-delay:.9s">.</i></div>
+    <button class="me-chip" data-act="me">${avSVG(me?.name,lp?.L)}<div style="min-width:0;text-align:left"><b>${esc(me?.name||'Parent')}</b>${isParent()?`<small>PARENT${C.cloud?.uid?' · ONLINE':''}</small>`:`<small>LV ${lp.L} · ${fmt(pr.xp)} XP</small><div class="xpbar"><i style="width:${lp.pct*100}%"></i></div>`}</div></button></header>`;
+  const V={chores:viewChores,ranks:viewRanks,badges:viewBadges,family:viewFamily,reports:viewReports,rules:viewRules,more:viewMore}[TAB];
+  app.className='app';app.innerHTML=hdr+`<main class="view ${dir||''}">${V()}</main>`;
+  renderTabs(tabs);bindView()}
+function renderTabs(tabs){let t=$('#tabs');if(!t){t=document.createElement('nav');t.id='tabs';t.className='tabs';document.body.appendChild(t)}
+  const unread=isParent()?C.inbox.filter(n=>!n.read).length:0;
+  t.innerHTML=`<span class="ind"></span>`+tabs.map(([k,e,n])=>`<button data-tab="${k}" class="${k===TAB?'on':''}"><span class="ti">${e}</span>${n}${k==='family'&&unread?`<span class="badge-dot">${unread>9?'9+':unread}</span>`:''}</button>`).join('');
+  const i=tabs.findIndex(x=>x[0]===TAB),ind=t.querySelector('.ind'),b=t.querySelectorAll('button')[i];
+  const place=()=>{ind.style.left=b.offsetLeft+'px';ind.style.width=b.offsetWidth+'px'};
+  ind.style.transition='none';const prev=t.querySelectorAll('button')[lastTabIdx]||b;ind.style.left=prev.offsetLeft+'px';ind.style.width=prev.offsetWidth+'px';void ind.offsetWidth;ind.style.transition='';requestAnimationFrame(place);lastTabIdx=i;
+  t.onclick=e=>{const x=e.target.closest('[data-tab]');if(x)goTab(x.dataset.tab)}}
+function goTab(k){const tabs=tabsNow(),a=tabs.findIndex(t=>t[0]===TAB),b=tabs.findIndex(t=>t[0]===k);if(b<0||k===TAB)return;TAB=k;SFX.swoosh();buzz(8);render(b>a?'r':'l');scrollTo({top:0,behavior:'instant'})}
+/* swipe between tabs */
+(()=>{let x0=null,y0=0,t0=0;addEventListener('touchstart',e=>{if(e.touches.length!==1||e.target.closest('input,textarea,select,.ov,.seg'))return x0=null;x0=e.touches[0].clientX;y0=e.touches[0].clientY;t0=Date.now()},{passive:true});
+  addEventListener('touchend',e=>{if(x0==null||!C.fam||STEP||$('.ov'))return;const dx=e.changedTouches[0].clientX-x0,dy=e.changedTouches[0].clientY-y0;x0=null;if(Math.abs(dx)<70||Math.abs(dy)>Math.abs(dx)*.6||Date.now()-t0>600)return;
+    const tabs=tabsNow(),i=tabs.findIndex(t=>t[0]===TAB),j=i+(dx<0?1:-1);if(tabs[j])goTab(tabs[j][0])},{passive:true})})();
+
+/* ---------- start / create / join ---------- */
+function viewStart(){
+  if(STEP==='create'){const f={startMonth:monthIdx()},P=CREATE.mode==='parent';
+    return`<div class="start view r"><div><div class="lbl">${P?'I’m a parent':'Create a family'}</div><h1 class="ttl">${P?'Set up your family':'Create a Family'}</h1>
+      <p class="note">Put up to four names. Each person gets one chore for the month, and the chores rotate every month so nobody gets stuck.</p></div>
+      <label class="f"><span class="lbl">Family name</span><input class="inp" id="c-fam" maxlength="30" placeholder="The Smiths" value="${esc(CREATE.fam)}"></label>
+      <div class="card"><div class="lbl">This month (${MONTHS[new Date().getMonth()]})</div>
+        ${[0,1,2,3].map(i=>{const ch=choreFor(f,i);return`<div class="slot"><span class="num">${i+1}</span><input class="inp" data-slot="${i}" maxlength="18" placeholder="Name ${i+1}" value="${esc(CREATE.names[i])}"><span class="chore-chip"><span class="e" style="animation-delay:${i*.3}s">${ch.e}</span>${ch.n}</span></div>`}).join('')}
+        <p class="note" style="margin:8px 0 0">Next month everyone moves to the next chore: Dishes → Laundry → Animals → Floors.</p></div>
+      ${P?`<label class="f"><span class="lbl">Your name (parent)</span><input class="inp" id="c-pname" maxlength="18" placeholder="Mom, Dad, Alex…" value="${esc(CREATE.pname)}"></label>
+        <label class="f"><span class="lbl">Parent PIN (optional, keeps kids out of parent mode)</span><input class="inp" id="c-pin" inputmode="numeric" maxlength="6" placeholder="4 digits"></label>`
+       :`<div class="card"><div class="lbl">Which one are you?</div><div class="who">${[0,1,2,3].map(i=>`<button class="pill ${CREATE.slot===i?'on':''}" data-who="${i}">${esc(CREATE.names[i]||'Name '+(i+1))}</button>`).join('')}<button class="pill" data-act="toparent">👑 I’m a Parent</button></div></div>`}
+      ${window.supabase&&window.CH_SUPABASE?`<label class="sw" style="border:0"><div class="grow"><b>Put the family online</b><small>Get a family code so everyone can join from their own phone. Needs a free account.</small></div><input type="checkbox" id="c-cloud" ${CREATE.cloud?'checked':''}></label>`:''}
+      <div class="btns"><button class="btn ghost" data-act="back">Back</button><button class="btn p" data-act="create">Create family</button></div></div>`}
+  if(STEP==='join')return`<div class="start view r"><div><div class="lbl">Join a family</div><h1 class="ttl">Got a code?</h1><p class="note">Ask your parent for the 6-letter family code. They’ll let you in and choose if you’re a parent or a kid.</p></div>
+      ${C.cloud&&C.cloud.uid?`<div class="note">Signed in as ${esc(C.cloud.email)}</div>
+      <label class="f"><span class="lbl">Family code</span><input class="inp" id="j-code" maxlength="6" placeholder="ABC123" style="text-transform:uppercase;font:800 24px var(--f-d);letter-spacing:.2em"></label>
+      <label class="f"><span class="lbl">Your name</span><input class="inp" id="j-name" maxlength="18" placeholder="Your first name"></label>
+      <div class="btns"><button class="btn ghost" data-act="back">Back</button><button class="btn p" data-act="join">Join</button></div>`:authForm('join')}</div>`;
+  if(STEP==='auth')return`<div class="start view r"><div><div class="lbl">Account</div><h1 class="ttl">Sign in</h1><p class="note">Use the same account as Routines Reimagined if you have one.</p></div>${authForm('auth')}</div>`;
+  if(STEP==='pending')return`<div class="start view"><div class="big" style="font-size:64px">⏳</div><h1 class="ttl" style="text-align:center">Waiting for your parent</h1>
+      <p class="tagline">You asked to join <b>${esc(C.pending?.name||'the family')}</b>. A parent needs to let you in. This screen checks every few seconds.</p>
+      <button class="btn" data-act="recheck">Check now</button><button class="btn ghost" data-act="back">Back</button></div>`;
+  return`<div class="start"><div class="big" aria-label="CHORES">${[...'CHORES'].map((c,i)=>`<i style="animation-delay:${i*.08}s,${.8+i*.15}s;color:${i%2?'var(--text)':'var(--o)'}">${c}</i>`).join('')}</div>
+    <p class="tagline">Do your chore. Earn XP. Climb the family leaderboard. 🦍</p>
+    <button class="choice" data-act="newfam"><span class="ci">🏠</span><span><b>Create a Family</b><small>Four names, four chores, a new one every month</small></span></button>
+    <button class="choice" data-act="newpar"><span class="ci">👑</span><span><b>I’m a Parent</b><small>Manage the family, set rules, approve chores</small></span></button>
+    <button class="choice" data-act="tojoin"><span class="ci">🔑</span><span><b>Join with a code</b><small>Your family already uses CHORES</small></span></button></div>`}
+function authForm(next){if(!window.supabase||!window.CH_SUPABASE)return`<div class="banner o">Joining with a code works on the CHORES website (where accounts are on). In here, create the family on this device and switch between people.</div><button class="btn ghost" data-act="back">Back</button>`;
+  return`<label class="f"><span class="lbl">Email</span><input class="inp" id="a-email" type="email" autocomplete="email"></label>
+    <label class="f"><span class="lbl">Password</span><input class="inp" id="a-pass" type="password" autocomplete="current-password" minlength="6"></label>
+    <div class="note" id="a-msg" style="min-height:20px;margin-top:6px"></div>
+    <div class="btns"><button class="btn ghost" data-act="back">Back</button><button class="btn" data-act="signup" data-next="${next}">New account</button><button class="btn p" data-act="signin" data-next="${next}">Sign in</button></div>`}
+function bindStart(){const a=$('#app');
+  a.oninput=e=>{const t=e.target;if(t.dataset.slot!=null){CREATE.names[+t.dataset.slot]=t.value;$$('.pill[data-who]').forEach(p=>{const i=+p.dataset.who;p.textContent=CREATE.names[i]||'Name '+(i+1)})}if(t.id==='c-fam')CREATE.fam=t.value;if(t.id==='c-pname')CREATE.pname=t.value;if(t.id==='c-cloud')CREATE.cloud=t.checked};
+  a.onchange=a.oninput;
+  a.onclick=async e=>{const b=e.target.closest('[data-act],[data-who]');if(!b)return;SFX.tap();const act=b.dataset.act;
+    if(b.dataset.who!=null){CREATE.slot=+b.dataset.who;$$('.pill[data-who]').forEach(p=>p.classList.toggle('on',+p.dataset.who===CREATE.slot));return}
+    if(act==='newfam'){CREATE.mode='kid';STEP='create'}else if(act==='newpar'||act==='toparent'){CREATE.mode='parent';STEP='create'}else if(act==='tojoin')STEP='join';
+    else if(act==='back'){STEP=C.fam?null:'start'}
+    else if(act==='create')return doCreate();
+    else if(act==='signin'||act==='signup')return doAuth(act,b.dataset.next);
+    else if(act==='join')return doJoin();else if(act==='recheck')return cloudPull(true);
+    render()}}
+async function doCreate(){const names=CREATE.names.map(s=>s.trim());if(!names.some(Boolean)){SFX.warn();toast('✏️','Add a name','Put at least one name in a slot.');return}
+  const P=CREATE.mode==='parent';if(!P&&!names[CREATE.slot]){SFX.warn();toast('👆','Pick yourself','Tap the slot that is you (it needs a name).');return}
+  const pin=($('#c-pin')||{}).value||'';
+  const f={id:uid(),name:CREATE.fam.trim()||'Our family',startMonth:monthIdx(),slots:names.map(n=>({name:n})),parents:[],rules:{},goals:[{id:uid(),lvl:5,reward:'',who:'all'},{id:uid(),lvl:10,reward:'',who:'all'}],contact:{},reportTime:'19:00',pin,approvals:{}};
+  if(P){f.parents.push({pid:'p0',name:CREATE.pname.trim()||'Parent'})}
+  C.fam=f;C.me=P?{pid:'p0',role:'parent',slot:null}:{pid:'s'+CREATE.slot,role:'child',slot:CREATE.slot};
+  if(CREATE.cloud){if(!(C.cloud&&C.cloud.uid)){save();STEP='auth';C.afterAuth='mkcloud';render();return}try{await cloudCreate()}catch(e){toast('⚠️','Couldn’t go online',String(e.message||e));}}
+  STEP=null;TAB=null;save();SFX.allDone();confetti(1.2);render();
+  setTimeout(()=>overlay(`<div class="rays"></div><div class="eyebrow">Family created</div><div class="big-n">🏠</div><h2 class="ttl">${esc(f.name)}</h2><p>${kids().map(k=>`${esc(k.name)}: ${choreFor(f,k.slot).e} ${choreFor(f,k.slot).n}`).join('<br>')}</p>${C.fam.code?`<p>Family code</p><div class="code">${C.fam.code}</div>`:''}`,{btn:'Start'}),400)}
+
+/* ---------- KID: chores ---------- */
+function taskRow(pid,slot,t,i){const s=taskState(pid,t.id),cls=s?(s.ok?'done':'done wait'):'';
+  return`<div class="task ${cls}" data-task="${esc(t.id)}" style="animation:lbIn .4s ${i*.05}s both"><span class="cb"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+    <div class="grow"><div class="tt">${esc(t.t)}</div>${s&&!s.ok?'<small>Waiting for a parent to approve</small>':t.monthly?'<small>Once this month</small>':''}</div><span class="xp">+${t.xp}</span></div>`}
+function viewChores(){const me=meP(),pid=me.pid,slot=me.slot,f=fam(),ch=choreFor(f,slot),R=rulesFor(slot),st=dayStats(pid,slot),p=prog(pid),ts=tasksFor(slot),mt=monthTask(slot);
+  const C2=2*Math.PI*31,pct=st.total?st.ok/st.total:0,nxt=choreFor(f,slot,monthIdx()+1),lock=canAct(slot);
+  let h=`<section class="card hot"><div class="hero"><div class="big-e">${ch.e}</div><div class="grow"><div class="lbl">Your chore for ${MONTHS[new Date().getMonth()]}</div><h2 class="ttl">${ch.n}</h2>
+     <div class="note">🔥 ${p.streak} day streak · +${st.x} XP today</div></div>
+     <div class="ring"><svg viewBox="0 0 74 74"><defs><linearGradient id="gO"><stop offset="0" stop-color="#e3241b"/><stop offset=".5" stop-color="#ff7a00"/><stop offset="1" stop-color="#ffad5a"/></linearGradient></defs><circle class="t" cx="37" cy="37" r="31"/><circle class="b" cx="37" cy="37" r="31" stroke-dasharray="${C2}" stroke-dashoffset="${C2*(1-pct)}"/></svg><div>${st.ok}/${st.total}</div></div></div></section>`;
+  if(lock)h+=`<div class="banner ${R.paused||dayOff(slot)?'o':''}">🔒 ${esc(lock)}</div>`;
+  if(R.dueTime&&!lock&&!st.all)h+=`<div class="banner o">⏰ Due by ${esc(R.dueTime)}. Late chores give half XP.</div>`;
+  if(R.needApproval)h+=`<div class="note" style="margin:4px 2px">👀 A parent approves each chore before you get the XP.</div>`;
+  h+=`<div class="sec-h"><h3>Today</h3><span class="lbl">${TASK_XP} XP each · +${ALL_DONE_XP} for all</span></div>${ts.map((t,i)=>taskRow(pid,slot,t,i)).join('')}`;
+  h+=`<div class="sec-h"><h3>Monthly challenge</h3><span class="lbl">+${MONTH_XP} XP</span></div>${taskRow(pid,slot,mt,ts.length)}`;
+  h+=`<section class="card"><div class="row"><span style="font-size:30px" class="ico">${nxt.e}</span><div class="grow"><div class="lbl">Next month</div><b>You get ${nxt.n}</b></div>${R.allowSwap?`<button class="btn sm" data-act="swap">Ask to swap</button>`:''}</div></section>`;
+  if(!R.hideOthers){const others=kids().filter(k=>k.pid!==pid);if(others.length)h+=`<div class="sec-h"><h3>Family today</h3></div>`+others.map(k=>{const s=dayStats(k.pid,k.slot),c=choreFor(f,k.slot);return`<div class="lb"><span style="font-size:22px">${c.e}</span><div class="grow"><b>${esc(k.name)}</b><div class="mini"><i style="width:${s.total?s.ok/s.total*100:0}%"></i></div></div><span class="lbl">${s.ok}/${s.total}</span></div>`}).join('')}
+  return h}
+
+/* ---------- KID: ranks ---------- */
+function board(scope){const f=fam();if(scope==='world')return(C.world||[]).map(r=>({name:r.handle,xp:r.xp,L:r.level,streak:r.streak,mine:C.cloud&&r.user_id===C.cloud.uid}));
+  return kids().map(k=>{const p=prog(k.pid);return{name:k.name,xp:p.xp,L:lvlOf(p.xp),streak:p.streak,mine:C.me&&k.pid===C.me.pid,e:choreFor(f,k.slot).e}}).sort((a,b)=>b.xp-a.xp)}
+function viewRanks(){const me=meP(),p=prog(me.pid),lp=lvlProg(p.xp),t=tierOf(lp.L),R=myRules();
+  let h=`<section class="card hot" style="text-align:center"><div class="emb-wrap" data-act="replay">${embSVG(lp.L)}</div><div class="lbl" style="margin-top:6px">Rank</div><h2 class="ttl" style="color:${t[2]==='#6b6b73'?'var(--text)':t[2]}">${t[0]}</h2>
+    <div class="bigxp">LV <span>${lp.L}</span></div><div class="lvlbar"><i style="width:${lp.pct*100}%"></i></div><div class="note">${fmt(lp.into)} / ${fmt(lp.need)} XP to level ${lp.L+1} · ${fmt(p.xp)} XP total</div></section>`;
+  if(!R.hideBoard){const world=!R.hideGlobal&&C.cloud&&C.cloud.uid;if(!world)LBSEG='fam';const rows=board(LBSEG);
+    if(LBSEG==='fam'&&rows.length>1&&rows[0].mine&&rows[0].xp>0&&!p.stats.top){p.stats.top=1;save();setTimeout(()=>checkBadges(me.pid),300)}
+    h+=`<div class="sec-h"><h3 class="ttl">Leaderboard</h3><span class="lbl">by total XP</span></div>${world?`<div class="seg" id="lbseg"><span class="ind"></span><button data-seg="fam" class="${LBSEG==='fam'?'on':''}">Family</button><button data-seg="world" class="${LBSEG==='world'?'on':''}">World</button></div>`:''}
+      ${rows.map((r,i)=>`<div class="lb ${i<3?'p'+(i+1):''} ${r.mine?'mine':''}" style="animation-delay:${i*.06}s"><span class="pos">${i===0?'👑':i+1}</span>${embSVG(r.L,'sm')}<div class="grow"><b>${esc(r.name)}${r.mine?' (you)':''}</b><div class="note">LV ${r.L} · 🔥 ${r.streak||0}</div></div><span class="x">${fmt(r.xp)}</span></div>`).join('')||'<div class="note">Nobody here yet.</div>'}`}
+  h+=`<div class="sec-h"><h3>All ranks</h3><span class="lbl">insanely hard</span></div><div class="tiers">${TIERS.map(x=>`<div class="tier ${lp.L>=x[1]?'':'lock'}" data-tier="${x[1]}">${embSVG(x[1])}<div>${x[0]}</div><div class="note" style="font-size:10px">LV ${x[1]}</div></div>`).join('')}</div>
+    <p class="note" style="text-align:center;margin-top:12px">Level ${lp.L+1} needs ${fmt(needFor(lp.L))} XP. Every level costs 30% more than the last.</p>`;
+  return h}
+/* ---------- KID: badges ---------- */
+function viewBadges(){const p=prog(meP().pid),got=BADGES.filter(b=>p.badges[b.id]).length;
+  return`<section class="card hot"><div class="row"><span style="font-size:40px" class="ico">🎖️</span><div class="grow"><div class="lbl">Badges</div><h2 class="ttl">${got} / ${BADGES.length}</h2></div></div><div class="lvlbar"><i style="width:${got/BADGES.length*100}%"></i></div><p class="note" style="margin:0">Tap a badge you’ve earned to flip it.</p></section>
+   <div class="bgrid">${BADGES.map(b=>{const g=!!p.badges[b.id];return`<div class="bdg ${g?'got':'lock'}" data-badge="${b.id}">${badgeSVG(b,g)}<b>${esc(b.n)}</b><small>${esc(b.d)}</small></div>`}).join('')}</div>`}
+
+/* ================= PARENT views ================= */
+function viewFamily(){const f=fam(),k=dkey();let h='';
+  h+=`<section class="card hot"><div class="lbl">${esc(f.name)}</div><h2 class="ttl">${MONTHS[new Date().getMonth()]} chores</h2>
+    ${f.code?`<p class="note" style="margin:6px 0 0">Family code. Share it so others can join:</p><div class="code">${f.code}</div><div class="btns"><button class="btn sm" data-act="sharecode">Share code</button></div>`
+      :`<p class="note">This family lives on this device. ${window.CH_SUPABASE&&window.supabase?'Put it online to get a join code.':''}</p>${window.CH_SUPABASE&&window.supabase?'<button class="btn sm" data-act="gocloud">Put family online</button>':''}`}</section>`;
+  const pend=(C.joinReq||[]);if(pend.length)h+=`<div class="sec-h"><h3>Wants to join</h3></div>`+pend.map(m=>`<div class="card"><b>${esc(m.name||'Someone')}</b><div class="row" style="margin-top:8px;flex-wrap:wrap">
+     <select class="inp" style="flex:1;min-width:110px" data-jrole="${m.user_id}"><option value="child">Child</option><option value="parent">Parent</option></select>
+     <select class="inp" style="flex:1;min-width:110px" data-jslot="${m.user_id}"><option value="">No slot</option>${f.slots.map((s,i)=>`<option value="${i}" ${(s.name||'').toLowerCase()===(m.name||'').toLowerCase()?'selected':''}>${esc(s.name||'Slot '+(i+1))} · ${choreFor(f,i).n}</option>`).join('')}</select></div>
+     <div class="btns"><button class="btn sm red" data-act="jdeny" data-u="${m.user_id}">Deny</button><button class="btn sm p" data-act="jok" data-u="${m.user_id}">Let in</button></div></div>`).join('');
+  const waits=[];kids().forEach(p=>{const d=prog(p.pid).days;Object.keys(d).slice(-7).forEach(day=>{for(const id in d[day].t){const e=d[day].t[id];if(!e.ok&&!e.g){const t=[...tasksFor(p.slot,day),monthTask(p.slot,day)].find(x=>x.id===id);if(t&&!((f.approvals||{})[p.pid]||{})[day]?.[id])waits.push({p,day,t})}}})});
+  if(waits.length)h+=`<div class="sec-h"><h3>Needs approval</h3><span class="lbl">${waits.length}</span></div>`+waits.map(w=>`<div class="task"><span style="font-size:22px">${choreFor(f,w.p.slot).e}</span><div class="grow"><div class="tt">${esc(w.t.t)}</div><small>${esc(w.p.name)} · ${w.day===k?'today':w.day}</small></div>
+     <button class="btn sm red" data-act="deny" data-pid="${w.p.pid}" data-k="${w.day}" data-id="${esc(w.t.id)}">✕</button><button class="btn sm p" data-act="approve" data-pid="${w.p.pid}" data-k="${w.day}" data-id="${esc(w.t.id)}">✓</button></div>`).join('');
+  h+=`<div class="sec-h"><h3>Today</h3><span class="lbl">${new Date().toLocaleDateString(undefined,{weekday:'long'})}</span></div>`;
+  h+=kids().map(p=>{const s=dayStats(p.pid,p.slot),pr=prog(p.pid),c=choreFor(f,p.slot),L=lvlOf(pr.xp),R=rulesFor(p.slot);
+    return`<section class="card"><div class="kid">${avSVG(p.name,L)}<div class="grow"><b>${esc(p.name)}</b> <span class="tag o">${c.e} ${c.n}</span>${R.paused?' <span class="tag">paused</span>':''}${(pr.days[k]||{}).flag?' <span class="tag r">⚠️ fast</span>':''}
+      <div class="note">LV ${L} · ${fmt(pr.xp)} XP · 🔥 ${pr.streak}${isLocalPid(p.pid)?'':' · own phone'}</div><div class="mini"><i style="width:${s.total?s.ok/s.total*100:0}%"></i></div></div><div style="font:900 22px var(--f-d)">${s.ok}/${s.total}</div></div>
+      <div class="btns"><button class="btn sm" data-act="bonus" data-pid="${p.pid}">🎁 Bonus XP</button>${isLocalPid(p.pid)?`<button class="btn sm" data-act="actas" data-pid="${p.pid}">Do chores as ${esc(p.name)}</button>`:''}<button class="btn sm" data-act="kidrules" data-slot="${p.slot}">Rules</button></div></section>`}).join('')||'<div class="note">Add names in Settings.</div>';
+  const inbox=C.inbox.filter(n=>n.kind!=='approve'||waits.length);
+  h+=`<div class="sec-h"><h3>Notifications</h3>${C.inbox.some(n=>!n.read)?'<button class="btn sm ghost" data-act="readall">Mark all read</button>':''}</div>`+
+    (inbox.slice(0,30).map(n=>`<div class="inbox-i ${n.read?'':'new'}"><span class="e">${{level:'⬆️',goal:'🏆',done:'✅',cheat:'⚠️',approve:'⏳',swap:'🔄',report:'📊'}[n.kind]||'🔔'}</span><div class="grow"><b>${esc(n.title)}</b><div class="note">${esc(n.body||'')}</div><div class="lbl" style="font-size:10px;margin-top:3px">${new Date(n.at).toLocaleString()}</div>
+      ${n.kind==='goal'&&n.data&&n.data.reward?`<button class="btn sm" style="margin-top:6px" data-act="given" data-n="${n.id}">${n.data.given?'✓ Reward given':'Mark reward given'}</button>`:''}</div></div>`).join('')||'<div class="note">Nothing yet. You’ll see level-ups, rewards earned, cheat alerts and finished chores here.</div>');
+  return h}
+function viewReports(){const f=fam(),days=[...Array(7)].map((_,i)=>addDays(dkey(),-i)),r=reportFor(REPDAY),ct=f.contact||{},txt=reportText(REPDAY);
+  return`<section class="card hot"><div class="lbl">Daily report</div><h2 class="ttl">${fromKey(REPDAY).toLocaleDateString(undefined,{weekday:'long',month:'short',day:'numeric'})}</h2>
+    <div class="who">${days.map(d=>`<button class="pill ${d===REPDAY?'on':''}" data-day="${d}">${d===dkey()?'Today':fromKey(d).toLocaleDateString(undefined,{weekday:'short'})}</button>`).join('')}</div></section>
+    <section class="card"><table class="rep"><tr><th>Kid</th><th>Chore</th><th>Done</th><th>XP</th></tr>${r.map(x=>`<tr><td><b>${esc(x.p.name)}</b><div class="note">🔥 ${x.streak} · LV ${x.L}</div></td><td>${x.ch.e} ${x.ch.n}</td><td>${x.off?'<span class="tag">off</span>':`<b style="color:${x.done>=x.total?'var(--o)':x.done?'var(--text)':'var(--red2)'}">${x.done}/${x.total}</b>${x.wait?`<div class="note">${x.wait} waiting</div>`:''}`}${x.flag?' <span class="tag r">⚠️</span>':''}</td><td>+${x.x}</td></tr>
+      ${!x.off&&x.missing.length?`<tr><td colspan="4" class="note" style="border-bottom:1px solid #232327">Not done: ${esc(x.missing.join(', '))}</td></tr>`:''}`).join('')}</table>
+    <div class="btns">${ct.email?`<a class="btn sm" href="mailto:${esc(ct.email)}?subject=${encodeURIComponent('CHORES report '+REPDAY)}&body=${encodeURIComponent(txt)}">✉️ Email</a>`:''}${ct.phone?`<a class="btn sm" href="sms:${esc(ct.phone)}?&body=${encodeURIComponent(txt)}">💬 Text</a>`:''}<button class="btn sm" data-act="sharerep">Share</button><button class="btn sm" data-act="copyrep">Copy</button></div>
+    ${!ct.email&&!ct.phone?'<p class="note">Add parent contact info in Settings to email or text reports in one tap.</p>':''}</section>
+    <section class="card"><div class="lbl">Every day</div><label class="sw"><div class="grow"><b>Daily report time</b><small>CHORES pops up the report and notifies you at this time each day.</small></div><input class="inp" type="time" data-fam="reportTime" value="${esc(f.reportTime||'19:00')}"></label>
+      <label class="sw"><div class="grow"><b>Phone notifications</b><small>${typeof Notification==='undefined'?'Not supported here':Notification.permission==='granted'?'On':'Allow notifications for reports, level-ups and alerts'}</small></div><button class="btn sm" data-act="notifs">${typeof Notification!=='undefined'&&Notification.permission==='granted'?'Test':'Turn on'}</button></label></section>
+    <section class="card"><div class="lbl">Last 7 days</div>${kids().map(p=>{const pr=prog(p.pid);return`<div class="row" style="margin:10px 0"><b style="width:70px;overflow:hidden;text-overflow:ellipsis">${esc(p.name)}</b><div class="grow" style="display:flex;gap:4px">${days.slice().reverse().map(d=>{const s=dayStats(p.pid,p.slot,d),off=dayOff(p.slot,d);return`<span title="${d}" style="flex:1;height:26px;border-radius:6px;background:${off?'#1d1d21':s.total&&s.ok>=s.total?'var(--o)':s.ok?'#7a3a00':'#3a0f0c'}"></span>`}).join('')}</div></div>`}).join('')}
+      <div class="note">🟧 all done · 🟫 some · 🟥 none · ⬛ day off</div></section>`}
+const RULE_DEFS=[['needApproval','Parent approves chores','XP only counts after you approve'],['noUncheck','No unchecking','Once checked, it stays checked'],['lockName','Lock their name','They can’t rename themselves'],['lockSettings','Lock settings','No switching profiles or changing sound'],
+  ['hideBoard','Hide leaderboard','No leaderboard on their Ranks tab'],['hideGlobal','Family leaderboard only','Hide the world leaderboard'],['hideOthers','Hide siblings’ progress','Only see their own chores'],['hideBadges','Hide the Badges tab',''],
+  ['weekendsOff','Weekends off','No chores Saturday and Sunday'],['paused','Pause chores','Vacation or sick day — no chores, streak kept'],['streakFreeze','Streak freeze','One missed day a week won’t break the streak'],['doubleXP','Double XP','Every chore gives 2× XP'],
+  ['cheatAlerts','Cheat alerts','Tell me when chores get checked super fast'],['allowSwap','Allow swap requests','They can ask to trade chores'],['reminders','Reminders','Remind them if chores aren’t done']];
+function viewRules(){const f=fam(),ks=kids();if(!ks.length)return'<div class="note">Add names first.</div>';if(!ks.find(k=>k.slot===RULESLOT))RULESLOT=ks[0].slot;const R=rulesFor(RULESLOT),k=ks.find(x=>x.slot===RULESLOT);
+  return`<section class="card hot"><div class="lbl">Restrictions</div><h2 class="ttl">${esc(k.name)}’s rules</h2><div class="who">${ks.map(x=>`<button class="pill ${x.slot===RULESLOT?'on':''}" data-rslot="${x.slot}">${esc(x.name)}</button>`).join('')}</div></section>
+   <section class="card">${RULE_DEFS.map(([key,n,d])=>`<label class="sw"><div class="grow"><b>${n}</b>${d?`<small>${d}</small>`:''}</div><input type="checkbox" data-rule="${key}" ${R[key]?'checked':''}></label>`).join('')}</section>
+   <section class="card"><div class="lbl">Times and limits</div>
+     <label class="sw"><div class="grow"><b>Chores due by</b><small>Late chores give half XP</small></div><input class="inp" type="time" data-rulev="dueTime" value="${esc(R.dueTime)}"></label>
+     <label class="sw"><div class="grow"><b>Bedtime lock</b><small>Can’t check chores after this</small></div><input class="inp" type="time" data-rulev="bedtime" value="${esc(R.bedtime)}"></label>
+     <label class="sw"><div class="grow"><b>Reminder time</b></div><input class="inp" type="time" data-rulev="remindAt" value="${esc(R.remindAt)}"></label>
+     <label class="sw"><div class="grow"><b>Quiet hours</b><small>No notifications</small></div><input class="inp" type="time" data-rulev="quietFrom" value="${esc(R.quietFrom)}"><input class="inp" type="time" data-rulev="quietTo" value="${esc(R.quietTo)}"></label>
+     <label class="sw"><div class="grow"><b>Max XP per day</b><small>0 = no limit</small></div><input class="inp" type="number" min="0" step="5" data-rulev="maxXP" value="${R.maxXP||0}" style="width:96px"></label>
+     <label class="sw"><div class="grow"><b>Sounds</b></div><select class="inp" data-rulev="forceSound"><option value="">Their choice</option><option value="on" ${R.forceSound==='on'?'selected':''}>Always on</option><option value="off" ${R.forceSound==='off'?'selected':''}>Always off</option></select></label></section>
+   <section class="card"><div class="lbl">Extra daily chores for ${esc(k.name)}</div>${(R.extra||[]).map((t,i)=>`<div class="row" style="margin:6px 0"><span class="grow">• ${esc(t)}</span><button class="btn sm ghost" data-act="xdel" data-i="${i}">✕</button></div>`).join('')||'<p class="note">None yet.</p>'}
+     <div class="row"><input class="inp" id="x-new" maxlength="40" placeholder="Make your bed"><button class="btn" data-act="xadd">Add</button></div></section>`}
+function viewMore(){const f=fam(),ct=f.contact||{};
+  return`<section class="card"><div class="lbl">Family</div><label class="f"><span class="lbl">Family name</span><input class="inp" data-fam="name" maxlength="30" value="${esc(f.name)}"></label>
+    ${f.slots.map((s,i)=>`<div class="slot"><span class="num">${i+1}</span><input class="inp" data-sname="${i}" maxlength="18" placeholder="Name ${i+1}" value="${esc(s.name)}"><span class="chore-chip"><span class="e">${choreFor(f,i).e}</span>${choreFor(f,i).n}</span></div>`).join('')}
+    <div class="lbl" style="margin-top:12px">Rotation</div><div class="note">${[0,1,2,3].map(m=>`<b>${MONTHS[(new Date().getMonth()+m)%12]}:</b> ${kids().map(k=>`${esc(k.name)} ${choreFor(f,k.slot,monthIdx()+m).e}`).join(' · ')}`).join('<br>')}</div></section>
+  <section class="card"><div class="lbl">Parent contact info</div><p class="note" style="margin:4px 0 0">Used for reward alerts and daily reports.</p>
+    <label class="f"><span class="lbl">Name</span><input class="inp" data-ct="name" maxlength="24" placeholder="Mom" value="${esc(ct.name||'')}"></label>
+    <label class="f"><span class="lbl">Email</span><input class="inp" type="email" data-ct="email" placeholder="parent@email.com" value="${esc(ct.email||'')}"></label>
+    <label class="f"><span class="lbl">Phone</span><input class="inp" type="tel" data-ct="phone" placeholder="(555) 555-5555" value="${esc(ct.phone||'')}"></label></section>
+  <section class="card"><div class="lbl">Level goals and rewards</div><p class="note" style="margin:4px 0 8px">When a kid reaches the level, you get notified and they see their reward.</p>
+    ${(f.goals||[]).map((g,i)=>`<div class="row" style="margin:8px 0;flex-wrap:wrap"><span class="lbl">LV</span><input class="inp" type="number" min="2" max="99" data-goal="${i}" data-gk="lvl" value="${g.lvl}" style="width:70px"><input class="inp grow" data-goal="${i}" data-gk="reward" maxlength="40" placeholder="Reward (pizza night, $10…)" value="${esc(g.reward)}" style="min-width:140px">
+      <select class="inp" data-goal="${i}" data-gk="who" style="width:auto"><option value="all">Everyone</option>${kids().map(k=>`<option value="${k.slot}" ${g.who===k.slot?'selected':''}>${esc(k.name)}</option>`).join('')}</select><button class="btn sm ghost" data-act="gdel" data-i="${i}">✕</button></div>`).join('')}
+    <button class="btn sm" data-act="gadd">+ Add goal</button></section>
+  <section class="card"><div class="lbl">Parents</div>${(f.parents||[]).map(p=>`<div class="row" style="margin:6px 0">${avSVG(p.name,1)}<b class="grow">${esc(p.name)}</b></div>`).join('')}
+    ${f.code?'':`<div class="row" style="margin-top:8px"><input class="inp" id="p-new" maxlength="18" placeholder="Add a parent on this device"><button class="btn" data-act="padd">Add</button></div>`}
+    <label class="f"><span class="lbl">Parent PIN</span><input class="inp" data-fam="pin" inputmode="numeric" maxlength="6" placeholder="none" value="${esc(f.pin||'')}"></label></section>
+  <section class="card"><label class="sw"><div class="grow"><b>Sounds</b></div><input type="checkbox" data-act="snd" ${C.sound!==false?'checked':''}></label>
+    ${window.CH_SUPABASE&&window.supabase?(C.cloud&&C.cloud.uid?`<div class="sw"><div class="grow"><b>Signed in</b><small>${esc(C.cloud.email)}</small></div><button class="btn sm" data-act="signout">Sign out</button></div>`:`<div class="sw"><div class="grow"><b>Account</b><small>Sign in to sync and use a family code</small></div><button class="btn sm" data-act="toauth">Sign in</button></div>`):''}</section>
+  <p class="note" style="text-align:center">CHORES by Pepe Apps 🦍</p>`}
+
+/* ================= event binding ================= */
+function bindView(){const a=$('#app');
+  a.onclick=e=>{const T=e.target;
+    const tk=T.closest('[data-task]');if(tk&&!isParent()){const me=meP(),all=[...tasksFor(me.slot),monthTask(me.slot)],t=all.find(x=>x.id===tk.dataset.task);if(t)toggleTask(me.pid,me.slot,t,tk);return}
+    if(tk&&isParent()){const me=meP();if(me&&me.slot!=null){}return}
+    const bd=T.closest('[data-badge]');if(bd){const b=BADGES.find(x=>x.id===bd.dataset.badge);if(bd.classList.contains('got')){const s=bd.querySelector('svg');s.classList.remove('flip');void s.getBoundingClientRect();s.classList.add('flip');SFX.flip();setTimeout(()=>{SFX.coin();sparks(bd)},950)}else{SFX.tap();toast('🔒',b.n,b.d)}return}
+    const tr=T.closest('[data-tier]');if(tr){const L=+tr.dataset.tier,t=tierOf(L),me=prog(meP().pid);SFX.badge();overlay(`<div class="rays"></div><div class="eyebrow">${lvlOf(me.xp)>=L?'Unlocked':'Locked'}</div><div class="emb-wrap">${embSVG(L)}</div><h2>${t[0]}</h2><p>Reach level ${L}. That’s ${fmt(LV_CUM[L])} total XP.</p>`);return}
+    const sg=T.closest('[data-seg]');if(sg){LBSEG=sg.dataset.seg;SFX.tap();if(LBSEG==='world')cloudWorld();render();return}
+    const dy=T.closest('[data-day]');if(dy){REPDAY=dy.dataset.day;SFX.tap();render();return}
+    const rs=T.closest('[data-rslot]');if(rs){RULESLOT=+rs.dataset.rslot;SFX.tap();render();return}
+    const b=T.closest('[data-act]');if(!b)return;const act=b.dataset.act;if(b.type!=='checkbox')SFX.tap();
+    ({me:openMe,replay:()=>{SFX.pound();const w=$('.emb-wrap');w.animate([{transform:'scale(1)'},{transform:'scale(1.25) rotate(-8deg)'},{transform:'scale(.95) rotate(4deg)'},{transform:'scale(1)'}],{duration:700,easing:'cubic-bezier(.3,1.6,.4,1)'});sparks(w)},
+      swap:()=>{notifyParents('swap',`${meP().name} wants to swap chores`,`They have ${choreFor(fam(),meP().slot).n} this month.`);toast('🔄','Asked your parent','They’ll decide.')},
+      approve:()=>{approveTask(b.dataset.pid,b.dataset.k,b.dataset.id,true);SFX.check(4);confetti(.4);render()},deny:()=>{approveTask(b.dataset.pid,b.dataset.k,b.dataset.id,false);SFX.uncheck();render()},
+      bonus:()=>bonusSheet(b.dataset.pid),actas:()=>switchTo(b.dataset.pid),
+      kidrules:()=>{RULESLOT=+b.dataset.slot;goTab('rules')},readall:()=>{C.inbox.forEach(n=>n.read=true);save();render()},
+      given:()=>{const n=C.inbox.find(x=>x.id===b.dataset.n);if(n){n.data.given=!n.data.given;n.read=true;save();render()}},
+      sharecode:()=>shareText(`Join our family on CHORES! Code: ${fam().code}`),gocloud:async()=>{if(!(C.cloud&&C.cloud.uid)){STEP='auth';C.afterAuth='mkcloud';render();return}try{await cloudCreate();render()}catch(e){toast('⚠️','Couldn’t go online',String(e.message||e))}},
+      jok:()=>cloudAdmit(b.dataset.u,true),jdeny:()=>cloudAdmit(b.dataset.u,false),
+      sharerep:()=>shareText(reportText(REPDAY)),copyrep:()=>{try{navigator.clipboard.writeText(reportText(REPDAY));toast('📋','Copied','Report copied.')}catch(e){}},
+      notifs:async()=>{if(typeof Notification==='undefined')return;if(Notification.permission!=='granted')await Notification.requestPermission();if(Notification.permission==='granted'){SFX.notify();sysNotify('CHORES notifications are on','You’ll get reports, level-ups and alerts.','ch-test')}render()},
+      xadd:()=>{const v=$('#x-new').value.trim();if(!v)return;setRule(RULESLOT,'extra',[...(rulesFor(RULESLOT).extra||[]),v]);render()},xdel:()=>{const x=[...(rulesFor(RULESLOT).extra||[])];x.splice(+b.dataset.i,1);setRule(RULESLOT,'extra',x);render()},
+      gadd:()=>{const f=fam();const last=(f.goals||[]).reduce((m,g)=>Math.max(m,g.lvl),0);(f.goals=f.goals||[]).push({id:uid(),lvl:last+5||5,reward:'',who:'all'});famSave();render()},gdel:()=>{fam().goals.splice(+b.dataset.i,1);famSave();render()},
+      padd:()=>{const v=$('#p-new').value.trim();if(!v)return;const f=fam();(f.parents=f.parents||[]).push({pid:'p'+uid(),name:v});famSave();render()},
+      snd:()=>{C.sound=b.checked;save();if(C.sound)SFX.check(3)},toauth:()=>{STEP='auth';render()},signout:()=>cloudSignOut()}[act]||(()=>{}))()};
+  a.onchange=e=>{const T=e.target,f=fam();
+    if(T.dataset.rule){setRule(RULESLOT,T.dataset.rule,T.checked);SFX.check(T.checked?5:1)}
+    else if(T.dataset.rulev){setRule(RULESLOT,T.dataset.rulev,T.type==='number'?Math.max(0,+T.value||0):T.value)}
+    else if(T.dataset.fam){f[T.dataset.fam]=T.value.trim();famSave()}
+    else if(T.dataset.sname!=null){f.slots[+T.dataset.sname].name=T.value.trim();famSave()}
+    else if(T.dataset.ct){f.contact={...(f.contact||{}),[T.dataset.ct]:T.value.trim()};famSave();toast('✅','Saved','Contact info updated.')}
+    else if(T.dataset.goal!=null){const g=f.goals[+T.dataset.goal],k=T.dataset.gk;g[k]=k==='lvl'?Math.max(2,Math.min(99,+T.value||2)):k==='who'?(T.value==='all'?'all':+T.value):T.value.trim();famSave()}
+  };
+  const lb=$('#lbseg');if(lb){const on=lb.querySelector('button.on'),ind=lb.querySelector('.ind');ind.style.left=on.offsetLeft+'px';ind.style.width=on.offsetWidth+'px'}}
+function setRule(slot,k,v){const f=fam();f.rules=f.rules||{};f.rules[slot]={...(f.rules[slot]||{}),[k]:v};famSave()}
+function famSave(){save();try{famPush()}catch(e){}}
+function shareText(t){if(navigator.share)navigator.share({text:t}).catch(()=>{});else{try{navigator.clipboard.writeText(t);toast('📋','Copied','Paste it anywhere.')}catch(e){}}}
+function bonusSheet(pid){const p=personOf(pid);sheet(`<div class="eyebrow" style="font:600 11px var(--f-m);letter-spacing:.2em;color:var(--o)">BONUS XP</div><h2>Reward ${esc(p.name)}</h2><div class="who" style="margin:12px 0">${[10,25,50,100].map(n=>`<button class="pill" data-amt="${n}">+${n}</button>`).join('')}</div><input class="inp" id="b-why" maxlength="40" placeholder="Why? (helped without being asked)"><div class="btns"><button class="btn ghost" data-close>Cancel</button></div>`,
+  (o,close)=>o.addEventListener('click',e=>{const x=e.target.closest('[data-amt]');if(!x)return;giveBonus(pid,+x.dataset.amt,o.querySelector('#b-why').value.trim());close();SFX.coin();confetti(.6);toast('🎁','Bonus sent',`+${x.dataset.amt} XP to ${p.name}`);render()}))}
+function openMe(){const me=meP(),R=myRules(),f=fam();
+  if(!isParent()&&R.lockSettings){const close=sheet(`<h2>${esc(me.name)}</h2><p class="note">Your parent locked settings.</p><div class="btns"><button class="btn" data-act="toPar">👑 Parent mode</button><button class="btn p" data-close>OK</button></div>`,(o,c)=>o.querySelector('[data-act=toPar]').onclick=()=>{c();switchTo(f.parents[0]?.pid)});return}
+  sheet(`<h2>${esc(me?.name||'')}</h2>${!isParent()&&!R.lockName&&isLocalPid(me.pid)||(!isParent()&&!R.lockName&&!isLocalPid(me.pid))?`<label class="f"><span class="lbl">Change your name</span><input class="inp" id="m-name" maxlength="18" value="${esc(me.name)}"></label>`:''}
+    <div class="lbl" style="margin-top:14px">Switch person</div>${people().filter(p=>(p.role==='parent'||(f.slots[p.slot].name||'').trim())&&(isLocalPid(p.pid)||p.role==='parent'&&(!C.cloud||!C.cloud.uid)||p.pid===C.me.pid)).map(p=>`<button class="choice" style="margin-top:8px;padding:10px" data-sw="${p.pid}">${avSVG(p.name,lvlOf(prog(p.pid).xp))}<span><b style="font-size:17px">${esc(p.name)}${p.pid===C.me.pid?' (now)':''}</b><small>${p.role==='parent'?'Parent':choreFor(f,p.slot).n}</small></span></button>`).join('')}
+    <label class="sw"><div class="grow"><b>Sounds</b></div><input type="checkbox" id="m-snd" ${C.sound!==false?'checked':''} ${R.forceSound&&!isParent()?'disabled':''}></label>
+    <div class="btns"><button class="btn p" data-close>Done</button></div>`,(o,close)=>{
+      o.addEventListener('click',e=>{const s=e.target.closest('[data-sw]');if(s){close();switchTo(s.dataset.sw)}});
+      const n=o.querySelector('#m-name');if(n)n.onchange=()=>{const v=n.value.trim();if(!v)return;if(me.slot!=null){f.slots[me.slot].name=v;famSave();cloudRename(v)}render()};
+      o.querySelector('#m-snd').onchange=e=>{C.sound=e.target.checked;save()}})}
+function switchTo(pid){const p=personOf(pid);if(!p)return;const go=()=>{C.me={pid,role:p.role,slot:p.slot};TAB=null;save();SFX.swoosh();render();if(p.role==='parent')maybeReport();else{unseenGoals();checkBadges(pid)}};
+  if(p.role==='parent'&&fam().pin&&!isParent()){sheet(`<h2>Parent PIN</h2><input class="inp" id="pin" inputmode="numeric" maxlength="6" autofocus style="font:800 28px var(--f-d);letter-spacing:.4em;text-align:center"><div class="btns"><button class="btn ghost" data-close>Cancel</button><button class="btn p" id="pinok">Unlock</button></div>`,(o,close)=>{const ok=()=>{if(o.querySelector('#pin').value===fam().pin){close();go()}else{SFX.warn();o.querySelector('.box').animate([{transform:'translateX(-8px)'},{transform:'translateX(8px)'},{transform:'none'}],{duration:250})}};o.querySelector('#pinok').onclick=ok;setTimeout(()=>o.querySelector('#pin').focus(),50)});return}
+  go()}
+const isLocalPid=pid=>/^s\d$/.test(pid)||/^p/.test(pid);
+
+/* ================= timers: reminders + daily report ================= */
+function maybeReport(){if(!isParent()||!fam())return;const t=hm(fam().reportTime||'19:00'),k=dkey();if(nowMin()<t||C.reportSeen===k||!kids().length)return;C.reportSeen=k;save();
+  const r=reportFor(k),all=r.filter(x=>!x.off&&x.done>=x.total).length;sysNotify('📊 Today’s chore report',r.map(x=>`${x.p.name}: ${x.off?'off':x.done+'/'+x.total}`).join(' · '),'ch-report');SFX.notify();
+  C.inbox.unshift({id:uid(),at:Date.now(),kind:'report',title:'Daily report is ready',body:`${all}/${r.filter(x=>!x.off).length} kids finished every chore today.`,read:false});save();
+  overlay(`<div class="eyebrow">Daily report</div><h2 class="ttl">How everyone did today</h2>${r.map(x=>`<div class="lb"><span style="font-size:22px">${x.ch.e}</span><div class="grow" style="text-align:left"><b>${esc(x.p.name)}</b><div class="note">${x.off?'Day off':`${x.done}/${x.total} done · +${x.x} XP`}${x.flag?' · ⚠️ fast':''}</div></div><span class="x">${x.off?'—':x.done>=x.total?'✅':x.done?'🟧':'❌'}</span></div>`).join('')}`,{btn:'See full report',onOpen:o=>o.querySelector('[data-close]').addEventListener('click',()=>{REPDAY=k;goTab('reports')})})}
+function maybeRemind(){if(isParent()||!C.me||!fam())return;const R=myRules(),k=dkey(),st=dayStats(C.me.pid,C.me.slot);if(!R.reminders||dayOff(C.me.slot)||st.ok>=st.total||inQuiet(R))return;if(nowMin()<hm(R.remindAt)||C.remSeen===k+C.me.pid)return;C.remSeen=k+C.me.pid;save();
+  sysNotify('🦍 Chores time!',`${st.total-st.ok} ${choreFor(fam(),C.me.slot).n.toLowerCase()} task${st.total-st.ok===1?'':'s'} left today.`,'ch-remind');toast('⏰','Chore reminder',`${st.total-st.ok} left. You got this!`)}
+setInterval(()=>{maybeReport();maybeRemind()},60000);
+let lastDay=dkey();setInterval(()=>{if(dkey()!==lastDay){lastDay=dkey();render()}},30000);
+
+/* ================= cloud sync (Supabase) — only on the hosted site ================= */
+let SB=null;
+function sbInit(){if(!window.CH_SUPABASE||!window.supabase||!window.supabase.createClient)return;try{SB=window.supabase.createClient(CH_SUPABASE.url,CH_SUPABASE.key,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false,storageKey:'chores-auth'}})}catch(e){SB=null;return}
+  SB.auth.getSession().then(({data})=>{const s=data&&data.session;if(s){C.cloud={uid:s.user.id,email:s.user.email};save();cloudPull()}else if(C.cloud){C.cloud=null;save()}});
+  setInterval(()=>{if(document.visibilityState==='visible')cloudPull()},20000);document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')cloudPull();else cloudPush(true)})}
+const online=()=>SB&&C.cloud&&C.cloud.uid;
+const famOnline=()=>online()&&fam()&&fam().code;
+async function doAuth(act,next){const email=$('#a-email').value.trim(),password=$('#a-pass').value,msg=$('#a-msg');if(!email||password.length<6){msg.textContent='Enter your email and a password (6+ characters).';SFX.warn();return}
+  msg.textContent='Working…';try{const r=act==='signup'?await SB.auth.signUp({email,password}):await SB.auth.signInWithPassword({email,password});if(r.error)throw r.error;
+    const s=r.data.session;if(!s){msg.textContent='Check your email to confirm your account, then sign in.';return}C.cloud={uid:s.user.id,email:s.user.email};save();SFX.allDone();
+    if(C.afterAuth==='mkcloud'&&fam()){C.afterAuth=null;try{await cloudCreate()}catch(e){toast('⚠️','Couldn’t go online',String(e.message||e))}STEP=null;render();return}
+    const had=await cloudPull(true);if(next==='join'&&!had){STEP='join';render();return}if(had)STEP=null;else STEP=fam()?null:'start';render()}catch(e){msg.textContent=String(e.message||e);SFX.warn()}}
+async function doJoin(){const code=$('#j-code').value.trim().toUpperCase(),name=$('#j-name').value.trim();if(code.length<6||!name){SFX.warn();toast('✏️','Add the code and your name','');return}
+  const {data,error}=await SB.rpc('ch_join_family',{join_code:code,my_name:name});if(error){SFX.warn();toast('⚠️','Couldn’t join',error.message);return}
+  C.pending={id:data.id,name:data.name,me:name};save();STEP='pending';SFX.swoosh();render()}
+function migratePid(from,to){if(from===to||!C.prog[from])return;const a=C.prog[from],b=C.prog[to];if(!b||a.xp>=b.xp)C.prog[to]=a;delete C.prog[from]}
+async function cloudCreate(){const f=fam(),me=C.me,P=me.role==='parent';const myName=P?(f.parents[0]||{}).name||'Parent':f.slots[me.slot].name;
+  const {data,error}=await SB.rpc('ch_create_family',{fam_name:f.name,slot_names:f.slots.map(s=>s.name),my_slot:P?-1:me.slot,my_name:myName});if(error)throw error;
+  const old=me.pid;f.id=data.id;f.code=data.code;
+  if(P){f.parents=[{pid:C.cloud.uid,name:myName}]}else f.slots[me.slot].pid=C.cloud.uid;
+  migratePid(old,C.cloud.uid);C.me={...me,pid:C.cloud.uid};save();await famPush();await cloudPush(true);SFX.allDone();confetti(1);
+  overlay(`<div class="eyebrow">Your family is online</div><h2>Family code</h2><div class="code">${f.code}</div><p>Everyone downloads CHORES, taps <b>Join with a code</b> and types this in. You choose if they’re a parent or a kid.</p>`)}
+async function famPush(){if(!famOnline()||!isParent())return;const f=fam();
+  const {error}=await SB.from('ch_families').update({name:f.name,slots:f.slots,rules:{...f.rules,_meta:{reportTime:f.reportTime,pin:f.pin}},goals:f.goals||[],contact:f.contact||{},approvals:f.approvals||{},start_month:f.startMonth,updated_at:new Date().toISOString()}).eq('id',f.id);
+  if(error)console.warn(error)}
+let pushT=0;async function cloudPush(now){if(!online()||!fam()||!fam().code)return;if(!now){clearTimeout(pushT);pushT=setTimeout(()=>cloudPush(true),1500);return}
+  const uidv=C.cloud.uid,mine=C.prog[uidv]||prog(uidv),f=fam(),myslot=f.slots.findIndex(s=>s.pid===uidv),shared={};
+  if(isParentAcct())for(const k in C.prog)if(/^s\d$/.test(k))shared[k]=C.prog[k];
+  const nm=myslot>=0?f.slots[myslot].name:((f.parents||[]).find(p=>p.pid===uidv)||{}).name||'';
+  await SB.from('ch_progress').upsert({user_id:uidv,family_id:f.id,name:nm,slot:myslot>=0?myslot:null,xp:mine.xp,level:lvlOf(mine.xp),data:{me:mine,shared},updated_at:new Date().toISOString()});
+  if(myslot>=0){const R=rulesFor(myslot);if(R.hideGlobal)await SB.from('ch_board').delete().eq('user_id',uidv);else await SB.from('ch_board').upsert({user_id:uidv,handle:(nm||'Player').slice(0,14),xp:mine.xp,level:lvlOf(mine.xp),streak:mine.streak,updated_at:new Date().toISOString()})}}
+const isParentAcct=()=>online()&&fam()&&(fam().parents||[]).some(p=>p.pid===C.cloud.uid);
+async function cloudNote(n){if(!famOnline()||isParent())return;await SB.from('ch_notes').insert({family_id:fam().id,kind:n.kind,title:n.title,body:n.body,data:n.data||{}})}
+let pulling=false;
+async function cloudPull(force){if(!online()||pulling)return false;pulling=true;try{const u=C.cloud.uid;
+  const {data:mem}=await SB.from('ch_members').select('*').eq('user_id',u);const act=(mem||[]).find(m=>m.status==='active'),pend=(mem||[]).find(m=>m.status==='pending');
+  if(!act){if(pend){STEP='pending';C.pending=C.pending||{id:pend.family_id,name:'the family'};render()}return false}
+  const [{data:fr},{data:ms},{data:pr}]=await Promise.all([SB.from('ch_families').select('*').eq('id',act.family_id).single(),SB.from('ch_members').select('*').eq('family_id',act.family_id),SB.from('ch_progress').select('*').eq('family_id',act.family_id)]);
+  if(!fr)return false;const meta=(fr.rules||{})._meta||{},rules={...(fr.rules||{})};delete rules._meta;
+  const old=fam()&&fam().code===fr.code?fam():null;
+  const f={id:fr.id,code:fr.code,name:fr.name,startMonth:fr.start_month,slots:(fr.slots||[]).map(s=>({name:s.name||'',pid:s.pid})),rules,goals:fr.goals||[],contact:fr.contact||{},approvals:fr.approvals||{},reportTime:meta.reportTime||'19:00',pin:meta.pin||'',parents:[]};
+  while(f.slots.length<4)f.slots.push({name:''});
+  for(const m of ms||[]){if(m.status!=='active')continue;if(m.role==='parent')f.parents.push({pid:m.user_id,name:m.name||'Parent'});else if(m.slot!=null&&f.slots[m.slot]){f.slots[m.slot].pid=m.user_id;if(!f.slots[m.slot].name)f.slots[m.slot].name=m.name}}
+  if(!old&&C.fam&&!C.fam.code&&C.me){/* local family replaced by cloud one: keep local progress for my slot */const lp=C.me.pid;if(act.slot!=null)migratePid('s'+act.slot,u);else if(lp)migratePid(lp,u)}
+  C.fam=f;C.joinReq=(ms||[]).filter(m=>m.status==='pending');
+  if(isParent()||act.role==='parent'){}
+  C.me={pid:u,role:act.role,slot:act.role==='parent'?null:act.slot};if(C.me.role!=='parent'&&C.me.slot==null){C.me.role='child';C.me.slot=f.slots.findIndex(s=>s.pid===u)}
+  if(C.me.role==='child'&&(C.me.slot==null||C.me.slot<0)){C.me.slot=0}
+  for(const r of pr||[]){const d=r.data||{};if(r.user_id===u){const mine=C.prog[u];if(!mine||(d.me&&d.me.xp>mine.xp&&force))C.prog[u]=d.me||mine||prog(u)}else if(d.me)C.prog[r.user_id]=d.me;
+    if(r.user_id!==u)for(const k in d.shared||{}){const cur=C.prog[k];if(!cur||d.shared[k].xp>=cur.xp)C.prog[k]=d.shared[k]}}
+  // parent notifications
+  if(C.me.role==='parent'){const since=C.noteSince||new Date(Date.now()-864e5).toISOString();const {data:ns}=await SB.from('ch_notes').select('*').eq('family_id',f.id).gt('created_at',since).order('created_at',{ascending:true}).limit(50);
+    for(const n of ns||[]){if(C.inbox.find(x=>x.cid===n.id))continue;C.inbox.unshift({id:uid(),cid:n.id,at:Date.parse(n.created_at),kind:n.kind,title:n.title,body:n.body,data:n.data,read:false});if(C.noteSince){SFX.notify();sysNotify(n.title,n.body||'','ch-'+n.kind+n.id)}}
+    C.noteSince=ns&&ns.length?ns[ns.length-1].created_at:(C.noteSince||new Date(Date.now()-6e5).toISOString())}
+  if(STEP==='pending'){STEP=null;TAB=null;SFX.allDone();confetti(1.2);toast('🎉','You’re in!',`Welcome to ${f.name}`)}
+  save();applyApprovals();unseenGoals();if(!$('.ov')&&!document.activeElement?.matches('input,textarea,select'))render();return true}
+  catch(e){console.warn(e);return false}finally{pulling=false}}
+async function cloudAdmit(user,yes){if(!famOnline())return;const f=fam();
+  if(!yes){await SB.from('ch_members').delete().eq('family_id',f.id).eq('user_id',user);SFX.uncheck()}
+  else{const role=$(`[data-jrole="${user}"]`).value,sv=$(`[data-jslot="${user}"]`).value,slot=sv===''?null:+sv,m=(C.joinReq||[]).find(x=>x.user_id===user);
+    const {error}=await SB.from('ch_members').update({status:'active',role,slot:role==='child'?slot:null}).eq('family_id',f.id).eq('user_id',user);if(error){toast('⚠️','Couldn’t let them in',error.message);return}
+    if(role==='child'&&slot!=null){if(!f.slots[slot].name)f.slots[slot].name=m?.name||'';f.slots[slot].pid=user;await famPush()}SFX.allDone();confetti(.8);toast('✅','They’re in!',`${m?.name||'New member'} joined as a ${role}.`)}
+  await cloudPull(true)}
+async function cloudWorld(){if(!online())return;const {data}=await SB.from('ch_board').select('*').order('xp',{ascending:false}).limit(50);C.world=data||[];render()}
+async function cloudRename(v){if(!famOnline())return;await SB.from('ch_members').update({name:v}).eq('family_id',fam().id).eq('user_id',C.cloud.uid).then(()=>{},()=>{});cloudPush(true)}
+async function cloudSignOut(){try{await cloudPush(true);await SB.auth.signOut()}catch(e){}C.cloud=null;save();toast('👋','Signed out','Your family stays on this device.');render()}
+
+/* ================= boot ================= */
+fxInit();sbInit();
+document.addEventListener('pointerdown',()=>SFX.unlock(),{once:true});
+render();
+setTimeout(()=>{maybeReport();maybeRemind();if(C.me&&!isParent()){checkBadges(C.me.pid);unseenGoals()}},3800);
+if(window.CH_STANDALONE&&'serviceWorker' in navigator&&location.protocol!=='file:')addEventListener('load',()=>navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).catch(()=>{}));
+</script>
+<script>(function(){if(location.protocol==='file:')return;let busy=false;async function check(){if(busy||document.visibilityState!=='visible')return;busy=true;try{const r=await fetch('version.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const v=(await r.json()).v;if(v&&v!==window.CH_VERSION){let t='';try{t=sessionStorage.getItem('ch-upd')||''}catch(e){}if(t===v)return;try{sessionStorage.setItem('ch-upd',v)}catch(e){}const a=document.activeElement;if(a&&/^(INPUT|TEXTAREA)$/.test(a.tagName)&&a.value)return;try{const reg=navigator.serviceWorker&&await navigator.serviceWorker.getRegistration();if(reg)await reg.update()}catch(e){}location.reload()}}catch(e){}finally{busy=false}}addEventListener('load',()=>setTimeout(check,2000));document.addEventListener('visibilitychange',check)})();</script>
+</body>
+</html>
