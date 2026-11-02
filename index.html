@@ -15,7 +15,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Routines">
 <style>:root{padding-top:0;padding-bottom:0}html{background:#09090A}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
-<script>window.RR_STANDALONE=true;window.RR_VERSION='6c72424a74';</script>
+<script>window.RR_STANDALONE=true;window.RR_VERSION='bd077f4203';</script>
 <script>window.RR_SUPABASE={url:'https://uszalonpjyssvvsikzvg.supabase.co',key:'sb_publishable_w-5rI0R9ht2-HAr5HghM0w_-3HYiAEg'};</script>
 <script src="supabase.js"></script>
 </head>
@@ -712,6 +712,19 @@ svg.moose:not(.big){animation:breathe 3.4s ease-in-out infinite}
 .tab-ind::after{content:"";position:absolute;left:50%;bottom:3px;width:18px;height:3px;margin-left:-9px;border-radius:3px;background:var(--lvl);box-shadow:0 0 8px var(--lvl-glow)}
 .tabs .tab{position:relative;z-index:1}
 .tab[aria-selected="true"]{background:transparent!important;box-shadow:none!important}
+/* every title glows and zooms gently; every icon breathes */
+@keyframes titleGlow{0%,100%{transform:translateY(0) scale(1);text-shadow:none}50%{transform:translateY(-2px) scale(1.015);text-shadow:0 0 14px rgba(169,139,255,.35)}}
+#view h2,#view .h2,#view h3,#view .h3,.block-h h3,.ob-card h2,.ov h2{transform-origin:left center;animation:titleIn .55s cubic-bezier(.2,1.2,.4,1) both,titleGlow 4.5s 1s ease-in-out infinite!important}
+.ov h2,.ob-card h2{transform-origin:center}
+@keyframes iconZoom{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
+@keyframes iconGlow{0%,100%{filter:drop-shadow(0 0 0 transparent)}50%{filter:drop-shadow(0 0 6px rgba(169,139,255,.6))}}
+.btn svg,.icon-btn,.attach svg,.snd svg,.howlink .chev,.guide-h .chev,.lk-icons svg,.grip svg,.toast svg,.medal,.chip svg,.kidbar svg,.sk-head svg,.empty svg,.send svg,.ed-actions svg{animation:iconZoom 2.8s ease-in-out infinite,iconGlow 3.6s ease-in-out infinite}
+.toast>svg,.toast .bdg{animation:iconZoom 1.6s ease-in-out infinite}
+.dsb.once::after{content:"";position:absolute;top:5px;right:6px;width:6px;height:6px;border-radius:50%;background:var(--gold);animation:dotPulse 1.6s ease-in-out infinite}
+.once-box{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:12px;padding:12px;border-radius:14px;background:var(--gold-soft);border:1px dashed rgba(255,197,61,.45)}.once-box .note{margin:0;flex:1;min-width:180px}
+.once-btn{border-color:var(--gold)!important;color:var(--gold)!important}
+.badges .badge{perspective:600px}.badges svg.bdg{transform-style:preserve-3d;backface-visibility:visible}
+@media (prefers-reduced-motion:reduce){.btn svg,.icon-btn,.attach svg,.snd svg,.howlink .chev,.guide-h .chev,.lk-icons svg,.grip svg,.toast svg,.chip svg,.kidbar svg,.sk-head svg,.empty svg,.send svg,.dsb.once::after{animation:none!important}}
 /* looping idle animations: small, satisfying, never distracting */
 @keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
 @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
@@ -1340,6 +1353,10 @@ function achievementShow(b,replay){achQ=achQ.then(()=>new Promise(res=>{
   document.body.appendChild(o);o.animate([{opacity:0},{opacity:1}],{duration:220});SFX.badge();setTimeout(()=>{try{SFX.bonus()}catch(e){}},420);buzz([20,40,20,40,90]);if(!reduced)confetti(b.t==='legend'?1.6:b.t==='diamond'?1.2:.8);
   const close=()=>{const a=o.animate([{opacity:1},{opacity:0}],{duration:180});a.onfinish=()=>{o.remove();res()}};
   o.querySelector('button').onclick=close;o.querySelector('button').focus();o.addEventListener('click',e=>{if(e.target===o)close()});setTimeout(()=>o.isConnected&&!replay&&close(),7000)}))}
+function coinFlip(el,b){const sv=el.querySelector('svg.bdg');if(!sv||sv.dataset.flip)return;sv.dataset.flip=1;try{SFX.shuffle()}catch(e){}
+  const turns=3+Math.floor(Math.random()*2);
+  const a=sv.animate([{transform:'translateY(0) rotateY(0) scale(1)',offset:0},{transform:'translateY(6px) scale(1.05,.9)',offset:.08},{transform:`translateY(-110px) rotateY(${turns*180}deg) scale(1.15)`,offset:.48,easing:'cubic-bezier(.3,0,.7,1)'},{transform:`translateY(0) rotateY(${turns*360}deg) scale(1)`,offset:.86,easing:'cubic-bezier(.5,0,.9,.4)'},{transform:`translateY(-12px) rotateY(${turns*360}deg)`,offset:.93},{transform:`translateY(0) rotateY(${turns*360}deg)`,offset:1}],{duration:reduced?1:1300});
+  a.onfinish=()=>{delete sv.dataset.flip;try{SFX.coin();SFX.badge()}catch(e){}chkConfetti(sv.getBoundingClientRect());toast(badgeSVG(b,true,'toast-bdg'),b.n,b.d+(S.badges[b.id]?' · earned '+new Date(S.badges[b.id]).toLocaleDateString():''))}}
 function badgeLocked(b){toast(badgeSVG(b,false,'toast-bdg'),b.n+' · locked',b.d)}
 /* replay a rank reveal */
 function rankReplay(rk){const L=lvl(S.xp),mine=titleFor(L,S.xp),order=['Wood','Bronze','Silver','Gold','Platinum','Diamond','Vibranium','Legend'],got=order.indexOf(rk)<=order.indexOf(mine);
@@ -1472,7 +1489,8 @@ function rawSched(){
 }
 /* ================= Per-day schedules ================= */
 let schDay=null,CMDDAYS=null,CMDALL=false;
-function schedForDay(wd,r){r=r||rawSched();const ov=r.days&&r.days[wd];return{...r,sections:ov?ov.sections:r.sections,_wd:wd,_custom:!!ov}}
+const nextDateFor=wd=>addDays(todayKey(),(wd-((new Date().getDay()+6)%7)+7)%7);
+function schedForDay(wd,r){r=r||rawSched();const once=r.once&&r.once[nextDateFor(wd)];if(once)return{...r,sections:once.sections,_wd:wd,_custom:true,_once:true};const ov=r.days&&r.days[wd];return{...r,sections:ov?ov.sections:r.sections,_wd:wd,_custom:!!ov}}
 function sched(){return schedForDay((new Date().getDay()+6)%7)}
 const DAYFULL=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
 const DAYWORD='(monday|tuesday|wednesday|thursday|friday|saturday|sunday|mon|tues|tue|wed|weds|thurs|thur|thu|fri|sat|sun)s?';
@@ -1494,14 +1512,14 @@ function parseDayScope(text){
 const scopeLabel=(days)=>!days?'every day':days.length===7?'every day':days.join()==='0,1,2,3,4'?'weekdays':days.join()==='5,6'?'weekends':days.map(i=>DAYFULL[i]).join(', ');
 function dayStrip(r){
   const tw=(new Date().getDay()+6)%7,sd=schDay??tw;
-  return`<div class="daystrip" role="tablist" aria-label="Day of the week">${WDN.map((d,i)=>`<button class="dsb ${i===sd?'on':''} ${i===tw?'today':''} ${r.days&&r.days[i]?'custom':''}" role="tab" aria-selected="${i===sd}" data-act="schday" data-v="${i}">${d}${i===tw?'<i>today</i>':''}</button>`).join('')}</div>`;
+  return`<div class="daystrip" role="tablist" aria-label="Day of the week">${WDN.map((d,i)=>`<button class="dsb ${i===sd?'on':''} ${i===tw?'today':''} ${r.once&&r.once[nextDateFor(i)]?'once':r.days&&r.days[i]?'custom':''}" role="tab" aria-selected="${i===sd}" data-act="schday" data-v="${i}">${d}${i===tw?'<i>today</i>':''}</button>`).join('')}</div>`;
 }
 function viewDayOther(sd,r){
   const sc=schedForDay(sd,r),lockedForMe=lockedForKid();
   let h=dayStrip(r)+banner('info',`Viewing ${DAYFULL[sd]}’s schedule.`,'You can check things off on the day itself.');
-  h+=`<section class="card"><div class="day"><div style="min-width:0"><div class="label">${DAYFULL[sd]} · ${sc._custom?'custom for this day':'same as every day'}</div><h2>My schedule</h2>
+  h+=`<section class="card"><div class="day"><div style="min-width:0"><div class="label">${DAYFULL[sd]} · ${sc._once?'one-time changes':sc._custom?'custom for this day':'same as every day'}</div><h2>My schedule</h2>
     <div class="meta"><span class="chip">${sc.sections.length} sections</span><span class="chip">${sc.sections.reduce((a,x)=>a+x.tasks.length,0)} tasks</span>${sc._custom?'<span class="chip lv">Custom day</span>':''}</div></div></div>
-    <div class="dayfoot">${sc._custom&&!lockedForMe?`<button class="btn" data-act="resetday">Use every-day schedule</button>`:'<span></span>'}<button class="btn" data-act="edit" ${lockedForMe?'disabled':''}>Edit ${DAYFULL[sd]}</button></div></section>`;
+    <div class="dayfoot">${sc._custom&&!lockedForMe?`<button class="btn" data-act="resetday">${sc._once?'Undo one-time':'Use every-day schedule'}</button>`:'<span></span>'}<button class="btn" data-act="edit" ${lockedForMe?'disabled':''}>Edit ${DAYFULL[sd]}</button></div></section>`;
   for(const sec of sc.sections){h+=`<section class="block"><div class="block-h"><h3>${esc(sec.name)}</h3><span class="label">${sec.tasks.length}</span></div>`;
     sec.tasks.forEach(k=>h+=`<div class="ex task ro"><span class="slot num">${k.time?hm(k.time):'Any time'}</span><div class="exinfo static"><span class="exn">${esc(k.title)}${k.kind==='workout'?' <span class="tag">Workout</span>':''}</span><span class="cue">${k.min?k.min+' min':''}</span></div><div></div></div>`);
     h+=`</section>`}
@@ -1520,8 +1538,11 @@ function saveNote(sel,cust){const others=(cust||[]).filter(d=>!sel.includes(d));
   return`Only the days you picked change. The other days keep their own schedule.`}
 function saveScheduleScope(sections,scope,wd,extra){
   const r=clone(rawSched());r.example=false;r.by=R0()==='parent'?'parent':'me';Object.assign(r,extra||{});
-  if(scope==='all'){r.sections=sections;r.days={}}else{r.days=r.days||{};(Array.isArray(wd)?wd:[wd]).forEach(d=>r.days[d]={sections:clone(sections)})}
-  delete r._wd;delete r._custom;return saveSchedule(r);
+  const t=todayKey();r.once=Object.fromEntries(Object.entries(r.once||{}).filter(([k])=>k>=t));
+  if(scope==='once'){(Array.isArray(wd)?wd:[wd]).forEach(d=>r.once[nextDateFor(d)]={sections:clone(sections)})}
+  else{const ds=scope==='all'?[0,1,2,3,4,5,6]:(Array.isArray(wd)?wd:[wd]);ds.forEach(d=>delete r.once[nextDateFor(d)]);
+    if(scope==='all'){r.sections=sections;r.days={}}else{r.days=r.days||{};ds.forEach(d=>r.days[d]={sections:clone(sections)})}}
+  delete r._wd;delete r._custom;delete r._once;return saveSchedule(r);
 }
 const SCHEDQ=[
   {k:'what',q:'What do you want to add to your schedule? List one or more things, like **piano, walk the dog**.',parse:(t,raw)=>{const l=listParse(raw);return l.length?l:null},hint:'Tell me one or more things to add.'},
@@ -2478,11 +2499,11 @@ function viewDay(){
   let h=dayStrip(raw);
   if(sc.example)h+=banner('info','This is an example schedule.','Edit it, ask Skeefo to build one for you, or let a parent set it.',`<button class="btn primary act" data-go="skeefo">Ask Skeefo</button>`);
   else if(sc.by==='parent')h+=banner('info','Your parent set this schedule.',lockedForMe?'Only your parent can change it. You can still check things off.':'You can still edit it.');
-  h+=`<section class="card"><div class="day"><div style="min-width:0"><div class="label">${new Date().toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'})} · ${sc._custom?'custom for '+DAYFULL[tw]:'same as every day'}</div><h2>My schedule</h2>
+  h+=`<section class="card"><div class="day"><div style="min-width:0"><div class="label">${new Date().toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'})} · ${sc._once?'one-time changes for today':sc._custom?'custom for '+DAYFULL[tw]:'same as every day'}</div><h2>My schedule</h2>
     <div class="meta"><span class="chip xp">+${TASK_XP} XP per task</span><span class="chip xp">+${SEC_XP} per finished section</span>${next?`<span class="chip">Next: ${esc(next.title)}${next.time?' · '+hm(next.time):''}</span>`:''}</div></div>
     <div class="ring ${pct===1?'full':''}"><svg viewBox="0 0 84 84"><circle class="trk" cx="42" cy="42" r="36"/><circle class="bar" cx="42" cy="42" r="36" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-pct)}"/></svg><div><div><b class="num">${dn}/${all.length}</b><span>done</span></div></div></div></div>
     <div class="dayfoot"><span class="note">Check things off as you finish them for XP.</span>
-    <div class="row-act"><button class="btn sm ghost" data-act="yetitoggle" aria-pressed="${S.yeti!==false}" title="Task animations">✨ Animations ${S.yeti!==false?'on':'off'}</button><button class="btn" data-act="edit" ${lockedForMe?'disabled title="Your parent locked this schedule"':''}>Edit ${DAYFULL[tw]}</button></div></div></section>`;
+    <div class="row-act"><button class="btn sm ghost" data-act="yetitoggle" aria-pressed="${S.yeti!==false}" title="Task animations">✨ Animations ${S.yeti!==false?'on':'off'}</button>${sc._once&&!lockedForMe?'<button class="btn" data-act="resetday">Undo one-time</button>':''}<button class="btn" data-act="edit" ${lockedForMe?'disabled title="Your parent locked this schedule"':''}>Edit ${DAYFULL[tw]}</button></div></div></section>`;
   for(const sec of sc.sections){
     const sd=sec.tasks.filter(k=>taskState(k,log).d).length;
     h+=`<section class="block"><div class="block-h"><h3>${esc(sec.name)}</h3><span class="label">${sd}/${sec.tasks.length}${log._sec&&log._sec[sec.id]?' · bonus earned':''}</span></div>`;
@@ -2540,6 +2561,7 @@ function viewEditor(){
   const hasW=draft.sections.some(s=>s.tasks.some(k=>k.kind==='workout'));
   h+=`</div><div class="ed-actions"><button class="btn" data-act="addsec">+ Add section</button>${hasW?'':`<button class="btn" data-act="addworkout">+ Add daily workout</button>`}</div>
     ${savePicker(wd,cust)}
+    <div class="once-box"><button class="btn once-btn" data-act="saveonce">⏳ Save for one time</button><span class="note">Only ${nextDateFor(wd)===todayKey()?'today':'this coming '+DAYFULL[wd]} changes. When the day is over, it goes back to how it was.</span></div>
     <div class="dayfoot ed-save"><button class="btn" data-act="cancel">Cancel</button><button class="btn primary" data-act="savesched" data-v="pick" id="ed-savebtn">${saveLabel(draft._save)}</button></div></section>`;
   return h;
 }
@@ -3920,7 +3942,7 @@ function viewProgress(){
     <div class="stat"><span class="label">Badges</span><b class="num">${earned}/${BADGES.length}</b></div></div>
   <section class="card"><div class="label">Last 5 weeks</div><div class="heat">${cells}</div>
     <div class="legend">less <i style="background:var(--heat0)"></i><i style="background:var(--heat1)"></i><i style="background:var(--heat2)"></i><i style="background:var(--heat3)"></i> more XP</div></section>
-  <section class="card"><div class="rep-h"><span class="label">Badges</span><b class="num" style="color:var(--gold)">${earned}/${BADGES.length}</b></div><p class="note" style="margin:0 0 8px">Tap a badge to replay its animation.</p><div class="badges">${BADGES.map(b=>`<div class="badge ${S.badges[b.id]?'':'off'}" role="button" tabindex="0" data-act="badge" data-v="${b.id}" aria-label="${esc(b.n)}${S.badges[b.id]?' (tap to replay)':' (locked)'}">${badgeSVG(b,!!S.badges[b.id])}<div class="bn">${esc(b.n)}</div><div class="bd">${esc(b.d)}</div></div>`).join('')}</div></section>`:'')+
+  <section class="card"><div class="rep-h"><span class="label">Badges</span><b class="num" style="color:var(--gold)">${earned}/${BADGES.length}</b></div><p class="note" style="margin:0 0 8px">Tap a badge you’ve earned to flip it like a coin! 🪙</p><div class="badges">${BADGES.map(b=>`<div class="badge ${S.badges[b.id]?'':'off'}" role="button" tabindex="0" data-act="badge" data-v="${b.id}" aria-label="${esc(b.n)}${S.badges[b.id]?' (tap to replay)':' (locked)'}">${badgeSVG(b,!!S.badges[b.id])}<div class="bn">${esc(b.n)}</div><div class="bd">${esc(b.d)}</div></div>`).join('')}</div></section>`:'')+
   `<section class="card"><div class="label">Rank ladder</div><div class="ladder">${ladder}</div>
     <ul class="rules">
       <li><span>1</span><div>Every exercise earns XP. Finishing the whole routine earns a ${BONUS} XP bonus, multiplied by the streak (up to ×2.0 at 10 days).</div></li>
@@ -4025,7 +4047,7 @@ document.addEventListener('click',e=>{
     case'toggle':toggle(t.dataset.id,t);break;
     case'how':{SFX.soft();const id=t.dataset.id,row=t.closest('.ex');if(openHow.has(id))openHow.delete(id);else openHow.add(id);const o=openHow.has(id);row.classList.toggle('open',o);t.setAttribute('aria-expanded',o);break}
     case'guide':{SFX.soft();guideOpen=!guideOpen;const g=t.closest('.guide');g.classList.toggle('open',guideOpen);t.setAttribute('aria-expanded',guideOpen);break}
-    case'badge':{const b=BADGES.find(x=>x.id===t.dataset.v);if(b)(S.badges[b.id]?achievementShow(b,true):badgeLocked(b));break}
+    case'badge':{const b=BADGES.find(x=>x.id===t.dataset.v);if(b)(S.badges[b.id]?coinFlip(t,b):badgeLocked(b));break}
     case'rankreplay':rankReplay(t.dataset.v);break;
     case'sharerank':shareRank(t);break;
     case'editprof':pEdit=true;render();setTimeout(()=>$('#pf')?.scrollIntoView({block:'start',behavior:reduced?'auto':'smooth'}),60);break;
@@ -4056,7 +4078,7 @@ document.addEventListener('click',e=>{
       toast(medal('🔗',false),linkAutoDone(k)?'Done on '+tabLinkName(k.link):'Finish your '+tabLinkName(k.link)+' tab first',linkAutoDone(k)?'This one follows your '+tabLinkName(k.link)+' tab.':(k.link==='workout'?'Finish every move in your workout and this checks itself off.':k.link==='diet'?'Log breakfast, lunch and dinner and this checks itself off.':'Check everything on that tab and this checks itself off.'));break}
     case'start':{ensureToday();const d=todayKey(),log=S.dayLog[d]||(S.dayLog[d]={_x:0,_sec:{}});(log[t.dataset.id]||(log[t.dataset.id]={})).s=Date.now();SFX.start();save();render();break}
     case'schday':{const v=+t.dataset.v,tw=(new Date().getDay()+6)%7;schDay=v===tw?null:v;SFX.soft();render();break}
-    case'resetday':{const wd=schDay??((new Date().getDay()+6)%7),r=clone(rawSched());if(r.days)delete r.days[wd];delete r._wd;delete r._custom;saveSchedule(r);render();toast(medal('✓',true),DAYFULL[wd]+' reset','It uses your every-day schedule again.');break}
+    case'resetday':{const wd=schDay??((new Date().getDay()+6)%7),r=clone(rawSched());if(r.once&&r.once[nextDateFor(wd)]){delete r.once[nextDateFor(wd)];delete r._wd;delete r._custom;delete r._once;saveSchedule(r);render();toast(medal('↺',true),'One-time changes undone',DAYFULL[wd]+' is back to normal.');break}if(r.days)delete r.days[wd];delete r._wd;delete r._custom;saveSchedule(r);render();toast(medal('✓',true),DAYFULL[wd]+' reset','It uses your every-day schedule again.');break}
     case'edit':draft=clone(schedForDay(schDay??((new Date().getDay()+6)%7)));if(R0()==='parent')draft.locked=RULES().lockSchedule;draft.sections.forEach(s=>{s.id=s.id||rid();s.tasks.forEach(k=>k.id=k.id||rid())});render();break;
     case'cancel':draft=null;render();break;
     case'addsec':draft.sections.push({id:rid(),name:'New section',tasks:[{id:rid(),title:'',time:'',min:10}]});render();break;
@@ -4070,6 +4092,9 @@ document.addEventListener('click',e=>{
       document.querySelectorAll('.savepick .dsb').forEach(b=>{const on=draft._save.includes(+b.dataset.v);b.classList.toggle('on',on);b.setAttribute('aria-pressed',on)});
       const sb=$('#ed-savebtn');if(sb){sb.textContent=saveLabel(draft._save);sb.disabled=!draft._save.length}
       const raw=rawSched(),n=$('#ed-savenote');if(n)n.textContent=saveNote(draft._save,Object.keys(raw.days||{}).map(Number));break}
+    case'saveonce':{const wd=draft._wd??((new Date().getDay()+6)%7),secs=clone(draft.sections).map(s=>({...s,name:(s.name||'').trim()||'Section',tasks:s.tasks.filter(k=>k.kind==='workout'||(k.title||'').trim()).map(k=>({...k,title:(k.title||'').trim()}))}));
+      const when=nextDateFor(wd),isToday=when===todayKey();draft=null;saveScheduleScope(secs,'once',[wd],R0()==='parent'?{}:{locked:false});render();SFX.link();
+      toast(medal('1×',true),`Saved for ${isToday?'today':DAYFULL[wd]} only`,`After ${isToday?'today':'that '+DAYFULL[wd]} ends, it goes back to normal.`);break}
     case'savesched':{if(t.dataset.v==='pick'&&!(draft._save||[1]).length)break;const secs=clone(draft.sections).map(s=>({...s,name:(s.name||'').trim()||'Section',tasks:s.tasks.filter(k=>k.kind==='workout'||(k.title||'').trim()).map(k=>({...k,title:(k.title||'').trim()}))}));
       const wd=draft._wd??((new Date().getDay()+6)%7),pick=t.dataset.v==='pick'?(draft._save||[wd]):t.dataset.v==='day'?[wd]:[0,1,2,3,4,5,6],scope=pick.length===7?'all':'day',extra=R0()==='parent'?{locked:!!draft.locked}:{locked:false};
       const lbl=saveLabel(pick).replace(/^Save for /,'').replace(/ only$/,'');draft=null;saveScheduleScope(secs,scope,pick,extra);render();SFX.link();toast(medal('✓',true),scope==='day'?'Saved for '+lbl:'Saved for every day',R0()==='parent'?'It’s on your kid’s app now.':scope==='day'?'The other days stay the same.':'Every day of your week is updated.');break}
