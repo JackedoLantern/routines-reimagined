@@ -9,7 +9,7 @@
 <link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="PEPE CHORES">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Figtree:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap">
-<script>window.CH_STANDALONE=true;window.CH_VERSION='27b10906df';window.CH_SUPABASE={url:'https://uszalonpjyssvvsikzvg.supabase.co',key:'sb_publishable_w-5rI0R9ht2-HAr5HghM0w_-3HYiAEg'};</script>
+<script>window.CH_STANDALONE=true;window.CH_VERSION='22cf21b223';window.CH_SUPABASE={url:'https://uszalonpjyssvvsikzvg.supabase.co',key:'sb_publishable_w-5rI0R9ht2-HAr5HghM0w_-3HYiAEg'};</script>
 <script src="../supabase.js"></script>
 <style>:root{--bg:#0a0a0b;--bg2:#121214;--card:#17171a;--card2:#1e1e22;--line:#2b2b31;--grey:#8d8d96;--grey2:#5c5c64;--text:#f4f2ef;--o:#ff7a00;--o2:#ffad5a;--o3:#ff9a2e;--oglow:rgba(255,122,0,.45);--red:#e3241b;--red2:#ff5a4a;--ok:#ff9a2e;
   --f-d:"Big Shoulders Display","Oswald",Impact,sans-serif;--f-b:"Figtree",system-ui,-apple-system,sans-serif;--f-m:"DM Mono",ui-monospace,Menlo,monospace;
@@ -459,12 +459,12 @@ const fmt=n=>Math.round(n).toLocaleString();
 const CHORES=[
   {k:'dishes',n:'Dishes',e:'🍽️',tasks:['Clear the table after dinner','Wash or load the dishes','Dry and put dishes away','Wipe the counters and table'],
     month:['Deep-clean the microwave','Clean out the fridge shelves','Scrub the sink until it shines','Organize the plastic container drawer']},
-  {k:'laundry',n:'Laundry',e:'🧺',tasks:['Gather dirty laundry','Run a load (wash and dry)','Fold everything neatly','Put clothes away'],
-    month:['Wash all the bed sheets','Match every lost sock','Clean out the lint trap and dryer','Sort old clothes to donate']},
+  {k:'floors',n:'Floors',e:'🧹',tasks:['Pick up clutter off the floor','Sweep or vacuum','Empty the trash bins','Shake out the door mats'],
+    month:['Mop every hard floor','Vacuum under the couch and beds','Wipe all the baseboards','Clean the stairs or entryway']},
   {k:'animals',n:'Animals',e:'🐾',tasks:['Feed the animals','Give fresh water','Clean up (litter, cage or yard)','Play, walk or brush them'],
     month:['Give the pet a bath or full brush','Wash pet bowls and bedding','Organize pet food and toys','Clean the cage or tank top to bottom']},
-  {k:'floors',n:'Floors',e:'🧹',tasks:['Pick up clutter off the floor','Sweep or vacuum','Empty the trash bins','Shake out the door mats'],
-    month:['Mop every hard floor','Vacuum under the couch and beds','Wipe all the baseboards','Clean the stairs or entryway']}
+  {k:'laundry',n:'Laundry',e:'🧺',tasks:['Gather dirty laundry','Run a load (wash and dry)','Fold everything neatly','Put clothes away'],
+    month:['Wash all the bed sheets','Match every lost sock','Clean out the lint trap and dryer','Sort old clothes to donate']}
 ];
 const choreFor=(fam,slot,mi=monthIdx())=>CHORES[(((slot+(mi-(fam.startMonth??mi)))%4)+4)%4];
 
@@ -790,7 +790,7 @@ function viewStart(){
       <label class="f"><span class="lbl">Family name</span><input class="inp" id="c-fam" maxlength="30" placeholder="The Smiths" value="${esc(CREATE.fam)}"></label>
       <div class="card"><div class="lbl">This month (${MONTHS[new Date().getMonth()]})</div>
         ${[0,1,2,3].map(i=>{const ch=choreFor(f,i);return`<div class="slot"><span class="num">${i+1}</span><input class="inp" data-slot="${i}" maxlength="18" placeholder="Name ${i+1}" value="${esc(CREATE.names[i])}"><span class="chore-chip"><span class="e" style="animation-delay:${i*.3}s">${ch.e}</span>${ch.n}</span></div>`}).join('')}
-        <p class="note" style="margin:8px 0 0">Next month everyone moves to the next chore: Dishes → Laundry → Animals → Floors.</p></div>
+        <p class="note" style="margin:8px 0 0">Next month everyone moves to the next chore: Dishes → Floors → Animals → Laundry.</p></div>
       ${P?`<label class="f"><span class="lbl">Your name (parent)</span><input class="inp" id="c-pname" maxlength="18" placeholder="Mom, Dad, Alex…" value="${esc(CREATE.pname)}"></label>
         <label class="f"><span class="lbl">Parent PIN (optional, keeps kids out of parent mode)</span><input class="inp" id="c-pin" inputmode="numeric" maxlength="6" placeholder="4 digits"></label>`
        :`<div class="card"><div class="lbl">Which one are you?</div><div class="who">${[0,1,2,3].map(i=>`<button class="pill ${CREATE.slot===i?'on':''}" data-who="${i}">${esc(CREATE.names[i]||'Name '+(i+1))}</button>`).join('')}<button class="pill" data-act="toparent">👑 I’m a Parent</button></div></div>`}
