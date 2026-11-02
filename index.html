@@ -15,7 +15,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Routines">
 <style>:root{padding-top:0;padding-bottom:0}html{background:#09090A}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
-<script>window.RR_STANDALONE=true;window.RR_VERSION='bd077f4203';</script>
+<script>window.RR_STANDALONE=true;window.RR_VERSION='18b1141ddb';</script>
 <script>window.RR_SUPABASE={url:'https://uszalonpjyssvvsikzvg.supabase.co',key:'sb_publishable_w-5rI0R9ht2-HAr5HghM0w_-3HYiAEg'};</script>
 <script src="supabase.js"></script>
 </head>
@@ -709,6 +709,10 @@ svg.moose:not(.big){animation:breathe 3.4s ease-in-out infinite}
 #tabbar{position:relative}
 .tab-ind{position:absolute;left:0;top:6px;bottom:6px;border-radius:14px;background:var(--surface-2);box-shadow:inset 0 0 0 1px var(--line-2),0 4px 14px -6px var(--lvl-glow);pointer-events:none;z-index:0}
 .tab-ind.go{transition:transform .42s cubic-bezier(.3,1.35,.4,1),width .42s cubic-bezier(.3,1.35,.4,1)}
+.tab-ind{overflow:hidden}
+.tab-ind::before{content:"";position:absolute;top:0;bottom:0;left:-60%;width:50%;background:linear-gradient(105deg,transparent,rgba(255,255,255,.28),rgba(169,139,255,.25),transparent);transform:skewX(-18deg);animation:indShine 5s 1.5s ease-in-out infinite}
+@keyframes indShine{0%,72%{left:-60%;opacity:0}74%{opacity:1}92%{left:130%;opacity:1}100%{left:130%;opacity:0}}
+@media (prefers-reduced-motion:reduce){.tab-ind::before{animation:none;opacity:0}}
 .tab-ind::after{content:"";position:absolute;left:50%;bottom:3px;width:18px;height:3px;margin-left:-9px;border-radius:3px;background:var(--lvl);box-shadow:0 0 8px var(--lvl-glow)}
 .tabs .tab{position:relative;z-index:1}
 .tab[aria-selected="true"]{background:transparent!important;box-shadow:none!important}
