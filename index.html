@@ -15,7 +15,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Routines">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
-<script>window.RR_STANDALONE=true;window.RR_VERSION='90e59c3260';</script>
+<script>window.RR_STANDALONE=true;window.RR_VERSION='9b5e8a63e2';</script>
 <script>window.RR_SUPABASE={url:'https://uszalonpjyssvvsikzvg.supabase.co',key:'sb_publishable_w-5rI0R9ht2-HAr5HghM0w_-3HYiAEg'};</script>
 <script src="supabase.js"></script>
 </head>
@@ -683,6 +683,27 @@ svg.moose:not(.big){animation:breathe 3.4s ease-in-out infinite}
 .chk-conf{position:fixed;width:7px;height:7px;border-radius:2px;pointer-events:none;z-index:96}
 @media (prefers-reduced-motion:reduce){.chk.chk-fx,.chk.chk-fx svg path{animation:none!important;stroke-dashoffset:0}}
 .prof-sum .ed-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}.prof-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px}.prof-grid div{padding:10px 12px;border-radius:12px;background:var(--surface-2);min-width:0}.prof-grid span{display:block;font-size:12px;color:var(--muted)}.prof-grid b{display:block;overflow-wrap:anywhere}
+/* titles, labels, tabs and widgets: gentle, gratifying motion (body text stays still) */
+@keyframes titleIn{from{transform:translateY(8px);opacity:0;letter-spacing:.12em}to{transform:none;opacity:1}}
+@keyframes titleFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-2px)}}
+@keyframes labelGlow{0%,100%{opacity:.85}50%{opacity:1;text-shadow:0 0 8px currentColor}}
+@keyframes tabIn{from{transform:translateY(14px) scale(.9);opacity:0}to{transform:none;opacity:1}}
+@keyframes cardGlow{0%,100%{box-shadow:0 0 0 0 transparent}50%{box-shadow:0 0 0 1px rgba(169,139,255,.12),0 8px 24px -12px rgba(169,139,255,.25)}}
+#view h2,#view .h2,#view h3,#view .h3,.block-h h3,.ob-card h2,.ov h2{display:block;animation:titleIn .55s cubic-bezier(.2,1.2,.4,1) both,titleFloat 5s 1s ease-in-out infinite;will-change:transform}
+#view .card:nth-child(2n) h2,#view .card:nth-child(2n) .h3,#view .block:nth-child(2n) h3{animation-delay:.06s,2.2s}
+#view .card:nth-child(3n) h2,#view .card:nth-child(3n) .h3,#view .block:nth-child(3n) h3{animation-delay:.12s,3.3s}
+#view .label,.ob-step,.eyebrow{animation:labelGlow 4s ease-in-out infinite}
+#view .card:nth-child(2n) .label{animation-delay:1.3s}#view .card:nth-child(3n) .label{animation-delay:2.6s}
+.tabs .tab{animation:tabIn .5s cubic-bezier(.2,1.4,.4,1) both}
+.tabs .tab:nth-child(2){animation-delay:.04s}.tabs .tab:nth-child(3){animation-delay:.08s}.tabs .tab:nth-child(4){animation-delay:.12s}.tabs .tab:nth-child(5){animation-delay:.16s}.tabs .tab:nth-child(6){animation-delay:.2s}.tabs .tab:nth-child(7){animation-delay:.24s}.tabs .tab:nth-child(8){animation-delay:.28s}.tabs .tab:nth-child(n+9){animation-delay:.32s}
+.tabs .tab span{display:inline-block;transition:transform .25s cubic-bezier(.2,1.5,.4,1)}.tabs .tab[aria-selected="true"] span{transform:scale(1.06)}
+.tabs .tab:active svg{transform:scale(.8) rotate(-8deg)!important}
+#view .card,#view .stat,#view .block .ex{animation:cardGlow 6s ease-in-out infinite}
+#view .card:nth-child(2n),#view .stat:nth-child(2n){animation-delay:2s}#view .card:nth-child(3n),#view .stat:nth-child(3n){animation-delay:4s}
+.stat{animation:floatIn .5s cubic-bezier(.2,1.2,.4,1) both,cardGlow 6s 1s ease-in-out infinite!important}
+.who .title{animation:titleFloat 4.5s ease-in-out infinite}.streak span,.lvl small{animation:labelGlow 4s ease-in-out infinite}
+.dayfoot .note,.cue,.note,p,small,.hint,.bd,.sub{animation:none}
+@media (prefers-reduced-motion:reduce){#view h2,#view .h2,#view h3,#view .h3,.block-h h3,.ob-card h2,.ov h2,#view .label,.ob-step,.eyebrow,.tabs .tab,#view .card,#view .stat,#view .block .ex,.stat,.who .title,.streak span{animation:none!important}}
 /* looping idle animations: small, satisfying, never distracting */
 @keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
 @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
