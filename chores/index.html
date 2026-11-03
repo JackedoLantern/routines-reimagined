@@ -9,7 +9,7 @@
 <link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="PEPE CHORES">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Figtree:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap">
-<script>window.CH_STANDALONE=true;window.CH_VERSION='3440f4a57c';window.CH_SUPABASE={url:'https://uszalonpjyssvvsikzvg.supabase.co',key:'sb_publishable_w-5rI0R9ht2-HAr5HghM0w_-3HYiAEg'};</script>
+<script>window.CH_STANDALONE=true;window.CH_VERSION='46b7a66810';window.CH_SUPABASE={url:'https://uszalonpjyssvvsikzvg.supabase.co',key:'sb_publishable_w-5rI0R9ht2-HAr5HghM0w_-3HYiAEg'};</script>
 <script src="../supabase.js"></script>
 <style>:root{--bg:#0a0a0b;--bg2:#121214;--card:#17171a;--card2:#1e1e22;--line:#2b2b31;--grey:#8d8d96;--grey2:#5c5c64;--text:#f4f2ef;--o:#ff7a00;--o2:#ffad5a;--o3:#ff9a2e;--oglow:rgba(255,122,0,.45);--red:#e3241b;--red2:#ff5a4a;--ok:#ff9a2e;
   --f-d:"Big Shoulders Display","Oswald",Impact,sans-serif;--f-b:"Figtree",system-ui,-apple-system,sans-serif;--f-m:"DM Mono",ui-monospace,Menlo,monospace;
@@ -275,6 +275,12 @@ button,.pill,.choice,.lb,.tier,.bdg,.task,label.sw{transition:transform .16s cub
 .ring .b{transition:stroke-dashoffset .9s cubic-bezier(.2,1,.3,1)}
 
 .choice .av,.kid .av,.lb .av{width:44px;height:44px;flex:none}
+
+.danger-zone{border-color:#4a1410;background:linear-gradient(180deg,#1c0e0d,#141416)}
+.holdbtn{position:relative;overflow:hidden;margin-top:12px;min-height:54px;font-size:16px;user-select:none;-webkit-user-select:none;touch-action:none}
+.holdbtn .fill{position:absolute;left:0;top:0;bottom:0;width:0;background:linear-gradient(90deg,#7a0f0a,var(--red));box-shadow:0 0 20px rgba(227,36,27,.6)}
+.holdbtn .lbl2{position:relative;z-index:1;color:#fff}
+.row>.av,.card .av{width:40px;height:40px;flex:none}
 </style>
 </head>
 <body>
@@ -484,7 +490,7 @@ const ICP={
 const EMO={'🍽️':'dishes','🧺':'laundry','🐾':'animals','🧹':'floors','🧽':'sparkle','✨':'sparkle','🏆':'trophy','🎖️':'medal','🏅':'medal','🥇':'medal','🥈':'medal','🥉':'medal','🏠':'home','👑':'crown','🔱':'crown','⚜️':'crown','🔑':'key',
   '🛡️':'shield','⚙️':'gear','📊':'chart','🔥':'fire','🌋':'fire','✅':'checkbox','✓':'check','💯':'hundred','🔒':'lock','🔓':'unlock','🔔':'bell','🎁':'gift','⏰':'clock','⏳':'hourglass','⚠️':'warn','🔄':'swap','🔁':'swap','↩️':'swap',
   '📅':'calendar','🗓️':'calendar','🍂':'calendar','⭐':'star','🌟':'star','🌈':'star','☄️':'star','🌙':'moon','🌗':'moon','🌅':'sunrise','✉️':'mail','💬':'chat','👍':'thumbs','🤝':'thumbs','⚡':'bolt','💥':'bolt','🚀':'rocket',
-  '🦍':'gorilla','👀':'eye','✏️':'pencil','👆':'up','⬆️':'up','→':'right','✕':'x','❌':'x','📋':'clip','🎉':'party','🎆':'party','👋':'hand','🧊':'snow','💀':'skull','💪':'flex','🌍':'globe','🪐':'globe','💎':'gem','💠':'gem','🛹':'board','🐝':'bee','🐔':'animals','🥚':'','⚙':'gear','🛡':'shield'};
+  '🦍':'gorilla','👀':'eye','✏️':'pencil','👆':'up','⬆️':'up','→':'right','✕':'x','❌':'x','📋':'clip','🎉':'party','🎆':'party','👋':'hand','🧊':'snow','💀':'skull','💪':'flex','🌍':'globe','🪐':'globe','💎':'gem','💠':'gem','🛹':'board','🐝':'bee','🗑️':'x','🐔':'animals','🥚':'','⚙':'gear','🛡':'shield'};
 const ico=(n,cls='')=>`<svg class="i ${cls}" viewBox="0 0 24 24" aria-hidden="true"><path d="${ICP[n]||ICP.star}"/></svg>`;
 const EMO_RE=new RegExp(Object.keys(EMO).sort((a,b)=>b.length-a.length).map(k=>k.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('|')+'|[\\u{1F300}-\\u{1FAFF}\\u{2600}-\\u{27BF}]\\uFE0F?','gu');
 function emo(h){return String(h).replace(EMO_RE,m=>EMO[m]?ico(EMO[m]):'')}
@@ -725,6 +731,7 @@ const SFX=(()=>{let ac=null,master=null,verb=null;
     soft(){tone(1046,0,.08,{vol:.06,to:1318,wet:false});tone(1568,.05,.12,{vol:.04})},
     num(n=0){tone(523.25*Math.pow(1.06,n),0,.09,{type:'triangle',vol:.16,wet:false})},
     unlock(){tone(880,0,.08,{type:'square',vol:.05,wet:false});tone(1320,.06,.18,{type:'triangle',vol:.12})},
+    levelDown(){[392,370,349.2,293.7].forEach((f,i)=>tone(f,i*.18,i===3?.7:.18,{type:'sawtooth',vol:.06,to:i===3?196:null}));tone(98,.55,.7,{type:'triangle',vol:.22,to:65})},
     pound(){[0,.16].forEach(t=>{tone(95,t,.28,{vol:.7,to:48,wet:false});noise(t,.1,{vol:.16,from:900,to:200,type:'lowpass'})})}}})();
 const buzz=p=>{try{navigator.vibrate&&navigator.vibrate(p)}catch(e){}};
 
@@ -1121,6 +1128,7 @@ function viewMore(){const f=fam(),ct=f.contact||{};
     <label class="f"><span class="lbl">Parent PIN</span><input class="inp" data-fam="pin" inputmode="numeric" maxlength="6" placeholder="none" value="${esc(f.pin||'')}"></label></section>
   <section class="card"><label class="sw"><div class="grow"><b>Sounds</b></div><input type="checkbox" data-act="snd" ${C.sound!==false?'checked':''}></label>
     ${window.CH_SUPABASE&&window.supabase?(C.cloud&&C.cloud.uid?`<div class="sw"><div class="grow"><b>Signed in</b><small>${esc(C.cloud.email)}</small></div><button class="btn sm" data-act="signout">Sign out</button></div>`:`<div class="sw"><div class="grow"><b>Account</b><small>Sign in to sync and use a family code</small></div><button class="btn sm" data-act="toauth">Sign in</button></div>`):''}</section>
+  <section class="card danger-zone"><div class="lbl" style="color:var(--red2)">Danger zone</div><div class="sw" style="border:0"><div class="grow"><b>Delete family</b><small>Removes the family, every kid, all XP, badges and streaks. Needs your parent passcode. Can’t be undone.</small></div><button class="btn sm red" data-act="delfam">${ico('x')} Delete</button></div></section>
   <p class="note" style="text-align:center">PEPE CHORES by Pepe Apps 🦍</p>`}
 
 /* ================= event binding ================= */
@@ -1134,7 +1142,7 @@ function bindView(){const a=$('#app');
     const dy=T.closest('[data-day]');if(dy){REPDAY=dy.dataset.day;SFX.tap();render();return}
     const rs=T.closest('[data-rslot]');if(rs){RULESLOT=+rs.dataset.rslot;SFX.tap();render();return}
     const b=T.closest('[data-act]');if(!b)return;const act=b.dataset.act;if(b.type!=='checkbox')SFX.tap();
-    ({joinhere:()=>joinHere(+b.dataset.slot),addload:()=>{const me=meP(),d=dayLog(me.pid);d.q=d.q||{};d.q.loads=Math.min(12,(d.q.loads||1)+1);save();SFX.num(d.q.loads);confetti(.25);toast('🧺','Load added',`Now ${d.q.loads} loads today`);render(null,true)},showcode:()=>{b.textContent=b.dataset.c;SFX.tap()},me:openMe,bell:openBell,redish:()=>askDishes(true),replay:()=>{SFX.pound();const w=$('.emb-wrap');w.animate([{transform:'scale(1)'},{transform:'scale(1.25) rotate(-8deg)'},{transform:'scale(.95) rotate(4deg)'},{transform:'scale(1)'}],{duration:700,easing:'cubic-bezier(.3,1.6,.4,1)'});sparks(w)},
+    ({delfam:()=>deleteFamilyFlow(),joinhere:()=>joinHere(+b.dataset.slot),addload:()=>{const me=meP(),d=dayLog(me.pid);d.q=d.q||{};d.q.loads=Math.min(12,(d.q.loads||1)+1);save();SFX.num(d.q.loads);confetti(.25);toast('🧺','Load added',`Now ${d.q.loads} loads today`);render(null,true)},showcode:()=>{b.textContent=b.dataset.c;SFX.tap()},me:openMe,bell:openBell,redish:()=>askDishes(true),replay:()=>{SFX.pound();const w=$('.emb-wrap');w.animate([{transform:'scale(1)'},{transform:'scale(1.25) rotate(-8deg)'},{transform:'scale(.95) rotate(4deg)'},{transform:'scale(1)'}],{duration:700,easing:'cubic-bezier(.3,1.6,.4,1)'});sparks(w)},
       swap:()=>{notifyParents('swap',`${meP().name} wants to swap chores`,`They have ${choreFor(fam(),meP().slot).n} this month.`);toast('🔄','Asked your parent','They’ll decide.')},
       approve:()=>{approveTask(b.dataset.pid,b.dataset.k,b.dataset.id,true);SFX.check(4);confetti(.4);render()},deny:()=>{approveTask(b.dataset.pid,b.dataset.k,b.dataset.id,false);SFX.uncheck();render()},
       bonus:()=>bonusSheet(b.dataset.pid),actas:()=>switchTo(b.dataset.pid),
@@ -1229,6 +1237,26 @@ document.addEventListener('pointerdown',e=>{const b=e.target.closest('button,a.b
 document.addEventListener('click',e=>{const b=e.target.closest('[data-close],button:not([data-act]):not([data-tab]):not([data-a]):not([data-n]):not([data-next]):not([data-back]):not([data-go]):not([data-sw]):not([data-amt]),a.btn');if(b&&!b.closest('#pepeIntro'))try{SFX.tap()}catch(_){}},true);
 document.addEventListener('focusin',e=>{if(e.target.matches&&e.target.matches('.inp'))try{SFX.soft()}catch(_){}});
 
+/* delete family: parent only, passcode required, then hold-to-delete */
+function deleteFamilyFlow(){if(!isParent())return;const f=fam();
+  const confirmStep=()=>sheet(`<div class="eyebrow" style="font:600 11px var(--f-m);letter-spacing:.2em;color:var(--red2)">DELETE FAMILY</div><h2>Delete “${esc(f.name)}”?</h2>
+    <p class="note">This removes the family${f.code?' for everyone, on every phone':''}, all ${kids().length} kid${kids().length===1?'':'s'}, and all their XP, badges and streaks. It can’t be undone.</p>
+    <button class="btn red wide holdbtn" id="hold"><span class="fill"></span><span class="lbl2">Hold to delete</span></button>
+    <div class="btns"><button class="btn ghost" data-close>Cancel</button></div>`,(o,close)=>{const h=o.querySelector('#hold'),fill=h.querySelector('.fill');let t0=0,raf=0,tickN=0;
+      const stop=()=>{cancelAnimationFrame(raf);if(!t0)return;t0=0;fill.style.transition='width .3s';fill.style.width='0%'};
+      const loop=()=>{const k=Math.min(1,(performance.now()-t0)/1600);fill.style.width=(k*100)+'%';const n=Math.floor(k*8);if(n>tickN){tickN=n;SFX.num(n);buzz(6)}if(k>=1){t0=0;close();doDeleteFamily();return}raf=requestAnimationFrame(loop)};
+      h.addEventListener('pointerdown',e=>{e.preventDefault();t0=performance.now();tickN=0;fill.style.transition='none';raf=requestAnimationFrame(loop)});['pointerup','pointerleave','pointercancel'].forEach(ev=>h.addEventListener(ev,stop))});
+  if(!f.pin){codeSheet('Create a parent passcode','You need a passcode to delete the family. Pick 4 to 6 numbers.',v=>{if(!/^\d{4,6}$/.test(v))return false;f.pin=v;famSave();toast('🔒','Passcode saved','You’ll need it for parent mode too.');setTimeout(confirmStep,250)});return}
+  codeSheet('Parent passcode','Type your parent passcode to delete the family.',v=>{if(v!==f.pin)return false;setTimeout(confirmStep,250)})}
+async function doDeleteFamily(){const f=fam();
+  if(f.code&&typeof famOnline==='function'&&famOnline()){const {error}=await SB.from('ch_families').delete().eq('id',f.id);
+    const {data:still}=await SB.from('ch_families').select('id').eq('id',f.id);
+    if(error||(still&&still.length)){SFX.warn();toast('⚠️','Couldn’t delete',error?error.message:'Only the parent who created the family can delete it.');return}}
+  SFX.levelDown?SFX.levelDown():SFX.warn();
+  const app=$('#app');if(app&&!reduced)await app.animate([{transform:'none',opacity:1,filter:'none'},{transform:'scale(.9)',opacity:0,filter:'blur(6px)'}],{duration:450,easing:'ease-in'}).finished.catch(()=>{});
+  C.fam=null;C.me=null;C.prog={};C.inbox=[];C.joinReq=[];C.kidCodes={};C.ltimer=null;save();$('#tabs')?.remove();STEP='start';TAB=null;render();
+  toast('🗑️','Family deleted','You can create a new one any time.')}
+
 /* ================= cloud sync (Supabase) — only on the hosted site ================= */
 let SB=null;
 const kidEmail=(code,name)=>`k.${code.toLowerCase()}.${(name.toLowerCase().normalize('NFKD').replace(/[^a-z0-9]/g,'')||'kid')}@kids.pepechores.app`;
@@ -1280,7 +1308,9 @@ async function cloudNote(n){if(!famOnline()||n.to===C.me.pid)return;if(n.to==='p
 let pulling=false;
 async function cloudPull(force){if(!online()||pulling)return false;pulling=true;try{const u=C.cloud.uid;
   const {data:mem}=await SB.from('ch_members').select('*').eq('user_id',u);const act=(mem||[]).find(m=>m.status==='active'),pend=(mem||[]).find(m=>m.status==='pending');
-  if(!act){if(pend){STEP='pending';C.pending=C.pending||{id:pend.family_id,name:'the family'};render()}return false}
+  if(!act){if(pend){STEP='pending';C.pending=C.pending||{id:pend.family_id,name:'the family'};render()}
+    else if(C.fam&&C.fam.code&&!force){C.fam=null;C.me=null;STEP='start';TAB=null;save();$('#tabs')?.remove();render();toast('🗑️','Family removed','Your parent deleted the family or removed you.')}
+    return false}
   const [{data:fr},{data:ms},{data:pr}]=await Promise.all([SB.from('ch_families').select('*').eq('id',act.family_id).single(),SB.from('ch_members').select('*').eq('family_id',act.family_id),SB.from('ch_progress').select('*').eq('family_id',act.family_id)]);
   if(!fr)return false;const meta=(fr.rules||{})._meta||{},rules={...(fr.rules||{})};delete rules._meta;
   const old=fam()&&fam().code===fr.code?fam():null;

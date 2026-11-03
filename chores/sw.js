@@ -1,4 +1,4 @@
-const CACHE='chores-3440f4a57c';const CORE=['./','index.html','manifest.webmanifest','icon.svg','icon-192.png','icon-512.png','../supabase.js'];
+const CACHE='chores-46b7a66810';const CORE=['./','index.html','manifest.webmanifest','icon.svg','icon-192.png','icon-512.png','../supabase.js'];
 self.addEventListener('install',e=>{self.skipWaiting();e.waitUntil(caches.open(CACHE).then(c=>c.addAll(CORE)).catch(()=>{}))});
 self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k.startsWith('chores-')&&k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
 self.addEventListener('fetch',e=>{const u=new URL(e.request.url);if(e.request.method!=='GET'||u.origin!==location.origin||u.pathname.endsWith('version.json'))return;
