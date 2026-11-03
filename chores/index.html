@@ -9,7 +9,7 @@
 <link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="PEPE CHORES">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Figtree:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap">
-<script>window.CH_STANDALONE=true;window.CH_VERSION='46b7a66810';window.CH_SUPABASE={url:'https://uszalonpjyssvvsikzvg.supabase.co',key:'sb_publishable_w-5rI0R9ht2-HAr5HghM0w_-3HYiAEg'};</script>
+<script>window.CH_STANDALONE=true;window.CH_VERSION='9c727776fc';window.CH_SUPABASE={url:'https://uszalonpjyssvvsikzvg.supabase.co',key:'sb_publishable_w-5rI0R9ht2-HAr5HghM0w_-3HYiAEg'};</script>
 <script src="../supabase.js"></script>
 <style>:root{--bg:#0a0a0b;--bg2:#121214;--card:#17171a;--card2:#1e1e22;--line:#2b2b31;--grey:#8d8d96;--grey2:#5c5c64;--text:#f4f2ef;--o:#ff7a00;--o2:#ffad5a;--o3:#ff9a2e;--oglow:rgba(255,122,0,.45);--red:#e3241b;--red2:#ff5a4a;--ok:#ff9a2e;
   --f-d:"Big Shoulders Display","Oswald",Impact,sans-serif;--f-b:"Figtree",system-ui,-apple-system,sans-serif;--f-m:"DM Mono",ui-monospace,Menlo,monospace;
@@ -1085,7 +1085,7 @@ function viewFamily(){const f=fam(),k=dkey();let h='';
   return h}
 function viewReports(){const f=fam(),days=[...Array(7)].map((_,i)=>addDays(dkey(),-i)),r=reportFor(REPDAY),ct=f.contact||{},txt=reportText(REPDAY);
   return`<section class="card hot"><div class="lbl">Daily report</div><h2 class="ttl">${fromKey(REPDAY).toLocaleDateString(undefined,{weekday:'long',month:'short',day:'numeric'})}</h2>
-    <div class="who">${days.map(d=>`<button class="pill ${d===REPDAY?'on':''}" data-day="${d}">${d===dkey()?'Today':fromKey(d).toLocaleDateString(undefined,{weekday:'short'})}</button>`).join('')}</div></section>
+    <div class="who">${days.slice().reverse().map(d=>`<button class="pill ${d===REPDAY?'on':''}" data-day="${d}">${d===dkey()?'Today':fromKey(d).toLocaleDateString(undefined,{weekday:'short'})}</button>`).join('')}</div></section>
     <section class="card"><table class="rep"><tr><th>Kid</th><th>Chore</th><th>Done</th><th>XP</th></tr>${r.map(x=>`<tr><td><b>${esc(x.p.name)}</b><div class="note">🔥 ${x.streak} · LV ${x.L}</div></td><td>${x.ch.e} ${x.ch.n}</td><td>${x.off?'<span class="tag">off</span>':`<b style="color:${x.done>=x.total?'var(--o)':x.done?'var(--text)':'var(--red2)'}">${x.done}/${x.total}</b>${x.wait?`<div class="note">${x.wait} waiting</div>`:''}`}${x.flag?' <span class="tag r">⚠️</span>':''}</td><td>+${x.x}</td></tr>
       ${!x.off&&x.missing.length?`<tr><td colspan="4" class="note" style="border-bottom:1px solid #232327">Not done: ${esc(x.missing.join(', '))}</td></tr>`:''}`).join('')}</table>
     <div class="btns">${ct.email?`<a class="btn sm" href="mailto:${esc(ct.email)}?subject=${encodeURIComponent('CHORES report '+REPDAY)}&body=${encodeURIComponent(txt)}">✉️ Email</a>`:''}${ct.phone?`<a class="btn sm" href="sms:${esc(ct.phone)}?&body=${encodeURIComponent(txt)}">💬 Text</a>`:''}<button class="btn sm" data-act="sharerep">Share</button><button class="btn sm" data-act="copyrep">Copy</button></div>
