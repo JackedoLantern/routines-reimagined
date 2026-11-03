@@ -9,7 +9,7 @@
 <link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="PEPE CHORES">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Figtree:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap">
-<script>window.CH_STANDALONE=true;window.CH_VERSION='9c727776fc';window.CH_SUPABASE={url:'https://uszalonpjyssvvsikzvg.supabase.co',key:'sb_publishable_w-5rI0R9ht2-HAr5HghM0w_-3HYiAEg'};</script>
+<script>window.CH_STANDALONE=true;window.CH_VERSION='946c583ed7';window.CH_SUPABASE={url:'https://uszalonpjyssvvsikzvg.supabase.co',key:'sb_publishable_w-5rI0R9ht2-HAr5HghM0w_-3HYiAEg'};</script>
 <script src="../supabase.js"></script>
 <style>:root{--bg:#0a0a0b;--bg2:#121214;--card:#17171a;--card2:#1e1e22;--line:#2b2b31;--grey:#8d8d96;--grey2:#5c5c64;--text:#f4f2ef;--o:#ff7a00;--o2:#ffad5a;--o3:#ff9a2e;--oglow:rgba(255,122,0,.45);--red:#e3241b;--red2:#ff5a4a;--ok:#ff9a2e;
   --f-d:"Big Shoulders Display","Oswald",Impact,sans-serif;--f-b:"Figtree",system-ui,-apple-system,sans-serif;--f-m:"DM Mono",ui-monospace,Menlo,monospace;
@@ -687,7 +687,9 @@ function tasksFor(slot,day=dkey()){const f=fam();if(!f)return[];const d=fromKey(
     for(let n=1;n<=N;n++)[['wash','Wash','washer'],['dry','Dry','dryer'],['fold','Fold','shirt','Ask Mom to watch while you fold'],['beds','Put everyone’s laundry on their beds','bed']]
       .forEach(([k,t,icon,sub])=>list.push({id:`laundry-L${n}-${k}`,t,ch:'laundry',xp:TASK_XP,seq:1,load:n,of:N,step:k,icon,sub}))}
   else list=ch.tasks.map((t,i)=>({id:ch.k+'-'+i,t,ch:ch.k,xp:TASK_XP}));
-  (R.extra||[]).filter(Boolean).forEach((t,i)=>list.push({id:'x-'+i+'-'+t.slice(0,12),t,ch:'extra',xp:TASK_XP}));
+  const g=fromKey(day).getDay();
+  (R.extra||[]).filter(Boolean).forEach((t,i)=>{const dd=choreDays(t);if(dd&&!dd.includes(g))return;
+    list.push({id:'x-'+i+'-'+t.slice(0,12),t:dd?cleanDays(t):t,ch:'extra',xp:TASK_XP,sub:dd?daysLabel(dd):undefined})});
   return list}
 function monthTask(slot,day=dkey()){const f=fam(),mi=monthIdx(fromKey(day)),ch=choreFor(f,slot,mi);return{id:'m-'+mi,t:ch.month[mi%ch.month.length],ch:ch.k,xp:MONTH_XP,monthly:true}}
 const isWeekend=k=>{const g=fromKey(k).getDay();return g===0||g===6};
@@ -701,6 +703,18 @@ function statsFor(pid){const p=prog(pid);return{...p.stats,tasks:p.stats.tasks||
 /* steps that must be done in order (laundry) */
 function seqLocked(pid,slot,task,k=dkey()){if(!task.seq)return false;const d=(prog(pid).days[k]||{t:{}}).t;for(const t of tasksFor(slot,k)){if(t.id===task.id)return false;if(t.seq&&!d[t.id])return true}return false}
 function seqLaterDone(pid,slot,task,k=dkey()){if(!task.seq)return false;const d=(prog(pid).days[k]||{t:{}}).t;let after=false;for(const t of tasksFor(slot,k)){if(after&&t.seq&&d[t.id])return true;if(t.id===task.id)after=true}return false}
+
+/* "Every Tuesday", "Mondays and Fridays", "Sat", "weekends", "weekdays" → only on those days */
+const WD=[['sunday','sun'],['monday','mon'],['tuesday','tue','tues'],['wednesday','wed'],['thursday','thu','thur','thurs'],['friday','fri'],['saturday','sat']];
+const WDN=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const DAY_RE=/\b(?:every\s+|on\s+)?(sundays?|mondays?|tuesdays?|wednesdays?|thursdays?|fridays?|saturdays?|sun|mon|tues?|wed|thu(?:rs?)?|fri|sat|weekends?|weekdays?)\b/gi;
+function choreDays(t){const s=String(t).toLowerCase(),out=new Set();let m;DAY_RE.lastIndex=0;
+  while((m=DAY_RE.exec(s))){const w=m[1].replace(/s$/,'');if(/^weekend/.test(m[1])){out.add(0);out.add(6);continue}if(/^weekday/.test(m[1])){[1,2,3,4,5].forEach(x=>out.add(x));continue}
+    WD.forEach((names,i)=>{if(names.some(n=>w===n||m[1]===n||w===n.replace(/s$/,'')))out.add(i)})}
+  return out.size?[...out].sort():null}
+function cleanDays(t){return String(t).replace(/\s*[(\[]?\s*(?:every|on)?\s*((sundays?|mondays?|tuesdays?|wednesdays?|thursdays?|fridays?|saturdays?|sun|mon|tues?|wed|thu(?:rs?)?|fri|sat|weekends?|weekdays?)\s*(,|&|and|\/)?\s*)+[)\]]?\s*[:\-–]?\s*/gi,' ').replace(/\s{2,}/g,' ').trim().replace(/^./,c=>c.toUpperCase())||t}
+function daysLabel(d){if(d.length===2&&d.includes(0)&&d.includes(6))return'Every weekend';if(d.length===5&&!d.includes(0)&&!d.includes(6))return'Every weekday';
+  const n=d.map(i=>WDN[i]);return'Every '+(n.length===1?n[0]:n.slice(0,-1).join(', ')+' and '+n[n.length-1])}
 
 /* ================= sounds ================= */
 const SFX=(()=>{let ac=null,master=null,verb=null;
@@ -1108,8 +1122,8 @@ function viewRules(){const f=fam(),ks=kids();if(!ks.length)return'<div class="no
      <label class="sw"><div class="grow"><b>Quiet hours</b><small>No notifications</small></div><input class="inp" type="time" data-rulev="quietFrom" value="${esc(R.quietFrom)}"><input class="inp" type="time" data-rulev="quietTo" value="${esc(R.quietTo)}"></label>
      <label class="sw"><div class="grow"><b>Max XP per day</b><small>0 = no limit</small></div><input class="inp" type="number" min="0" step="5" data-rulev="maxXP" value="${R.maxXP||0}" style="width:96px"></label>
      <label class="sw"><div class="grow"><b>Sounds</b></div><select class="inp" data-rulev="forceSound"><option value="">Their choice</option><option value="on" ${R.forceSound==='on'?'selected':''}>Always on</option><option value="off" ${R.forceSound==='off'?'selected':''}>Always off</option></select></label></section>
-   <section class="card"><div class="lbl">Extra daily chores for ${esc(k.name)}</div>${(R.extra||[]).map((t,i)=>`<div class="row" style="margin:6px 0"><span class="grow">• ${esc(t)}</span><button class="btn sm ghost" data-act="xdel" data-i="${i}">✕</button></div>`).join('')||'<p class="note">None yet.</p>'}
-     <div class="row"><input class="inp" id="x-new" maxlength="40" placeholder="Make your bed"><button class="btn" data-act="xadd">Add</button></div></section>`}
+   <section class="card"><div class="lbl">Extra daily chores for ${esc(k.name)}</div>${(R.extra||[]).map((t,i)=>`<div class="row" style="margin:6px 0"><span class="grow">• ${esc(choreDays(t)?cleanDays(t):t)}${choreDays(t)?` <span class="tag o">${daysLabel(choreDays(t))}</span>`:''}</span><button class="btn sm ghost" data-act="xdel" data-i="${i}">✕</button></div>`).join('')||'<p class="note">None yet.</p>'}
+     <div class="row"><input class="inp" id="x-new" maxlength="40" placeholder="Make your bed · or “Every Sunday: wash the car”"><button class="btn" data-act="xadd">Add</button></div></section>`}
 function viewMore(){const f=fam(),ct=f.contact||{};
   return`<section class="card"><div class="lbl">Family</div><label class="f"><span class="lbl">Family name</span><input class="inp" data-fam="name" maxlength="30" value="${esc(f.name)}"></label>
     ${f.slots.map((s,i)=>`<div class="slot"><span class="num">${i+1}</span><div class="inp" style="display:flex;align-items:center;${s.name?'':'color:var(--grey)'}">${s.name?esc(s.name):'Open spot'}</div><span class="chore-chip"><span class="e">${choreFor(f,i).e}</span>${choreFor(f,i).n}</span></div>`).join('')}
