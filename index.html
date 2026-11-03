@@ -15,7 +15,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Routines">
 <style>:root{padding-top:0;padding-bottom:0}html{background:#09090A}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
-<script>window.RR_STANDALONE=true;window.RR_VERSION='99c37eb1c4';</script>
+<script>window.RR_STANDALONE=true;window.RR_VERSION='c13099983e';</script>
 <script>window.RR_SUPABASE={url:'https://uszalonpjyssvvsikzvg.supabase.co',key:'sb_publishable_w-5rI0R9ht2-HAr5HghM0w_-3HYiAEg'};</script>
 <script src="supabase.js"></script>
 </head>
@@ -1190,7 +1190,7 @@ svg .btn1{animation:iBlink .4s steps(2) infinite}svg .btn2{animation:iBlink .4s 
 html,body,*{scrollbar-width:none;-ms-overflow-style:none}*::-webkit-scrollbar{display:none;width:0;height:0}
 </style>
 
-<!--PEPE-INTRO--><script>/* ===== Pepe Sites intro: animated logo badge with angry shredded gorilla (orange & black). Plays once per launch, tap to skip ===== */
+<!--PEPE-INTRO--><script>/* ===== PEPE Inc. intro: animated logo badge with angry shredded gorilla (orange & black). Plays once per launch, tap to skip ===== */
 (function(){
   try{if(sessionStorage.getItem('pepe-intro'))return;sessionStorage.setItem('pepe-intro','1')}catch(e){}
   const rm=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -1292,10 +1292,10 @@ html,body,*{scrollbar-width:none;-ms-overflow-style:none}*::-webkit-scrollbar{di
     <circle class="pp-red" cx="120" cy="140" r="126" fill="none" stroke="#e01b1b" stroke-width="8" stroke-linecap="round" pathLength="100" stroke-dasharray="6 94" transform="rotate(-90 120 140)"/>
     </svg>`;
   const word=t=>[...t].map((c,i)=>c===' '?'<i style="width:14px"> </i>':`<i class="${'PEPE'.includes(c)&&i<4?'o':''}" style="animation-delay:${.35+i*.06}s">${c}</i>`).join('');
-  const el=document.createElement('div');el.id='pepeIntro';el.setAttribute('role','img');el.setAttribute('aria-label','Pepe Sites');
+  const el=document.createElement('div');el.id='pepeIntro';el.setAttribute('role','img');el.setAttribute('aria-label','PEPE Inc.');
   el.innerHTML=`<div class="pp-glow"></div><div class="pp-stage"><div class="pp-floor"></div>${monkey}
     ${[0,1,2,3].map(i=>`<span class="pp-note" style="left:${[30,190,10,210][i]}px;top:${[60,40,130,120][i]}px;--dx:${[-30,30,-20,24][i]}px;--r:${[-30,25,-15,40][i]}deg;animation-delay:${i*.45}s">${['♪','♫','♪','♬'][i]}</span>`).join('')}
-    <div class="pp-word">${word('PEPE SITES')}</div><div class="pp-sub">PRESENTS</div></div><div class="pp-skip"><span class="s1"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#ff7a00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-4px;margin-right:6px"><path d="M4 9.5h4l5-4.5v14l-5-4.5H4z M16.5 9a4 4 0 0 1 0 6 M19 6.5a7.5 7.5 0 0 1 0 11"/></svg>TAP FOR SOUND</span><span class="s2">TAP TO SKIP</span></div>`;
+    <div class="pp-word">${word('PEPE Inc.')}</div><div class="pp-sub">PRESENTS</div></div><div class="pp-skip"><span class="s1"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#ff7a00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-4px;margin-right:6px"><path d="M4 9.5h4l5-4.5v14l-5-4.5H4z M16.5 9a4 4 0 0 1 0 6 M19 6.5a7.5 7.5 0 0 1 0 11"/></svg>TAP FOR SOUND</span><span class="s2">TAP TO SKIP</span></div>`;
   let ac=null,played=false;
   const add=()=>{document.body.appendChild(el);tryPlay()};
   if(document.body)add();else document.addEventListener('DOMContentLoaded',add);
