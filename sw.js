@@ -8,6 +8,7 @@ async function getData(){try{const r=await (await caches.open('rr-data')).match(
 self.addEventListener('fetch',e=>{
   if(e.request.method!=='GET')return;
   const url=new URL(e.request.url);
+  if(url.pathname.endsWith('.mp4'))return; // let the browser stream the intro video directly
   if(url.origin!==self.location.origin&&!/fonts\.(googleapis|gstatic)\.com$/.test(url.hostname))return;
   if(url.pathname.endsWith('/widget/data.json')){e.respondWith(getData().then(d=>new Response(JSON.stringify(d||{level:1,title:'Rookie',streak:0,workoutText:'Open the app to start',leftText:''}),{headers:{'content-type':'application/json'}})));return}
   const fresh=e.request.mode==='navigate'||/\.(html|js|webmanifest|json)$/.test(url.pathname);
