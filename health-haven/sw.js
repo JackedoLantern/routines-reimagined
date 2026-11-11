@@ -1,5 +1,5 @@
 // Health Haven: works offline and opens like an app
-const CACHE='hh-v3';
+const CACHE='hh-v4';
 const CORE=['./','index.html','manifest.webmanifest','icon.svg','icon-192.png','icon-512.png','apple-touch-icon.png'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(CORE)).then(()=>self.skipWaiting()))});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k.startsWith('hh-')&&k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});

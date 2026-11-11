@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="theme-color" content="#14805A">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
@@ -47,7 +47,10 @@
   --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 28px rgba(0,0,0,.35); color-scheme:dark}
 
 *{box-sizing:border-box}
-html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;touch-action:manipulation}
+body{touch-action:manipulation}
+/* 16px inputs stop iPhones from zooming in when you tap a box */
+input:not(#planTitle),select,textarea{font-size:16px!important}
 body{background:var(--bg);color:var(--ink);font-family:var(--font-b);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
 h1,h2,h3,h4{font-family:var(--font-d);margin:0;letter-spacing:-.015em;line-height:1.12;text-wrap:balance}
@@ -1282,6 +1285,11 @@ function renderAll(){renderTop();renderToday();renderLazy();renderRewards();rend
   if(n!==i&&n>=0&&n<VIEWS.length){el.style.transition='transform .18s var(--ease),opacity .18s';el.style.transform=`translateX(${dx<0?-90:90}px)`;el.style.opacity='0';buzz(8);const t=el;setTimeout(()=>{t.style.cssText='';go(VIEWS[n])},150)}
   else{el.style.transition='transform .55s var(--spring),opacity .3s';el.style.transform='';el.style.opacity='';const t=el;setTimeout(()=>{t.style.transition=''},560)}};
  main.addEventListener('touchend',end);main.addEventListener('touchcancel',end)})();
+/* no pinch or double-tap zoom: keeps it feeling like an app */
+['gesturestart','gesturechange','gestureend'].forEach(t=>document.addEventListener(t,e=>e.preventDefault(),{passive:false}));
+document.addEventListener('touchmove',e=>{if(e.touches.length>1||(e.scale&&e.scale!==1))e.preventDefault()},{passive:false});
+let lastTouchEnd=0;document.addEventListener('touchend',e=>{const now=Date.now();if(now-lastTouchEnd<300&&!e.target.closest('input,textarea'))e.preventDefault();lastTouchEnd=now},{passive:false});
+
 /* ---------- boot ---------- */
 document.documentElement.classList.toggle('rm',!!state.rm);
 renderAll();renderCoach();
