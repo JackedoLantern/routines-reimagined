@@ -65,6 +65,15 @@ input,select,textarea{font:inherit;color:inherit}
 .topnav button.on{color:var(--ink)}
 .lvlchip{display:flex;align-items:center;gap:8px;padding:6px 6px 6px 12px;border-radius:999px;background:var(--surface);box-shadow:var(--shadow);font-weight:700;font-size:13px;white-space:nowrap}
 .lvlchip .ring{width:28px;height:28px}
+.rkdot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:middle;box-shadow:0 0 0 2px var(--surface)}
+.ladder{display:flex;flex-direction:column}
+.rung{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:11px 0;border-top:1px solid var(--line)}
+.rung:first-child{border-top:0}
+.rung .medal{width:30px;height:30px;border-radius:50%;display:grid;place-items:center}
+.rung .medal svg{width:16px;height:16px;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.rung.got .medal{box-shadow:0 0 0 3px var(--surface),0 0 0 5px currentColor}
+.rung.lock{opacity:.5}
+.rung.cur b::after{content:'You are here';margin-left:8px;font-size:11px;font-weight:700;color:var(--green);letter-spacing:.04em;text-transform:uppercase}
 .lvlchip.bump{animation:bump .6s var(--spring)}
 @keyframes bump{0%{transform:scale(1)}35%{transform:scale(1.12)}100%{transform:scale(1)}}
 .iconbtn{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:var(--surface);box-shadow:var(--shadow);transition:transform .4s var(--spring)}
@@ -635,11 +644,15 @@ function trigText(t){
  return {habit:d.habit,move:d.mv(c,n,sec)}}
 
 /* ---------- rewards ---------- */
-const TITLES=['Couch Sprout','Seedling','Sapling','Trail Walker','Iron Fern','Oak Mover','Summit Seeker','Haven Keeper','Haven Legend'];
+/* Same ranks as Routines Reimagined, with every XP target 10 times higher */
+const TITLES=[[1,'Wood'],[2,'Bronze'],[3,'Silver'],[4,'Gold'],[5,'Platinum'],[6,'Diamond'],[7,'Vibranium']],LEGEND_XP=25000;
+const RANKCOL={Wood:'#B07A4A',Bronze:'#CD7F32',Silver:'#C9CED6',Gold:'#FFC53D',Platinum:'#9FE3E0',Diamond:'#6FD3FF',Vibranium:'#A98BFF',Legend:'#FF5CA8'};
+const RANK_ORDER=['Wood','Bronze','Silver','Gold','Platinum','Diamond','Vibranium','Legend'];
 const UNLOCK={1:'A sprout',2:'Your first tree',3:'Wildflowers',4:'A cabin',5:'A second tree',6:'A pond',7:'A training corner',8:'Lanterns',9:'A rainbow'};
-const need=L=>50*L*(L-1);
+const need=L=>{const n=Math.max(0,L-1);return 10*(100*n+25*n*(n-1))};
 const levelOf=xp=>{let L=1;while(xp>=need(L+1))L++;return L};
-const titleOf=L=>TITLES[Math.min(L,TITLES.length)-1];
+const titleOf=(L,xp=state.xp)=>xp>=LEGEND_XP?'Legend':TITLES.reduce((t,[m,n])=>L>=m?n:t,'Wood');
+const rkDot=rk=>`<span class="rkdot" style="background:${RANKCOL[rk]}"></span>`;
 const BADGES=[
  ['first-set','First rep','Check off your first set','check',s=>s.stats.sets>=1],
  ['first-wo','Day one','Finish your first workout','check',s=>s.stats.workouts>=1],
@@ -655,8 +668,9 @@ const BADGES=[
  ['pdf','Plan importer','Import a workout plan','file',s=>s.stats.imports>=1],
  ['chat','Good question','Ask the coach something','chat',s=>s.stats.chats>=1],
  ['variant','Shape-shifter','Try 5 workout variants','shuffle',s=>s.stats.variantChanges>=5],
- ['lvl-5','Iron Fern','Reach level 5','leaf',s=>levelOf(s.xp)>=5],
- ['lvl-8','Haven Keeper','Reach level 8','leaf',s=>levelOf(s.xp)>=8]
+ ['lvl-5','Platinum','Reach Platinum rank (level 5)','leaf',s=>levelOf(s.xp)>=5],
+ ['lvl-8','Vibranium','Reach Vibranium rank (level 7)','leaf',s=>levelOf(s.xp)>=7],
+ ['legend','Legend','Reach Legend rank (25,000 XP)','star',s=>s.xp>=LEGEND_XP]
 ];
 const QUESTS=[{id:'wo',t:"Finish today's workout",goal:1,val:d=>d.workout?1:0},{id:'lazy',t:'Do 3 Lazy Mode moves',goal:3,val:d=>d.lazy},{id:'sets',t:'Check off 10 sets',goal:10,val:d=>d.sets}];
 
@@ -701,7 +715,7 @@ function confStep(){cx.clearRect(0,0,innerWidth,innerHeight);parts.forEach(p=>{p
 const celeQ=[];let celeOpen=false;
 function queueCele(o){celeQ.push(o);if(!celeOpen)nextCele()}
 function nextCele(){const o=celeQ.shift();if(!o){celeOpen=false;return}celeOpen=true;const c=$('#cele'),card=$('#celeCard');
- let mid='';if(o.kind==='level')mid=`<div class="cele-badge">${svgI('star')}</div>`;else if(o.kind==='badge')mid=`<div class="cele-badge">${svgI(o.icon)}</div>`;
+ let mid='';if(o.kind==='level'){const col=RANKCOL[o.rank]||'#FFC53D';mid=`<div class="cele-badge" style="background:color-mix(in srgb,${col} 28%,transparent)"><svg viewBox="0 0 24 24" style="stroke:${col}">${ICON.star}</svg></div>`}else if(o.kind==='badge')mid=`<div class="cele-badge">${svgI(o.icon)}</div>`;
  card.innerHTML=`<span class="eyebrow">${esc(o.eyebrow)}</span><h2>${esc(o.title)}</h2>${mid}${o.xp?`<div class="cele-xp">+<span id="celeNum">0</span> XP</div>`:''}<p class="muted">${esc(o.text||'')}</p><button class="btn pri" id="celeClose">${esc(o.btn||'Keep going')}</button>`;
  c.hidden=false;requestAnimationFrame(()=>requestAnimationFrame(()=>{c.classList.add('show');if(o.xp)animateNum($('#celeNum'),0,o.xp,1100);growHaven(card)}));
  if(o.kind!=='badge')confetti();buzz([12,40,12]);
@@ -735,7 +749,8 @@ function after(){
  if(d.lazy>=3)markActive();
  BADGES.forEach(([id,name,desc,icon,test])=>{if(!state.badges[id]&&test(state)){state.badges[id]=todayKey();queueCele({kind:'badge',eyebrow:'Badge unlocked',title:name,text:desc,icon,btn:'Nice'})}});
  const L=levelOf(state.xp);
- if(L>(state.lvlSeen||1)){state.lvlSeen=L;justUnlocked=L;queueCele({kind:'level',eyebrow:'Level up',title:`Level ${L} · ${titleOf(L)}`,text:'New title unlocked. Keep the streak alive.',btn:'Love it'});setTimeout(()=>{justUnlocked=0},2500)}
+ {const rk=titleOf(L);if(!state.rankSeen)state.rankSeen=rk;const lv=L>(state.lvlSeen||1),nr=rk!==state.rankSeen&&RANK_ORDER.indexOf(rk)>RANK_ORDER.indexOf(state.rankSeen);
+  if(lv||nr){state.lvlSeen=Math.max(L,state.lvlSeen||1);state.rankSeen=rk;queueCele({kind:'level',rank:rk,eyebrow:nr?'New rank!':'Level up',title:`${rk} · Level ${L}`,text:rk==='Legend'?'You reached Legend. Almost nobody gets here.':`${(need(L+1)-state.xp).toLocaleString()} XP to level ${L+1}.`,btn:'Love it'})}}
  save();renderAll()}
 
 /* ---------- navigation ---------- */
@@ -753,7 +768,7 @@ addEventListener('resize',moveInd);
 
 /* ---------- top ---------- */
 function renderTop(){const L=levelOf(state.xp),p=(state.xp-need(L))/(need(L+1)-need(L)),C=2*Math.PI*11;
- $('#lvlchip').innerHTML=`Lv ${L}<svg class="ring" viewBox="0 0 28 28"><circle cx="14" cy="14" r="11" fill="none" stroke="var(--surface-2)" stroke-width="3"/><circle cx="14" cy="14" r="11" fill="none" stroke="var(--green)" stroke-width="3" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-p)}" transform="rotate(-90 14 14)" style="transition:stroke-dashoffset 1s var(--ease)"/></svg>`}
+ $('#lvlchip').innerHTML=`${rkDot(titleOf(L))}${titleOf(L)} · Lv ${L}<svg class="ring" viewBox="0 0 28 28"><circle cx="14" cy="14" r="11" fill="none" stroke="var(--surface-2)" stroke-width="3"/><circle cx="14" cy="14" r="11" fill="none" stroke="var(--green)" stroke-width="3" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-p)}" transform="rotate(-90 14 14)" style="transition:stroke-dashoffset 1s var(--ease)"/></svg>`}
 
 /* ---------- workout model ---------- */
 function currentWorkout(){
@@ -778,10 +793,10 @@ function renderToday(){
    <span class="eyebrow">${esc(dateStr)}</span>
    <h1>${greet}${name}. <em>Let's grow.</em></h1>
    <div style="display:flex;flex-direction:column;gap:8px">
-    <div class="row" style="justify-content:space-between"><b>Level ${L} · ${titleOf(L)}</b><span class="mono muted" style="font-size:13px">${state.xp-need(L)} / ${need(L+1)-need(L)} XP</span></div>
+    <div class="row" style="justify-content:space-between"><b>${rkDot(titleOf(L))}${titleOf(L)} · Level ${L}</b><span class="mono muted" style="font-size:13px">${state.xp-need(L)} / ${need(L+1)-need(L)} XP</span></div>
     <div class="xpbar"><i style="transform:scaleX(${p.toFixed(3)})"></i></div>
    </div>
-   <div class="stats-line"><span class="flame"><svg viewBox="0 0 24 24">${ICON.flame}</svg>${st} day${st===1?'':'s'}</span>${state.streak.shields?`<span class="pill">${state.streak.shields} streak shield${state.streak.shields>1?'s':''}</span>`:''}<span class="pill green">Next: Level ${L+1} · ${titleOf(L+1)}</span></div>
+   <div class="stats-line"><span class="flame"><svg viewBox="0 0 24 24">${ICON.flame}</svg>${st} day${st===1?'':'s'}</span>${state.streak.shields?`<span class="pill">${state.streak.shields} streak shield${state.streak.shields>1?'s':''}</span>`:''}<span class="pill green">Next: Level ${L+1} · ${titleOf(L+1,need(L+1))}</span></div>
   </div>
  </section>
  ${state.setup?'':`<div class="banner"><p><b>This is an example profile</b> (age 28, dumbbells, 20 minutes). Set up yours so every workout fits your age, equipment and time.</p><button class="btn pri" data-act="profile">Set up my profile</button></div>`}
@@ -906,9 +921,9 @@ document.addEventListener('input',e=>{if(e.target.id==='lazyDesc')ui.lazyDraft=e
 function renderRewards(){const L=levelOf(state.xp),p=(state.xp-need(L))/(need(L+1)-need(L)),got=BADGES.filter(b=>state.badges[b[0]]).length;
  V.rewards=`
  <section class="card" style="display:grid;gap:18px;grid-template-columns:1fr;align-items:center">
-  <div style="display:flex;flex-direction:column;gap:10px"><span class="eyebrow">Your level</span><h1 style="font-size:clamp(28px,4.5vw,40px);font-weight:800">Level ${L} · ${titleOf(L)}</h1>
+  <div style="display:flex;flex-direction:column;gap:10px"><span class="eyebrow">Your level</span><h1 style="font-size:clamp(28px,4.5vw,40px);font-weight:800">${titleOf(L)} · Level ${L}</h1>
    <div class="xpbar"><i style="transform:scaleX(${p.toFixed(3)})"></i></div>
-   <p class="muted">${need(L+1)-state.xp} XP until level ${L+1} · ${titleOf(L+1)}. Sets earn 2 XP, finished moves 5, Lazy Mode moves 5, quests 25 and full workouts 50.</p></div>
+   <p class="muted">${(need(L+1)-state.xp).toLocaleString()} XP until level ${L+1} (${titleOf(L+1,need(L+1))}). ${state.xp>=LEGEND_XP?'You are a Legend.':'Legend rank unlocks at 25,000 XP.'} Sets earn 2 XP, finished moves 5, Lazy Mode moves 5, quests 25 and full workouts 50.</p></div>
  </section>
  <div class="tiles">
   <div class="tile"><b>${state.stats.workouts}</b><span>Workouts</span></div>
@@ -916,6 +931,7 @@ function renderRewards(){const L=levelOf(state.xp),p=(state.xp-need(L))/(need(L+
   <div class="tile"><b>${state.stats.lazy}</b><span>Lazy Mode moves</span></div>
   <div class="tile"><b>${state.stats.best}</b><span>Best streak (days)</span></div>
  </div>
+ <section class="card"><div class="sec-h"><h2>Ranks</h2><span class="pill">Same as Routines Reimagined, 10× harder</span></div><div class="ladder" style="margin-top:8px">${RANK_ORDER.map(rk=>{const lvN=rk==='Legend'?null:TITLES.find(t=>t[1]===rk)[0],xpN=rk==='Legend'?LEGEND_XP:need(lvN),cur=titleOf(L),got=RANK_ORDER.indexOf(rk)<=RANK_ORDER.indexOf(cur);return `<div class="rung${got?' got':' lock'}${rk===cur?' cur':''}" style="color:${RANKCOL[rk]}"><span class="medal" style="background:color-mix(in srgb,${RANKCOL[rk]} 30%,transparent)"><svg viewBox="0 0 24 24" style="stroke:${RANKCOL[rk]}">${ICON.star}</svg></span><b style="color:var(--ink)">${rk}</b><span class="mono muted" style="font-size:13px">${rk==='Legend'?'':'Lv '+lvN+' · '}${xpN.toLocaleString()} XP</span></div>`}).join('')}</div></section>
  <div class="sec-h"><h2>Badges</h2><span class="pill gold">${got} of ${BADGES.length}</span></div>
  <div class="badges">${BADGES.map(([id,name,desc,icon])=>`<div class="badge${state.badges[id]?'':' locked'}"><span class="bi">${svgI(icon)}</span><b>${esc(name)}</b><small>${esc(desc)}</small></div>`).join('')}</div>`;
  growHaven($('#view-rewards'))}
