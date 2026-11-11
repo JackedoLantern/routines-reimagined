@@ -88,6 +88,11 @@ input,select,textarea{font:inherit;color:inherit}
 @keyframes bump{0%{transform:scale(1)}35%{transform:scale(1.12)}100%{transform:scale(1)}}
 .iconbtn{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:var(--surface);box-shadow:var(--shadow);transition:transform .4s var(--spring)}
 .iconbtn:active{transform:scale(.9)}
+.iconbtn{position:relative}
+.sync{position:absolute;top:-3px;right:-3px;width:12px;height:12px;border-radius:50%;border:2px solid var(--bg);background:var(--ink-2);transition:background .3s,transform .4s var(--spring)}
+.sync[data-st=saved]{background:var(--green)}
+.sync[data-st=saving]{background:var(--gold);animation:breathe2 1s ease-in-out infinite}
+.sync[data-st=error]{background:var(--coral)}
 .iconbtn svg{width:20px;height:20px;stroke:var(--ink);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .tabbar{position:fixed;left:0;right:0;bottom:0;z-index:30;background:color-mix(in srgb,var(--surface) 90%,transparent);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-top:1px solid var(--line);padding:6px max(8px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(8px,env(safe-area-inset-left,0px))}
 .tabbar .nav{justify-content:space-between;max-width:560px;margin:0 auto}
@@ -724,6 +729,7 @@ const ui={planSel:null,daySel:0,imp:null,curView:null,delArm:null};
 let justUnlocked=0,remote=null,saveTimer=null,saving=Promise.resolve();
 function save(){state.t=Date.now();const keys=Object.keys(state.days).sort();while(keys.length>21)delete state.days[keys.shift()];
  try{localStorage.setItem(LS,JSON.stringify(state))}catch(e){}
+ if(typeof cloud!=='undefined'&&cloud.user)cloudQueue();
  if(remote){clearTimeout(saveTimer);saveTimer=setTimeout(()=>{const body={s:JSON.stringify(state),t:state.t};saving=saving.then(()=>remote.set(body)).catch(()=>{})},1200)}}
 function day(){const k=todayKey();return state.days[k]||(state.days[k]={sets:0,lazy:0,workout:false,q:{}})}
 function streakNow(){const s=state.streak;if(!s.last)return 0;const d=dayDiff(s.last,todayKey());if(d<=1)return s.count;if(d===2&&s.shields>0)return s.count;return 0}
@@ -1232,6 +1238,7 @@ async function act(a,e){const k=a.dataset.act;
 function openProfile(){const p={...state.profile};const sh=$('#sheet'),pn=$('#sheetPanel');
  const seg=(k,opts)=>`<div class="seg">${opts.map(([v,l])=>`<button type="button" class="chip${String(p[k])===String(v)?' on':''}" data-pk="${k}" data-pv="${v}">${esc(l)}</button>`).join('')}</div>`;
  const draw=()=>{pn.innerHTML=`<span class="grab"></span><h2 id="sheetTitle">Your profile</h2><p class="muted">Every workout, Lazy Mode move and tip adapts to this. Change it anytime.</p>
+  ${accountRow()}
   <div class="field"><label for="pName">Name (optional)</label><input id="pName" value="${esc(p.name)}" maxlength="30"></div>
   <div class="field"><label for="pAge">Age</label><input id="pAge" type="number" min="8" max="100" value="${p.age}" inputmode="numeric"></div>
   ${p.age<13?'<div class="note">Kids under 13 should set up Health Haven with a parent or guardian.</div>':''}
@@ -1249,6 +1256,7 @@ function openProfile(){const p={...state.profile};const sh=$('#sheet'),pn=$('#sh
   $('#pGenderText')?.addEventListener('input',e=>p.genderText=e.target.value);
   $$('[data-pk]',pn).forEach(b=>b.onclick=()=>{const k=b.dataset.pk;let v=b.dataset.pv;if(k==='time')v=+v;if(k==='preg')v=v==='1';p[k]=v;if(k==='gender'&&v!=='f')p.preg=false;buzz(6);draw()});
   $('#rmSw').onclick=()=>{state.rm=!state.rm;document.documentElement.classList.toggle('rm',state.rm);save();draw()};
+  $('#aIn')&&($('#aIn').onclick=()=>{closeSheet();setTimeout(()=>openLogin(),560)});$('#aOut')&&($('#aOut').onclick=signOut);
   $('#sndSw').onclick=()=>{state.sound=state.sound===false;save();SFX.lazy();draw()};
   $('#pSave').onclick=()=>{p.name=$('#pName').value.trim();p.genderText=p.gender==='na'?($('#pGenderText')?.value||'').trim().slice(0,30):'';p.age=clamp(Math.round(+$('#pAge').value)||28,8,100);state.profile=p;state.setup=true;state.swaps={};if(state.active.type!=='plan')state.active={type:'gen'};closeSheet();after();if(ui.curView==='train')retrain();toast('Profile saved. Everything is fitted to you now.')}};
  draw();sh.hidden=false;requestAnimationFrame(()=>requestAnimationFrame(()=>sh.classList.add('show')));setTimeout(()=>$('#pName')?.focus({preventScroll:true}),400)}
@@ -1290,6 +1298,66 @@ function renderAll(){renderTop();renderToday();renderLazy();renderRewards();rend
 document.addEventListener('touchmove',e=>{if(e.touches.length>1||(e.scale&&e.scale!==1))e.preventDefault()},{passive:false});
 let lastTouchEnd=0;document.addEventListener('touchend',e=>{const now=Date.now();if(now-lastTouchEnd<300&&!e.target.closest('input,textarea'))e.preventDefault();lastTouchEnd=now},{passive:false});
 
+/* ---------- accounts and cloud saving (website version; inside Claude, Claude saves for you) ---------- */
+const IN_CLAUDE=!!(window.claude&&window.claude.use);
+const SB={url:'https://uszalonpjyssvvsikzvg.supabase.co',key:'sb_publishable_w-5rI0R9ht2-HAr5HghM0w_-3HYiAEg'};
+const cloud={client:null,user:null,status:'off',timer:null,chain:Promise.resolve(),pending:false};
+function renderAccountBits(){const b=$('#openProfile');if(!b)return;let d=$('.sync',b);if(!d){d=document.createElement('span');d.className='sync';b.append(d)}
+ const st=IN_CLAUDE?'saved':!cloud.user?'off':cloud.status;d.dataset.st=st;b.setAttribute('aria-label',st==='off'?'Your profile (not signed in)':'Your profile ('+(st==='saved'?'saved':st)+')')}
+function applyCloud(d){state=migrate(d);state.owner=cloud.user.id;try{localStorage.setItem(LS,JSON.stringify(state))}catch(e){}
+ document.documentElement.classList.toggle('rm',!!state.rm);renderAll();if(ui.curView==='train')renderTrain();renderCoach()}
+async function cloudPush(){if(!cloud.client||!cloud.user)return;clearTimeout(cloud.timer);cloud.pending=false;
+ const snap={user_id:cloud.user.id,data:JSON.parse(JSON.stringify(state)),client_t:state.t||Date.now(),updated_at:new Date().toISOString()};
+ cloud.chain=cloud.chain.then(async()=>{const {error}=await cloud.client.from('hh_state').upsert(snap,{onConflict:'user_id'});cloud.status=error?'error':(cloud.pending?'saving':'saved');renderAccountBits()}).catch(()=>{cloud.status='error';renderAccountBits()});return cloud.chain}
+function cloudQueue(){if(!cloud.user)return;state.owner=cloud.user.id;cloud.pending=true;cloud.status='saving';renderAccountBits();clearTimeout(cloud.timer);cloud.timer=setTimeout(cloudPush,500)}
+async function cloudPull(fresh){if(!cloud.client||!cloud.user||cloud.pending)return;
+ const {data,error}=await cloud.client.from('hh_state').select('data,client_t').eq('user_id',cloud.user.id).maybeSingle();
+ if(error){cloud.status='error';renderAccountBits();return}
+ if(data&&data.data){const mine=state.owner===cloud.user.id;
+  if(!mine){if(fresh&&state.xp>0)toast('Loaded your saved progress from your account');applyCloud(data.data)}
+  else if((data.client_t||0)>(state.t||0))applyCloud(data.data);
+  else if((state.t||0)>(data.client_t||0))await cloudPush()}
+ else{state.owner=cloud.user.id;await cloudPush()}
+ cloud.status='saved';renderAccountBits()}
+async function cloudInit(){if(IN_CLAUDE){renderAccountBits();return}
+ try{if(!window.supabase)await loadScript('../supabase.js');
+  cloud.client=window.supabase.createClient(SB.url,SB.key,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}});
+  const {data:{session}}=await cloud.client.auth.getSession();cloud.user=session?session.user:null;
+  cloud.client.auth.onAuthStateChange((ev,session)=>{const was=cloud.user&&cloud.user.id;cloud.user=session?session.user:null;if(cloud.user&&cloud.user.id!==was)cloudPull(true);renderAccountBits()});
+  if(cloud.user)await cloudPull(true);else if(!state.skipLogin)openLogin();
+ }catch(e){cloud.status='error'}
+ renderAccountBits()}
+document.addEventListener('visibilitychange',()=>{if(document.hidden){if(cloud.pending)cloudPush()}else cloudPull(false)});
+addEventListener('pagehide',()=>{if(cloud.pending)cloudPush()});
+addEventListener('focus',()=>cloudPull(false));
+setInterval(()=>{if(!document.hidden)cloudPull(false)},30000);
+function openLogin(mode){mode=mode||'in';const sh=$('#sheet'),pn=$('#sheetPanel');
+ const draw=(msg,err)=>{pn.innerHTML=`<span class="grab"></span>
+  <div class="row" style="gap:14px"><span class="mark" style="width:48px;height:48px;border-radius:14px">${$('.mark svg').outerHTML}</span><div><h2 id="sheetTitle">${mode==='in'?'Sign in':'Create your account'}</h2><p class="muted">Everything you do saves to your account, on every device.</p></div></div>
+  <form id="authForm" style="display:flex;flex-direction:column;gap:12px">
+   <div class="field"><label for="aEmail">Email</label><input id="aEmail" type="email" autocomplete="email" required></div>
+   <div class="field"><label for="aPass">Password</label><input id="aPass" type="password" autocomplete="${mode==='in'?'current-password':'new-password'}" minlength="6" required></div>
+   ${err?`<div class="errbox">${esc(err)}</div>`:''}${msg?`<div class="note"><b>${esc(msg)}</b></div>`:''}
+   <button class="btn pri" type="submit" id="aGo">${mode==='in'?'Sign in':'Create account'}</button>
+  </form>
+  <div class="row" style="justify-content:space-between"><button class="btn ghost" id="aSwap">${mode==='in'?'New here? Create an account':'Have an account? Sign in'}</button><button class="btn ghost" id="aSkip">Not now</button></div>
+  <p class="muted" style="font-size:12.5px">Same account as Routines Reimagined. Without an account, progress only stays on this device.</p>`;
+  $('#aSwap').onclick=()=>{mode=mode==='in'?'up':'in';draw()};
+  $('#aSkip').onclick=()=>{state.skipLogin=true;save();closeSheet()};
+  $('#authForm').onsubmit=async e=>{e.preventDefault();const email=$('#aEmail').value.trim(),password=$('#aPass').value;if(!cloud.client){draw('','Accounts are unavailable right now. Check your connection and try again.');return}
+   const go=$('#aGo');go.disabled=true;go.textContent=mode==='in'?'Signing in…':'Creating…';
+   try{const r=mode==='in'?await cloud.client.auth.signInWithPassword({email,password}):await cloud.client.auth.signUp({email,password});
+    if(r.error)throw r.error;
+    if(!r.data.session){mode='in';draw('Check your email to confirm your account, then sign in here.');return}
+    cloud.user=r.data.user;closeSheet();SFX.quest();toast(mode==='in'?'Signed in. Your progress is synced.':'Account created. Everything saves now.');await cloudPull(true)}
+   catch(err){const m=String(err&&err.message||'');draw('',/invalid login/i.test(m)?'That email or password is wrong.':/already registered/i.test(m)?'That email already has an account. Sign in instead.':/password/i.test(m)?'Passwords need at least 6 characters.':/email/i.test(m)?'Check that your email is typed correctly.':"Couldn't reach the server. Try again.")}};
+  setTimeout(()=>$('#aEmail')?.focus({preventScroll:true}),350)};
+ draw();sh.hidden=false;requestAnimationFrame(()=>requestAnimationFrame(()=>sh.classList.add('show')))}
+async function signOut(){if(cloud.pending)await cloudPush();try{await cloud.client.auth.signOut()}catch(e){}cloud.user=null;state=freshState();try{localStorage.setItem(LS,JSON.stringify(state))}catch(e){}renderAll();renderCoach();closeSheet();toast('Signed out');renderAccountBits();setTimeout(()=>openLogin(),600)}
+function accountRow(){if(IN_CLAUDE)return `<div class="toggle"><span><b>Saved automatically</b><br><span class="muted" style="font-size:13px">Inside Claude, your progress saves to your Claude account.</span></span></div>`;
+ if(cloud.user)return `<div class="toggle"><span style="min-width:0"><b>Signed in</b><br><span class="muted" style="font-size:13px;overflow-wrap:anywhere">${esc(cloud.user.email||'')} · everything saves to your account</span></span><button type="button" class="btn sm" id="aOut">Sign out</button></div>`;
+ return `<div class="toggle"><span><b>Not signed in</b><br><span class="muted" style="font-size:13px">Sign in to save across all your devices</span></span><button type="button" class="btn pri sm" id="aIn">Sign in</button></div>`}
+
 /* ---------- boot ---------- */
 document.documentElement.classList.toggle('rm',!!state.rm);
 renderAll();renderCoach();
@@ -1297,6 +1365,7 @@ go(VIEWS.includes(location.hash.slice(1))?location.hash.slice(1):'today');
 const setTabH=()=>document.documentElement.style.setProperty('--tabh',$('.tabbar').offsetHeight+'px');setTabH();addEventListener('resize',setTabH);
 requestAnimationFrame(moveInd);
 if(document.fonts&&document.fonts.ready)document.fonts.ready.then(moveInd);
+cloudInit();
 (async function initCaps(){
  if(!window.claude||!window.claude.use){sampleReady=true;renderCoach();renderLazy();renderImport();return}
  window.claude.use('sample').then(s=>{sample=s;sampleReady=true;renderCoach();renderLazy();renderImport()}).catch(()=>{sampleReady=true;renderCoach()});
