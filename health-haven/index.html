@@ -4,6 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#14805A">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Health Haven">
 <style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
 <title>Health Haven</title>
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -56,8 +63,8 @@ input,select,textarea{font:inherit;color:inherit}
 .top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--bg) 84%,transparent);-webkit-backdrop-filter:saturate(1.4) blur(14px);backdrop-filter:saturate(1.4) blur(14px);border-bottom:1px solid var(--line)}
 .top-in{max-width:1080px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:10px;display:flex;align-items:center;gap:14px}
 .brand{display:flex;align-items:center;gap:10px;font-family:var(--font-d);font-weight:800;font-size:19px;letter-spacing:-.02em;white-space:nowrap}
-.mark{width:34px;height:34px;border-radius:11px;background:var(--green);display:grid;place-items:center;flex:none}
-.mark svg{width:22px;height:22px;stroke:var(--on-green);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.mark{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#21A774,#0B5A3E);display:grid;place-items:center;flex:none;box-shadow:0 2px 6px rgba(11,90,62,.3)}
+.mark svg{width:26px;height:26px;stroke:var(--on-green);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .nav{position:relative;display:flex;gap:2px}
 .nav .ind{position:absolute;left:0;top:0;height:100%;width:0;border-radius:999px;background:var(--green-soft);transition:transform .55s var(--ease),width .55s var(--ease);z-index:0;pointer-events:none}
 .topnav{margin-left:auto}
@@ -371,7 +378,7 @@ table.rev tr.unclear input{border-color:color-mix(in srgb,var(--coral) 60%,var(-
 <body>
 <header class="top">
   <div class="top-in">
-    <div class="brand"><span class="mark"><svg viewBox="0 0 24 24"><path d="M4 11.5 12 5l8 6.5V20H4z"/><path d="M12 20v-5c0-2 1.5-3.5 3.5-3.5-.2 2-1.5 3.5-3.5 3.5"/></svg></span>Health Haven</div>
+    <div class="brand"><span class="mark"><svg viewBox="0 0 512 512" aria-hidden="true"><path d="M118 238 256 120 394 238" fill="none" stroke="#FFFFFF" stroke-width="44" stroke-linecap="round" stroke-linejoin="round"/><path d="M256 418C148 346 136 262 196 248C226 241 248 258 256 278C264 258 286 241 316 248C376 262 364 346 256 418Z" fill="#FFFFFF" stroke="none"/></svg></span>Health Haven</div>
     <nav class="nav topnav" aria-label="Sections"><span class="ind"></span>
       <button data-go="today">Today</button><button data-go="train">Train</button><button data-go="import">Import</button><button data-go="coach">Coach</button><button data-go="lazy">Lazy Mode</button><button data-go="rewards">Rewards</button>
     </nav>
@@ -1253,5 +1260,6 @@ if(document.fonts&&document.fonts.ready)document.fonts.ready.then(moveInd);
 })();
 </script>
 
+<script>if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).catch(()=>{})</script>
 </body>
 </html>
