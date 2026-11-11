@@ -64,7 +64,7 @@ input,select,textarea{font:inherit;color:inherit}
 .top-in{max-width:1080px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:10px;display:flex;align-items:center;gap:14px}
 .brand{display:flex;align-items:center;gap:10px;font-family:var(--font-d);font-weight:800;font-size:19px;letter-spacing:-.02em;white-space:nowrap}
 .mark{width:36px;height:36px;border-radius:10px;overflow:hidden;background:linear-gradient(135deg,#21A774,#0B5A3E);display:grid;place-items:center;flex:none;box-shadow:0 2px 6px rgba(11,90,62,.3)}
-.mark svg{width:100%;height:100%;display:block}
+.mark svg{width:26px;height:26px;display:block}
 .nav{position:relative;display:flex;gap:2px}
 .nav .ind{position:absolute;left:0;top:0;height:100%;width:0;border-radius:999px;background:var(--green-soft);transition:transform .55s var(--ease),width .55s var(--ease);z-index:0;pointer-events:none}
 .topnav{margin-left:auto}
@@ -378,7 +378,7 @@ table.rev tr.unclear input{border-color:color-mix(in srgb,var(--coral) 60%,var(-
 <body>
 <header class="top">
   <div class="top-in">
-    <div class="brand"><span class="mark"><svg viewBox="0 0 512 512" aria-hidden="true"><defs><linearGradient id="hh-bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#21A774"/><stop offset="1" stop-color="#0B5A3E"/></linearGradient><linearGradient id="hh-fur" gradientUnits="userSpaceOnUse" x1="0" y1="210" x2="0" y2="480"><stop offset="0" stop-color="#94592F"/><stop offset="1" stop-color="#5E361C"/></linearGradient><linearGradient id="hh-skin" gradientUnits="userSpaceOnUse" x1="0" y1="100" x2="0" y2="222"><stop offset="0" stop-color="#F3CC9F"/><stop offset="1" stop-color="#D9A06A"/></linearGradient><g id="hh-armshape"><rect x="-40" y="332" width="440" height="124" rx="56"/><circle cx="212" cy="318" r="94"/><path d="M316 446C308 360 308 284 320 212H412C430 286 448 362 444 436Z"/><circle cx="384" cy="398" r="64"/><path d="M60 456l14 26 14-26 14 26 14-26 14 26 14-26 14 26 14-26 14 26 14-26 14 26 14-26 14 26 14-26 14 26 14-26M444 380l26 8-22 12 24 14-26 6 18 18-26-2"/><path d="M312 222l10-22 10 20 12-22 10 20 12-22 10 20 12-22 10 20 12-22 10 22z"/></g><g id="hh-fist"><rect x="318" y="100" width="108" height="120" rx="34"/><rect x="292" y="100" width="62" height="34" rx="17"/><rect x="292" y="130" width="62" height="34" rx="17"/><rect x="292" y="160" width="62" height="34" rx="17"/><rect x="296" y="190" width="56" height="32" rx="16"/></g></defs><rect width="512" height="512" fill="url(#hh-bg)"/><g><use href="#hh-armshape" fill="#3A2110" stroke="#3A2110" stroke-width="22" stroke-linejoin="round"/><use href="#hh-armshape" fill="url(#hh-fur)"/><ellipse cx="200" cy="270" rx="56" ry="26" fill="#FFFFFF" opacity=".18" transform="rotate(-18 200 270)"/><path d="M140 372C190 404 262 402 300 360" fill="none" stroke="#3A2110" stroke-width="11" stroke-linecap="round"/><path d="M346 318C366 348 372 380 362 414" fill="none" stroke="#3A2110" stroke-width="9" stroke-linecap="round" opacity=".6"/><path d="M70 400l20-12M120 420l20-12M250 428l20-12M200 440l18-12M380 270l14-12M392 344l14-12" stroke="#3A2110" stroke-width="7" stroke-linecap="round" opacity=".45"/><use href="#hh-fist" fill="#3A2110" stroke="#3A2110" stroke-width="20" stroke-linejoin="round"/><rect x="318" y="100" width="108" height="120" rx="34" fill="url(#hh-skin)"/><g fill="url(#hh-skin)" stroke="#3A2110" stroke-width="8"><rect x="292" y="100" width="62" height="34" rx="17"/><rect x="292" y="130" width="62" height="34" rx="17"/><rect x="292" y="160" width="62" height="34" rx="17"/><rect x="296" y="190" width="56" height="32" rx="16"/></g><rect x="330" y="168" width="84" height="32" rx="16" fill="url(#hh-skin)" stroke="#3A2110" stroke-width="8"/></g></svg></span>Health Haven</div>
+    <div class="brand"><span class="mark"><svg viewBox="0 0 512 512" aria-hidden="true"><path d="M118 238 256 120 394 238" fill="none" stroke="#FFFFFF" stroke-width="44" stroke-linecap="round" stroke-linejoin="round"/><path d="M256 418C148 346 136 262 196 248C226 241 248 258 256 278C264 258 286 241 316 248C376 262 364 346 256 418Z" fill="#FFFFFF" stroke="none"/></svg></span>Health Haven</div>
     <nav class="nav topnav" aria-label="Sections"><span class="ind"></span>
       <button data-go="today">Today</button><button data-go="train">Train</button><button data-go="import">Import</button><button data-go="coach">Coach</button><button data-go="lazy">Lazy Mode</button><button data-go="rewards">Rewards</button>
     </nav>
@@ -426,6 +426,31 @@ const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 function hash(s){let h=2166136261;for(const c of s){h^=c.charCodeAt(0);h=Math.imul(h,16777619)}return h>>>0}
 const reduced=()=>state.rm||matchMedia('(prefers-reduced-motion: reduce)').matches;
 function buzz(ms){try{navigator.vibrate&&navigator.vibrate(ms)}catch(e){}}
+/* ---------- sound effects: synthesized wet pops, drips and chimes (no files) ---------- */
+const SFX=(()=>{let ctx=null,mg=null;
+ const ac=()=>{try{if(!ctx){const A=window.AudioContext||window.webkitAudioContext;if(!A)return null;ctx=new A();mg=ctx.createGain();mg.gain.value=.9;const comp=ctx.createDynamicsCompressor();mg.connect(comp);comp.connect(ctx.destination)}if(ctx.state==='suspended')ctx.resume();return ctx}catch(e){return null}};
+ const on=()=>state.sound!==false&&!document.hidden;
+ function tone({f=600,f2=null,t=0,d=.12,type='sine',v=.18,a=.004}){const c=ac();if(!c)return;const o=c.createOscillator(),g=c.createGain(),s=c.currentTime+t;o.type=type;o.frequency.setValueAtTime(f,s);if(f2)o.frequency.exponentialRampToValueAtTime(f2,s+d*.9);g.gain.setValueAtTime(0,s);g.gain.linearRampToValueAtTime(v,s+a);g.gain.exponentialRampToValueAtTime(.0008,s+d);o.connect(g);g.connect(mg);o.start(s);o.stop(s+d+.03)}
+ /* a wet "bloop": a quick upward pitch sweep sounds like a water drop or bubble */
+ const drop=(t=0,base=480,v=.22)=>{tone({f:base,f2:base*2.7,t,d:.085,v,a:.002});tone({f:base*2.3,f2:base*3.6,t:t+.012,d:.045,v:v*.28,a:.002})};
+ const chime=(fs,step,v)=>fs.forEach((f,i)=>{tone({f,t:i*step,d:.55,v,type:'triangle'});tone({f:f*2,t:i*step+.01,d:.3,v:v*.3})});
+ const sprinkle=(t,n,v)=>{for(let i=0;i<n;i++)drop(t+i*.055,520+Math.random()*900,v)};
+ return {
+  set:()=>{if(on())drop(0,420+Math.random()*90)},
+  setUndo:()=>{if(on())tone({f:540,f2:280,d:.11,v:.12})},
+  exDone:()=>{if(!on())return;drop(0,360);drop(.075,540);tone({f:1320,t:.13,d:.35,v:.07,type:'triangle'})},
+  lazy:()=>{if(!on())return;drop(0,300,.26);drop(.055,440,.22);drop(.11,640,.17)},
+  tab:()=>{if(on())tone({f:880,f2:1150,d:.04,v:.05,type:'triangle'})},
+  tap:()=>{if(on())drop(0,640,.09)},
+  quest:()=>{if(!on())return;drop(0,420);chime([784,988,1319],.075,.1)},
+  workout:()=>{if(!on())return;chime([523,659,784,1047],.09,.14);sprinkle(.42,9,.1)},
+  level:()=>{if(!on())return;chime([392,523,659,784,1047,1319],.08,.13);sprinkle(.5,12,.09)},
+  badge:()=>{if(!on())return;drop(0,380,.2);chime([1047,1568],.11,.1)},
+  rest:()=>{if(!on())return;drop(0,600,.16);drop(.18,600,.16);tone({f:1320,t:.36,d:.45,v:.13,type:'triangle'})},
+  send:()=>{if(on())drop(0,520,.14)},
+  reply:()=>{if(on())drop(0,760,.1)}
+ }})();
+
 const ICON={
  check:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',
  flame:'<path d="M12 3c1 3.5 5 5.5 5 10a5 5 0 0 1-10 0c0-2.5 1.5-4 2.5-5 0 2 1 3 2 3.5C11 9 11 6 12 3z"/>',
@@ -725,7 +750,7 @@ function nextCele(){const o=celeQ.shift();if(!o){celeOpen=false;return}celeOpen=
  let mid='';if(o.kind==='level'){const col=RANKCOL[o.rank]||'#FFC53D';mid=`<div class="cele-badge" style="background:color-mix(in srgb,${col} 28%,transparent)"><svg viewBox="0 0 24 24" style="stroke:${col}">${ICON.star}</svg></div>`}else if(o.kind==='badge')mid=`<div class="cele-badge">${svgI(o.icon)}</div>`;
  card.innerHTML=`<span class="eyebrow">${esc(o.eyebrow)}</span><h2>${esc(o.title)}</h2>${mid}${o.xp?`<div class="cele-xp">+<span id="celeNum">0</span> XP</div>`:''}<p class="muted">${esc(o.text||'')}</p><button class="btn pri" id="celeClose">${esc(o.btn||'Keep going')}</button>`;
  c.hidden=false;requestAnimationFrame(()=>requestAnimationFrame(()=>{c.classList.add('show');if(o.xp)animateNum($('#celeNum'),0,o.xp,1100);growHaven(card)}));
- if(o.kind!=='badge')confetti();buzz([12,40,12]);
+ if(o.kind!=='badge')confetti();(o.kind==='level'?SFX.level:o.kind==='badge'?SFX.badge:SFX.workout)();buzz([12,40,12]);
  $('#celeClose').onclick=()=>{c.classList.remove('show');setTimeout(()=>{c.hidden=true;nextCele()},reduced()?0:380)};
  setTimeout(()=>$('#celeClose')?.focus({preventScroll:true}),60)}
 
@@ -752,7 +777,7 @@ function growHaven(root){$$('.hv.grow',root).forEach(el=>requestAnimationFrame((
 /* ---------- after every action ---------- */
 function after(){
  const d=day();
- QUESTS.forEach(q=>{if(q.val(d)>=q.goal&&!d.q[q.id]){d.q[q.id]=1;state.xp+=25;toast('Quest done: '+q.t+' (+25 XP)')}});
+ QUESTS.forEach(q=>{if(q.val(d)>=q.goal&&!d.q[q.id]){d.q[q.id]=1;state.xp+=25;SFX.quest();toast('Quest done: '+q.t+' (+25 XP)')}});
  if(d.lazy>=3)markActive();
  BADGES.forEach(([id,name,desc,icon,test])=>{if(!state.badges[id]&&test(state)){state.badges[id]=todayKey();queueCele({kind:'badge',eyebrow:'Badge unlocked',title:name,text:desc,icon,btn:'Nice'})}});
  const L=levelOf(state.xp);
@@ -763,7 +788,7 @@ function after(){
 /* ---------- navigation ---------- */
 const VIEWS=['today','train','import','coach','lazy','rewards'];
 function moveInd(){$$('.nav').forEach(nav=>{const a=nav.querySelector('button.on'),ind=nav.querySelector('.ind');if(!ind)return;if(!a||!a.offsetWidth){ind.style.width='0px';return}ind.style.width=a.offsetWidth+'px';ind.style.transform=`translateX(${a.offsetLeft}px)`})}
-function go(v){if(!VIEWS.includes(v))v='today';if(v===ui.curView)return;
+function go(v){if(!VIEWS.includes(v))v='today';if(v===ui.curView)return;if(ui.curView)SFX.tab();
  const back=ui.curView&&VIEWS.indexOf(v)<VIEWS.indexOf(ui.curView);
  $$('.view').forEach(el=>{const on=el.id==='view-'+v;el.hidden=!on;el.classList.remove('enter','back');if(on&&ui.curView){void el.offsetWidth;el.classList.add('enter');if(back)el.classList.add('back')}});
  $$('[data-go]').forEach(b=>{if(b.closest('.nav'))b.classList.toggle('on',b.dataset.go===v)});ui.curView=v;
@@ -869,14 +894,14 @@ function retrain(){if(document.startViewTransition&&!reduced())document.startVie
 $('#view-train').addEventListener('click',e=>{
  const v=e.target.closest('[data-var]');
  if(v){const k=v.dataset.var;let val=v.dataset.val;if(k==='time'||k==='age')val=+val;if(k==='age')val=clamp(val,8,100);if(k==='preg')val=val==='1';
-  state.profile[k]=val;state.swaps={};state.stats.variantChanges++;buzz(6);retrain();after();return}
+  state.profile[k]=val;state.swaps={};state.stats.variantChanges++;buzz(6);SFX.tap();retrain();after();return}
  const sw=e.target.closest('[data-swap]');
- if(sw){const i=+sw.dataset.swap;state.swaps[i]=(state.swaps[i]||0)+1;buzz(8);retrain();save();renderToday();return}
+ if(sw){const i=+sw.dataset.swap;state.swaps[i]=(state.swaps[i]||0)+1;buzz(8);SFX.tap();retrain();save();renderToday();return}
  const s=e.target.closest('.set');
  if(s){const card=s.closest('.ex'),id=card.dataset.item,idx=+s.dataset.set;const {w,key}=currentWorkout();ensureSess(key);const it=allItems(w).find(i=>i.id===id);if(!it)return;
   const n=state.sess.done[id]||0,d=day();
-  if(idx<n){if(idx!==n-1)return;state.sess.done[id]=n-1;state.xp=Math.max(0,state.xp-2);state.stats.sets=Math.max(0,state.stats.sets-1);d.sets=Math.max(0,d.sets-1);paintSets(id,it.sets);updateProgress(w);renderTop();save();renderToday();return}
-  state.sess.done[id]=n+1;state.stats.sets++;d.sets++;addXP(2,e);buzz(10);paintSets(id,it.sets,n);
+  if(idx<n){if(idx!==n-1)return;SFX.setUndo();state.sess.done[id]=n-1;state.xp=Math.max(0,state.xp-2);state.stats.sets=Math.max(0,state.stats.sets-1);d.sets=Math.max(0,d.sets-1);paintSets(id,it.sets);updateProgress(w);renderTop();save();renderToday();return}
+  state.sess.done[id]=n+1;state.stats.sets++;d.sets++;addXP(2,e);buzz(10);(n+1>=it.sets?SFX.exDone:SFX.set)();paintSets(id,it.sets,n);
   if(n+1>=it.sets){if(!state.sess.exXP[id]){state.sess.exXP[id]=1;setTimeout(()=>{state.xp+=5;floatXP(e.clientX,e.clientY-30,'+5 XP');renderTop();save()},380)}stopRest()}
   else if(it.rest)startRest(it.rest,it.name);
   if(updateProgress(w))completeWorkout(w,key);
@@ -889,7 +914,7 @@ function completeWorkout(w,key){if(state.sessDone[key])return;state.sessDone[key
 /* rest timer */
 let restEnd=0,restTotal=0,restRaf=0;
 function startRest(sec,label){restTotal=sec;restEnd=performance.now()+sec*1000;$('#restLbl').textContent='Rest · next set of '+label;$('#rest').classList.add('show');cancelAnimationFrame(restRaf);restRaf=requestAnimationFrame(restTick)}
-function restTick(t){const left=Math.max(0,restEnd-t);$('#restNum').textContent=Math.ceil(left/1000);$('#restBar').style.transform=`scaleX(${restTotal?(left/(restTotal*1000)).toFixed(4):0})`;if(left<=0){stopRest();buzz([20,60,20]);toast('Rest done. Next set!');return}restRaf=requestAnimationFrame(restTick)}
+function restTick(t){const left=Math.max(0,restEnd-t);$('#restNum').textContent=Math.ceil(left/1000);$('#restBar').style.transform=`scaleX(${restTotal?(left/(restTotal*1000)).toFixed(4):0})`;if(left<=0){stopRest();buzz([20,60,20]);SFX.rest();toast('Rest done. Next set!');return}restRaf=requestAnimationFrame(restTick)}
 function stopRest(){cancelAnimationFrame(restRaf);$('#rest').classList.remove('show')}
 $('#restSkip').onclick=stopRest;
 $('#restAdd').onclick=()=>{restEnd+=15000;restTotal+=15};
@@ -912,7 +937,7 @@ function renderLazy(){
   <div class="formgrid"><div class="field"><label for="cHabit">When I…</label><input id="cHabit" placeholder="Every time I wait for the bus"></div><div class="field"><label for="cMove">I do…</label><input id="cMove" placeholder="20 calf raises"></div><button class="btn pri" data-act="addtrig">Add trigger</button></div>
  </section>`}
 function lazyDo(k,e){const t=state.triggers.find(x=>x.k===k);if(!t)return;t.count++;state.stats.lazy++;day().lazy++;if(k==='teeth')state.stats.tooth++;
- addXP(5,e);buzz(12);
+ addXP(5,e);buzz(12);SFX.lazy();
  if(!t.custom&&t.count%7===0&&t.level<5){t.level++;toast(`Level up: ${trigText(t).move}`)}
  after();
  $$(`[data-did="${CSS.escape(k)}"]`).forEach(b=>{b.classList.remove('burst');void b.offsetWidth;b.classList.add('burst');setTimeout(()=>b.classList.remove('burst'),750)})}
@@ -1037,15 +1062,15 @@ function pendingBubble(txt){const b=document.createElement('div');b.className='m
 function setBusy(on){chatBusy=on;const s=$('#chatSend');if(s)s.innerHTML=on?svgI('stop'):svgI('send');$$('[data-quick]').forEach(b=>b.disabled=on)}
 async function sendChat(text){text=(text||'').trim();if(!text||chatBusy)return;
  if(aiOn()&&/^build me a workout/i.test(text))return coachBuild(text);
- state.chat.push({role:'user',content:text});state.stats.chats++;renderCoach();setBusy(true);
+ state.chat.push({role:'user',content:text});state.stats.chats++;renderCoach();setBusy(true);SFX.send();
  const b=pendingBubble('Thinking');chatCtl=new AbortController();
  if(!aiOn()){await offlineReply(text,b);return}
  try{const turns=[{role:'user',content:RULES()},...state.chat.slice(-16).map(m=>({role:m.role,content:m.content}))];
   const {text:ans}=await sample(turns,{cache:false,signal:chatCtl.signal,onText:({text})=>{b.classList.remove('thinking');b.innerHTML=md(text)}});
-  state.chat.push({role:'assistant',content:ans})}
+  state.chat.push({role:'assistant',content:ans});SFX.reply()}
  catch(e){if(e&&AI_OFF.includes(e.code)){aiDisabled=true;await offlineReply(text,b);return}if(e&&e.text)state.chat.push({role:'assistant',content:e.text});if(!e||e.code!=='cancelled')toast(errCopy(e))}
  state.chat=state.chat.slice(-30);setBusy(false);after();renderCoach();$('#log')?.lastElementChild?.scrollIntoView({behavior:'smooth',block:'end'})}
-async function coachBuild(text){state.chat.push({role:'user',content:text});state.stats.chats++;renderCoach();setBusy(true);const b=pendingBubble('Building your workout');
+async function coachBuild(text){state.chat.push({role:'user',content:text});state.stats.chats++;renderCoach();setBusy(true);SFX.send();const b=pendingBubble('Building your workout');
  try{const o=await sample.json(`${RULES()}\n\nThe user asked: "${text}". Build one workout for today. Reply with only JSON: {"title": string, "days":[{"name": string, "exercises":[{"name": string, "sets": number, "reps": string, "rest": string, "notes": string}]}]}. Use exactly one day. Start with one short warm-up move and fit everything into ${state.profile.time} minutes. Put one form cue in each "notes".`);
   const pl=normPlan(o);pl.source='Big Billbie';state.plans.unshift(pl);state.plans=state.plans.slice(0,12);state.active={type:'plan',id:pl.id,day:0};
   state.chat.push({role:'assistant',content:`I built **${pl.days[0].name}** for you: ${pl.days[0].exercises.length} moves in about ${state.profile.time} minutes. It's ready in Train with checklists and rest timers.`,action:'train'});buzz([10,40,10])}
@@ -1125,7 +1150,7 @@ function brain(q){
  return R(`I'm not sure about that one yet, but I'm great at:\n- Building workouts (try "30 minute upper body workout with dumbbells")\n- Meals, snacks, protein and water\n- Form tips for squats, push-ups, deadlifts, planks and more\n- Soreness, sleep, stress and motivation\nTry asking one of those!`)}
 function typeOut(b,text){return new Promise(res=>{if(reduced()){b.innerHTML=md(text);return res()}const parts=text.split(/(\s+)/),n=parts.length,dur=clamp(n*11,350,1400),t0=performance.now();const step=t=>{const k=Math.ceil(n*Math.min(1,(t-t0)/dur));b.innerHTML=md(parts.slice(0,k).join(''));if(k<n)requestAnimationFrame(step);else res()};requestAnimationFrame(step)})}
 async function offlineReply(text,b){await new Promise(r=>setTimeout(r,reduced()?0:450));const r=brain(text);b.classList.remove('thinking');await typeOut(b,r.text);
- state.chat.push({role:'assistant',content:r.text,action:r.action||null});state.chat=state.chat.slice(-30);setBusy(false);after();renderCoach();$('#log')?.lastElementChild?.scrollIntoView({behavior:reduced()?'auto':'smooth',block:'end'})}
+ state.chat.push({role:'assistant',content:r.text,action:r.action||null});SFX.reply();state.chat=state.chat.slice(-30);setBusy(false);after();renderCoach();$('#log')?.lastElementChild?.scrollIntoView({behavior:reduced()?'auto':'smooth',block:'end'})}
 
 /* Lazy Mode without AI */
 const LAZY_MAP=[['teeth',['teeth','brush']],['kettle',['coffee',' tea','kettle','microwave','breakfast','cook']],['bath',['bathroom','toilet',' pee']],['stairs',['stairs','upstairs']],['episode',[' tv','netflix',' show','youtube','episode','watch','movie']],['game',['game','gaming','scroll','tiktok','instagram','xbox','playstation','switch']],['charge',['charge','charging','phone']],['bed',['wake','bed','morning']],['fridge',['fridge','snack','hungry']],['load',['load','video']]];
@@ -1213,6 +1238,7 @@ function openProfile(){const p={...state.profile};const sh=$('#sheet'),pn=$('#sh
   <div class="field"><label>Workout length</label>${seg('time',TIMES.map(t=>[t,t+' min']))}</div>
   <div class="field"><label>Main goal</label>${seg('goal',Object.entries(GOAL))}</div>
   <div class="field"><label>Be honest. How lazy are you?</label>${seg('lazy',Object.entries(LAZY))}</div>
+  <div class="toggle"><span><b>Sound effects</b><br><span class="muted" style="font-size:13px">Pops, drips and chimes when you earn things</span></span><button type="button" class="sw${state.sound!==false?' on':''}" id="sndSw" aria-label="Sound effects" aria-pressed="${state.sound!==false}"></button></div>
   <div class="toggle"><span><b>Reduce motion</b><br><span class="muted" style="font-size:13px">Turns off animations</span></span><button type="button" class="sw${state.rm?' on':''}" id="rmSw" aria-label="Reduce motion" aria-pressed="${state.rm}"></button></div>
   <div class="row" style="justify-content:flex-end"><button class="btn ghost" data-close>Cancel</button><button class="btn pri" id="pSave">Save profile</button></div>`;
   $('#pAge').addEventListener('change',e=>{p.age=clamp(Math.round(+e.target.value)||28,8,100);draw()});
@@ -1220,6 +1246,7 @@ function openProfile(){const p={...state.profile};const sh=$('#sheet'),pn=$('#sh
   $('#pGenderText')?.addEventListener('input',e=>p.genderText=e.target.value);
   $$('[data-pk]',pn).forEach(b=>b.onclick=()=>{const k=b.dataset.pk;let v=b.dataset.pv;if(k==='time')v=+v;if(k==='preg')v=v==='1';p[k]=v;if(k==='gender'&&v!=='f')p.preg=false;buzz(6);draw()});
   $('#rmSw').onclick=()=>{state.rm=!state.rm;document.documentElement.classList.toggle('rm',state.rm);save();draw()};
+  $('#sndSw').onclick=()=>{state.sound=state.sound===false;save();SFX.lazy();draw()};
   $('#pSave').onclick=()=>{p.name=$('#pName').value.trim();p.genderText=p.gender==='na'?($('#pGenderText')?.value||'').trim().slice(0,30):'';p.age=clamp(Math.round(+$('#pAge').value)||28,8,100);state.profile=p;state.setup=true;state.swaps={};if(state.active.type!=='plan')state.active={type:'gen'};closeSheet();after();if(ui.curView==='train')retrain();toast('Profile saved. Everything is fitted to you now.')}};
  draw();sh.hidden=false;requestAnimationFrame(()=>requestAnimationFrame(()=>sh.classList.add('show')));setTimeout(()=>$('#pName')?.focus({preventScroll:true}),400)}
 function closeSheet(){const sh=$('#sheet');sh.classList.remove('show');setTimeout(()=>sh.hidden=true,reduced()?0:550)}
@@ -1243,6 +1270,18 @@ const V={set today(h){morph($('#view-today'),h)},set lazy(h){morph($('#view-lazy
 /* ---------- render all ---------- */
 function renderAll(){renderTop();renderToday();renderLazy();renderRewards();renderImport();if(ui.curView==='today')growHaven($('#view-today'))}
 
+
+/* swipe left or right to change tabs; the page follows your finger */
+(()=>{let sx=0,sy=0,dx=0,t0=0,active=false,lock=null,el=null;const main=$('main');
+ main.addEventListener('touchstart',e=>{active=false;if(e.touches.length!==1||e.target.closest('input,textarea,select,.tablewrap,.daytabs,.plans,.seg,.agebox'))return;sx=e.touches[0].clientX;sy=e.touches[0].clientY;dx=0;t0=performance.now();lock=null;el=$('#view-'+ui.curView);active=!!el},{passive:true});
+ main.addEventListener('touchmove',e=>{if(!active)return;const x=e.touches[0].clientX-sx,y=e.touches[0].clientY-sy;
+  if(lock===null){if(Math.abs(x)<10&&Math.abs(y)<10)return;lock=Math.abs(x)>Math.abs(y)*1.3?'x':'y'}
+  if(lock!=='x')return;dx=x;const i=VIEWS.indexOf(ui.curView),edge=(dx>0&&i===0)||(dx<0&&i===VIEWS.length-1),d=edge?dx*.22:dx*.9;
+  el.classList.remove('enter','back');el.style.transition='none';el.style.transform=`translateX(${d}px)`;el.style.opacity=String(1-Math.min(.4,Math.abs(d)/800))},{passive:true});
+ const end=()=>{if(!active||lock!=='x'){active=false;return}active=false;const i=VIEWS.indexOf(ui.curView),v=Math.abs(dx)/Math.max(1,performance.now()-t0),n=(Math.abs(dx)>80||(v>.45&&Math.abs(dx)>30))?(dx<0?i+1:i-1):i;
+  if(n!==i&&n>=0&&n<VIEWS.length){el.style.transition='transform .18s var(--ease),opacity .18s';el.style.transform=`translateX(${dx<0?-90:90}px)`;el.style.opacity='0';buzz(8);const t=el;setTimeout(()=>{t.style.cssText='';go(VIEWS[n])},150)}
+  else{el.style.transition='transform .55s var(--spring),opacity .3s';el.style.transform='';el.style.opacity='';const t=el;setTimeout(()=>{t.style.transition=''},560)}};
+ main.addEventListener('touchend',end);main.addEventListener('touchcancel',end)})();
 /* ---------- boot ---------- */
 document.documentElement.classList.toggle('rm',!!state.rm);
 renderAll();renderCoach();
