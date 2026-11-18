@@ -389,8 +389,14 @@ table.rev tr.unclear input{border-color:color-mix(in srgb,var(--coral) 60%,var(-
 @media (min-width:880px){.pp-body{grid-template-columns:340px 1fr}.pp-panel{position:sticky;top:76px}}
 .pp-panel{display:flex;flex-direction:column;gap:16px}
 .pp-printer{display:flex;gap:14px;align-items:center}
-.pp-printer h2{font-size:30px;font-weight:800}
-.pp-ico{width:56px;height:56px;border-radius:16px;background:var(--green-soft);display:grid;place-items:center;flex:none}
+.pp-box{display:flex;flex-direction:column;gap:14px;padding:16px;border-radius:18px;border:1.5px solid var(--line);background:var(--surface-2)}
+.pp-pname{display:block;font-family:var(--font-d);font-size:20px;font-weight:700;margin-top:2px}
+.pp-pnote{display:block;font-size:13px}
+.pp-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.pp-stats div{background:var(--surface);border-radius:12px;padding:10px 6px;text-align:center;min-width:0}
+.pp-stats b{display:block;font-family:var(--font-m);font-size:clamp(14px,4.2vw,20px);font-weight:700;line-height:1.1;overflow-wrap:anywhere}
+.pp-stats span{font-size:11.5px;color:var(--ink-2);font-weight:600}
+.pp-ico{width:56px;height:56px;border-radius:16px;background:var(--surface);display:grid;place-items:center;flex:none}
 .pp-ico svg{width:30px;height:30px;stroke:var(--green);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .pp-go{width:100%;padding:14px;font-size:16px}
 .pp-sheets{display:flex;flex-direction:column;gap:20px;min-width:0}
@@ -405,7 +411,7 @@ table.rev tr.unclear input{border-color:color-mix(in srgb,var(--coral) 60%,var(-
 .sheet-inner .p-sub{font-size:12px;color:#555}
 .sheet-inner h2{font-family:var(--font-b);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#555;margin:0}
 .sheet-inner .p-sec{padding:12px 0 2px}
-.sheet-inner .p-row{display:grid;grid-template-columns:24px 1fr auto auto;gap:12px;align-items:center;padding:9px 0;border-bottom:1px solid #DDD}
+.sheet-inner .p-row{display:grid;grid-template-columns:24px 1fr auto;gap:12px;align-items:center;padding:9px 0;border-bottom:1px solid #DDD}
 .sheet-inner .p-num{font:700 12px/1 var(--font-m);color:#777}
 .sheet-inner .p-name b,.sheet-inner .p-sr b{display:block;font-size:14px;font-weight:700;color:#111}
 .sheet-inner .p-name small,.sheet-inner .p-sr small{display:block;font-size:11px;color:#666;margin-top:2px}
@@ -717,7 +723,7 @@ function genWorkout(p,swaps={}){
  return {title:FOCUS_LABEL[c.focus],sub:`${c.time} min · ${EQUIP_LABEL[c.band==='kid'?'none':p.equip]} · ${BAND_LABEL[c.band]}`,fmt,notes,sections,time:c.time}}
 
 function parseRest(s){s=String(s||'');let m=s.match(/(\d+(?:\.\d+)?)\s*(?:-|–|to)?\s*\d*\s*(min|m\b)/i);if(m)return clamp(Math.round(parseFloat(m[1])*60),0,300);m=s.match(/(\d+)/);return m?clamp(+m[1],0,300):60}
-function planWorkout(pl,d){const day=pl.days[d];return {title:day.name,sub:pl.title,fmt:'Imported plan',notes:[],time:null,sections:[{name:'Workout',items:day.exercises.map((e,i)=>({id:'p'+i+'-'+hash(e.name).toString(36),name:e.name,cue:e.notes||'',sets:clamp(Math.round(+e.sets)||3,1,10),reps:e.reps||'',rest:parseRest(e.rest),load:'',swappable:false,unclear:!!e.unclear}))}]}}
+function planWorkout(pl,d){const day=pl.days[d];return {title:day.name,sub:pl.title,fmt:'Imported plan',notes:[],time:null,sections:[{name:'Workout',items:day.exercises.map((e,i)=>({id:'p'+i+'-'+hash(e.name).toString(36),name:e.name,cue:e.notes||'',sets:clamp(Math.round(+e.sets)||3,1,10),reps:e.reps||'',rest:parseRest(e.rest),restGiven:!!String(e.rest||'').trim(),load:'',swappable:false,unclear:!!e.unclear}))}]}}
 
 /* ---------- lazy mode ---------- */
 const TRIG=[
@@ -1418,9 +1424,9 @@ function accountRow(){if(IN_CLAUDE)return `<div class="toggle"><span><b>Saved au
 /* ---------- print page: real paper preview, page count, then the system print dialog ---------- */
 const PAPERS={white:['White','#FFFFFF'],cream:['Cream','#FBF6EA'],mint:['Mint','#EEF7F1'],gray:['Light gray','#F2F3F2']};
 const PSIZE={letter:{l:'Letter',w:8.5,h:11},a4:{l:'A4',w:8.27,h:11.69}};
-const pr={paper:'white',size:'letter',scope:'today',boxes:true};
+const pr={paper:'white',size:'letter',scope:'today'};
 function printDays(){const {w,plan}=currentWorkout();
- const mk=(title,sub,sections)=>({title,sub,sections:sections.map(s=>({name:s.name,items:s.items.map(i=>({name:i.name,sets:i.sets,reps:i.reps,rest:i.rest,load:i.load||'',note:i.cue||''}))}))});
+ const mk=(title,sub,sections)=>({title,sub,sections:sections.map(s=>({name:s.name,items:s.items.map(i=>({name:i.name,sets:i.sets,reps:i.reps,rest:i.restGiven===false?0:i.rest,load:i.load||'',note:i.cue||''}))}))});
  if(pr.scope==='plan'&&plan)return plan.days.map((d,i)=>{const x=planWorkout(plan,i);return mk(d.name,plan.title,x.sections)});
  return [mk(w.title,w.sub,w.sections)]}
 function sheetBlocks(days){const name=state.profile.name,date=new Date().toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric',year:'numeric'}),B=[];
@@ -1428,7 +1434,7 @@ function sheetBlocks(days){const name=state.profile.name,date=new Date().toLocal
   B.push({cls:'p-day'+(di?' p-newday':''),html:`<div class="p-brand"><span>Health Haven</span><span>${esc(name?name+' · ':'')}${esc(date)}</span></div><h1>${esc(d.title)}</h1><p class="p-sub">${esc(d.sub)}</p>`});
   d.sections.forEach(s=>{
    if(d.sections.length>1)B.push({cls:'p-sec',html:`<h2>${esc(s.name)}</h2>`,keep:true});
-   s.items.forEach((it,i)=>B.push({cls:'p-row',html:`<span class="p-num">${i+1}</span><span class="p-name"><b>${esc(it.name)}</b>${it.load?`<small>${esc(it.load)}</small>`:''}</span><span class="p-sr"><b>${it.sets} × ${esc(it.reps)}</b>${it.rest?`<small>Rest ${it.rest}s</small>`:''}</span>${pr.boxes?`<span class="p-boxes">${Array.from({length:it.sets},()=>'<i></i>').join('')}</span>`:''}`}))});
+   s.items.forEach((it,i)=>B.push({cls:'p-row',html:`<span class="p-num">${i+1}</span><span class="p-name"><b>${esc(it.name)}</b>${it.load?`<small>${esc(it.load)}</small>`:''}</span><span class="p-sr"><b>${it.sets} × ${esc(it.reps)}</b>${it.rest?`<small>Rest ${it.rest}s</small>`:''}</span>`}))});
   B.push({cls:'p-notes',html:`<span>Notes</span><i></i><i></i>`})});
  return B}
 function paginate(blocks){const sz=PSIZE[pr.size],W=Math.round((sz.w-1)*96),H=Math.round((sz.h-1)*96);
@@ -1446,12 +1452,14 @@ function renderPrint(){const pg=$('#printPage');if(!pg)return;const {plan}=curre
  pg.innerHTML=`<div class="pp-top"><button class="btn ghost" data-pr-close aria-label="Back">${svgI('back')}Back</button><b>Print workout</b><span></span></div>
  <div class="pp-body">
   <section class="card pp-panel">
-   <div class="pp-printer"><span class="pp-ico">${svgI('printer')}</span><div><span class="eyebrow">Ready to print</span><h2>${n} page${n>1?'s':''}</h2><p class="muted">${sz.l} paper · ${PAPERS[pr.paper][0].toLowerCase()} · ${days.length} day${days.length>1?'s':''}, ${days.reduce((a,d)=>a+d.sections.reduce((b,s)=>b+s.items.length,0),0)} exercises</p></div></div>
-   ${IN_CLAUDE?`<div class="note">Printing works in the Health Haven website and Home Screen app. Open jackedolantern.github.io/routines-reimagined/health-haven/ to print this.</div>`:`<button class="btn pri pp-go" data-pr-go>${svgI('printer')}Print ${n} page${n>1?'s':''}</button><p class="muted" style="font-size:13px">You'll pick your printer in the next step.</p>`}
+   <div class="pp-box">
+    <div class="pp-printer"><span class="pp-ico">${svgI('printer')}</span><div style="min-width:0"><span class="eyebrow">Printer</span><b class="pp-pname">${IN_CLAUDE?'Not available in Claude':'Your printer'}</b><span class="muted pp-pnote">${IN_CLAUDE?'Open the website or Home Screen app to print':'Pick which printer in the next step'}</span></div></div>
+    <div class="pp-stats"><div><b>${n}</b><span>page${n>1?'s':''}</span></div><div><b>${days.length}</b><span>day${days.length>1?'s':''}</span></div><div><b>${days.reduce((a,d)=>a+d.sections.reduce((b,s)=>b+s.items.length,0),0)}</b><span>exercises</span></div><div><b>${pr.size==='a4'?'A4':'8.5×11'}</b><span>${PAPERS[pr.paper][0].toLowerCase()}</span></div></div>
+    <button class="btn pri pp-go" ${IN_CLAUDE?'disabled':'data-pr-go'}>${svgI('printer')}Print ${n} page${n>1?'s':''}</button>
+   </div>
    ${plan?`<div class="field"><label>What to print</label>${seg('scope',[['today',"Today's day"],['plan',`Whole plan (${plan.days.length} days)`]])}</div>`:''}
    <div class="field"><label>Paper colour</label>${seg('paper',Object.entries(PAPERS).map(([k,v])=>[k,v[0]]))}</div>
    <div class="field"><label>Paper size</label>${seg('size',Object.entries(PSIZE).map(([k,v])=>[k,v.l]))}</div>
-   <div class="toggle"><span><b>Tick boxes</b><br><span class="muted" style="font-size:13px">One box per set to check off with a pen</span></span><button type="button" class="sw${pr.boxes?' on':''}" data-pr="boxes" data-v="${pr.boxes?0:1}" aria-label="Tick boxes" aria-pressed="${pr.boxes}"></button></div>
   </section>
   <div class="pp-sheets" id="printSheets">${pages.map((p,i)=>`<div class="sheet-wrap" style="--pw:${sz.w}in;--ph:${sz.h}in"><div class="sheet" style="background:${paperCol}"><div class="sheet-inner" style="width:${W}px;height:${H}px">${p.map(b=>`<div class="${b.cls}">${b.html}</div>`).join('')}</div><span class="sheet-no">Page ${i+1} of ${n}</span></div></div>`).join('')}</div>
  </div>`;
@@ -1464,7 +1472,7 @@ document.addEventListener('click',e=>{
  if(e.target.closest('[data-print]')){openPrint();return}
  if(e.target.closest('[data-pr-close]')){closePrint();return}
  if(e.target.closest('[data-pr-go]')){SFX.quest();setTimeout(()=>{try{window.print()}catch(err){}},120);return}
- const c=e.target.closest('[data-pr]');if(c){const k=c.dataset.pr;pr[k]=k==='boxes'?c.dataset.v==='1':c.dataset.v;buzz(6);SFX.tap();renderPrint()}});
+ const c=e.target.closest('[data-pr]');if(c){const k=c.dataset.pr;pr[k]=c.dataset.v;buzz(6);SFX.tap();renderPrint()}});
 addEventListener('resize',()=>{if(document.body.classList.contains('printing-open'))fitSheets()});
 addEventListener('keydown',e=>{if(e.key==='Escape'&&document.body.classList.contains('printing-open'))closePrint()});
 
