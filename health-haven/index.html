@@ -395,6 +395,7 @@ table.rev tr.unclear input{border-color:color-mix(in srgb,var(--coral) 60%,var(-
 .pp-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
 .pp-stats div{background:var(--surface);border-radius:12px;padding:10px 6px;text-align:center;min-width:0}
 .pp-stats b{display:block;font-family:var(--font-m);font-size:clamp(14px,4.2vw,20px);font-weight:700;line-height:1.1;overflow-wrap:anywhere}
+.pp-stats b.pp-sz{font-family:var(--font-b);font-size:15px;white-space:nowrap;line-height:1.35}
 .pp-stats span{font-size:11.5px;color:var(--ink-2);font-weight:600}
 .pp-ico{width:56px;height:56px;border-radius:16px;background:var(--surface);display:grid;place-items:center;flex:none}
 .pp-ico svg{width:30px;height:30px;stroke:var(--green);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
@@ -1424,10 +1425,10 @@ function accountRow(){if(IN_CLAUDE)return `<div class="toggle"><span><b>Saved au
 /* ---------- print page: real paper preview, page count, then the system print dialog ---------- */
 const PAPERS={white:['White','#FFFFFF'],cream:['Cream','#FBF6EA'],mint:['Mint','#EEF7F1'],gray:['Light gray','#F2F3F2']};
 const PSIZE={letter:{l:'Letter',w:8.5,h:11},a4:{l:'A4',w:8.27,h:11.69}};
-const pr={paper:'white',size:'letter',scope:'today'};
+const pr={paper:'white',size:'letter',scope:'today'}; /* scope: 'today', 'all', or a day number as text */
 function printDays(){const {w,plan}=currentWorkout();
  const mk=(title,sub,sections)=>({title,sub,sections:sections.map(s=>({name:s.name,items:s.items.map(i=>({name:i.name,sets:i.sets,reps:i.reps,rest:i.restGiven===false?0:i.rest,load:i.load||'',note:i.cue||''}))}))});
- if(pr.scope==='plan'&&plan)return plan.days.map((d,i)=>{const x=planWorkout(plan,i);return mk(d.name,plan.title,x.sections)});
+ if(plan&&pr.scope!=='today'){const idx=pr.scope==='all'?plan.days.map((_,i)=>i):[+pr.scope].filter(i=>plan.days[i]);if(idx.length)return idx.map(i=>{const x=planWorkout(plan,i);return mk(plan.days[i].name,plan.title,x.sections)})}
  return [mk(w.title,w.sub,w.sections)]}
 function sheetBlocks(days){const name=state.profile.name,date=new Date().toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric',year:'numeric'}),B=[];
  days.forEach((d,di)=>{
@@ -1445,7 +1446,7 @@ function paginate(blocks){const sz=PSIZE[pr.size],W=Math.round((sz.w-1)*96),H=Ma
   if((b.cls.includes('p-newday')||used+h+nextH>H)&&pages[pages.length-1].length){pages.push([]);used=0}
   pages[pages.length-1].push(b);used+=h});
  m.remove();return {pages,W,H}}
-function renderPrint(){const pg=$('#printPage');if(!pg)return;const {plan}=currentWorkout();if(pr.scope==='plan'&&!plan)pr.scope='today';
+function renderPrint(){const pg=$('#printPage');if(!pg)return;const {plan}=currentWorkout();if(!plan)pr.scope='today';else if(pr.scope==='today')pr.scope=String(state.active.day||0);else if(pr.scope!=='all'&&!plan.days[+pr.scope])pr.scope='0';
  const days=printDays(),{pages,W,H}=paginate(sheetBlocks(days)),sz=PSIZE[pr.size],n=pages.length,paperCol=PAPERS[pr.paper][1];
  const seg=(k,opts)=>`<div class="seg">${opts.map(([v,l])=>`<button class="chip${pr[k]===v?' on':''}" data-pr="${k}" data-v="${v}">${esc(l)}</button>`).join('')}</div>`;
  $('#printPs').textContent=`@page{size:${pr.size==='a4'?'A4':'letter'};margin:0.5in}`;
@@ -1454,10 +1455,10 @@ function renderPrint(){const pg=$('#printPage');if(!pg)return;const {plan}=curre
   <section class="card pp-panel">
    <div class="pp-box">
     <div class="pp-printer"><span class="pp-ico">${svgI('printer')}</span><div style="min-width:0"><span class="eyebrow">Printer</span><b class="pp-pname">${IN_CLAUDE?'Not available in Claude':'Your printer'}</b><span class="muted pp-pnote">${IN_CLAUDE?'Open the website or Home Screen app to print':'Pick which printer in the next step'}</span></div></div>
-    <div class="pp-stats"><div><b>${n}</b><span>page${n>1?'s':''}</span></div><div><b>${days.length}</b><span>day${days.length>1?'s':''}</span></div><div><b>${days.reduce((a,d)=>a+d.sections.reduce((b,s)=>b+s.items.length,0),0)}</b><span>exercises</span></div><div><b>${pr.size==='a4'?'A4':'8.5×11'}</b><span>${PAPERS[pr.paper][0].toLowerCase()}</span></div></div>
+    <div class="pp-stats"><div><b>${n}</b><span>page${n>1?'s':''}</span></div><div><b>${days.length}</b><span>day${days.length>1?'s':''}</span></div><div><b>${days.reduce((a,d)=>a+d.sections.reduce((b,s)=>b+s.items.length,0),0)}</b><span>exercises</span></div><div><b class="pp-sz">${PSIZE[pr.size].l}</b><span>${PAPERS[pr.paper][0].toLowerCase()}</span></div></div>
     <button class="btn pri pp-go" ${IN_CLAUDE?'disabled':'data-pr-go'}>${svgI('printer')}Print ${n} page${n>1?'s':''}</button>
    </div>
-   ${plan?`<div class="field"><label>What to print</label>${seg('scope',[['today',"Today's day"],['plan',`Whole plan (${plan.days.length} days)`]])}</div>`:''}
+   ${plan&&plan.days.length>1?`<div class="field"><label>Which day to print</label>${seg('scope',[...plan.days.map((d,i)=>[String(i),d.name]),['all',`All ${plan.days.length} days`]])}</div>`:''}
    <div class="field"><label>Paper colour</label>${seg('paper',Object.entries(PAPERS).map(([k,v])=>[k,v[0]]))}</div>
    <div class="field"><label>Paper size</label>${seg('size',Object.entries(PSIZE).map(([k,v])=>[k,v.l]))}</div>
   </section>
@@ -1466,7 +1467,7 @@ function renderPrint(){const pg=$('#printPage');if(!pg)return;const {plan}=curre
  fitSheets()}
 function fitSheets(){$$('#printSheets .sheet-wrap').forEach(w=>{const sh=$('.sheet',w),pw=sh.offsetWidth,avail=w.clientWidth,s=Math.min(1,avail/pw);sh.style.transform=`translateX(${Math.max(0,(avail-pw*s)/2)}px) scale(${s})`;w.style.height=sh.offsetHeight*s+'px'})}
 function openPrint(){let pg=$('#printPage');if(!pg){pg=document.createElement('div');pg.id='printPage';pg.setAttribute('role','dialog');pg.setAttribute('aria-label','Print workout');document.body.append(pg)}
- pr.paper='white';document.body.classList.add('printing-open');renderPrint();pg.hidden=false;requestAnimationFrame(()=>requestAnimationFrame(()=>{pg.classList.add('show');fitSheets()}));SFX.tap()}
+ pr.paper='white';pr.scope='today';document.body.classList.add('printing-open');renderPrint();pg.hidden=false;requestAnimationFrame(()=>requestAnimationFrame(()=>{pg.classList.add('show');fitSheets()}));SFX.tap()}
 function closePrint(){const pg=$('#printPage');if(!pg)return;pg.classList.remove('show');document.body.classList.remove('printing-open');setTimeout(()=>pg.hidden=true,reduced()?0:450)}
 document.addEventListener('click',e=>{
  if(e.target.closest('[data-print]')){openPrint();return}
