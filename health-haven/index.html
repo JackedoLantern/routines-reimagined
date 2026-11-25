@@ -402,8 +402,8 @@ table.rev tr.unclear input{border-color:color-mix(in srgb,var(--coral) 60%,var(-
 .pp-go{width:100%;padding:14px;font-size:16px}
 .pp-sheets{display:flex;flex-direction:column;gap:20px;min-width:0}
 .sheet-wrap{position:relative;width:100%;overflow:hidden}
-.sheet{position:absolute;left:50%;top:0;margin-left:calc(var(--pw) / -2);width:var(--pw);height:var(--ph);padding:.5in;transform-origin:top center;box-shadow:0 2px 6px rgba(0,0,0,.12),0 18px 40px rgba(0,0,0,.14);border-radius:3px;color:#111;color-scheme:light}
-.sheet-wrap .sheet{left:0;margin-left:0;transform-origin:top left}
+.psheet{position:absolute;left:50%;top:0;margin-left:calc(var(--pw) / -2);width:var(--pw);height:var(--ph);padding:.5in;transform-origin:top center;box-shadow:0 2px 6px rgba(0,0,0,.12),0 18px 40px rgba(0,0,0,.14);border-radius:3px;color:#111;color-scheme:light}
+.sheet-wrap .psheet{left:0;margin-left:0;transform-origin:top left}
 .sheet-no{position:absolute;bottom:.22in;right:.5in;font:500 10px/1 var(--font-b);color:#888}
 .sheet-inner{color:#111;font-family:var(--font-b);overflow:hidden}
 .sheet-inner .p-day{padding-bottom:10px;border-bottom:2.5px solid #111;margin-bottom:6px}
@@ -435,7 +435,7 @@ body.printing-open{overflow:hidden}
  .pp-sheets{display:block}
  .sheet-wrap{height:auto!important;overflow:visible;break-after:page;page-break-after:always}
  .sheet-wrap:last-child{break-after:auto;page-break-after:auto}
- .sheet{position:static;transform:none!important;width:auto;height:auto;padding:0;box-shadow:none;border-radius:0;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ .psheet{position:static;transform:none!important;width:auto;height:auto;padding:0;box-shadow:none;border-radius:0;-webkit-print-color-adjust:exact;print-color-adjust:exact}
  .sheet-inner{height:auto!important}
  .sheet-no{display:none}
 }
@@ -1462,10 +1462,10 @@ function renderPrint(){const pg=$('#printPage');if(!pg)return;const {plan}=curre
    <div class="field"><label>Paper colour</label>${seg('paper',Object.entries(PAPERS).map(([k,v])=>[k,v[0]]))}</div>
    <div class="field"><label>Paper size</label>${seg('size',Object.entries(PSIZE).map(([k,v])=>[k,v.l]))}</div>
   </section>
-  <div class="pp-sheets" id="printSheets">${pages.map((p,i)=>`<div class="sheet-wrap" style="--pw:${sz.w}in;--ph:${sz.h}in"><div class="sheet" style="background:${paperCol}"><div class="sheet-inner" style="width:${W}px;height:${H}px">${p.map(b=>`<div class="${b.cls}">${b.html}</div>`).join('')}</div><span class="sheet-no">Page ${i+1} of ${n}</span></div></div>`).join('')}</div>
+  <div class="pp-sheets" id="printSheets">${pages.map((p,i)=>`<div class="sheet-wrap" style="--pw:${sz.w}in;--ph:${sz.h}in"><div class="psheet" style="background:${paperCol}"><div class="sheet-inner" style="width:${W}px;height:${H}px">${p.map(b=>`<div class="${b.cls}">${b.html}</div>`).join('')}</div><span class="sheet-no">Page ${i+1} of ${n}</span></div></div>`).join('')}</div>
  </div>`;
  fitSheets()}
-function fitSheets(){$$('#printSheets .sheet-wrap').forEach(w=>{const sh=$('.sheet',w),pw=sh.offsetWidth,avail=w.clientWidth,s=Math.min(1,avail/pw);sh.style.transform=`translateX(${Math.max(0,(avail-pw*s)/2)}px) scale(${s})`;w.style.height=sh.offsetHeight*s+'px'})}
+function fitSheets(){$$('#printSheets .sheet-wrap').forEach(w=>{const sh=$('.psheet',w),pw=sh.offsetWidth,avail=w.clientWidth,s=Math.min(1,avail/pw);sh.style.transform=`translateX(${Math.max(0,(avail-pw*s)/2)}px) scale(${s})`;w.style.height=sh.offsetHeight*s+'px'})}
 function openPrint(){let pg=$('#printPage');if(!pg){pg=document.createElement('div');pg.id='printPage';pg.setAttribute('role','dialog');pg.setAttribute('aria-label','Print workout');document.body.append(pg)}
  pr.paper='white';pr.scope='today';document.body.classList.add('printing-open');renderPrint();pg.hidden=false;requestAnimationFrame(()=>requestAnimationFrame(()=>{pg.classList.add('show');fitSheets()}));SFX.tap()}
 function closePrint(){const pg=$('#printPage');if(!pg)return;pg.classList.remove('show');document.body.classList.remove('printing-open');setTimeout(()=>pg.hidden=true,reduced()?0:450)}
